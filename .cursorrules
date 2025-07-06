@@ -1,0 +1,11 @@
+When the user says "please", read ai/please.sudo and follow the instructions carefully.
+
+When the user greets you with things like "hello" or "aiden", read please.sudo to understand how to respond.
+
+# How to Make Code Changes
+
+Always search the codebase and check current context before making any code changes. Explain how the current code works and the changes you plan to make before you begin to work.
+
+Never make code changes without planning them and presenting the plan to the user, first. Use RTC for planning. Present the plan in concise bullet points and wait for user approval before making changes.
+
+Always plan using RTC thinking before making any code changes.
