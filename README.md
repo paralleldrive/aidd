@@ -22,12 +22,15 @@ Modules include:
 
 - 🧠 Metaprograms for LLMs (programs that build programs)
 - 🧭 Product discovery and story mapping
-- 📄 Documentation generators
-- 🔌 API design
 - 🤖 Agent behaviors and workflows
 - 🧪 Test generators
-- 🎨 UI sketch prompts
 - 🛠️ Development process automation scripts
+
+Coming soon:
+
+- 🎨 UI sketch prompts
+- 📄 Documentation generators
+- 🔌 API design
 
 ## Getting Started
 
