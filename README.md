@@ -32,7 +32,6 @@ Coming soon:
 - 📄 Documentation generators
 - 🔌 API design
 
-
 ## Getting Started
 
 Visit the [SudoLang Github Repository](https://github.com/paralleldrive/sudolang-llm-support) and be sure to install SudoLang syntax highlighting. Then come back here to find the metaprograms and automations to help 10x your development productivity and get the most out of AI Driven Development.
