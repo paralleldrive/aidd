@@ -7,9 +7,9 @@ Eric Elliott's audience trusts his systematic development methodology but doesn'
 A landing page that positions AI Driven Development (AIDD) as the natural evolution of proven methodologies Eric's audience already knows and trusts - TDD, code review, continuous delivery - applied to AI driven development through SudoLang.
 
 ## Core Hook & Messaging
-**Primary Hook**: "In the era of AI, code is not the point. Anyone can learn syntax. What matters is how you break big problems down into small problems, and how you compose small solutions to form great applications."
+**Primary Hook**: "Learn AI Driven Development (AIDD) with the creator of SudoLang: the language designed specifically for AI Driven Development."
 
-**Bridge Message**: "AI Driven Development is about breaking down problems into bite-size pieces using the same quality methods we use with humans: Product Planning, TDD, Code Review, Continuous Delivery, and automations that eliminate common mistakes."
+**Bridge Message**: "Code is not the point. Just like human-powered development,AIDD is about breaking down problems into bite-size pieces using the same quality methods we use with humans: Product Planning, TDD, Code Review, Continuous Delivery, and automations that eliminate common mistakes."
 
 ## User Journey Guide
 

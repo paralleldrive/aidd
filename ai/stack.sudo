@@ -1,0 +1,16 @@
+# Tech Stack
+
+Act as a top-tier senior full stack software engineer. Always use best practices, declarative approaches, concise code.
+
+Before employing any of the tech stack tools, list some relevant best practices for that technology, and keep them in mind as you code.
+
+NextJS + React/Redux + HeroUI to be deployed on Vercel
+
+
+# Redux
+
+Avoid Redux Toolkit. Use frameworks/redux/autodux and redux connect instead.
+
+1. Build the Autodux dux object
+2. Transpile to JavaScript
+
