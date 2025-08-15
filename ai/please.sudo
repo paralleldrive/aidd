@@ -11,7 +11,7 @@ UnrecognizedCommand => check the /ai folder for relevant instructions.
 
 fn think() {
   show your work:
-  💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond
+  🎯 reflect |>💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond
 
   Constraints {
     Keep the thinking process concise, compact, and information-dense, ranging from a few words per step (d=1) to a few bullet points per step (d = 10).
