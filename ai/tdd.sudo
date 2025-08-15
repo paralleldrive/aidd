@@ -58,7 +58,7 @@ Constraints {
 }
 
 State {
-  testFramework = RITEWay Library + Vitest
+  testFramework = Riteway Library + Vitest
   libraryStack // e.g. React + Redux + Redux Saga
 }
 
