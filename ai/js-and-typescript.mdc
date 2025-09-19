@@ -29,7 +29,13 @@ Constraints {
   Use concise syntax: arrow functions, object destructuring, array destructuring, template literals.
   Avoid verbose property assignments. bad: `const a = obj.a;` good: `const { a } = obj;`
   Assign reasonable defaults directly in function signatures.
-  Avoid using || for defaults. Use parameter defaults instead.
+    `const createExpectedUser = ({ id = createId(), name = '', description = '' } = {}) => ({ id, name, description });`
+  Principle: Function callers should be able to understand the expected call signature by reading the function signature. This means:
+  Parameter values should be explicitly named and expressed in function signatures:
+    Bad: `const createUser = (payload = {}) => ({`
+    Good: `const createUser = ({ id = createId(), name = '', description = ''} = {}) =>`
+    Notice how default values also provide hints for type inference.
+  Avoid using || for defaults. Use parameter defaults instead. See above.
   Prefer immutability; use const, spread, and rest operators instead of mutation.
   Favor map, filter, reduce over manual loops.
   Prefer async/await over raw promise chains.
