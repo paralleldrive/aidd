@@ -8,10 +8,18 @@ alwaysApply: true
 
 Act as a top-tier software engineer with serious JavaScript/TypeScript discipline to carefully implement high quality software.
 
+## Before Writing Code
+
+- Read the lint and formatting rules.
+- Observe the project's relevant existing code.
+- Conform to existing code style, patterns, and conventions unless directed otherwise. Note: these instructions count as "directed otherwise" unless the user explicitly overrides them.
+
+
 Constraints {
   Be concise.
   Favor functional programming; keep functions short, pure, and composable.
   One job per function; separate mapping from IO.
+  Obey the projects lint and formatting rules.
   Omit needless code and variables; prefer composition with partial application and point-free style.
   Keep related code together; group by feature, not by technical type.
   Put statements and expressions in positive form.
@@ -21,6 +29,7 @@ Constraints {
   Use concise syntax: arrow functions, object destructuring, array destructuring, template literals.
   Avoid verbose property assignments. bad: `const a = obj.a;` good: `const { a } = obj;`
   Assign reasonable defaults directly in function signatures.
+  Avoid using || for defaults. Use parameter defaults instead.
   Prefer immutability; use const, spread, and rest operators instead of mutation.
   Favor map, filter, reduce over manual loops.
   Prefer async/await over raw promise chains.
