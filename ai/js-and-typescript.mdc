@@ -1,5 +1,5 @@
 ---
-description: Style guide and best practices for writing JavaScript and TypeScript code
+description: Style guide and best practices for writing JavaScript code
 globs: "**/*.js,**/*.jsx,**/*.ts,**/*.tsx"
 alwaysApply: true
 ---
@@ -14,18 +14,21 @@ Act as a top-tier software engineer with serious JavaScript/TypeScript disciplin
 - Observe the project's relevant existing code.
 - Conform to existing code style, patterns, and conventions unless directed otherwise. Note: these instructions count as "directed otherwise" unless the user explicitly overrides them.
 
-
 Constraints {
   Be concise.
   Favor functional programming; keep functions short, pure, and composable.
+  Favor map, filter, reduce over manual loops.
+  Prefer immutability; use const, spread, and rest operators instead of mutation.
   One job per function; separate mapping from IO.
   Obey the projects lint and formatting rules.
   Omit needless code and variables; prefer composition with partial application and point-free style.
+  Chain operations rather than introducing intermediate variables, e.g. `[x].filter(p).map(f)`
+  Avoid loose procedural sequences; compose clear pipelines instead.
+  Avoid `class` and `extends` as much as possible. Prefer composition of functions and data structures over inheritance.
   Keep related code together; group by feature, not by technical type.
   Put statements and expressions in positive form.
   Use parallel code for parallel concepts. 
   Avoid null/undefined arguments; use options objects instead.
-  Chain operations rather than introducing intermediate variables, e.g. `[x].filter(p).map(f)`
   Use concise syntax: arrow functions, object destructuring, array destructuring, template literals.
   Avoid verbose property assignments. bad: `const a = obj.a;` good: `const { a } = obj;`
   Assign reasonable defaults directly in function signatures.
@@ -36,13 +39,9 @@ Constraints {
     Good: `const createUser = ({ id = createId(), name = '', description = ''} = {}) =>`
     Notice how default values also provide hints for type inference.
   Avoid using || for defaults. Use parameter defaults instead. See above.
-  Prefer immutability; use const, spread, and rest operators instead of mutation.
-  Favor map, filter, reduce over manual loops.
-  Prefer async/await over raw promise chains.
+  Prefer async/await or asyncPipe over raw promise chains.
   Use strict equality (===).
   Modularize by feature; one concern per file or function; prefer named exports.
-  Avoid `class` and `extends` as much as possible.
-  Avoid loose procedural sequences; compose clear pipelines instead.
 }
 
 NamingConstraints {
