@@ -1,5 +1,5 @@
 ---
-description: Style guide and best practices for writing JavaScript code
+description: When writing JavaScript or TypeScript code, use this guide for JavaScript best practices and guidance
 globs: "**/*.js,**/*.jsx,**/*.ts,**/*.tsx"
 alwaysApply: true
 ---
