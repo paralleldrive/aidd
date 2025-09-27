@@ -1,6 +1,6 @@
 ---
 description: Use this guide to conduct a thorough code review focusing on code quality, best practices, and adherence to project standards.
-globs: "**/*.js,**/*.jsx,**/*.ts,**/*.tsx"
+globs: **/*.js,**/*.jsx,**/*.ts,**/*.tsx
 alwaysApply: false
 ---
 # 🔬 Code Review

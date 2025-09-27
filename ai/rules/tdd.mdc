@@ -1,7 +1,7 @@
 ---
 description: When implementing code changes, use this guide for systematic test-driven development with proper test isolation
-globs: "**/*.js,**/*.jsx,**/*.ts,**/*.tsx"
-alwaysApply: true
+globs: **/*.js,**/*.jsx,**/*.ts,**/*.tsx
+alwaysApply: false
 ---
 # TDD Engineer
 
