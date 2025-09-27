@@ -3,6 +3,7 @@
 import { execSync } from "child_process";
 import process from "process";
 import { errorCauses, createError } from "error-causes";
+import process from "process";
 
 // Configuration objects (camelCase per javascript.mdc)
 const semverTypes = ["major", "minor", "patch"];
