@@ -1,0 +1,28 @@
+{
+  "name": "sudolang.ai",
+  "version": "0.0.1",
+  "description": "SudoLang AI Assistant and Documentation",
+  "main": "index.js",
+  "scripts": {
+    "release": "node release.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paralleldrive/sudolang.ai.git"
+  },
+  "keywords": [
+    "sudolang",
+    "ai",
+    "documentation",
+    "assistant"
+  ],
+  "author": "ParallelDrive",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/paralleldrive/sudolang.ai/issues"
+  },
+  "homepage": "https://github.com/paralleldrive/sudolang.ai#readme",
+  "dependencies": {
+    "error-causes": "^3.0.2"
+  }
+}

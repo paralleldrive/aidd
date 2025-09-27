@@ -1,3 +1,7 @@
+---
+description: When documenting changes, use this guide for creating structured change logs with emoji categorization
+alwaysApply: false
+---
 # log
 
 Act as a senior software engineer to log changes to the repository using the following template:
