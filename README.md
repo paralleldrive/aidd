@@ -1,4 +1,4 @@
-# SudoLang.ai
+# AIDD with SudoLang.ai
 
 **The standard library for AI Driven Development.**
 
@@ -8,21 +8,30 @@ A public collection of reusable metaprograms, agent scripts, and prompt modules.
 
 ## 🚀 Quick Start with AIDD CLI
 
-Get the complete AI agent orchestration system in any project instantly:
+1. **Install SudoLang syntax highlighting**: Visit the [SudoLang Github Repository](https://github.com/paralleldrive/sudolang-llm-support) and install syntax highlighting for your editor.
 
-```bash
-# Clone AI system to current directory (no installation needed!)
-npx sudolang.ai
+2. **Clone the AI system**:
 
-# Or clone to a specific project
-npx sudolang.ai my-awesome-project
+   ```bash
+   # Recommended: Creates ai/ folder + .cursor symlink for automatic integration
+   npx aidd --cursor my-project
 
-# Preview what will be added
-npx sudolang.ai --dry-run
+   # Alternative: Just the ai/ folder (manual integration required)
+   npx aidd my-project
+   ```
 
-# Force overwrite existing ai/ folder
-npx sudolang.ai --force
-```
+3. **Explore the structure**:
+
+   ```bash
+   cd my-project
+   ls ai/                    # See available components
+   cat ai/rules/please.mdc   # Read the main orchestrator
+   ```
+
+4. **Start using AI workflows**:
+   - Reference `ai/rules/` in AI prompts for better context
+   - Use `ai/commands/` as workflow templates
+   - Customize rules for your specific project needs
 
 This gives you immediate access to:
 
@@ -59,6 +68,12 @@ Coming soon:
 - 📄 Documentation generators
 - 🔌 API design
 
+## 📋 System Requirements
+
+- **Node.js**: 16.0.0+ (requires ESM support)
+- **Environment**: Unix/Linux shell (bash, zsh) or Windows with WSL
+- **Editors**: Works with any editor; optimized for Cursor
+
 ## 🛠️ AIDD CLI Reference
 
 The **AI Driven Development (AIDD)** CLI tool clones the complete AI agent orchestration system to any directory.
@@ -67,10 +82,10 @@ The **AI Driven Development (AIDD)** CLI tool clones the complete AI agent orche
 
 ```bash
 # Recommended: Use npx (no installation required)
-npx sudolang.ai [target-directory] [options]
+npx aidd [target-directory] [options]
 
 # Alternative: Global installation
-npm install -g sudolang.ai
+npm install -g aidd
 aidd [target-directory] [options]
 ```
 
@@ -90,20 +105,20 @@ aidd [target-directory] [options]
 
 ```bash
 # Basic usage
-npx sudolang.ai                    # Current directory
-npx sudolang.ai my-project        # Specific directory
+npx aidd                    # Current directory
+npx aidd my-project        # Specific directory
 
 # Preview and force options
-npx sudolang.ai --dry-run         # See what would be copied
-npx sudolang.ai --force --verbose # Overwrite with details
+npx aidd --dry-run         # See what would be copied
+npx aidd --force --verbose # Overwrite with details
 
 # Cursor editor integration
-npx sudolang.ai --cursor          # Create .cursor symlink
-npx sudolang.ai my-project --cursor --verbose
+npx aidd --cursor          # Create .cursor symlink
+npx aidd my-project --cursor --verbose
 
 # Multiple projects
-npx sudolang.ai frontend-app
-npx sudolang.ai backend-api
+npx aidd frontend-app
+npx aidd backend-api
 ```
 
 ## 📁 AI System Structure
@@ -158,7 +173,7 @@ The AIDD CLI can automatically set up the AI agent system for **Cursor editor** 
 
 ```bash
 # Creates both ai/ folder AND .cursor symlink
-npx sudolang.ai --cursor
+npx aidd --cursor
 
 # This creates:
 # ai/           <- The complete AI system
@@ -183,7 +198,7 @@ If you already have a `.cursor` folder, manually integrate our system:
 
 ```bash
 # 1. Clone without symlink
-npx sudolang.ai my-project
+npx aidd my-project
 
 # 2. Manually reference our rules in your existing .cursor rules
 # Add to your .cursor/rules.md:
@@ -196,34 +211,11 @@ npx sudolang.ai my-project
 
 ```bash
 # If .cursor already exists, use --force
-npx sudolang.ai --cursor --force
+npx aidd --cursor --force
 
 # Preview what --cursor will do
-npx sudolang.ai --cursor --dry-run --verbose
+npx aidd --cursor --dry-run --verbose
 ```
-
-## Getting Started
-
-1. **Install SudoLang syntax highlighting**: Visit the [SudoLang Github Repository](https://github.com/paralleldrive/sudolang-llm-support) and install syntax highlighting for your editor.
-
-2. **Clone the AI system**:
-
-   ```bash
-   npx sudolang.ai my-project
-   ```
-
-3. **Explore the structure**:
-
-   ```bash
-   cd my-project
-   ls ai/                    # See available components
-   cat ai/rules/please.mdc   # Read the main orchestrator
-   ```
-
-4. **Start using AI workflows**:
-   - Reference `ai/rules/` in AI prompts for better context
-   - Use `ai/commands/` as workflow templates
-   - Customize rules for your specific project needs
 
 ## 📄 License
 
@@ -242,5 +234,5 @@ MIT © [ParallelDrive](https://github.com/paralleldrive)
 **Start building with AI orchestration today:**
 
 ```bash
-npx sudolang.ai
+npx aidd --cursor
 ```
