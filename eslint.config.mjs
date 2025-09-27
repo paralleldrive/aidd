@@ -20,7 +20,7 @@ const eslintConfig = [
     },
   },
   {
-    ignores: ["node_modules/**", "tests/**", "coverage/**"],
+    ignores: ["node_modules/**", "coverage/**"],
   },
 ];
 
