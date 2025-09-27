@@ -1,20 +1,40 @@
 {
-  "name": "sudolang.ai",
+  "name": "aidd",
   "version": "1.1.0",
-  "description": "SudoLang AI Assistant and Documentation",
+  "description": "The standard library for AI Driven Development.",
   "main": "index.js",
-  "scripts": {
-    "release": "node release.js"
+  "type": "module",
+  "bin": {
+    "aidd": "./bin/aidd.js"
   },
+  "scripts": {
+    "release": "node release.js",
+    "lint": "eslint && echo 'Lint complete.'",
+    "lint:fix": "eslint --fix && echo 'Lint fix complete.'",
+    "format": "prettier --write . && echo 'Format complete.'",
+    "format:check": "prettier --check . && echo 'Format check complete.'",
+    "test": "vitest run && echo 'Test complete.' && npm run -s lint"
+  },
+  "files": [
+    "ai/**/*",
+    "bin/**/*",
+    "lib/**/*",
+    "README.md",
+    "LICENSE"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/paralleldrive/sudolang.ai.git"
   },
   "keywords": [
+    "ai-driven-development",
+    "aidd",
     "sudolang",
-    "ai",
-    "documentation",
-    "assistant"
+    "ai-agents",
+    "cli-tool",
+    "development-tools",
+    "prompt-engineering",
+    "ai-orchestration"
   ],
   "author": "ParallelDrive",
   "license": "MIT",
@@ -23,6 +43,20 @@
   },
   "homepage": "https://github.com/paralleldrive/sudolang.ai#readme",
   "dependencies": {
-    "error-causes": "^3.0.2"
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "error-causes": "^3.0.2",
+    "fs-extra": "^11.1.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@vitest/coverage-v8": "^3.2.4",
+    "eslint": "^9",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "^3.6.2",
+    "release-it": "^19.0.5",
+    "riteway": "^9.0.0-rc.1",
+    "vitest": "^3.2.4"
   }
 }

@@ -3,21 +3,21 @@ name: Create Release
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - "v*.*.*"
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    
+
     permissions:
       contents: write
-      
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch full history for better release notes
-          
+          fetch-depth: 0 # Fetch full history for better release notes
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
