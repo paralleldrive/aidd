@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { execSync } from "child_process";
+import process from "process";
 import { errorCauses, createError } from "error-causes";
 
 // Configuration objects (camelCase per javascript.mdc)
@@ -24,7 +25,7 @@ const config = {
 };
 
 // Error causes definition using error-causes library
-const [releaseErrors] = errorCauses({
+const [releaseErrors, handleReleaseErrors] = errorCauses({
   ValidationError: {
     code: "VALIDATION_ERROR",
     message: "Input validation failed",
@@ -100,8 +101,8 @@ const runReleaseIt = (semverType) => {
   }
 };
 
-// Error handling with specific error types
-const createErrorHandler = () => ({
+// Use error-causes handleErrors pattern
+const handleError = handleReleaseErrors({
   ValidationError: ({ name, code, message, cause }) => {
     console.error(`❌ Validation failed: ${message}`);
     console.error("💡 Fix the issue and try again.");
@@ -123,17 +124,6 @@ const createErrorHandler = () => ({
   },
 });
 
-const handleError = (error) => {
-  const handler = createErrorHandler()[error.constructor.name];
-  if (handler) {
-    handler(error);
-  } else {
-    console.error(`❌ Unexpected error: ${error.message}`);
-    if (error.cause) console.error(`🔍 Cause: ${error.cause}`);
-    process.exit(1);
-  }
-};
-
 // Simplified release flow using release-it
 const createRelease = ({ argv, defaultType }) => {
   const bumpType = parseBumpType({ argv, defaultType });
@@ -144,7 +134,7 @@ const createRelease = ({ argv, defaultType }) => {
   validateBranch(currentBranch);
 
   console.log(
-    `🎯 Preparing ${bumpType} (${semverType}) release on branch ${currentBranch}...`
+    `🎯 Preparing ${bumpType} (${semverType}) release on branch ${currentBranch}...`,
   );
 
   // Use release-it to handle the complete release workflow
