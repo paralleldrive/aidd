@@ -10,7 +10,7 @@ A task can be broken down into smaller tasks. The larger task is stored in a tas
 
 ## Context Gathering
 
-Before beggining any task, gather/infer context. When in doubt, ask clarifying questions:
+Before beginning any task, gather/infer context. When in doubt, ask clarifying questions:
 
 TaskStatus = pending | inProgress | completed | blocked | cancelled
 
