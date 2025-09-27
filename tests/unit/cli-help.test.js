@@ -63,6 +63,33 @@ describe("CLI help command", () => {
       expected: true,
     });
   });
+
+  test("help output includes getting started examples", async () => {
+    const { stdout } = await execAsync(`node ${cliPath} --help`);
+
+    assert({
+      given: "CLI help command is run",
+      should: "include getting started examples with installation commands",
+      actual:
+        stdout.includes("Getting Started") &&
+        stdout.includes("npx aidd --cursor my-project") &&
+        stdout.includes("cd my-project"),
+      expected: true,
+    });
+  });
+
+  test("getting started examples appear before About the Author", async () => {
+    const { stdout } = await execAsync(`node ${cliPath} --help`);
+    const examplesIndex = stdout.indexOf("Getting Started");
+    const authorIndex = stdout.indexOf("About the Author");
+
+    assert({
+      given: "CLI help command is run",
+      should: "show Getting Started examples before About the Author section",
+      actual: examplesIndex > 0 && examplesIndex < authorIndex,
+      expected: true,
+    });
+  });
 });
 
 describe("CLI success message", () => {

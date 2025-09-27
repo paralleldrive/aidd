@@ -36,10 +36,14 @@ const createCli = () => {
   return program
     .name("aidd")
     .description(
-      "AI Driven Development - Clone SudoLang AI agent orchestration system",
+      "AI Driven Development - Install SudoLang AI agent orchestration system",
     )
     .version(packageJson.version)
-    .argument("[target-directory]", "target directory to clone ai/ folder", ".")
+    .argument(
+      "[target-directory]",
+      "target directory to install ai/ folder",
+      ".",
+    )
     .option("-f, --force", "overwrite existing files")
     .option("-d, --dry-run", "show what would be copied without copying")
     .option("-v, --verbose", "provide detailed output")
@@ -57,6 +61,41 @@ The standard library for AI Driven Development.
 A public collection of reusable metaprograms, agent scripts, and prompt modules.
 
 SudoLang is a pseudocode language for prompting large language models with clear structure, strong typing, and explicit control flow.
+`,
+    )
+    .addHelpText(
+      "after",
+      `
+Getting Started
+
+1. Recommended: Creates ai/ folder + .cursor symlink for automatic integration
+   npx aidd --cursor my-project
+
+2. Alternative: Just the ai/ folder (manual integration required)
+   npx aidd my-project
+
+3. Explore the structure:
+   cd my-project
+   ls ai/                    # See available components
+   cat ai/rules/please.mdc   # Read the main orchestrator
+
+Examples
+
+Basic usage:
+  npx aidd                    # Current directory
+  npx aidd my-project         # Specific directory
+
+Preview and force options:
+  npx aidd --dry-run          # See what would be copied
+  npx aidd --force --verbose  # Overwrite with details
+
+Cursor editor integration:
+  npx aidd --cursor           # Create .cursor symlink
+  npx aidd my-project --cursor --verbose
+
+Multiple projects:
+  npx aidd frontend-app
+  npx aidd backend-api
 `,
     )
     .addHelpText(
