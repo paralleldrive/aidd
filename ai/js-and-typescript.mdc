@@ -1,7 +1,7 @@
 ---
 description: Style guide and best practices for writing JavaScript and TypeScript code
-globs: "**/*.js,**/*.jsx,**/*.ts,**/*.tsx"
-alwaysApply: true
+globs: **/*.js,**/*.jsx,**/*.ts,**/*.tsx
+alwaysApply: false
 ---
 
 # JavaScript/TypeScript guide
