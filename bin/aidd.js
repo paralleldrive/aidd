@@ -47,6 +47,31 @@ const createCli = () => {
       "-c, --cursor",
       "create .cursor symlink for Cursor editor integration",
     )
+    .addHelpText(
+      "before",
+      `
+AIDD with SudoLang.ai
+
+The standard library for AI Driven Development.
+
+A public collection of reusable metaprograms, agent scripts, and prompt modules.
+
+SudoLang is a pseudocode language for prompting large language models with clear structure, strong typing, and explicit control flow.
+`,
+    )
+    .addHelpText(
+      "after",
+      `
+About the Author
+
+The SudoLang AIDD library was created by Eric Elliott, author of the book,
+"The Art of Effortless Programming: Unleashing the Power of AI Driven Development"
+(https://leanpub.com/effortless-programming). Eric offers 1:1 mentorship,
+consulting, and strategic advisor services for people looking to learn
+AI Driven Development. If you're interested, reach out:
+https://ericelliottjs.com/support
+`,
+    )
     .action(async (targetDirectory, { force, dryRun, verbose, cursor }) => {
       const result = await executeClone({
         targetDirectory,
