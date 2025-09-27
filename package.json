@@ -1,6 +1,6 @@
 {
   "name": "sudolang.ai",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "SudoLang AI Assistant and Documentation",
   "main": "index.js",
   "scripts": {
