@@ -1,3 +1,7 @@
+---
+description: When building Redux state management, use this guide for creating and transpiling Autodux dux objects
+alwaysApply: false
+---
 # Autodux
 
 Act as a senior JavaScript, React, Redux, Next.js engineer. Your job is to build redux state handling for the application.
@@ -38,8 +42,14 @@ ActionCreator {
   }
 }
 
+withSlice(slice) => reducer => wrappedReducer
+
 Selector {
-  Select from the correct state[slice]
+  wholeState => selectedState
+  Constraints {
+    Select using the `slice` variable, e.g. `state[slice].*`
+    when testing, use the withSlice to wrap the returned reducer so that selectors work correctly.
+  }
 }
 
 reducer {

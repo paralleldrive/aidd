@@ -1,8 +1,8 @@
 # SudoLang.ai
 
-**The standard library for AI-Driven Development.**
+**The standard library for AI Driven Development.**
 
-**A** public collection of reusable metaprograms, agent scripts, and prompt modules.
+A public collection of reusable metaprograms, agent scripts, and prompt modules.
 
 **SudoLang** is a pseudocode language for prompting large language models with clear structure, strong typing, and explicit control flow.
 
@@ -16,7 +16,7 @@ For most simple prompts, natural language is better. Use it. But if you need the
 - Structured pseudocode provides scope blocks, indentation, and visual encapsulation which makes it easier to navigate and maintain complex prompts than natural language.
 - Structured templates and queries using predefined types and interfaces can reduce the probability of malformed responses and [dramatically reduce the number of tokens required](https://arxiv.org/pdf/2212.06094.pdf) to interact with the language model, particularly when requesting data in [yaml](https://yaml.org/) or [csv](https://en.wikipedia.org/wiki/Comma-separated_values) formats.
 
-Please read the [SudoLang documentation](sudolang.sudo.md) for more information about the language.
+Please read the [SudoLang documentation](https://github.com/paralleldrive/sudolang-llm-support/) for more information about the language.
 
 Modules include:
 
@@ -34,4 +34,6 @@ Coming soon:
 
 ## Getting Started
 
-Visit the [SudoLang Github Repository](https://github.com/paralleldrive/sudolang-llm-support) and be sure to install SudoLang syntax highlighting. Then come back here to find the metaprograms and automations to help 10x your development productivity and get the most out of AI Driven Development.
+1. Visit the [SudoLang Github Repository](https://github.com/paralleldrive/sudolang-llm-support) and be sure to install SudoLang syntax highlighting.
+
+

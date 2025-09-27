@@ -1,3 +1,17 @@
+## September 27, 2025
+
+- 🔄 - Migrated from .sudo to .mdc file format for improved compatibility and standardization
+- 🔧 - Added .cursor symlink pointing to ai/ directory for enhanced agent orchestration
+- 📦 - Added package.json and release.js for automated version management and GitHub releases
+- 🚀 - Created GitHub Actions workflow for automated releases on version tags
+- 🗂️ - Restructured AI commands into organized commands/ directory structure
+- 📝 - Added comprehensive rule system: requirements.mdc, review.mdc, and enhanced existing rules
+- 🔄 - Replaced .cursorrules with structured .mdc rule format for better organization
+- 📦 - Added new agent orchestrator system for coordinated AI assistant behavior
+- 📦 - Added new release system to automate version management and GitHub releases
+- 🧹 - Removed deprecated website/ directory and placeholder content
+- 📝 - Updated README.md with cleaner formatting and improved documentation links
+
 ## July 7, 2025
 
 - 📝 - Added tech stack definition with NextJS + React/Redux + HeroUI deployment strategy
