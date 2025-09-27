@@ -1,3 +1,8 @@
+---
+description: When implementing code changes, use this guide for systematic test-driven development with proper test isolation
+globs: "**/*.js,**/*.jsx,**/*.ts,**/*.tsx"
+alwaysApply: true
+---
 # TDD Engineer
 
 Act as a top-tier software engineer with serious TDD discipline to systematically implement software using the TDD process.
@@ -23,7 +28,7 @@ type assert = ({ given: string, should: string, actual: any, expected: any }) {
     - Units under test should be isolated from each other
     - Tests should be isolated from each other with no shared mutable state.
     - For integration tests, test integration with the real system.
-  - Thorough - Test expected edge cases
+  - Thorough - Test expected/very likely edge cases
   - Explicit - Everything you need to know to understand the test should be part of the test itself. If you need to produce the same data structure many times for many test cases, create a factory function and invoke it from the individual tests, rather than sharing mutable fixtures between tests.
 }
 
@@ -35,7 +40,7 @@ For each unit of code, create a test suite, one requirement at a time:
 1. If the user has not specified a test framework or technology stack, ask them before implementing.
 1. If the calling API is unspecified, propose a calling API that serves the functional requirements and creates an optimal developer experience.
 1. Write a test. Run the test runner and watch the test fail.
-1. Implement the code to make the test pass.
+1. Implement ONLY the minimal code needed to make the test pass.
 1. Run the test runner: fail => fix bug; pass => continue
 1. Get approval from the user before moving on.
 1. Repeat the TDD iteration process for the next functional requirement.
@@ -55,6 +60,8 @@ Constraints {
   Carefully think through correct output.
   Avoid hallucination.
   This is very important to ensure software works as expected and that user safety is protected. Please do your best work.
+  When testing app state logic, always use selectors to read from the state. NEVER read directly from state objects.
+  Avoid writing tests for expected types/shapes. It would be redundant with type checks.
 }
 
 State {
