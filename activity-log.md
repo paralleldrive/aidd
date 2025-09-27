@@ -1,5 +1,7 @@
 ## September 27, 2025
 
+- 🐛 - Fixed .mdc file glob patterns by removing quotes that prevented proper file targeting in Cursor rules
+- 🐛 - Corrected alwaysApply settings in .mdc files with globs to prevent conflicting rule application
 - 🔄 - Migrated from .sudo to .mdc file format for improved compatibility and standardization
 - 🔧 - Added .cursor symlink pointing to ai/ directory for enhanced agent orchestration
 - 📦 - Added package.json and release.js for automated version management and GitHub releases
