@@ -101,6 +101,21 @@ $taskDescription
 - Agent-specific guidance if applicable
 """
 
+## Completed Epic Documentation
+
+When an epic is completed, move it to tasks/archive/YYYY-MM-DD-${epicName}.md and update plan.md with:
+
+completedEpicTemplate() {
+  """
+  ### ✅ ${epicName}
+
+  **Status**: ✅ COMPLETED (${completionDate})  
+  **File**: [`tasks/archive/${epicFileName}`](./tasks/archive/${epicFileName})  
+  **Goal**: ${originalEpicGoal}  
+  **Result**: ${keyAccomplishmentsAndMetrics}
+  """
+}
+
 Constraints {
   Never attempt multiple tasks simultaneously
   Always get explicit user approval before moving to the next task
