@@ -1,6 +1,6 @@
 {
   "name": "aidd",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "The standard library for AI Driven Development.",
   "main": "index.js",
   "type": "module",
