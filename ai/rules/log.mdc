@@ -50,6 +50,7 @@ Constraints {
   Keep descriptions brief (< 50 chars).
   Focus on epic-level accomplishments, not implementation details.
   Never log meta-work or trivial changes.
+  Omit the "epic" from the description.
 }
 
 
