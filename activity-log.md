@@ -1,5 +1,6 @@
 ## September 28, 2025
 
+- 🚀 - Improved --help command - AI workflow benefits prominently displayed
 - 🔧 - Husky pre-push hook - Automated git status check
 - 🐛 - Release Test Race Condition - Fixed intermittent E2E test failure
 - 🔧 - Husky Pre-commit Hook - Automated test/lint validation

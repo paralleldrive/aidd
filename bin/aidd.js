@@ -11,7 +11,7 @@ import { errorCauses } from "error-causes";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const packageJson = JSON.parse(
-  readFileSync(path.join(__dirname, "../package.json"), "utf-8")
+  readFileSync(path.join(__dirname, "../package.json"), "utf-8"),
 );
 
 // Use the same error causes as the CLI library
@@ -36,20 +36,20 @@ const createCli = () => {
   return program
     .name("aidd")
     .description(
-      "AI Driven Development - Install SudoLang AI agent orchestration system"
+      "AI Driven Development - Install SudoLang AI agent orchestration system",
     )
     .version(packageJson.version)
     .argument(
       "[target-directory]",
       "target directory to install ai/ folder",
-      "."
+      ".",
     )
     .option("-f, --force", "overwrite existing files")
     .option("-d, --dry-run", "show what would be copied without copying")
     .option("-v, --verbose", "provide detailed output")
     .option(
       "-c, --cursor",
-      "create .cursor symlink for Cursor editor integration"
+      "create .cursor symlink for Cursor editor integration",
     )
     .addHelpText(
       "before",
@@ -69,7 +69,7 @@ Use /help [command] to learn how to use individual commands
 A public collection of reusable metaprograms, agent scripts, and prompt modules.
 
 SudoLang is a pseudocode language for prompting large language models with clear structure, strong typing, and explicit control flow.
-`
+`,
     )
     .addHelpText(
       "after",
@@ -111,7 +111,7 @@ Recommended:
 - Cursor: Open New Agent Chat
 - /help to learn how to use the system
 - Watch: https://www.youtube.com/watch?v=ybbfwu0Ykyg
-`
+`,
     )
     .addHelpText(
       "after",
@@ -124,7 +124,7 @@ The SudoLang AIDD library was created by Eric Elliott, author of the book,
 consulting, and strategic advisor services for people looking to learn
 AI Driven Development. If you're interested, reach out:
 https://ericelliottjs.com/support
-`
+`,
     )
     .action(async (targetDirectory, { force, dryRun, verbose, cursor }) => {
       const result = await executeClone({
@@ -153,7 +153,7 @@ https://ericelliottjs.com/support
             FileSystemError: ({ message, cause }) => {
               console.error(`❌ File System Error: ${message}`);
               console.error(
-                "💡 Check file permissions and available disk space"
+                "💡 Check file permissions and available disk space",
               );
               if (verbose && cause) {
                 console.error("🔍 Caused by:", cause.message || cause);
