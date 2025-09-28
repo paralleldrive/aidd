@@ -83,7 +83,7 @@ $taskDescription
   - Given [situation], should [jobToDo]
   - Given [situation], should [jobToDo]
 - **Constraints**:
-  - Avoid breaking changes to existing APIs.
+  - Avoid breaking changes to existing APIs unless the task explicitly requires refactoring or major improvements.
 
 **Success Criteria**:
 - [ ] Specific, measurable outcome 1
