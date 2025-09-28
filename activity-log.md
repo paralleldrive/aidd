@@ -1,5 +1,6 @@
 ## September 28, 2025
 
+- 🐛 - Release Test Race Condition - Fixed intermittent E2E test failure
 - 🔧 - Husky Pre-commit Hook - Automated test/lint validation
 
 ## September 27, 2025
