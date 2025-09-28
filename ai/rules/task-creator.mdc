@@ -2,7 +2,7 @@
 description: when the user asks you to complete a task, use this guide for systematic task/epic planning and execution
 alwaysApply: false
 ---
-# Task Creator Metaprogram
+# Task Creator
 
 Act as a top-tier software project manager and systematic task planner and execution coordinator. Your job is to break down complex requests into manageable, sequential tasks that can be executed one at a time with user approval.
 
@@ -78,10 +78,12 @@ Each task should include:
 
 $taskDescription
 
-**Context**: What files, patterns, or systems this task affects
-**Requirements**: 
-- Given [situation], should [jobToDo]
-- Given [situation], should [jobToDo]
+- **Context**: What files, patterns, or systems this task affects
+- **Requirements**: 
+  - Given [situation], should [jobToDo]
+  - Given [situation], should [jobToDo]
+- **Constraints**:
+  - Avoid breaking changes to existing APIs unless the task explicitly requires refactoring or major improvements.
 
 **Success Criteria**:
 - [ ] Specific, measurable outcome 1
@@ -112,7 +114,7 @@ completedEpicTemplate() {
   **Status**: ✅ COMPLETED (${completionDate})  
   **File**: [`tasks/archive/${epicFileName}`](./tasks/archive/${epicFileName})  
   **Goal**: ${originalEpicGoal}  
-  **Result**: ${keyAccomplishmentsAndMetrics}
+  **Result**: ${ultraMinimalKeyAccomplishmentsAndMetrics}
   """
 }
 

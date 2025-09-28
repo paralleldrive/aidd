@@ -70,3 +70,9 @@ NamingConstraints {
   Mixins and function decorators use `with${Thing}`. e.g. `withUser`, `withFeatures`, `withAuth`.
   Avoid ALL_CAPS for constants. Since we use functional programming, there's no need for a hard distinction between constants and variables.
 }
+
+Comments {
+  Favor docblocks for public APIs - but keep them minimal.
+  Ensure that any comments are necessary and add value. Never reiterate the style guides. Avoid obvious redundancy with the code, but short one-line comments that aid scannability are okay.
+  Comments should stand-alone months or years later. Assume that the reader is not familiar with the task plan or epic.
+}

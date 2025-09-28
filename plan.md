@@ -6,6 +6,13 @@ _No active epics - ready for new work_
 
 ## Completed Epics
 
+### ✅ GitHub PR Template Epic - AI Review Integration
+
+**Status**: ✅ COMPLETED (2025-09-28)  
+**File**: [`tasks/archive/2025-09-28-github-pr-template-epic.md`](./tasks/archive/2025-09-28-github-pr-template-epic.md)  
+**Goal**: Create `.github/pull_request_template.md` with AI review instructions in HTML comments  
+**Result**: Standardized PR template with hidden reviewer instructions for AI-powered code reviews using project style guides
+
 ### ✅ AIDD CLI Epic - AI Driven Development
 
 **Status**: ✅ COMPLETED (2025-09-27)  
@@ -19,3 +26,17 @@ _No active epics - ready for new work_
 **File**: [`tasks/archive/release-js-refactor-epic.md`](./tasks/archive/release-js-refactor-epic.md)  
 **Goal**: Refactor release.js script to align with functional programming standards and enhance error handling  
 **Result**: Transformed from 116-line procedural script to 313-line functional composition with professional error handling using error-causes library
+
+### ✅ Comment Cleanup Epic - Code Quality Improvement
+
+**Status**: ✅ COMPLETED (2025-09-28)  
+**File**: [`tasks/archive/2025-09-28-test-comment-cleanup-epic.md`](./tasks/archive/2025-09-28-test-comment-cleanup-epic.md)  
+**Goal**: Remove redundant comments that violate javascript.mdc and review.mdc comment policies  
+**Result**: Removed 7 comment violations across test and source files while preserving comments that aid scannability. All 28 tests continue to pass with improved code maintainability.
+
+### ✅ Release Latest Tag Management Epic - Automated Git Tag Management
+
+**Status**: ✅ COMPLETED (2025-09-28)  
+**File**: [`tasks/archive/2025-09-28-release-latest-tag-epic.md`](./tasks/archive/2025-09-28-release-latest-tag-epic.md)  
+**Goal**: Enhance release process to automatically manage "latest" git tag for stable releases  
+**Result**: Complete implementation with AsyncPipe architecture, real git operations, and seamless release-it integration. Added 39/39 passing tests including comprehensive E2E validation. Zero breaking changes to existing workflow.

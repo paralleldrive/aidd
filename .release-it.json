@@ -17,6 +17,9 @@
   },
   "hooks": {
     "before:init": ["npm test"],
-    "after:release": "echo 🎉 Successfully released ${name} v${version}"
+    "after:release": [
+      "node lib/update-latest-tag-hook.js ${version}",
+      "echo 🎉 Successfully released ${name} v${version}"
+    ]
   }
 }
