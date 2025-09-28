@@ -8,7 +8,7 @@ import path from "path";
 const execAsync = promisify(exec);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const cliPath = path.join(__dirname, "../../bin/aidd.js");
+const cliPath = path.join(__dirname, "./aidd.js");
 
 describe("CLI help command", () => {
   test("help output includes README intro", async () => {
