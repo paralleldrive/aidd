@@ -13,7 +13,7 @@
     "format": "prettier --write . && echo 'Format complete.'",
     "format:check": "prettier --check . && echo 'Format check complete.'",
     "test": "vitest run && echo 'Test complete.' && npm run -s lint",
-    "check-status": "[[ $(git status --porcelain) ]] && { echo '❌ Uncommitted changes'; exit 1; } || echo '✅ Git status is clean.'",
+    "check-status": "[ -n \"$(git status --porcelain)\" ] && { echo '❌ Uncommitted changes'; exit 1; } || echo '✅ Git status is clean.'",
     "prepare": "husky"
   },
   "files": [
