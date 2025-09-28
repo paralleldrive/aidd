@@ -58,6 +58,14 @@ AIDD with SudoLang.ai
 
 The standard library for AI Driven Development.
 
+🚀 AI-Powered Development Workflow:
+• /discover - what to build
+• /task - planning  
+• /execute - task epics with TDD
+• /review - the results
+
+Use /help [command] to learn how to use individual commands
+
 A public collection of reusable metaprograms, agent scripts, and prompt modules.
 
 SudoLang is a pseudocode language for prompting large language models with clear structure, strong typing, and explicit control flow.
@@ -96,6 +104,13 @@ Cursor editor integration:
 Multiple projects:
   npx aidd frontend-app
   npx aidd backend-api
+
+Recommended:
+
+- Install Cursor
+- Cursor: Open New Agent Chat
+- /help to learn how to use the system
+- Watch: https://www.youtube.com/watch?v=ybbfwu0Ykyg
 `,
     )
     .addHelpText(
