@@ -1,5 +1,7 @@
 ## September 27, 2025
 
+- 📝 - Enhanced JavaScript/TypeScript guide with comprehensive software engineering principles (DOT, YAGNI, KISS, DRY, SDA) and expanded constraint guidelines for IIFE avoidance and parameter defaults
+- 🔧 - Enabled always-apply mode for please.mdc to ensure consistent AI assistant behavior across all interactions
 - 🚀 - Enhanced CLI help system with comprehensive getting started examples and practical usage commands in aidd --help output
 - 🔄 - Enhanced error handling with proper error-causes handleErrors pattern replacing manual error code checking for cleaner functional programming
 - 🔧 - Added explicit process module imports for ES module consistency and eliminated procedural error switching logic

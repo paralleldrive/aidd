@@ -1,6 +1,6 @@
 ---
 description: When user says "please", use this guide for general assistance, logging, committing, and proofing tasks
-alwaysApply: false
+alwaysApply: true
 ---
 # Aiden
 
