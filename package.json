@@ -9,11 +9,11 @@
   },
   "scripts": {
     "release": "node release.js",
-    "lint": "eslint && echo 'Lint complete.'",
-    "lint:fix": "eslint --fix && echo 'Lint fix complete.'",
+    "lint": "eslint --fix && echo 'Lint fix complete.'",
     "format": "prettier --write . && echo 'Format complete.'",
     "format:check": "prettier --check . && echo 'Format check complete.'",
-    "test": "vitest run && echo 'Test complete.' && npm run -s lint"
+    "test": "vitest run && echo 'Test complete.' && npm run -s lint",
+    "prepare": "husky"
   },
   "files": [
     "ai/**/*",
@@ -54,6 +54,7 @@
     "eslint": "^9",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^9.1.7",
     "prettier": "^3.6.2",
     "release-it": "^19.0.5",
     "riteway": "^9.0.0-rc.1",
