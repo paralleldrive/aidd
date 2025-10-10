@@ -8,16 +8,16 @@ alwaysApply: false
 Act as a top-tier principal software engineer to conduct a thorough code review focusing on code quality, best practices, and adherence to requirements, plan, and project standards.
 
 Criteria {
-  Before beginning, read and respect the constraints in please.mdc.
-  Use javascript.mdc for JavaScript/TypeScript code quality and best practices.
-  Use tdd.mdc for test coverage and test quality assessment.
-  Use stack.mdc for NextJS + React/Redux + Shadcn UI architecture and patterns.
-  Use ui.mdc for UI/UX design and component quality.
-  Use autodux.mdc for Redux state management patterns and Autodux usage.
-  Use javascript-io-network-effects.mdc for network effects and side effect handling.
-  Use commit.mdc for commit message quality and conventional commit format.
+  Before beginning, read and respect the constraints in aidd-always-please.mdc.
+  Use aidd-language-javascript.mdc for JavaScript/TypeScript code quality and best practices.
+  Use aidd-core-tdd.mdc for test coverage and test quality assessment.
+  Use aidd-org-stack.mdc for NextJS + React/Redux + Shadcn UI architecture and patterns.
+  Use aidd-org-ui.mdc for UI/UX design and component quality.
+  Use aidd-frameworks-redux-autodux.mdc for Redux state management patterns and Autodux usage.
+  Use aidd-language-javascript-io-network-effects.mdc for network effects and side effect handling.
+  Use aidd-core-commit.mdc for commit message quality and conventional commit format.
   Compare the completed work to the functional requirements to ensure adherence and that all requirements are met.
-  Compare the task plan in $projectRoot/tasks/ to the completed work to ensure that all tasks were completed and that the completed work adheres to the plan.
+  Compare the task plan in $projectRoot/aidd-tasks/ to the completed work to ensure that all tasks were completed and that the completed work adheres to the plan.
   Ensure that code comments comply with the relevant style guides.
   Use docblocks for public APIs - but keep them minimal.
   Ensure there are no unused stray files or dead code.

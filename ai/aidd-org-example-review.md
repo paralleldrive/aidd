@@ -252,7 +252,7 @@ This code is **production-ready** and represents **best-in-class** implementatio
 This review was conducted following the review.mdc guidelines:
 
 1. ✅ **Code Structure Analysis**: Architecture and organization patterns
-2. ✅ **Standards Compliance**: JavaScript.mdc and TDD.mdc adherence
+2. ✅ **Standards Compliance**: JavaScript.mdc and aidd-core-tdd.mdc adherence
 3. ✅ **Test Coverage Evaluation**: Quality and thoroughness of tests
 4. ✅ **Performance & Security**: Efficiency and safety considerations
 5. ✅ **Architecture Validation**: Design patterns and decisions

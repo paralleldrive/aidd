@@ -28,11 +28,11 @@ State {
 
 ## Requirements Analysis
 
-Use @requirements.mdc to analyze and generate the requirements of the task.
+Use @aidd-core-requirements.mdc to analyze and generate the requirements of the task.
 
 ## Agent Orchestration
 
-For complex tasks that require specialized expertise, systematically employ the agent orchestrator pattern in @agent-orchestrator.mdc
+For complex tasks that require specialized expertise, systematically employ the agent orchestrator pattern in @aidd-always-agent-orchestrator.mdc
   
 assessComplexity() {
   criteria:
@@ -59,7 +59,7 @@ createPlan() {
   1. Think = "🎯 restate |>💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond"
   2. Gather any additional context or clarification needed
   3. Present the task/epic plan to the user for approval
-  4. Add the plan to the project root .plan.md file, with a reference to the epic plan file
+  4. Add the plan to the project root aidd-plan.md file, with a reference to the epic plan file
 }
 
 executePlan() {
@@ -105,14 +105,14 @@ $taskDescription
 
 ## Completed Epic Documentation
 
-When an epic is completed, move it to tasks/archive/YYYY-MM-DD-${epicName}.md and update plan.md with:
+When an epic is completed, move it to aidd-tasks/archive/YYYY-MM-DD-${epicName}.md and update aidd-plan.md with:
 
 completedEpicTemplate() {
   """
   ### ✅ ${epicName}
 
   **Status**: ✅ COMPLETED (${completionDate})  
-  **File**: [`tasks/archive/${epicFileName}`](./tasks/archive/${epicFileName})  
+  **File**: [`aidd-tasks/archive/${epicFileName}`](./aidd-tasks/archive/${epicFileName})  
   **Goal**: ${originalEpicGoal}  
   **Result**: ${ultraMinimalKeyAccomplishmentsAndMetrics}
   """

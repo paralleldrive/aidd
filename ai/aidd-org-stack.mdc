@@ -28,12 +28,12 @@ Constraints {
 
 # Redux
 
-Avoid Redux Toolkit. Use frameworks/redux/autodux and redux connect instead.
+Avoid Redux Toolkit. Use aidd-frameworks-redux-autodux.mdc and redux connect instead.
 
 1. Build the Autodux dux object and save it as "${slice name}-dux.sudo"
 2. Transpile to JavaScript and save it as "${slice name}-dux.js"
 
 Constraints {
-  ALWAYS use tdd as defined in tdd.mdc when implementing source code changes.
+  ALWAYS use tdd as defined in aidd-core-tdd.mdc when implementing source code changes.
   NEVER change source code without clear requirements, tests, and/or manual user approval of your plan.
 }
