@@ -24,21 +24,22 @@ A public collection of reusable metaprograms, agent scripts, and prompt modules.
 
    ```bash
    cd my-project
-   ls ai/                    # See available components
-   cat ai/rules/please.mdc   # Read the main orchestrator
+   ls ai/                              # See available components
+   cat ai/aidd-always-please.mdc      # Read the main orchestrator
    ```
 
 4. **Start using AI workflows**:
-   - Reference `ai/rules/` in AI prompts for better context
-   - Use `ai/commands/` as workflow templates
+   - Reference `ai/aidd-*.mdc` files in AI prompts for better context
+   - Use `ai/aidd-cmd-*.md` as workflow templates
    - Customize rules for your specific project needs
 
 This gives you immediate access to:
 
-- 🤖 **Agent orchestration rules** (`ai/rules/`)
-- ⚙️ **AI workflow commands** (`ai/commands/`)
-- 📋 **Development best practices** (JavaScript, TDD, UI/UX)
-- 🎯 **Product management tools** (user stories, journey mapping)
+- 🤖 **Agent orchestration rules** (`aidd-always-*.mdc`)
+- ⚙️ **AI workflow commands** (`aidd-cmd-*.md`)
+- 📋 **Development best practices** (`aidd-language-*.mdc`, `aidd-core-tdd.mdc`)
+- 🎯 **Product management tools** (`aidd-core-productmanager.mdc`)
+- 🎨 **UI/UX guidelines** (`aidd-org-ui.mdc`)
 
 ## Why SudoLang?
 
@@ -128,31 +129,55 @@ After running the CLI, you'll have a complete `ai/` folder:
 ```
 your-project/
 ├── ai/
-│   ├── commands/              # Workflow commands
-│   │   ├── help.md           # List available commands
-│   │   ├── plan.md           # Project planning
-│   │   ├── review.md         # Code reviews
-│   │   ├── task.md           # Task management
-│   │   └── ...
-│   ├── rules/                # Agent orchestration rules
-│   │   ├── agent-orchestrator.mdc
-│   │   ├── javascript/       # JS/TS best practices
-│   │   ├── frameworks/       # Redux, TDD patterns
-│   │   ├── productmanager.mdc
-│   │   ├── tdd.mdc
-│   │   ├── ui.mdc
-│   │   └── ...
-│   └── ...
+│   ├── aidd-always-agent-orchestrator.mdc  # Main orchestrator
+│   ├── aidd-always-please.mdc              # Core assistant
+│   │
+│   ├── aidd-cmd-help.md                    # List commands
+│   ├── aidd-cmd-plan.md                    # Project planning
+│   ├── aidd-cmd-review.md                  # Code reviews
+│   ├── aidd-cmd-task.md                    # Task management
+│   ├── aidd-cmd-*.md                       # Other workflow commands
+│   │
+│   ├── aidd-core-commit.mdc                # Git commit automation
+│   ├── aidd-core-log.mdc                   # Activity logging
+│   ├── aidd-core-productmanager.mdc        # Product management
+│   ├── aidd-core-requirements.mdc          # Functional requirements
+│   ├── aidd-core-review.mdc                # Code review process
+│   ├── aidd-core-task-creator.mdc          # Task planning
+│   ├── aidd-core-tdd.mdc                   # Test-driven development
+│   │
+│   ├── aidd-frameworks-redux-autodux.mdc   # Redux patterns
+│   ├── aidd-frameworks-redux-example.mdc   # Redux examples
+│   │
+│   ├── aidd-language-javascript.mdc        # JS/TS best practices
+│   ├── aidd-language-javascript-io-network-effects.mdc  # Saga patterns
+│   │
+│   ├── aidd-org-stack.mdc                  # Tech stack guide
+│   ├── aidd-org-ui.mdc                     # UI/UX guidelines
+│   └── aidd-org-example-review.md          # Review example
+│
 └── your-code/
 ```
 
+### File Naming Convention
+
+Files use a prefix-based naming system for easy categorization:
+
+- **`aidd-always-*.mdc`** - Core orchestration (always applied)
+- **`aidd-cmd-*.md`** - Workflow commands (user-triggered)
+- **`aidd-core-*.mdc`** - Core development processes
+- **`aidd-frameworks-*.mdc`** - Framework-specific guides
+- **`aidd-language-*.mdc`** - Language-specific best practices
+- **`aidd-org-*.mdc`** - Organization/project-specific settings
+
 ### Key Components
 
-- **Agent Orchestrator** (`ai/rules/agent-orchestrator.mdc`) - Coordinates multiple AI agents
-- **Development Rules** (`ai/rules/javascript/`, `ai/rules/tdd.mdc`) - Best practices and patterns
-- **Workflow Commands** (`ai/commands/`) - Structured AI interaction templates
-- **Product Management** (`ai/rules/productmanager.mdc`) - User stories and journey mapping
-- **UI/UX Guidelines** (`ai/rules/ui.mdc`) - Design and user experience standards
+- **Agent Orchestrator** (`aidd-always-agent-orchestrator.mdc`) - Coordinates multiple AI agents
+- **Please Assistant** (`aidd-always-please.mdc`) - Main assistant with reflective thinking
+- **Development Rules** (`aidd-language-javascript.mdc`, `aidd-core-tdd.mdc`) - Best practices and patterns
+- **Workflow Commands** (`aidd-cmd-*.md`) - Structured AI interaction templates
+- **Product Management** (`aidd-core-productmanager.mdc`) - User stories and journey mapping
+- **UI/UX Guidelines** (`aidd-org-ui.mdc`) - Design and user experience standards
 
 ## 🎯 AI Integration
 
@@ -202,9 +227,10 @@ npx aidd my-project
 
 # 2. Manually reference our rules in your existing .cursor rules
 # Add to your .cursor/rules.md:
-# @import ../ai/rules/javascript/javascript.mdc
-# @import ../ai/rules/tdd.mdc
-# @import ../ai/rules/productmanager.mdc
+# @import ../ai/aidd-language-javascript.mdc
+# @import ../ai/aidd-core-tdd.mdc
+# @import ../ai/aidd-core-productmanager.mdc
+# @import ../ai/aidd-org-ui.mdc
 ```
 
 ### Troubleshooting
