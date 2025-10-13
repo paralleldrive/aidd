@@ -1,78 +1,538 @@
+```markdown
 ---
-description: When writing JavaScript or TypeScript code, use this guide for JavaScript best practices and guidance
+description: When writing JavaScript or TypeScript code in Canva, use this guide for best practices aligned with Canva's reactive architecture
 globs: **/*.js,**/*.jsx,**/*.ts,**/*.tsx
 alwaysApply: false
 ---
 
-# JavaScript/TypeScript guide
+# Canva JavaScript/TypeScript Guide
 
-Act as a top-tier software engineer with serious JavaScript/TypeScript discipline to carefully implement high quality software.
+Act as a senior software engineer familiar with Canva's reactive architecture, MobX patterns, and TypeScript conventions.
 
 ## Before Writing Code
 
 - Read the lint and formatting rules.
 - Observe the project's relevant existing code.
+- Understand Canva's MobX-based state management patterns.
 - Conform to existing code style, patterns, and conventions unless directed otherwise. Note: these instructions count as "directed otherwise" unless the user explicitly overrides them.
 
-## Principles
+## Core Principles
 
-- DOT 
-- YAGNI
-- KISS
-- DRY
-- SDA - Self Describing APIs
-- Simplicity - "Simplicity is removing the obvious, and adding the meaningful."
-  - Obvious stuff gets hidden in the abstraction.
-  - Meaningful stuff is what needs to be customized and passed in as parameters.
-  - Functions should have default parameters whenever it makes sense so that callers can supply only what is different from the default.
+- Reactive State Management - Use MobX for application state with clear observable/action separation
+- Type Safety First - Leverage TypeScript strictly for better developer experience
+- Separation of Concerns - UI components consume stores; stores handle business logic
+- Performance by Default - Use MobX fine-grained reactivity and React optimization patterns
+- Design System First - Use Easel components instead of custom CSS
 
 Constraints {
-  Be concise.
-  Favor functional programming; keep functions short, pure, and composable.
-  Favor map, filter, reduce over manual loops.
-  Prefer immutability; use const, spread, and rest operators instead of mutation.
-  One job per function; separate mapping from IO.
-  Obey the projects lint and formatting rules.
-  Omit needless code and variables; prefer composition with partial application and point-free style.
-  Chain operations rather than introducing intermediate variables, e.g. `[x].filter(p).map(f)`
-  Avoid loose procedural sequences; compose clear pipelines instead.
-  Avoid `class` and `extends` as much as possible. Prefer composition of functions and data structures over inheritance.
+  ALWAYS use classes for MobX stores with decorators (@observable, @action, @computed).
+  ALWAYS wrap components consuming MobX state with observer().
+  Use functional components with React hooks for UI layer.
+  Separate business logic (stores) from presentation (components).
+  Use TypeScript interfaces for all data contracts and API responses.
+  Prefer observable.ref for object references to avoid unnecessary deep observation.
+  Use observable.shallow for collections (arrays, maps, sets).
+  Wrap async state updates in runInAction().
+  Use @computed for derived values that depend on observables.
+  Follow MobX best practices for performance and reactivity.
+  Use strict TypeScript - avoid any, use unknown when type is truly unknown.
   Keep related code together; group by feature, not by technical type.
-  Put statements and expressions in positive form.
-  Use parallel code for parallel concepts. 
-  Avoid null/undefined arguments; use options objects instead.
-  Use concise syntax: arrow functions, object destructuring, array destructuring, template literals.
-  Avoid verbose property assignments. bad: `const a = obj.a;` good: `const { a } = obj;`
-  Assign reasonable defaults directly in function signatures.
-    `const createExpectedUser = ({ id = createId(), name = '', description = '' } = {}) => ({ id, name, description });`
-  Principle: SDA. This means:
-  Parameter values should be explicitly named and expressed in function signatures:
-    Bad: `const createUser = (payload = {}) => ({`
-    Good: `const createUser = ({ id = createId(), name = '', description = ''} = {}) =>`
-    Notice how default values also provide hints for type inference.
-  Avoid IIFEs. Use block scopes, modules, or normal arrow functions instead. Principle: KISS
-  Avoid using || for defaults. Use parameter defaults instead. See above.
-  Prefer async/await or asyncPipe over raw promise chains.
-  Use strict equality (===).
-  Modularize by feature; one concern per file or function; prefer named exports.
+  Prefer early returns over if-then-else structures.
+  Avoid "else" - it's usually a sign of code flow that needs optimization.
+  Use Easel Design System components instead of writing custom CSS.
+}
+
+## State Management with MobX
+
+StorePattern {
+  Use classes with MobX decorators for all state management.
+  
+  Observable types:
+    @observable.ref - for object references (prevents deep observation)
+    @observable.shallow - for collections (array/map/set)
+    @observable - for primitives (string, number, boolean)
+    @computed - for derived values
+    @action - for all state mutations
+  
+  Structure stores with clear sections:
+    Observables first
+    Computed values second
+    Actions last
+  
+  Example:
+    export class FeatureStore {
+      @observable.ref
+      data: FeatureData | null = null;
+      
+      @observable.ref
+      loading = false;
+      
+      @observable.shallow
+      items: FeatureItem[] = [];
+      
+      @computed
+      get isReady() {
+        return this.data !== null && !this.loading;
+      }
+      
+      @computed
+      get sortedItems() {
+        return [...this.items].sort((a, b) => a.name.localeCompare(b.name));
+      }
+      
+      @action
+      setData(data: FeatureData) {
+        this.data = data;
+      }
+      
+      @action
+      async fetchData() {
+        this.loading = true;
+        try {
+          const data = await api.fetch();
+          runInAction(() => {
+            this.data = data;
+            this.loading = false;
+          });
+        } catch (error) {
+          runInAction(() => {
+            this.loading = false;
+          });
+        }
+      }
+    }
+}
+
+## React Components
+
+ComponentPattern {
+  Use functional components with hooks.
+  ALWAYS wrap components consuming MobX state with observer().
+  Use React.memo for expensive pure components.
+  Keep components focused on presentation.
+  Delegate business logic to stores.
+  Use early returns for loading/error states - avoid nested conditionals.
+  Prefer Easel Design System components over custom styled components.
+  
+  Structure:
+    Component definition with observer()
+    Hooks (useEffect, useState, etc.)
+    Early returns for edge cases (no else blocks)
+    Main render logic using Easel components
+  
+  Example with early returns (no else):
+    const FeatureComponent = observer(({ store }: { store: FeatureStore }) => {
+      React.useEffect(() => {
+        store.fetchData();
+      }, [store]);
+      
+      if (store.loading) {
+        return <Spinner />;
+      }
+      
+      if (store.error) {
+        return <Alert tone="critical">{store.error.message}</Alert>;
+      }
+      
+      if (!store.isReady) {
+        return <EmptyState />;
+      }
+      
+      return (
+        <Box padding="medium">
+          <Stack space="small">
+            {store.sortedItems.map(item => (
+              <ItemCard key={item.id} item={item} />
+            ))}
+          </Stack>
+        </Box>
+      );
+    });
+    
+  Memoization:
+    const ItemCard = React.memo(({ item }: { item: FeatureItem }) => {
+      return (
+        <Card>
+          <Text>{item.name}</Text>
+        </Card>
+      );
+    });
+}
+
+DesignSystemConstraints {
+  ALWAYS use Easel Design System components instead of custom CSS.
+  Prefer Easel layout components (Box, Stack, Inline, Columns) for structure.
+  Use Easel primitives (Text, Heading, Button, etc.) for UI elements.
+  Leverage Easel's spacing, color, and typography tokens.
+  Only write custom CSS when Easel genuinely doesn't provide the capability.
+  
+  Easel layout primitives:
+    Box - for padding, background, borders
+    Stack - for vertical spacing
+    Inline - for horizontal spacing
+    Columns - for grid layouts
+    
+  Common Easel components:
+    Text, Heading - typography
+    Button - actions
+    Card - containers
+    Alert - notifications
+    Spinner - loading states
+    EmptyState - empty views
+    
+  Example (prefer this):
+    <Box padding="medium" background="secondary">
+      <Stack space="small">
+        <Heading level="2">Title</Heading>
+        <Text>Description</Text>
+        <Button onClick={handleClick}>Action</Button>
+      </Stack>
+    </Box>
+    
+  Avoid (custom CSS):
+    <div style={{ padding: '16px', backgroundColor: '#f5f5f5' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <h2 style={{ fontSize: '20px' }}>Title</h2>
+        <p>Description</p>
+        <button onClick={handleClick}>Action</button>
+      </div>
+    </div>
+}
+
+ControlFlowConstraints {
+  Prefer early returns over if-then-else structures.
+  Avoid "else" blocks - they usually indicate suboptimal flow.
+  Each condition should have its own early return.
+  Main logic should be at the end with no conditions.
+  
+  Bad (nested with else):
+    const processItem = (item: Item) => {
+      if (item.isValid) {
+        if (item.isActive) {
+          return item.process();
+        } else {
+          return item.activate();
+        }
+      } else {
+        return item.validate();
+      }
+    };
+  
+  Good (early returns, no else):
+    const processItem = (item: Item) => {
+      if (!item.isValid) {
+        return item.validate();
+      }
+      
+      if (!item.isActive) {
+        return item.activate();
+      }
+      
+      return item.process();
+    };
+  
+  Component example (bad):
+    const Component = ({ data }) => {
+      if (data.loading) {
+        return <Spinner />;
+      } else {
+        if (data.error) {
+          return <Alert tone="critical">Error</Alert>;
+        } else {
+          return <Content data={data} />;
+        }
+      }
+    };
+  
+  Component example (good):
+    const Component = ({ data }) => {
+      if (data.loading) {
+        return <Spinner />;
+      }
+      
+      if (data.error) {
+        return <Alert tone="critical">Error</Alert>;
+      }
+      
+      return <Content data={data} />;
+    };
 }
 
 NamingConstraints {
-  Use active voice.
-  Use clear, consistent naming.
-  Functions should be verbs. e.g. `increment()`, `filter()`.
-  Predicates and booleans should read like yes/no questions. e.g. `isActive`, `hasPermission`.
-  Prefer standalone verbs over noun.method. e.g. `createUser()` not `User.create()`.
-  Avoid noun-heavy and redundant names. e.g. `filter(fn, array)` not `matchingItemsFromArray(fn, array)`.
-  Avoid "doSomething" style. e.g. `notify()` not `Notifier.doNotification()`.
-  Lifecycle methods: prefer `beforeX` / `afterX` over `willX` / `didX`. e.g. `beforeUpdate()`.
-  Use strong negatives over weak ones: `isEmpty(thing)` not `!isDefined(thing)`.
-  Mixins and function decorators use `with${Thing}`. e.g. `withUser`, `withFeatures`, `withAuth`.
-  Avoid ALL_CAPS for constants. Since we use functional programming, there's no need for a hard distinction between constants and variables.
+  PascalCase for classes, components, interfaces, types.
+    AlertStore, FeatureComponent, UserData, CollabCursorState
+  
+  camelCase for methods, variables, properties.
+    addAlert, isLoading, cursorStates, fetchData
+  
+  Use descriptive, domain-specific names over generic ones.
+    Good: CollabPageCursorStore, FeedbackSurveyStore
+    Bad: CursorManager, SurveyData, Manager, Handler
+  
+  Store suffix for MobX stores.
+    UserStore, CommentStore, AlertStore, FeaturePanelStore
+  
+  Observable properties should be clear and descriptive.
+    Good: isLoading, hasError, selectedItems
+    Bad: loading, error, items
+  
+  Predicates and booleans read like yes/no questions.
+    isVisible, hasPermission, canEdit, shouldRender
+  
+  Action methods use clear verbs.
+    setData, addItem, removeUser, toggleVisibility, updateSettings
+  
+  Computed getters use descriptive nouns or predicates.
+    get filteredItems(), get isReady(), get totalCount()
+  
+  Avoid redundant naming.
+    Bad: UserStore.userList (just call it 'users')
+    Bad: FeatureStore.featureData (just call it 'data')
+  
+  Avoid noun-heavy constructions.
+    Good: filter(), increment(), notify()
+    Bad: performFiltering(), doIncrement(), executeNotification()
+}
+
+TypeScriptConstraints {
+  Use strict TypeScript configuration.
+  Define interfaces for all data structures and API contracts.
+  Avoid any type; use unknown when type is truly unknown.
+  Use discriminated unions for complex state.
+  Leverage type inference; don't redundantly specify types.
+  Use readonly for immutable properties in interfaces.
+  Use utility types (Partial, Pick, Omit) when appropriate.
+  
+  Interface structure:
+    interface FeatureData {
+      readonly id: string;
+      name: string;
+      description: string;
+    }
+  
+  Discriminated unions for state:
+    interface LoadingState {
+      kind: 'loading';
+    }
+    
+    interface SuccessState {
+      kind: 'success';
+      data: FeatureData;
+    }
+    
+    interface ErrorState {
+      kind: 'error';
+      error: Error;
+    }
+    
+    type FetchState = LoadingState | SuccessState | ErrorState;
+  
+  Type guards with early returns:
+    const processState = (state: FetchState) => {
+      if (state.kind === 'loading') {
+        return <Spinner />;
+      }
+      
+      if (state.kind === 'error') {
+        return <Alert tone="critical">{state.error.message}</Alert>;
+      }
+      
+      return <Content data={state.data} />;
+    };
+}
+
+PerformanceConstraints {
+  Use @computed for expensive derived calculations.
+  Use observable.shallow for large collections.
+  Use observable.ref for objects to avoid deep observation.
+  Use React.memo for expensive pure components.
+  Leverage MobX fine-grained reactivity.
+  Use dynamic imports for code splitting.
+  Avoid unnecessary re-renders by proper observable scoping.
+  
+  Computed values cache automatically:
+    @computed
+    get expensiveCalculation() {
+      // Only recalculates when dependencies change
+      return this.largeArray.reduce((sum, item) => sum + item.value, 0);
+    }
+  
+  Shallow observation for collections:
+    @observable.shallow
+    items: Item[] = [];  // Only array reference changes trigger updates
+  
+  Component memoization:
+    const ExpensiveComponent = React.memo(({ data }: Props) => {
+      // Only re-renders when data reference changes
+      return <ComplexVisualization data={data} />;
+    });
+}
+
+ErrorHandlingPattern {
+  Wrap async operations in try/catch.
+  Use runInAction for async state updates.
+  Store error state in observable properties.
+  Provide meaningful error messages.
+  Clear previous errors before new operations.
+  Use early returns for error states in components.
+  
+  Example:
+    @observable.ref
+    error: Error | null = null;
+    
+    @action
+    async performOperation() {
+      this.loading = true;
+      this.error = null;
+      
+      try {
+        const result = await api.fetch();
+        runInAction(() => {
+          this.data = result;
+          this.loading = false;
+        });
+      } catch (error) {
+        runInAction(() => {
+          this.error = error as Error;
+          this.loading = false;
+        });
+      }
+    }
+  
+  Component error handling with early return:
+    const Component = observer(({ store }: Props) => {
+      if (store.error) {
+        return <Alert tone="critical">{store.error.message}</Alert>;
+      }
+      
+      if (store.loading) {
+        return <Spinner />;
+      }
+      
+      return <Content data={store.data} />;
+    });
+}
+
+DependencyInjectionPattern {
+  Pass stores as props or via React context.
+  Avoid global singletons where possible.
+  Keep stores composable and testable.
+  Use React context for deeply nested components.
+  
+  Context pattern:
+    const StoreContext = React.createContext<FeatureStore | null>(null);
+    
+    const FeatureProvider = ({ children }: { children: React.ReactNode }) => {
+      const store = React.useMemo(() => new FeatureStore(), []);
+      return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>;
+    };
+    
+    const useFeatureStore = () => {
+      const store = React.useContext(StoreContext);
+      if (!store) throw new Error('FeatureStore not found in context');
+      return store;
+    };
+  
+  Direct prop passing for simple cases:
+    <FeatureComponent store={featureStore} />
+}
+
+TestingConstraints {
+  Test stores independently of UI components.
+  Use Jest with MobX-friendly patterns.
+  Use runInAction for test state setup.
+  Mock external dependencies at service boundaries.
+  Test computed values separately.
+  Test component behavior with mocked stores.
+  Test async actions with proper async/await.
+  
+  Store testing:
+    describe('FeatureStore', () => {
+      it('should update data correctly', () => {
+        const store = new FeatureStore();
+        const testData = { id: '1', name: 'Test' };
+        
+        runInAction(() => {
+          store.setData(testData);
+        });
+        
+        expect(store.data).toBe(testData);
+        expect(store.isReady).toBe(true);
+      });
+      
+      it('should handle async operations', async () => {
+        const store = new FeatureStore();
+        await store.fetchData();
+        expect(store.loading).toBe(false);
+      });
+    });
+  
+  Component testing:
+    describe('FeatureComponent', () => {
+      it('renders loading state', () => {
+        const mockStore = { isReady: false } as FeatureStore;
+        const { getByTestId } = render(<FeatureComponent store={mockStore} />);
+        expect(getByTestId('loading-spinner')).toBeInTheDocument();
+      });
+    });
 }
 
 Comments {
-  Favor docblocks for public APIs - but keep them minimal.
-  Ensure that any comments are necessary and add value. Never reiterate the style guides. Avoid obvious redundancy with the code, but short one-line comments that aid scannability are okay.
-  Comments should stand-alone months or years later. Assume that the reader is not familiar with the task plan or epic.
+  Use JSDoc for public APIs and complex logic.
+  Keep comments minimal and meaningful.
+  Document MobX patterns when non-obvious.
+  Avoid obvious redundancy with code.
+  Comments should explain WHY, not WHAT.
+  Document performance implications of observable choices.
+  
+  Store documentation:
+    /**
+     * Manages the state for the feature panel.
+     * Uses MobX for reactive updates to connected components.
+     */
+    export class FeaturePanelStore {
+      /**
+       * Currently selected items. Observable.shallow ensures
+       * only array reference changes trigger updates, not mutations.
+       */
+      @observable.shallow
+      selectedItems: Item[] = [];
+      
+      /**
+       * Computes filtered view based on current selection.
+       * Automatically caches and only recalculates when dependencies change.
+       */
+      @computed
+      get filteredItems() {
+        return this.items.filter(item => this.selectedItems.includes(item));
+      }
+    }
+  
+  Complex logic:
+    // Use shallow observation here because we only care about array reference
+    // changes, not individual item mutations. This prevents unnecessary re-renders.
+    @observable.shallow
+    items: Item[] = [];
 }
+
+CommonPitfalls {
+  Avoid:
+    Forgetting observer() wrapper on components consuming MobX state.
+    Forgetting runInAction() for async state updates.
+    Using observable instead of observable.ref for objects.
+    Using observable instead of observable.shallow for large arrays.
+    Mutating observable arrays/objects without @action.
+    Creating computed values with side effects.
+    Writing custom CSS instead of using Easel components.
+    Using else blocks instead of early returns.
+    Nested if-then-else structures.
+    
+  Remember:
+    All state mutations must be wrapped in @action or runInAction().
+    Components consuming observables MUST be wrapped with observer().
+    Async operations need runInAction() for state updates after await.
+    Computed values should be pure - no side effects.
+    Use early returns to avoid nested conditionals.
+    Prefer Easel Design System components over custom styling.
+}
+```

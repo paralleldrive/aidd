@@ -1,39 +1,59 @@
 ---
-description: When implementing NextJS + React/Redux + Shadcn UI features, use this guide for tech stack guidance and best practices
+description: When implementing React + MobX + TypeScript features in Canva's monorepo, use this guide for tech stack guidance and best practices
 alwaysApply: false
 ---
-# Tech Stack
+# Canva Tech Stack
 
-Act as a top-tier senior full stack software engineer. Always use best practices, declarative approaches, concise code.
+Act as a senior full stack software engineer familiar with Canva's architecture. Always use best practices, reactive programming, and performance-optimized approaches.
 
-Before employing any of the tech stack tools, list some relevant best practices for that technology, and keep them in mind as you code.
+React + MobX + TypeScript in a Bazel monorepo deployed on AWS
 
-NextJS + React/Redux + Shadcn to be deployed on Vercel
+# Frontend
 
-# JS
-
-Always use functional programming approaches.
-Favor pure functions, immutability, function composition, and declarative approaches.
-Favor `const` over `let` and `var` whenever possible.
-Use redux-saga for side effects.
-Always separate state management, UI, and side-effects from each other in different modules.
+Always use functional components with hooks and MobX for reactive state management.
+Favor observable patterns, computed values, and reactive UI updates.
+Use TypeScript for type safety and better developer experience.
+Leverage Bazel for fast, incremental builds.
 
 # React
 
 Constraints {
-  Always use the container/presentation pattern when you need persisted state.
-  Containers should never contain any direct UI markup (instead, import and use presentation components).
-  Containers should NEVER contain business logic. Instead, use react-redux connect to wire actions and selectors to presentation components.
+  Always use functional components with React hooks.
+  Use MobX observers for reactive components that depend on observable state.
+  Separate concerns: UI components, state stores, and business logic.
+  Use React.memo for performance optimization when appropriate.
 }
 
-# Redux
+# MobX
 
-Avoid Redux Toolkit. Use aidd-frameworks-redux-autodux.mdc and redux connect instead.
+Use MobX 6+ with decorators for reactive state management.
 
-1. Build the Autodux dux object and save it as "${slice name}-dux.sudo"
-2. Transpile to JavaScript and save it as "${slice name}-dux.js"
+1. Create observable stores for application state
+2. Use @observable for reactive data
+3. Use @computed for derived values
+4. Use @action for state mutations
 
 Constraints {
-  ALWAYS use tdd as defined in aidd-core-tdd.mdc when implementing source code changes.
-  NEVER change source code without clear requirements, tests, and/or manual user approval of your plan.
+  ALWAYS use @observer decorator for React components that consume observables.
+  Use runInAction for async state updates.
+  Prefer observable.ref for object references to avoid deep observation.
+  Use mobx-react-lite for modern React integration.
+}
+
+# TypeScript
+
+Constraints {
+  ALWAYS use strict TypeScript configuration.
+  Define interfaces for all data structures and API contracts.
+  Use proper typing for MobX observables and computed values.
+  Leverage TypeScript's inference where possible, explicit types where needed.
+}
+
+# Performance
+
+Constraints {
+  Use React.memo and useMemo for expensive computations.
+  Leverage MobX's fine-grained reactivity for optimal re-renders.
+  Use Webpack code splitting for large applications.
+  Optimize bundle sizes with tree shaking and dynamic imports.
 }
