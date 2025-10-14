@@ -36,6 +36,29 @@ directExecution() {
   prompt yourself with the $taskPrompt:
 }
 
+generateDispatchCommand(agents, taskFile, guides) {
+  return `cursor-agent \\
+  --agent ${agents.join(',')} \\
+  --prompt "$(cat ${taskFile})" \\
+  --context "${guides.join(',')}"`;
+}
+
+assessOrchestrationNeeds(task) {
+  domains = countChecked(task.technicalDomains)
+  specializations = countChecked(task.specializedKnowledge)
+  crossFunc = task.crossFunctional
+  integration = task.integrationWorkflows
+  
+  if (domains >= 2 || specializations >= 2 || crossFunc || integration) {
+    task.orchestrationRequired = true
+    task.dispatchCommand = generateDispatchCommand(
+      task.agentsNeeded,
+      task.filePath,
+      task.styleGuides
+    )
+  }
+}
+
 handleInitialRequest() {
   use taskCreator to create and execute a task plan
   match (contextRequirements = infer) {

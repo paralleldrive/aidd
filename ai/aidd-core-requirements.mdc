@@ -12,3 +12,54 @@ Constraints {
   Focus on functional requirements to support the user journey.
   Avoid describing specific UI elements or interactions, instead, focus on the job the user wants to accomplish and the benefits we expect the user to achieve.
 }
+
+## Formatting Requirements
+
+**Exact Format:**
+```
+Given [situation], should [jobToDo]
+```
+
+**Rules:**
+- No markdown formatting (no bold, italics, code blocks in the template text)
+- No bullet points in the template itself (bullets in requirement list OK)
+- Start with "Given", include "should"
+- Keep situation and jobToDo concise (prefer one line each)
+- Each requirement must be objectively testable
+
+**Examples:**
+
+✅ **Good:**
+- Given user clicks video, should play video inline
+- Given invalid videoId, should fallback to static app card
+- Given mobile viewport, should stack sections vertically
+- Given TypeScript compilation, should compile with 0 errors
+- Given user submits form, should validate all required fields
+- Given API request fails, should display error message to user
+
+❌ **Bad:**
+- **Given** user clicks video, **should** play video (markdown bold formatting)
+- When user clicks video, play it (no "Given/should" structure)
+- Given user interaction should handle video playback (vague - what interaction? what handling?)
+- Given component, should look good (subjective - not testable)
+- User can play video (no "Given/should" structure)
+
+**Validation:**
+
+Each requirement must:
+- Start with "Given"
+- Contain "should"
+- Be one line (or very concise)
+- Be objectively testable with code or validation command
+- Avoid subjective language (no "good", "clean", "appropriate", etc.)
+
+**Usage in Task Definitions:**
+
+```markdown
+## Requirements
+
+- Given existing EditorialFeaturedApp props interface, should create AppVideoCard component with same base props
+- Given video data present, should render video section using YoutubePlayer
+- Given no video data, should render app card without video section
+- Given TypeScript strict mode, should compile with 0 type errors
+```

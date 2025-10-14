@@ -1,4 +1,3 @@
-```markdown
 ---
 description: When writing JavaScript or TypeScript code in Canva, use this guide for best practices aligned with Canva's reactive architecture
 globs: **/*.js,**/*.jsx,**/*.ts,**/*.tsx
@@ -42,49 +41,116 @@ Constraints {
   Use Easel Design System components instead of writing custom CSS.
 }
 
+## State Management Decision Tree
+
+Use this to determine when MobX is needed vs props-only components:
+
+**When to Use MobX:**
+- Component has internal state that changes over time
+- Multiple components share reactive state
+- Computed values derive from observable state
+- Actions modify state with clear semantics
+- Example: User preferences panel, real-time collaboration cursor
+
+**When to Use Props-Only:**
+- Component receives all data from parent
+- No internal state mutations
+- Pure presentation logic
+- Data flows one-way down from parent
+- Example: Card component, list item, static display
+
+**Decision Template for Task Definitions:**
+```
+## State Management Strategy
+
+**Component Type:** [Presentational/Stateful/Connected]
+
+**MobX Required:** [YES/NO]
+
+**Justification:**
+- [Reason based on decision tree above]
+- [Specific state needs or lack thereof]
+
+**If YES - Implementation Pattern:**
+```language
+export class ComponentStore {
+  @observable.ref
+  data = null;
+  
+  @action
+  setData(data) {
+    this.data = data;
+  }
+}
+
+export const Component = observer(({ store }) => {
+  // Consumes store.data
+});
+```
+
+**If NO - Implementation Pattern:**
+```language
+export const Component: React.FC<Props> = (props) => {
+  // Props-only, no MobX
+  return <Box>{props.data}</Box>;
+};
+```
+
+**Validation:**
+```bash
+# If YES - verify MobX usage
+grep "@observable\|@action\|observer(" component.tsx
+# Expected: Matches found
+
+# If NO - verify no MobX
+grep "@observable\|@action\|observer(" component.tsx
+# Expected: No matches
+```
+```
+
 ## State Management with MobX
 
 StorePattern {
   Use classes with MobX decorators for all state management.
-  
+
   Observable types:
     @observable.ref - for object references (prevents deep observation)
     @observable.shallow - for collections (array/map/set)
     @observable - for primitives (string, number, boolean)
     @computed - for derived values
     @action - for all state mutations
-  
+
   Structure stores with clear sections:
     Observables first
     Computed values second
     Actions last
-  
+
   Example:
     export class FeatureStore {
       @observable.ref
       data: FeatureData | null = null;
-      
+
       @observable.ref
       loading = false;
-      
+
       @observable.shallow
       items: FeatureItem[] = [];
-      
+
       @computed
       get isReady() {
         return this.data !== null && !this.loading;
       }
-      
+
       @computed
       get sortedItems() {
         return [...this.items].sort((a, b) => a.name.localeCompare(b.name));
       }
-      
+
       @action
       setData(data: FeatureData) {
         this.data = data;
       }
-      
+
       @action
       async fetchData() {
         this.loading = true;
@@ -113,31 +179,31 @@ ComponentPattern {
   Delegate business logic to stores.
   Use early returns for loading/error states - avoid nested conditionals.
   Prefer Easel Design System components over custom styled components.
-  
+
   Structure:
     Component definition with observer()
     Hooks (useEffect, useState, etc.)
     Early returns for edge cases (no else blocks)
     Main render logic using Easel components
-  
+
   Example with early returns (no else):
     const FeatureComponent = observer(({ store }: { store: FeatureStore }) => {
       React.useEffect(() => {
         store.fetchData();
       }, [store]);
-      
+
       if (store.loading) {
         return <Spinner />;
       }
-      
+
       if (store.error) {
         return <Alert tone="critical">{store.error.message}</Alert>;
       }
-      
+
       if (!store.isReady) {
         return <EmptyState />;
       }
-      
+
       return (
         <Box padding="medium">
           <Stack space="small">
@@ -148,7 +214,7 @@ ComponentPattern {
         </Box>
       );
     });
-    
+
   Memoization:
     const ItemCard = React.memo(({ item }: { item: FeatureItem }) => {
       return (
@@ -165,13 +231,13 @@ DesignSystemConstraints {
   Use Easel primitives (Text, Heading, Button, etc.) for UI elements.
   Leverage Easel's spacing, color, and typography tokens.
   Only write custom CSS when Easel genuinely doesn't provide the capability.
-  
+
   Easel layout primitives:
     Box - for padding, background, borders
     Stack - for vertical spacing
     Inline - for horizontal spacing
     Columns - for grid layouts
-    
+
   Common Easel components:
     Text, Heading - typography
     Button - actions
@@ -179,7 +245,7 @@ DesignSystemConstraints {
     Alert - notifications
     Spinner - loading states
     EmptyState - empty views
-    
+
   Example (prefer this):
     <Box padding="medium" background="secondary">
       <Stack space="small">
@@ -188,7 +254,7 @@ DesignSystemConstraints {
         <Button onClick={handleClick}>Action</Button>
       </Stack>
     </Box>
-    
+
   Avoid (custom CSS):
     <div style={{ padding: '16px', backgroundColor: '#f5f5f5' }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -199,12 +265,53 @@ DesignSystemConstraints {
     </div>
 }
 
+## Import Path Requirements for Task Definitions
+
+When writing task definitions, ALWAYS provide exact import paths:
+
+**Easel Design System - Individual Imports (Tree-Shakeable):**
+```typescript
+import { Box } from '@canva/ui/box';
+import { Stack } from '@canva/ui/stack';
+import { Inline } from '@canva/ui/inline';
+import { Columns, Column } from '@canva/ui/columns';
+import { Text } from '@canva/ui/text';
+import { Heading } from '@canva/ui/heading';
+import { Button } from '@canva/ui/button';
+import { Card } from '@canva/ui/card';
+import { Alert } from '@canva/ui/alert';
+import { Spinner } from '@canva/ui/spinner';
+import { EmptyState } from '@canva/ui/empty-state';
+```
+
+**MobX (when state management needed):**
+```typescript
+import { observer } from 'mobx-react-lite';
+import { observable, action, computed, runInAction } from 'mobx';
+```
+
+**React:**
+```typescript
+import * as React from 'react';
+```
+
+**Never use barrel imports from Easel:**
+```typescript
+// ❌ WRONG - not tree-shakeable
+import { Box, Stack, Text } from '@canva/ui';
+
+// ✅ CORRECT - individual imports
+import { Box } from '@canva/ui/box';
+import { Stack } from '@canva/ui/stack';
+import { Text } from '@canva/ui/text';
+```
+
 ControlFlowConstraints {
   Prefer early returns over if-then-else structures.
   Avoid "else" blocks - they usually indicate suboptimal flow.
   Each condition should have its own early return.
   Main logic should be at the end with no conditions.
-  
+
   Bad (nested with else):
     const processItem = (item: Item) => {
       if (item.isValid) {
@@ -217,20 +324,20 @@ ControlFlowConstraints {
         return item.validate();
       }
     };
-  
+
   Good (early returns, no else):
     const processItem = (item: Item) => {
       if (!item.isValid) {
         return item.validate();
       }
-      
+
       if (!item.isActive) {
         return item.activate();
       }
-      
+
       return item.process();
     };
-  
+
   Component example (bad):
     const Component = ({ data }) => {
       if (data.loading) {
@@ -243,17 +350,17 @@ ControlFlowConstraints {
         }
       }
     };
-  
+
   Component example (good):
     const Component = ({ data }) => {
       if (data.loading) {
         return <Spinner />;
       }
-      
+
       if (data.error) {
         return <Alert tone="critical">Error</Alert>;
       }
-      
+
       return <Content data={data} />;
     };
 }
@@ -261,34 +368,34 @@ ControlFlowConstraints {
 NamingConstraints {
   PascalCase for classes, components, interfaces, types.
     AlertStore, FeatureComponent, UserData, CollabCursorState
-  
+
   camelCase for methods, variables, properties.
     addAlert, isLoading, cursorStates, fetchData
-  
+
   Use descriptive, domain-specific names over generic ones.
     Good: CollabPageCursorStore, FeedbackSurveyStore
     Bad: CursorManager, SurveyData, Manager, Handler
-  
+
   Store suffix for MobX stores.
     UserStore, CommentStore, AlertStore, FeaturePanelStore
-  
+
   Observable properties should be clear and descriptive.
     Good: isLoading, hasError, selectedItems
     Bad: loading, error, items
-  
+
   Predicates and booleans read like yes/no questions.
     isVisible, hasPermission, canEdit, shouldRender
-  
+
   Action methods use clear verbs.
     setData, addItem, removeUser, toggleVisibility, updateSettings
-  
+
   Computed getters use descriptive nouns or predicates.
     get filteredItems(), get isReady(), get totalCount()
-  
+
   Avoid redundant naming.
     Bad: UserStore.userList (just call it 'users')
     Bad: FeatureStore.featureData (just call it 'data')
-  
+
   Avoid noun-heavy constructions.
     Good: filter(), increment(), notify()
     Bad: performFiltering(), doIncrement(), executeNotification()
@@ -302,41 +409,41 @@ TypeScriptConstraints {
   Leverage type inference; don't redundantly specify types.
   Use readonly for immutable properties in interfaces.
   Use utility types (Partial, Pick, Omit) when appropriate.
-  
+
   Interface structure:
     interface FeatureData {
       readonly id: string;
       name: string;
       description: string;
     }
-  
+
   Discriminated unions for state:
     interface LoadingState {
       kind: 'loading';
     }
-    
+
     interface SuccessState {
       kind: 'success';
       data: FeatureData;
     }
-    
+
     interface ErrorState {
       kind: 'error';
       error: Error;
     }
-    
+
     type FetchState = LoadingState | SuccessState | ErrorState;
-  
+
   Type guards with early returns:
     const processState = (state: FetchState) => {
       if (state.kind === 'loading') {
         return <Spinner />;
       }
-      
+
       if (state.kind === 'error') {
         return <Alert tone="critical">{state.error.message}</Alert>;
       }
-      
+
       return <Content data={state.data} />;
     };
 }
@@ -349,18 +456,18 @@ PerformanceConstraints {
   Leverage MobX fine-grained reactivity.
   Use dynamic imports for code splitting.
   Avoid unnecessary re-renders by proper observable scoping.
-  
+
   Computed values cache automatically:
     @computed
     get expensiveCalculation() {
       // Only recalculates when dependencies change
       return this.largeArray.reduce((sum, item) => sum + item.value, 0);
     }
-  
+
   Shallow observation for collections:
     @observable.shallow
     items: Item[] = [];  // Only array reference changes trigger updates
-  
+
   Component memoization:
     const ExpensiveComponent = React.memo(({ data }: Props) => {
       // Only re-renders when data reference changes
@@ -375,16 +482,16 @@ ErrorHandlingPattern {
   Provide meaningful error messages.
   Clear previous errors before new operations.
   Use early returns for error states in components.
-  
+
   Example:
     @observable.ref
     error: Error | null = null;
-    
+
     @action
     async performOperation() {
       this.loading = true;
       this.error = null;
-      
+
       try {
         const result = await api.fetch();
         runInAction(() => {
@@ -398,17 +505,17 @@ ErrorHandlingPattern {
         });
       }
     }
-  
+
   Component error handling with early return:
     const Component = observer(({ store }: Props) => {
       if (store.error) {
         return <Alert tone="critical">{store.error.message}</Alert>;
       }
-      
+
       if (store.loading) {
         return <Spinner />;
       }
-      
+
       return <Content data={store.data} />;
     });
 }
@@ -418,21 +525,21 @@ DependencyInjectionPattern {
   Avoid global singletons where possible.
   Keep stores composable and testable.
   Use React context for deeply nested components.
-  
+
   Context pattern:
     const StoreContext = React.createContext<FeatureStore | null>(null);
-    
+
     const FeatureProvider = ({ children }: { children: React.ReactNode }) => {
       const store = React.useMemo(() => new FeatureStore(), []);
       return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>;
     };
-    
+
     const useFeatureStore = () => {
       const store = React.useContext(StoreContext);
       if (!store) throw new Error('FeatureStore not found in context');
       return store;
     };
-  
+
   Direct prop passing for simple cases:
     <FeatureComponent store={featureStore} />
 }
@@ -445,28 +552,28 @@ TestingConstraints {
   Test computed values separately.
   Test component behavior with mocked stores.
   Test async actions with proper async/await.
-  
+
   Store testing:
     describe('FeatureStore', () => {
       it('should update data correctly', () => {
         const store = new FeatureStore();
         const testData = { id: '1', name: 'Test' };
-        
+
         runInAction(() => {
           store.setData(testData);
         });
-        
+
         expect(store.data).toBe(testData);
         expect(store.isReady).toBe(true);
       });
-      
+
       it('should handle async operations', async () => {
         const store = new FeatureStore();
         await store.fetchData();
         expect(store.loading).toBe(false);
       });
     });
-  
+
   Component testing:
     describe('FeatureComponent', () => {
       it('renders loading state', () => {
@@ -484,7 +591,7 @@ Comments {
   Avoid obvious redundancy with code.
   Comments should explain WHY, not WHAT.
   Document performance implications of observable choices.
-  
+
   Store documentation:
     /**
      * Manages the state for the feature panel.
@@ -497,7 +604,7 @@ Comments {
        */
       @observable.shallow
       selectedItems: Item[] = [];
-      
+
       /**
        * Computes filtered view based on current selection.
        * Automatically caches and only recalculates when dependencies change.
@@ -507,7 +614,7 @@ Comments {
         return this.items.filter(item => this.selectedItems.includes(item));
       }
     }
-  
+
   Complex logic:
     // Use shallow observation here because we only care about array reference
     // changes, not individual item mutations. This prevents unnecessary re-renders.
@@ -526,7 +633,7 @@ CommonPitfalls {
     Writing custom CSS instead of using Easel components.
     Using else blocks instead of early returns.
     Nested if-then-else structures.
-    
+
   Remember:
     All state mutations must be wrapped in @action or runInAction().
     Components consuming observables MUST be wrapped with observer().
@@ -535,4 +642,3 @@ CommonPitfalls {
     Use early returns to avoid nested conditionals.
     Prefer Easel Design System components over custom styling.
 }
-```

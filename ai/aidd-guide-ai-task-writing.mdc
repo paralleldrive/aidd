@@ -1,0 +1,1069 @@
+---
+description: Guide for writing AI-executable task definitions with objective criteria and explicit instructions
+alwaysApply: false
+---
+
+# AI Task Writing Guide
+
+Best practices for writing task definitions that AI tools can execute successfully on first attempt.
+
+---
+
+## Core Principles
+
+1. **Objective Over Subjective** - AI can validate "≤50 lines" but not "clean code"
+2. **Explicit Over Implicit** - AI needs exact code, not "integrate appropriately"
+3. **Validatable Over Aspirational** - Every criterion needs validation command
+4. **Incremental Over Big-Bang** - Validate after each step, not just at end
+5. **Referenced Over Assumed** - Show actual code, don't assume AI knows your codebase
+
+---
+
+## Principle 1: Objective Over Subjective
+
+AI cannot validate subjective criteria. Replace with objectively measurable criteria.
+
+### Example 1: Component Design Quality
+
+**❌ Subjective (AI cannot validate):**
+```markdown
+## Success Criteria
+- [ ] Component has clean design
+- [ ] Visual hierarchy is clear
+- [ ] Layout is intuitive
+- [ ] Styling is consistent
+```
+
+**✅ Objective (AI can validate):**
+```markdown
+## Success Criteria
+
+- [ ] Component uses Box from Easel for container
+  - Validation: `grep "import { Box } from '@canva/ui/box'" component.tsx`
+  - Expected: Match found
+
+- [ ] Heading uses Text component with weight="bold" and size="large"
+  - Validation: `grep '<Text weight="bold" size="large">' component.tsx`
+  - Expected: Match found
+
+- [ ] Two-column layout with Columns component (60%/40% split)
+  - Validation: `grep 'width="3/5"' component.tsx && grep 'width="2/5"'`
+  - Expected: Both matches found
+
+- [ ] No custom CSS used anywhere
+  - Validation: `grep -r "\.css$\|style={{" path/to/component/`
+  - Expected: No matches
+```
+
+---
+
+### Example 2: Code Quality Assessment
+
+**❌ Subjective:**
+```markdown
+- [ ] Code follows best practices
+- [ ] Implementation is elegant
+- [ ] Function is well-structured
+```
+
+**✅ Objective:**
+```markdown
+- [ ] No else blocks used (early returns only)
+  - Validation: `grep " else " file.ts`
+  - Expected: No matches
+
+- [ ] Function ≤20 lines
+  - Validation: `wc -l file.ts`
+  - Expected: ≤20
+
+- [ ] Maximum nesting depth ≤3 levels
+  - Validation: Manual review or `awk '{print gsub(/\t/, "")}' file.ts | sort -rn | head -n 1`
+  - Expected: ≤3
+```
+
+---
+
+### Example 3: Performance Assessment
+
+**❌ Subjective:**
+```markdown
+- [ ] Component is performant
+- [ ] Function is fast enough
+- [ ] Loads quickly
+```
+
+**✅ Objective:**
+```markdown
+- [ ] Component renders in <50ms
+  - Validation: `npm run test:perf -- ComponentName`
+  - Expected: "render time: <50ms" in output
+
+- [ ] Function completes in <100ms for input size ≤1000
+  - Validation: `npm run test -- functionPerformance`
+  - Expected: Test passes with timing assertion
+
+- [ ] Bundle size increase <10KB
+  - Validation: `npm run build:analyze -- --compare`
+  - Expected: "+8.2KB" or less
+```
+
+---
+
+## Principle 2: Explicit Over Implicit
+
+AI cannot infer context or "figure out" details. Show exact code AI should write.
+
+### Example 1: Component Integration
+
+**❌ Implicit (AI must guess):**
+```markdown
+**Implementation:**
+- Integrate YoutubePlayer component with appropriate settings
+- Follow design system conventions
+- Use TypeScript properly
+```
+
+**✅ Explicit (AI knows exactly what to do):**
+```markdown
+**Implementation:**
+
+**Step 1: Import Required Components**
+```typescript
+// File: web/src/ui/apps/app_video_card/app_video_card.tsx
+// Add these exact imports at the top:
+
+import { Box } from '@canva/ui/box';
+import { Columns, Column } from '@canva/ui/columns';
+import { YoutubePlayer } from 'ui/tailoring/ui/video/youtube_player/youtube_player';
+import type { YouTubeVideoPlayerTarget } from 'ui/tailoring/ui/video/youtube_player/youtube_player';
+import type { AppVideoCardProps } from './app_video_card.types';
+```
+
+**Step 2: Create Component Structure**
+```typescript
+// File: web/src/ui/apps/app_video_card/app_video_card.tsx
+// Write exactly this code:
+
+export const AppVideoCard: React.FC<AppVideoCardProps> = (props) => {
+  const { videoId, title, iconUrl } = props;
+  
+  return (
+    <Box background="secondary" borderRadius="large" padding="xlarge">
+      <Columns space="large" alignY="stretch">
+        <Column width="3/5">
+          {videoId && (
+            <YoutubePlayer 
+              mode="inline"
+              videoId={videoId}
+              aspectRatio="16:9"
+              autoplay={false}
+              mute={true}
+            />
+          )}
+        </Column>
+        <Column width="2/5">
+          {/* App info in next step */}
+        </Column>
+      </Columns>
+    </Box>
+  );
+};
+```
+
+**Validation:**
+```bash
+npm run typecheck
+grep "import { Box }" app_video_card.tsx
+```
+Expected: 0 errors, match found
+```
+
+---
+
+### Example 2: API Integration
+
+**❌ Implicit:**
+```markdown
+**Implementation:**
+- Call the analytics API when appropriate
+- Handle errors gracefully
+```
+
+**✅ Explicit:**
+```markdown
+**Implementation:**
+
+**Step 1: Import Analytics**
+```typescript
+// File: component.tsx
+import { Analytics } from 'base/analytics';
+```
+
+**Step 2: Track Event on Video Play**
+```typescript
+// Add inside component:
+const handleVideoPlay = (event: { target: YouTubeVideoPlayerTarget; data: number }) => {
+  // Track analytics
+  Analytics.track('app_video_played', {
+    app_id: props.appId,
+    video_id: props.videoId,
+    timestamp: Date.now(),
+  });
+  
+  // Call original handler
+  props.onPlayVideo?.(event);
+};
+
+// Use in YoutubePlayer:
+<YoutubePlayer onPlayVideo={handleVideoPlay} />
+```
+
+**Validation:**
+```bash
+grep "Analytics.track" component.tsx
+grep "handleVideoPlay" component.tsx
+```
+Expected: Both matches found
+```
+
+---
+
+## Principle 3: Validatable Over Aspirational
+
+Every success criterion needs a command AI can execute to verify completion.
+
+### Example 1: Export Validation
+
+**❌ Not Validatable:**
+```markdown
+- [ ] Component properly exported
+- [ ] Module can be imported
+```
+
+**✅ Validatable:**
+```markdown
+- [ ] Component exports from index.ts
+  - Validation: `grep "export { AppVideoCard }" index.ts`
+  - Expected: Match found
+
+- [ ] Component imports successfully
+  - Validation: `node -e "const { AppVideoCard } = require('./dist'); console.log(typeof AppVideoCard);"`
+  - Expected: Output "function"
+
+- [ ] TypeScript types export correctly
+  - Validation: `grep "export type AppVideoCardProps" types.ts`
+  - Expected: Match found
+```
+
+---
+
+### Example 2: Test Coverage
+
+**❌ Not Validatable:**
+```markdown
+- [ ] Tests are comprehensive
+- [ ] All scenarios covered
+```
+
+**✅ Validatable:**
+```markdown
+- [ ] Tests cover all 6 functional requirements (1 test per requirement minimum)
+  - Validation: `grep "describe\|it\|test(" test.ts | wc -l`
+  - Expected: ≥6
+
+- [ ] Video rendering scenario tested
+  - Validation: `grep "when videoId is provided" test.ts`
+  - Expected: Match found
+
+- [ ] Non-video fallback scenario tested
+  - Validation: `grep "when videoId is not provided" test.ts`
+  - Expected: Match found
+
+- [ ] All tests pass
+  - Validation: `npm run test app_video_card`
+  - Expected: "X passing", exit code 0
+```
+
+---
+
+### Example 3: Pattern Compliance
+
+**❌ Not Validatable:**
+```markdown
+- [ ] Follows Canva coding standards
+- [ ] Uses design system correctly
+```
+
+**✅ Validatable:**
+```markdown
+- [ ] No else blocks (uses early returns per ControlFlowConstraints)
+  - Validation: `grep " else " component.tsx`
+  - Expected: No matches
+
+- [ ] Uses Easel components (per DesignSystemConstraints)
+  - Validation: `grep "@canva/ui" component.tsx`
+  - Expected: Multiple matches (Box, Stack, Text, etc.)
+
+- [ ] Individual Easel imports (tree-shakeable)
+  - Validation: `grep "from '@canva/ui/'" component.tsx`
+  - Expected: No barrel import found, only individual paths
+```
+
+---
+
+## Principle 4: Incremental Over Big-Bang
+
+Break implementation into small steps with validation after each step.
+
+### Example: Component Implementation
+
+**❌ Big-Bang (No intermediate validation):**
+```markdown
+**Implementation:**
+Create the complete AppVideoCard component with video section, app info section, conditional rendering, styling, and full integration with YoutubePlayer.
+
+**Validation:**
+```bash
+npm run test
+```
+Expected: All tests pass
+```
+
+**Problem:** If Step 1 is wrong, AI wastes time on Steps 2-5 before discovering error.
+
+---
+
+**✅ Incremental (Validate each step):**
+```markdown
+**Step 1: Create Props Interface**
+```typescript
+// File: app_video_card.types.ts
+export type AppVideoCardProps = {
+  videoId?: string;
+  title: string;
+  // ... (10 lines total)
+};
+```
+
+**Validation After Step 1:**
+```bash
+npm run typecheck
+wc -l app_video_card.types.ts
+```
+Expected: 0 errors, ≤15 lines
+
+✅ **Checkpoint:** Only proceed to Step 2 if validation passes
+
+---
+
+**Step 2: Create Component Shell with Easel**
+```typescript
+// File: app_video_card.tsx
+import { Box } from '@canva/ui/box';
+
+export const AppVideoCard = (props) => {
+  return <Box>{/* Content in next steps */}</Box>;
+};
+```
+
+**Validation After Step 2:**
+```bash
+npm run typecheck
+grep "import { Box }" app_video_card.tsx
+```
+Expected: 0 errors, match found
+
+✅ **Checkpoint:** Only proceed to Step 3 if validation passes
+
+---
+
+**Step 3: Add Columns Layout**
+[20 lines with validation]
+
+✅ **Checkpoint**
+
+---
+
+**Step 4: Add Video Section**
+[25 lines with validation]
+
+✅ **Checkpoint**
+
+---
+
+**Step 5: Add App Info Section**
+[20 lines with validation]
+
+✅ **Final Validation**
+
+**Benefits:**
+- Fail fast: Errors caught immediately at source
+- Clear progress: Each step is independently verifiable
+- Easy debugging: Know exactly which step failed
+- Reduced rework: Don't build on faulty foundation
+```
+
+---
+
+## Principle 5: Referenced Over Assumed
+
+Don't assume AI knows your codebase patterns. Show actual code from existing files.
+
+### Example: Using Existing Patterns
+
+**❌ Assumed Knowledge:**
+```markdown
+**Implementation:**
+Follow the same pattern as EditorialFeaturedApp for props handling.
+
+**Dependencies:**
+- EditorialFeaturedApp component
+- YoutubePlayer component
+```
+
+**✅ Referenced Context:**
+```markdown
+## CodeContext
+
+**Files to Examine:**
+
+**File 1:** `web/src/ui/apps/editorial_featured_app/editorial_featured_app.tsx`
+- **Lines 15-35:** Props interface definition
+```typescript
+// CURRENT CODE in editorial_featured_app.tsx:
+export type EditorialFeaturedAppProps = {
+  title: string;
+  iconUrl: string;
+  heading: string;
+  headingColor: 'dark' | 'light';
+  subheading: string;
+  backgroundColor: string;
+  onClick: () => void;
+  onComponentMounted?: (element: HTMLElement) => void;
+};
+```
+
+- **Lines 50-80:** Component implementation pattern
+```typescript
+// CURRENT CODE showing pattern to follow:
+export const EditorialFeaturedApp: React.FC<EditorialFeaturedAppProps> = ({
+  title,
+  iconUrl,
+  onClick,
+  // ...
+}) => {
+  return (
+    <BasicButton onClick={onClick}>
+      <Box paddingX="2u" paddingY="1.5u">
+        <Columns spacing="1u">
+          <Column width="content">
+            <StaticImage src={iconUrl} alt={title} />
+          </Column>
+          {/* ... */}
+        </Columns>
+      </Box>
+    </BasicButton>
+  );
+};
+```
+
+**Usage:** Extend EditorialFeaturedAppProps with AppVideoCardVideoProps using same pattern.
+
+---
+
+**File 2:** `ui/tailoring/ui/video/youtube_player/youtube_player.tsx`
+- **Lines 80-100:** YoutubePlayer usage example
+```typescript
+// CURRENT USAGE from existing code:
+<YoutubePlayer 
+  mode="inline"
+  videoId="abc123"
+  aspectRatio="16:9"
+  autoplay={false}
+  mute={true}
+  onPlayVideo={(event) => console.log('played', event)}
+/>
+```
+
+**Usage:** Use YoutubePlayer with these exact prop names and types.
+```
+
+---
+
+## Before/After Task Definition Examples
+
+### EXAMPLE 1: Props Interface Task
+
+**❌ BEFORE (AI will struggle):**
+```markdown
+# Task 1: Create Component Props
+
+Create props interface for AppVideoCard that extends EditorialFeaturedApp and adds video support.
+
+## Success Criteria
+- [ ] Props interface created
+- [ ] Extends existing props
+- [ ] Includes video props
+```
+
+**Problems:**
+- No CodeContext (AI doesn't see EditorialFeaturedAppProps)
+- No StyleGuides (AI doesn't know TypeScript standards)
+- Subjective criteria (what does "created" mean?)
+- No validation (how to verify?)
+- No exact code (what should interface look like?)
+
+---
+
+**✅ AFTER (AI can execute):**
+```markdown
+# Task 1a: Create AppVideoCard Props Interface
+
+Create TypeScript interface extending EditorialFeaturedAppProps with video-specific props.
+
+## CodeContext
+
+**File to Examine:**
+`web/src/ui/apps/editorial_featured_app/editorial_featured_app.tsx` (Lines 15-25)
+
+**Current Code:**
+```typescript
+export type EditorialFeaturedAppProps = {
+  title: string;
+  iconUrl: string;
+  onClick: () => void;
+  // ... [actual interface from file]
+};
+```
+
+## StyleGuides
+
+**Mandatory:** `aidd-language-javascript.mdc` - TypeScript strict mode, interface definitions
+
+**Constraints:**
+- ✅ Use strict TypeScript (no `any` types)
+- ✅ Use optional props with `?` for video features
+- ✅ Extend existing interface with `&` operator
+
+## Requirements
+
+- Given EditorialFeaturedAppProps interface, should create AppVideoCardVideoProps with video-specific fields
+- Given TypeScript compilation, should extend interfaces using intersection type
+- Given optional video features, should use optional property syntax with `?`
+
+## Implementation
+
+**Step 1: Create types file**
+```typescript
+// File: web/src/ui/apps/app_video_card/app_video_card.types.ts
+// Write exactly this code:
+
+import type { EditorialFeaturedAppProps } from 'ui/apps/editorial_featured_app/editorial_featured_app';
+
+export type AppVideoCardVideoProps = {
+  videoId?: string;
+  videoTitle?: string;
+  autoplay?: boolean;
+  mute?: boolean;
+};
+
+export type AppVideoCardProps = 
+  EditorialFeaturedAppProps & AppVideoCardVideoProps;
+```
+
+**Validation After Step 1:**
+```bash
+npm run typecheck
+```
+Expected: "0 errors", exit code 0
+
+## Success Criteria
+
+- [ ] File exists at expected path
+  - Validation: `ls web/src/ui/apps/app_video_card/app_video_card.types.ts`
+  - Expected: File exists
+
+- [ ] TypeScript compiles without errors
+  - Validation: `npm run typecheck`
+  - Expected: "0 errors", exit code 0
+
+- [ ] AppVideoCardProps exports successfully
+  - Validation: `grep "export type AppVideoCardProps" app_video_card.types.ts`
+  - Expected: Match found
+
+- [ ] Interface extends EditorialFeaturedAppProps
+  - Validation: `grep "EditorialFeaturedAppProps &" app_video_card.types.ts`
+  - Expected: Match found
+
+- [ ] File is ≤20 lines
+  - Validation: `wc -l app_video_card.types.ts`
+  - Expected: ≤20
+
+## Validation Scripts
+
+```bash
+# Complete validation suite
+npm run typecheck && \
+ls web/src/ui/apps/app_video_card/app_video_card.types.ts && \
+wc -l web/src/ui/apps/app_video_card/app_video_card.types.ts
+```
+
+Expected: 0 errors, file exists, ≤20 lines
+
+## Estimated Effort
+
+**Size:** Small
+**Time:** 30 minutes
+**Lines:** ~15 lines
+**Reference:** Similar to "TypeScript interface definition" from effort-calibration.mdc
+```
+
+---
+
+### EXAMPLE 2: Component Implementation Task
+
+**❌ BEFORE (AI will struggle):**
+```markdown
+# Task 2: Implement Component
+
+Create the AppVideoCard component with video support and responsive design.
+
+## Requirements
+- Component should render video when videoId provided
+- Should fallback gracefully when no video
+- Should be responsive
+
+## Success Criteria
+- [ ] Component works correctly
+- [ ] Video displays properly
+- [ ] Responsive design implemented
+```
+
+**Problems:**
+- No CodeContext (AI doesn't know how to use YoutubePlayer)
+- No StyleGuides (AI doesn't know about Easel/MobX requirements)
+- Subjective criteria ("works correctly", "displays properly")
+- No step-by-step implementation
+- >50 lines in one task
+
+---
+
+**✅ AFTER (AI can execute):**
+```markdown
+# Task 2b: Add Video Section with YoutubePlayer
+
+Add conditional video section using YoutubePlayer component with Easel layout.
+
+## CodeContext
+
+**File to Examine:**
+`ui/tailoring/ui/video/youtube_player/youtube_player.tsx` (Lines 80-100)
+
+**Current Usage Pattern:**
+```typescript
+// From existing codebase:
+<YoutubePlayer 
+  mode="inline"
+  videoId="video123"
+  aspectRatio="16:9"
+  autoplay={false}
+  mute={true}
+  hideControls={false}
+  onPlayVideo={(event) => handlePlay(event)}
+/>
+```
+
+**Pattern to Follow:**
+`web/src/ui/apps/editorial_featured_app/editorial_featured_app.tsx` - Conditional rendering pattern with early returns
+
+## StyleGuides
+
+**Mandatory:** 
+- `aidd-language-javascript.mdc` - ControlFlowConstraints (early returns, no else)
+- `aidd-language-javascript.mdc` - DesignSystemConstraints (Easel only)
+
+**Critical Constraints:**
+✅ **DO:**
+- Use early return for no-video case
+- Use Easel Box component for video container
+- Import YoutubePlayer from exact path shown in CodeContext
+
+❌ **DON'T:**
+- Use else block for conditional rendering
+- Use custom div with inline styles
+- Use barrel imports from '@canva/ui'
+
+## State Management Strategy
+
+**MobX Required:** NO
+
+**Justification:**
+- Component receives all data via props
+- No internal reactive state needed
+- Video playback managed by YoutubePlayer component
+
+## Requirements
+
+- Given videoId prop present, should render video section with YoutubePlayer
+- Given videoId prop absent, should skip video section rendering
+- Given video container, should use Easel Box component with proper styling
+
+## Implementation
+
+**Step 1: Add YoutubePlayer import**
+```typescript
+// File: app_video_card.tsx
+// Add to existing imports:
+import { YoutubePlayer } from 'ui/tailoring/ui/video/youtube_player/youtube_player';
+```
+
+**Validation After Step 1:**
+```bash
+npm run typecheck
+```
+Expected: 0 errors
+
+✅ **Checkpoint**
+
+---
+
+**Step 2: Add conditional video rendering**
+```typescript
+// File: app_video_card.tsx
+// Inside <Column width="3/5"> from previous task, add:
+
+{videoId && (
+  <Box background="tertiary" borderRadius="medium">
+    <YoutubePlayer 
+      mode="inline"
+      videoId={videoId}
+      aspectRatio="16:9"
+      autoplay={false}
+      mute={true}
+    />
+  </Box>
+)}
+```
+
+**Validation After Step 2:**
+```bash
+npm run typecheck
+grep "YoutubePlayer" app_video_card.tsx
+grep "videoId &&" app_video_card.tsx
+```
+Expected: 0 errors, both matches found
+
+✅ **Checkpoint**
+
+## Success Criteria
+
+- [ ] YoutubePlayer imported from correct path
+  - Validation: `grep "from 'ui/tailoring/ui/video/youtube_player/youtube_player'" app_video_card.tsx`
+  - Expected: Match found
+
+- [ ] Conditional rendering uses && operator (no else block)
+  - Validation: `grep "videoId &&" app_video_card.tsx`
+  - Expected: Match found
+  - Validation: `grep " else " app_video_card.tsx`
+  - Expected: No matches
+
+- [ ] Video container uses Easel Box
+  - Validation: `grep "<Box.*borderRadius" app_video_card.tsx`
+  - Expected: Match found (Box with borderRadius prop)
+
+- [ ] YoutubePlayer configured correctly
+  - Validation: `grep 'mode="inline"' app_video_card.tsx`
+  - Expected: Match found
+
+- [ ] TypeScript compiles
+  - Validation: `npm run typecheck`
+  - Expected: 0 errors
+
+- [ ] Added code ≤25 lines
+  - Validation: `git diff app_video_card.tsx | grep "^+" | wc -l`
+  - Expected: ≤25
+
+## Validation Scripts
+
+```bash
+# Complete validation
+npm run typecheck && \
+grep "YoutubePlayer" app_video_card.tsx && \
+grep "videoId &&" app_video_card.tsx && \
+! grep " else " app_video_card.tsx
+```
+
+Expected: 0 errors, matches found, no else blocks
+
+## Estimated Effort
+
+**Size:** Small
+**Time:** 1.5 hours  
+**Lines:** ~20 lines (implementation only)
+**Reference:** Similar to "Component section addition" from effort-calibration.mdc
+```
+
+---
+
+## Common AI Failure Patterns & Fixes
+
+### Pattern 1: "Figure Out" Language
+
+**❌ Causes AI to guess:**
+```markdown
+Figure out the best way to integrate the video player
+Determine appropriate styling
+Choose suitable validation approach
+```
+
+**✅ Explicit instructions:**
+```markdown
+Use YoutubePlayer component with these exact props: mode="inline", aspectRatio="16:9"
+Use Box from '@canva/ui/box' with background="secondary", padding="xlarge"
+Run these validation commands: npm run typecheck, grep "@canva/ui" file.tsx
+```
+
+---
+
+### Pattern 2: "Use Best Practices"
+
+**❌ Too vague:**
+```markdown
+Follow TypeScript best practices
+Use good coding standards
+Implement proper error handling
+```
+
+**✅ Specific requirements:**
+```markdown
+Use strict TypeScript mode (no 'any' types)
+Use early returns per ControlFlowConstraints (no else blocks)
+Wrap async errors in try/catch and use runInAction per MobX patterns
+```
+
+---
+
+### Pattern 3: "Make It [Quality]"
+
+**❌ Subjective quality:**
+```markdown
+Make it responsive
+Make it performant
+Make it accessible
+Make it look professional
+```
+
+**✅ Objective measurements:**
+```markdown
+At 768px breakpoint, switch from Columns to Stack layout
+Component renders in <50ms (validate with npm run test:perf)
+Add aria-label to interactive elements, use Easel color tokens for ≥4.5:1 contrast
+Use Easel Text component with size="large" weight="bold" for headings
+```
+
+---
+
+### Pattern 4: "Ensure Compliance"
+
+**❌ Vague compliance:**
+```markdown
+Ensure code follows style guide
+Ensure accessibility compliance
+Ensure design system usage
+```
+
+**✅ Specific verification:**
+```markdown
+No else blocks used (validate: grep " else " file.ts → expect no matches)
+ARIA labels on all buttons (validate: grep "aria-label" file.tsx → expect matches)
+Easel imports present (validate: grep "@canva/ui" file.tsx → expect matches)
+```
+
+---
+
+### Pattern 5: Generic Dependencies
+
+**❌ Vague dependencies:**
+```markdown
+**Dependencies:**
+- Design system components
+- Video player library
+- Analytics system
+```
+
+**✅ Exact references:**
+```markdown
+**Dependencies:**
+
+1. **File:** `@canva/ui/box/index.ts`
+   - **Export:** Box component
+   - **Import:** `import { Box } from '@canva/ui/box'`
+   - **Usage:**
+   ```typescript
+   <Box padding="medium" background="secondary">
+   ```
+
+2. **File:** `ui/tailoring/ui/video/youtube_player/youtube_player.tsx`
+   - **Export:** YoutubePlayer component
+   - **Import:** `import { YoutubePlayer } from 'ui/tailoring/ui/video/youtube_player/youtube_player'`
+   - **Props:** See lines 30-50 for prop interface
+   
+3. **File:** `base/analytics/analytics.ts`
+   - **Export:** Analytics.track() method
+   - **Usage:** `Analytics.track('event', { data })`
+```
+
+---
+
+## Task Definition Quality Checklist
+
+Use this before finalizing any task for user approval:
+
+### Mandatory Sections
+
+- [ ] CodeContext - with file paths, line numbers, code snippets
+- [ ] StyleGuides - with .mdc references and explicit DO/DON'T
+- [ ] State Management Strategy - for UI components (MobX YES/NO)
+- [ ] Requirements - using "Given [X], should [Y]" format
+- [ ] Implementation Steps - with exact code for each step
+- [ ] Validation Scripts - after each step and at task end
+- [ ] Success Criteria - objective and validatable
+
+### Content Quality
+
+- [ ] No subjective terms in success criteria
+- [ ] No "figure out", "determine", "choose" language
+- [ ] All code examples follow StyleGuide patterns
+- [ ] All imports have exact paths (no wildcards)
+- [ ] Task size ≤50 lines (or broken into sub-tasks)
+- [ ] Each step ≤20 lines
+- [ ] Validation after each step
+- [ ] Expected outputs specified for all validations
+
+### AI Executability
+
+- [ ] Everything AI needs is explicit (no assumptions)
+- [ ] Can copy-paste code directly from task
+- [ ] Can copy-paste validation commands
+- [ ] Can verify completion objectively
+- [ ] No human judgment required at any step
+
+---
+
+## Red Flags in Task Definitions
+
+**If you see these, task needs revision:**
+
+🚩 "Clean", "good", "appropriate", "nice", "proper", "suitable", "distinct"
+🚩 "Follow best practices"
+🚩 "Use appropriate settings"
+🚩 "Figure out", "determine", "choose"
+🚩 "Make it [quality]"
+🚩 "Ensure compliance"
+🚩 Success criteria without validation commands
+🚩 Code examples with custom CSS/styles
+🚩 Code examples with else blocks
+🚩 Import paths missing or using wildcards
+🚩 No CodeContext section
+🚩 No StyleGuides section
+🚩 Task >50 lines without breakdown
+🚩 No validation between implementation steps
+
+---
+
+## Green Flags in Task Definitions
+
+**These indicate AI-ready tasks:**
+
+✅ CodeContext with actual code snippets from existing files
+✅ StyleGuides with explicit DO/DON'T and code examples
+✅ Objective success criteria with validation commands
+✅ Exact code to write in implementation steps
+✅ Validation after each step with expected outputs
+✅ Import paths are exact and complete
+✅ Task ≤50 lines or broken into sub-tasks
+✅ Requirements use "Given [X], should [Y]" format
+✅ No subjective language anywhere
+✅ Everything needed is explicit
+
+---
+
+## Template for Quick Task Writing
+
+```markdown
+# Task X: [Specific Action in ≤50 Lines]
+
+[One-line description]
+
+## CodeContext
+
+**File:** `exact/path/file.ext` (Lines X-Y)
+```language
+[actual current code AI needs to see]
+```
+
+## StyleGuides
+
+**Mandatory:** `guide.mdc` - Section: [specific section]
+
+**Constraints:**
+✅ **DO:** [with code example]
+❌ **DON'T:** [with anti-pattern example]
+
+## State Management Strategy
+
+**MobX Required:** [YES/NO]
+**Justification:** [reason]
+
+## Requirements
+
+- Given [situation], should [action]
+- Given [situation], should [action]
+
+## Implementation
+
+**Step 1:** [action]
+```language
+// File: path
+[exact code - ≤20 lines]
+```
+**Validation:** `command` → Expected: [output]
+
+✅ **Checkpoint**
+
+## Success Criteria
+
+- [ ] [Objective criterion]
+  - Validation: `command`
+  - Expected: [output]
+
+## Validation Scripts
+
+```bash
+npm run typecheck && \
+[other validations]
+```
+Expected: All pass
+
+## Estimated Effort
+
+**Size:** Small
+**Time:** 1h
+**Lines:** ~X lines
+**Reference:** [similar example]
+```
+
+---
+
+## Final Checklist
+
+Before submitting task to AI:
+
+1. **Run against checklist above** - All mandatory sections present?
+2. **Remove all red flags** - Any subjective/vague language?
+3. **Add all green flags** - CodeContext, explicit code, validations?
+4. **Verify size** - ≤50 lines or broken down?
+5. **Test validation commands** - Do they actually work?
+
+**If all ✅ → Task is AI-ready**
+**If any ❌ → Revise before giving to AI**

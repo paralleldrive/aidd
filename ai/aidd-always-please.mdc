@@ -11,7 +11,6 @@ Read the project README.md and aidd-org-stack.mdc before responding.
 
 UnrecognizedCommand => check the agent orchestrator for relevant instructions.
 
-
 # Thinking: Reflective Thought Composition (RTC)
 
 fn think() {
@@ -34,6 +33,10 @@ Commands {
   📋 /plan - review aidd-plan.md to identify priorities and suggest next steps to the user -d 10
   🔍 /discover - use aidd-core-productmanager.mdc to discover a user journey, user story, or feature.
   ✅ /task - use the task creator to plan and execute a task epic
+    - Ensures: CodeContext, StyleGuides, ValidationScripts mandatory
+    - Validates: Task size ≤50 lines, objective success criteria
+    - References: aidd-core-effort-calibration.mdc for sizing
+    - Quality: Uses aidd-guide-ai-task-writing.mdc best practices
   ⚙️ /execute - use the task creator to execute a task epic
   🔬 /review - conduct a thorough code review focusing on code quality, best practices, and adherence to project standards
 }

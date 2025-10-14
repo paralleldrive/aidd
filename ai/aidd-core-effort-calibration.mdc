@@ -1,0 +1,685 @@
+---
+description: Reference examples for calibrating task size estimates for AI implementation
+alwaysApply: false
+---
+
+# Effort Calibration Guide
+
+Reference examples for determining if a task is Small, Medium, or Large. Use these to estimate task effort and validate task size constraints.
+
+## Small Tasks (1-2 hours, 20-50 lines, 2-8 tests)
+
+### Characteristics
+
+- Single file creation or modification
+- Single function or simple component
+- Minimal dependencies (1-2 imports)
+- Straightforward logic with few edge cases
+- Quick validation (1-2 commands)
+- Clear, focused scope
+
+### Code Examples
+
+**Example 1: TypeScript Interface Definition**
+```typescript
+// ~15 lines
+export type AppVideoCardVideoProps = {
+  videoId?: string;
+  videoTitle?: string;
+  autoplay?: boolean;
+  mute?: boolean;
+};
+
+export type AppVideoCardProps = 
+  EditorialFeaturedAppProps & AppVideoCardVideoProps;
+```
+
+**Example 2: Simple Utility Function**
+```typescript
+// ~12 lines (from lib/asyncPipe.js reference)
+const asyncPipe = (...fns) => (x) =>
+  fns.reduce(async (y, f) => f(await y), x);
+
+const isPrerelease = (version = "") =>
+  /-(alpha|beta|rc|next|canary|dev|pre)/.test(version);
+
+const shouldUpdateLatestTag = (version) => !isPrerelease(version);
+```
+
+**Example 3: Simple Component Shell**
+```typescript
+// ~25 lines
+import { Box } from '@canva/ui/box';
+import type { Props } from './types';
+
+export const SimpleCard: React.FC<Props> = ({ title, content }) => {
+  return (
+    <Box padding="medium" background="secondary">
+      <Text>{title}</Text>
+      <Text tone="secondary">{content}</Text>
+    </Box>
+  );
+};
+```
+
+### Test Examples for Small Tasks
+
+```javascript
+// 5-8 tests typical for Small task
+describe('isPrerelease', () => {
+  it('should return true for beta versions', () => {
+    assert({
+      given: 'a beta version string',
+      should: 'return true',
+      actual: isPrerelease('1.0.0-beta.1'),
+      expected: true
+    });
+  });
+
+  it('should return false for stable versions', () => {
+    assert({
+      given: 'a stable version string',
+      should: 'return false',
+      actual: isPrerelease('1.0.0'),
+      expected: false
+    });
+  });
+
+  // ... 3-6 more similar tests
+});
+```
+
+### Reference from Real Codebase
+
+- `lib/asyncPipe.js` - 12 lines implementation + 8 tests = **Small**
+- `lib/release-helpers.js` - 15 lines + 12 tests = **Small**
+
+---
+
+## Medium Tasks (3-6 hours, 50-150 lines, 10-30 tests)
+
+### Characteristics
+
+- 2-3 file creation or modification
+- Component with multiple sections or conditional logic
+- 1-2 API integrations or external dependencies
+- Moderate complexity with several edge cases
+- Multiple validation steps (3-5 commands)
+- Some integration work
+
+### Code Examples
+
+**Example 1: Component with Conditional Rendering**
+```typescript
+// ~80 lines total across component + types
+import { Box } from '@canva/ui/box';
+import { Stack } from '@canva/ui/stack';
+import { Columns, Column } from '@canva/ui/columns';
+
+export const AppVideoCard: React.FC<Props> = (props) => {
+  const { videoId, title, iconUrl, description } = props;
+  
+  if (!videoId) {
+    return (
+      <Box padding="large">
+        <Stack space="small">
+          <Text>{title}</Text>
+          <Text tone="secondary">{description}</Text>
+        </Stack>
+      </Box>
+    );
+  }
+
+  return (
+    <Box background="secondary" padding="xlarge">
+      <Columns space="large">
+        <Column width="3/5">
+          <YoutubePlayer videoId={videoId} />
+        </Column>
+        <Column width="2/5">
+          <Stack space="medium">
+            <img src={iconUrl} alt={title} />
+            <Text weight="bold">{title}</Text>
+            <Text>{description}</Text>
+          </Stack>
+        </Column>
+      </Columns>
+    </Box>
+  );
+};
+```
+
+**Example 2: Integration with External API**
+```typescript
+// ~100 lines including error handling
+export class FeatureStore {
+  @observable.ref
+  data = null;
+  
+  @observable.ref
+  loading = false;
+  
+  @observable.ref
+  error = null;
+
+  @action
+  async fetchData() {
+    this.loading = true;
+    this.error = null;
+
+    try {
+      const response = await api.fetch();
+      runInAction(() => {
+        this.data = response;
+        this.loading = false;
+      });
+    } catch (error) {
+      runInAction(() => {
+        this.error = error;
+        this.loading = false;
+      });
+    }
+  }
+}
+```
+
+### Test Examples for Medium Tasks
+
+```javascript
+// 15-20 tests typical for Medium task
+describe('AppVideoCard', () => {
+  describe('when videoId is provided', () => {
+    it('should render video section');
+    it('should render app info section');
+    it('should use Columns layout');
+    it('should pass videoId to YoutubePlayer');
+    // ... 4-6 more tests
+  });
+
+  describe('when videoId is not provided', () => {
+    it('should render without video section');
+    it('should render app info only');
+    it('should use Stack layout');
+    // ... 3-4 more tests
+  });
+
+  describe('accessibility', () => {
+    it('should have proper ARIA labels');
+    // ... 2-3 more a11y tests
+  });
+});
+```
+
+### Reference from Real Codebase
+
+- `lib/update-latest-tag-hook.js` - 45 lines + 15 tests = **Medium** (borderline Small)
+- Component with 2-3 sections + comprehensive tests - ~120 lines total = **Medium**
+
+---
+
+## Large Tasks (1-2 days, 150-500 lines, 30+ tests)
+
+### Characteristics
+
+- 4+ file creation or modification
+- Multiple components with shared state
+- 3+ API integrations or complex dependencies
+- Complex business logic with many edge cases
+- Extensive test coverage (unit + integration + E2E)
+- Many validation steps (6+ commands)
+- Cross-system coordination
+
+### Code Examples
+
+**Example 1: Feature with Store + Component + Utilities**
+```
+feature/
+├── feature_store.ts          (~80 lines - MobX store)
+├── feature_component.tsx     (~100 lines - UI component)
+├── feature_utils.ts          (~50 lines - helper functions)
+├── feature.types.ts          (~30 lines - TypeScript interfaces)
+└── tests/
+    ├── feature_store.test.ts (~80 lines)
+    ├── feature_component.test.tsx (~100 lines)
+    └── feature_utils.test.ts (~60 lines)
+
+Total: ~500 lines across 7 files
+```
+
+**Example 2: Complex Integration**
+```typescript
+// Component with multiple APIs, error handling, loading states
+// Store managing multiple data sources
+// Utility functions for data transformation
+// Type definitions for all API responses
+// Comprehensive test coverage including:
+//   - Unit tests for utilities
+//   - Store tests for state management
+//   - Component tests for rendering
+//   - Integration tests for API calls
+//   - E2E tests for user workflows
+```
+
+### Test Examples for Large Tasks
+
+```javascript
+// 40+ tests across multiple suites
+describe('FeatureStore', () => {
+  describe('initialization', () => { /* 5 tests */ });
+  describe('data fetching', () => { /* 10 tests */ });
+  describe('error handling', () => { /* 8 tests */ });
+  describe('computed values', () => { /* 7 tests */ });
+});
+
+describe('FeatureComponent', () => {
+  describe('rendering', () => { /* 10 tests */ });
+  describe('user interactions', () => { /* 8 tests */ });
+  describe('accessibility', () => { /* 5 tests */ });
+});
+
+describe('FeatureUtils', () => {
+  describe('data transformation', () => { /* 12 tests */ });
+});
+
+describe('Feature Integration E2E', () => {
+  describe('complete user workflow', () => { /* 6 tests */ });
+});
+```
+
+### Reference from Real Codebase
+
+- Full "Release Latest Tag" epic - ~200 lines across 4 files + 39 tests = **Large**
+- Complete feature with store + component + utils + tests - ~400 lines = **Large**
+
+---
+
+## Too Large (>2 days, >500 lines)
+
+### Action Required
+
+**MUST break into multiple tasks following ~50 lines guideline**
+
+### Breakdown Strategies
+
+**Strategy 1: Component Decomposition**
+```
+Large component (300 lines) →
+  Task 1a: Props interface (15 lines)
+  Task 1b: Component shell (25 lines)
+  Task 1c: Section 1 implementation (40 lines)
+  Task 1d: Section 2 implementation (40 lines)
+  Task 1e: Section 3 implementation (40 lines)
+  Task 1f: Integration & exports (20 lines)
+  Task 1g: Test suite (120 lines - or break further)
+```
+
+**Strategy 2: Epic Decomposition**
+```
+Epic with 4 features (800 lines) →
+  Task 1: Feature A (180 lines - break into 4 sub-tasks)
+  Task 2: Feature B (200 lines - break into 4 sub-tasks)
+  Task 3: Feature C (150 lines - break into 3 sub-tasks)
+  Task 4: Feature D (270 lines - break into 5 sub-tasks)
+```
+
+**Strategy 3: Separation of Concerns**
+```
+Complex integration (400 lines) →
+  Task 1: Type definitions (30 lines)
+  Task 2: API client (80 lines)
+  Task 3: Store implementation (100 lines)
+  Task 4: Component implementation (120 lines)
+  Task 5: Tests (70 lines)
+```
+
+---
+
+## Line Counting Methodology
+
+### What to Include
+
+- Source code lines (excluding comments)
+- Test code lines
+- Type definition lines
+- Import statements
+- Export statements
+- Function/component definitions
+
+### What to Exclude
+
+- Blank lines
+- Comment-only lines
+- Generated code
+- Documentation files
+- Configuration files
+
+### Validation Command
+
+```bash
+# Count non-blank, non-comment lines in task scope
+find path/to/task/files -name "*.ts" -o -name "*.tsx" | \
+  xargs grep -v "^[[:space:]]*$" | \
+  grep -v "^[[:space:]]*//" | \
+  wc -l
+```
+
+### Manual Count Method
+
+```
+1. Open all files in task scope
+2. Count lines excluding:
+   - Blank lines
+   - Lines with only comments
+   - Import grouping spaces
+3. Sum across all files
+4. Compare to calibration examples
+```
+
+---
+
+## Usage in Task Planning
+
+### Step-by-Step Process
+
+**1. Estimate Lines**
+```
+Count lines in all code examples provided in task
++ Expected test lines (typically 2x implementation for good coverage)
+= Total estimated lines
+```
+
+**2. Reference Examples**
+```
+Compare total to examples:
+  20-50 lines → Small
+  50-150 lines → Medium
+  150-500 lines → Large
+  >500 lines → Too Large (break up)
+```
+
+**3. Classify**
+```
+Assign size category: Small/Medium/Large
+Document reference: "Similar to [example from this guide]"
+```
+
+**4. Validate Size**
+```
+If >50 lines:
+  - Break into sub-tasks (Xa, Xb, Xc...)
+  - Each sub-task ≤50 lines
+  - Document breakdown rationale
+```
+
+**5. Document**
+```markdown
+## Estimated Effort
+
+**Size:** Small
+**Time:** 1-2 hours
+**Lines of Code:** ~35 lines
+**Reference:** Similar to "Simple utility function" (asyncPipe example)
+
+**Breakdown:**
+- Implementation: 12 lines
+- Types: 8 lines
+- Tests: 15 lines
+- Total: 35 lines
+```
+
+---
+
+## Task Size Validation Formula
+
+```
+estimatedLines = sum(implementationLines, testLines, typeLines)
+
+if (estimatedLines <= 50) {
+  return "Small - Single task OK"
+}
+
+if (estimatedLines <= 150) {
+  return "Medium - Consider breaking into 2-3 sub-tasks"
+}
+
+if (estimatedLines <= 500) {
+  return "Large - MUST break into 5-10 sub-tasks"
+}
+
+return "Too Large - MUST break into separate task files"
+```
+
+---
+
+## Common Estimation Mistakes
+
+### Mistake 1: Underestimating Test Code
+
+```
+❌ "Component is 50 lines, so task is Small"
+✅ "Component is 50 lines + 80 lines tests = 130 lines = Medium"
+```
+
+### Mistake 2: Forgetting Type Definitions
+
+```
+❌ "Implementation is 40 lines = Small"
+✅ "Implementation 40 + Types 20 + Tests 60 = 120 lines = Medium"
+```
+
+### Mistake 3: Not Counting Imports
+
+```
+❌ "Just the function body is 30 lines"
+✅ "Imports 5 + Function 30 + Exports 2 + Tests 40 = 77 lines = Medium"
+```
+
+### Mistake 4: Ignoring Integration Complexity
+
+```
+❌ "The code is only 60 lines = Medium"
+✅ "Code 60 + Integration setup 40 + Error handling 30 + Tests 80 = 210 lines = Large"
+```
+
+---
+
+## Calibration Examples from Actual Codebase
+
+### Small Task Example: asyncPipe Utility
+
+**Files:**
+- `lib/asyncPipe.js` - 12 lines
+- `lib/asyncPipe.test.js` - 8 lines
+
+**Total:** 20 lines
+
+**Complexity:**
+- Single focused utility function
+- Pure functional implementation
+- Minimal dependencies
+- 8 focused test cases
+
+**Classification:** **Small** (1 hour)
+
+---
+
+### Small Task Example: Version Validation
+
+**Files:**
+- `lib/release-helpers.js` - 15 lines
+- `lib/release-helpers.test.js` - 12 lines
+
+**Total:** 27 lines
+
+**Complexity:**
+- Two simple predicate functions
+- Regular expression matching
+- No external dependencies
+- 12 edge case tests
+
+**Classification:** **Small** (1.5 hours)
+
+---
+
+### Medium Task Example: Tag Update Hook
+
+**Files:**
+- `lib/update-latest-tag-hook.js` - 45 lines
+- `lib/update-latest-tag-hook.test.js` - 15 lines
+
+**Total:** 60 lines
+
+**Complexity:**
+- Command-line argument parsing
+- Git command execution
+- Process exit handling
+- Error logging
+- 15 integration tests
+
+**Classification:** **Medium** (4 hours)
+
+---
+
+### Large Task Example: Release Latest Tag Epic
+
+**Files:**
+- `lib/asyncPipe.js` + tests - 20 lines
+- `lib/release-helpers.js` + tests - 27 lines
+- `lib/update-latest-tag-hook.js` + tests - 60 lines
+- `lib/release-process-e2e.test.js` - 93 lines
+
+**Total:** 200 lines across 7 files
+
+**Complexity:**
+- Multiple utility functions
+- Git integration
+- Process orchestration
+- Comprehensive test suite (39 tests)
+- E2E testing with real git operations
+
+**Classification:** **Large** (1.5 days)
+
+---
+
+## Task Breakdown Decision Matrix
+
+| Estimated Lines | Classification | Action |
+|----------------|----------------|---------|
+| 0-50 | Small | Single task OK |
+| 51-100 | Medium | Consider 2 sub-tasks |
+| 101-150 | Medium | Recommended 3 sub-tasks |
+| 151-250 | Large | MUST break into 5+ sub-tasks |
+| 251-500 | Large | MUST break into 8+ sub-tasks |
+| 500+ | Too Large | MUST create separate task file/epic |
+
+---
+
+## Sub-Task Breakdown Template
+
+**When task >50 lines, use this breakdown:**
+
+```markdown
+## Task X: [Original Task Name] (BROKEN DOWN)
+
+**Total Estimated Lines:** 180 lines
+**Breakdown Required:** Yes (exceeds 50 line limit)
+
+### Sub-Tasks:
+
+**Task Xa: [Scope 1]**
+- Estimated: 25 lines
+- Focus: [Specific focus]
+- Validation: [Quick validation]
+
+**Task Xb: [Scope 2]**
+- Estimated: 30 lines
+- Focus: [Specific focus]
+- Validation: [Quick validation]
+
+**Task Xc: [Scope 3]**
+- Estimated: 35 lines
+- Focus: [Specific focus]
+- Validation: [Quick validation]
+
+**Task Xd: [Scope 4]**
+- Estimated: 40 lines
+- Focus: [Specific focus]
+- Validation: [Quick validation]
+
+**Task Xe: [Scope 5]**
+- Estimated: 50 lines
+- Focus: [Specific focus]
+- Validation: [Quick validation]
+
+**Total Sub-Tasks:** 5
+**Total Lines:** 180 (validated)
+```
+
+---
+
+## Validation Commands for Effort Estimation
+
+### Count Lines in Implementation Files
+
+```bash
+wc -l file1.ts file2.tsx file3.ts
+```
+**Expected:** See line counts for each file + total
+
+### Count Lines Excluding Comments/Blanks
+
+```bash
+grep -v "^[[:space:]]*$" file.ts | grep -v "^[[:space:]]*//" | wc -l
+```
+**Expected:** More accurate count
+
+### Count Test Lines
+
+```bash
+wc -l tests/*.test.ts tests/*.test.tsx
+```
+**Expected:** Test line count (usually 1-2x implementation)
+
+### Verify Task Size Compliance
+
+```bash
+TOTAL=$(wc -l file1.ts file2.ts tests/*.test.ts | tail -n 1 | awk '{print $1}')
+if [ $TOTAL -le 50 ]; then
+  echo "✅ Small task - size OK"
+elif [ $TOTAL -le 150 ]; then
+  echo "⚠️ Medium task - consider breaking up"
+else
+  echo "❌ Large/Too Large - MUST break into sub-tasks"
+fi
+```
+
+---
+
+## Quick Reference Table
+
+| Task Type | Time | Lines | Tests | Files | Validation Steps |
+|-----------|------|-------|-------|-------|------------------|
+| Small | 1-2h | 20-50 | 2-8 | 1 | 1-2 |
+| Medium | 3-6h | 50-150 | 10-30 | 2-3 | 3-5 |
+| Large | 1-2d | 150-500 | 30+ | 4+ | 6+ |
+| Too Large | >2d | >500 | - | - | Break up required |
+
+---
+
+## Usage in Task Creator
+
+```
+When planning task:
+  1. Count lines in code examples
+  2. Add estimated test lines (typically 1-2x implementation)
+  3. Reference this guide for classification
+  4. If >50 lines: Break into sub-tasks
+  5. Document size, reference, and breakdown
+
+In task template:
+  ## Estimated Effort
+  **Size:** [Small/Medium/Large]
+  **Time:** [based on table above]
+  **Lines of Code:** ~[number] lines
+  **Reference:** Similar to "[example from this guide]"
+```

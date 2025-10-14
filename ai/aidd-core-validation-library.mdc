@@ -1,0 +1,677 @@
+---
+description: Standard validation commands and patterns for task validation - use these for objective task completion verification
+alwaysApply: false
+---
+
+# Validation Library
+
+Standard validation commands for common task validation scenarios. Reference these when writing validation scripts in task definitions.
+
+---
+
+## TypeScript Validation
+
+### Basic Compilation Check
+
+```bash
+npm run typecheck
+```
+**Expected:** "0 errors" in output, exit code 0
+
+**Usage:** Verify TypeScript code compiles without errors
+
+---
+
+### Type Resolution Check
+
+```bash
+npm run typecheck 2>&1 | grep "Cannot find"
+```
+**Expected:** No matches (empty output)
+
+**Usage:** Verify all imports resolve correctly
+
+---
+
+### Specific File Type Check
+
+```bash
+npx tsc --noEmit path/to/file.ts
+```
+**Expected:** No errors, exit code 0
+
+**Usage:** Check single file without full project build
+
+---
+
+## Test Execution
+
+### Run All Tests
+
+```bash
+npm run test
+```
+**Expected:** "X passing", no failures, exit code 0
+
+---
+
+### Run Specific Test File
+
+```bash
+npm run test path/to/test.test.ts
+```
+**Expected:** All tests in file pass, exit code 0
+
+---
+
+### Run Test Pattern
+
+```bash
+npm run test --grep "ComponentName"
+```
+**Expected:** All matching tests pass
+
+---
+
+### Count Test Cases
+
+```bash
+grep "describe\|it\|test(" path/to/test.ts | wc -l
+```
+**Expected:** Number of test cases matches requirements count
+
+**Usage:** Verify test coverage for all requirements
+
+---
+
+## File Existence
+
+### Single File
+
+```bash
+ls path/to/file.ext
+```
+**Expected:** File exists (no "No such file or directory" error)
+
+---
+
+### Multiple Files
+
+```bash
+ls file1.ts file2.tsx file3.ts
+```
+**Expected:** All files listed, no errors
+
+---
+
+### Directory Structure
+
+```bash
+ls -la path/to/component/
+```
+**Expected:** Shows component.tsx, types.ts, tests/, etc.
+
+---
+
+## Easel Design System Compliance
+
+### No Custom CSS Files
+
+```bash
+find path/to/component/ -name "*.css"
+```
+**Expected:** No matches (empty output)
+
+**Alternative:**
+```bash
+grep -r "\.css$" path/to/component/
+```
+**Expected:** No matches
+
+**Usage:** Verify no .css files violating Easel-first policy
+
+---
+
+### No Inline Styles
+
+```bash
+grep -r "style={{" path/to/component/
+```
+**Expected:** No matches (empty output)
+
+**Usage:** Verify no inline styles used instead of Easel
+
+---
+
+### Easel Imports Present
+
+```bash
+grep "@canva/ui" path/to/component.tsx
+```
+**Expected:** Multiple matches (Box, Stack, Text, etc.)
+
+**Usage:** Verify Easel Design System components used
+
+---
+
+### Individual Easel Imports (Tree-Shakeable)
+
+```bash
+grep "from '@canva/ui/[^']*'" path/to/component.tsx
+```
+**Expected:** Individual paths like '@canva/ui/box', not barrel import '@canva/ui'
+
+**Usage:** Verify imports are tree-shakeable
+
+---
+
+### Specific Easel Component Usage
+
+```bash
+grep "import { Box } from '@canva/ui/box'" component.tsx
+```
+**Expected:** Match found
+
+**Usage:** Verify specific Easel component imported correctly
+
+---
+
+## MobX Pattern Compliance
+
+### When MobX Required = YES
+
+**Decorators Present:**
+```bash
+grep "@observable\|@action\|@computed" path/to/store.ts
+```
+**Expected:** Matches found
+
+**Observer Wrapper Present:**
+```bash
+grep "observer(" path/to/component.tsx
+```
+**Expected:** Match found
+
+**runInAction for Async:**
+```bash
+grep "runInAction" path/to/store.ts
+```
+**Expected:** Match found (if async operations present)
+
+---
+
+### When MobX Required = NO
+
+**No MobX Decorators:**
+```bash
+grep "@observable\|@action\|@computed\|observer(" path/to/component.tsx
+```
+**Expected:** No matches (empty output)
+
+**Props-Only Component:**
+```bash
+grep "React.FC<.*Props>" path/to/component.tsx
+```
+**Expected:** Match found (functional component with props)
+
+---
+
+## Control Flow Pattern Compliance
+
+### No Else Blocks
+
+```bash
+grep " else " path/to/file.ts
+```
+**Expected:** No matches (empty output)
+
+**Usage:** Verify early return pattern used instead of if-else
+
+---
+
+### Early Return Pattern
+
+```bash
+grep "^  if (.*) {$" -A 1 path/to/file.ts | grep "return"
+```
+**Expected:** Matches found (shows early returns after conditions)
+
+**Usage:** Verify code uses early returns for error/edge cases
+
+---
+
+### Nested Depth Check
+
+```bash
+# Count maximum indentation depth
+awk '{print gsub(/\t/, "")}' path/to/file.ts | sort -rn | head -n 1
+```
+**Expected:** ≤3 (max 3 levels of nesting)
+
+**Usage:** Verify code isn't too deeply nested
+
+---
+
+## Import Resolution
+
+### Module Imports Successfully
+
+```bash
+node -e "require('./path/to/module')"
+```
+**Expected:** No errors, exit code 0
+
+**Usage:** Verify module exports and imports work
+
+---
+
+### ES6 Import Resolution
+
+```bash
+npm run typecheck 2>&1 | grep "Cannot find module"
+```
+**Expected:** No matches (all imports resolve)
+
+---
+
+### Specific Export Validation
+
+```bash
+node -e "const { Export } = require('./path'); console.log(typeof Export);"
+```
+**Expected:** Output shows type (function, object, string, etc.)
+
+**Usage:** Verify specific export exists and is correct type
+
+---
+
+## Line Count Validation
+
+### Single File Line Count
+
+```bash
+wc -l path/to/file.ts
+```
+**Expected:** ≤50 lines (Small task) or specified limit
+
+**Usage:** Verify task size constraint
+
+---
+
+### Multiple Files Total
+
+```bash
+wc -l file1.ts file2.ts file3.ts | tail -n 1
+```
+**Expected:** Total ≤50 (Small), ≤150 (Medium), ≤500 (Large)
+
+**Usage:** Verify total task size across all files
+
+---
+
+### Non-Blank Line Count
+
+```bash
+grep -v "^[[:space:]]*$" file.ts | wc -l
+```
+**Expected:** More accurate count excluding blank lines
+
+---
+
+## Export Validation
+
+### Module Exports Correctly
+
+```bash
+node -e "const mod = require('./path'); console.log(Object.keys(mod));"
+```
+**Expected:** Lists exported names
+
+**Usage:** Verify all expected exports present
+
+---
+
+### TypeScript Type Exports
+
+```bash
+grep "^export type" path/to/types.ts
+```
+**Expected:** Matches found for each type definition
+
+---
+
+### Index File Re-Exports
+
+```bash
+grep "^export.*from" path/to/index.ts
+```
+**Expected:** Matches found for re-exported modules
+
+---
+
+## Requirements Format Validation
+
+### All Requirements Follow Given/Should
+
+```bash
+grep "^- Given .*, should " task-file.md | wc -l
+```
+**Expected:** Count matches total number of requirements
+
+**Usage:** Verify requirements use correct template
+
+---
+
+### No Markdown Formatting in Requirements
+
+```bash
+grep "^\*\*Given\*\*" task-file.md
+```
+**Expected:** No matches
+
+**Usage:** Verify requirements use plain text, not markdown bold
+
+---
+
+## Code Example Pattern Validation
+
+### Examples Use Early Returns (No Else)
+
+```bash
+grep " else " task-file.md
+```
+**Expected:** No matches in code examples (may appear in prose)
+
+**Usage:** Verify code examples follow ControlFlowConstraints
+
+---
+
+### Examples Use Easel (No Custom CSS)
+
+```bash
+grep "style={{" task-file.md
+```
+**Expected:** No matches in code examples
+
+**Usage:** Verify examples follow DesignSystemConstraints
+
+---
+
+### Examples Use Correct Imports
+
+```bash
+grep "from '@canva/ui/[^']*'" task-file.md
+```
+**Expected:** Individual imports found (not barrel imports)
+
+**Usage:** Verify import examples are tree-shakeable
+
+---
+
+## Success Criteria Objectivity Check
+
+### No Subjective Terms
+
+```bash
+grep -i "clean\|good\|appropriate\|nice\|elegant\|proper\|distinct\|better\|improved" task-file.md
+```
+**Expected:** No matches in success criteria section (may appear in descriptions)
+
+**Usage:** Verify all criteria are objective
+
+---
+
+### All Criteria Have Validation Commands
+
+```bash
+# Each success criterion should have "Validation:" line
+grep -A 3 "^- \[ \]" task-file.md | grep -c "Validation:"
+```
+**Expected:** Count matches number of success criteria
+
+**Usage:** Verify each criterion can be validated
+
+---
+
+### All Criteria Have Expected Outputs
+
+```bash
+grep -A 4 "^- \[ \]" task-file.md | grep -c "Expected:"
+```
+**Expected:** Count matches number of success criteria
+
+**Usage:** Verify each validation has expected output specified
+
+---
+
+## Agent Orchestration Validation
+
+### Complexity Assessment Present
+
+```bash
+grep "Multiple Technical Domains:\|Specialized Knowledge:" task-file.md
+```
+**Expected:** Both sections present
+
+**Usage:** Verify systematic agent assessment completed
+
+---
+
+### Dispatch Command Present (If Required)
+
+```bash
+grep "cursor-agent" task-file.md
+```
+**Expected:** Match found with full command (if orchestration required)
+
+**Usage:** Verify agent dispatch command provided when needed
+
+---
+
+## Validation Script Section Validation
+
+### Validation Scripts Section Exists
+
+```bash
+grep "## Validation Scripts" task-file.md
+```
+**Expected:** Section header found
+
+**Usage:** Verify mandatory ValidationScripts section present
+
+---
+
+### Each Validation Has Expected Output
+
+```bash
+grep -c "Expected:" task-file.md
+```
+**Expected:** Count ≥ number of validation commands in task
+
+**Usage:** Verify all validations specify expected output
+
+---
+
+## Mandatory Section Validation
+
+### CodeContext Section Present
+
+```bash
+grep "## CodeContext" task-file.md
+```
+**Expected:** Section header found
+
+**Usage:** Verify mandatory CodeContext section present
+
+---
+
+### StyleGuides Section Present
+
+```bash
+grep "## StyleGuides" task-file.md
+```
+**Expected:** Section header found
+
+**Usage:** Verify mandatory StyleGuides section present
+
+---
+
+### StateManagementStrategy Present (UI Components)
+
+```bash
+grep "## State Management Strategy" task-file.md
+```
+**Expected:** Section header found (for UI component tasks)
+
+**Usage:** Verify MobX decision documented
+
+---
+
+## Integration Validation
+
+### Imports Resolve in Target Codebase
+
+```bash
+cd target/codebase && npm run typecheck
+```
+**Expected:** 0 errors after adding new code
+
+**Usage:** Verify integration doesn't break existing code
+
+---
+
+### New Component Renders in Storybook
+
+```bash
+npm run storybook &
+sleep 10
+curl -s http://localhost:6006/ | grep "ComponentName"
+```
+**Expected:** Component name appears in Storybook
+
+---
+
+### No Breaking Changes to Existing Tests
+
+```bash
+npm run test -- --changed
+```
+**Expected:** All tests pass, no new failures
+
+**Usage:** Verify new code doesn't break existing tests
+
+---
+
+## Performance Validation
+
+### Bundle Size Impact
+
+```bash
+npm run build:analyze
+# Compare before and after bundle sizes
+```
+**Expected:** Bundle size increase <10KB (or specified limit)
+
+---
+
+### Render Performance
+
+```bash
+npm run test:perf -- ComponentName
+```
+**Expected:** Component renders in <50ms (or specified limit)
+
+---
+
+## Accessibility Validation
+
+### Color Contrast via Easel Tokens
+
+```bash
+grep "color=\"primary\|secondary\|critical\|success\|warning\"" component.tsx
+```
+**Expected:** Matches found (Easel color tokens used, not custom colors)
+
+---
+
+### ARIA Labels Present
+
+```bash
+grep "aria-label\|aria-labelledby" component.tsx
+```
+**Expected:** Matches found for interactive elements
+
+---
+
+### Keyboard Navigation Support
+
+```bash
+grep "onKeyDown\|onKeyPress\|tabIndex" component.tsx
+```
+**Expected:** Matches found (if interactive component)
+
+---
+
+## Documentation Validation
+
+### JSDoc Comments for Public APIs
+
+```bash
+grep "/\*\*" path/to/module.ts
+```
+**Expected:** Matches found for exported functions/classes
+
+---
+
+### Type Definitions Documented
+
+```bash
+grep "^\s*\*.*@" path/to/types.ts
+```
+**Expected:** JSDoc tags present (@param, @returns, etc.)
+
+---
+
+## Git/Version Control Validation
+
+### No Uncommitted Changes
+
+```bash
+git status --porcelain
+```
+**Expected:** Empty output (all changes committed)
+
+---
+
+### Commit Message Format
+
+```bash
+git log -1 --pretty=%B | head -n 1 | grep "^[a-z]*(\?[a-z]*)\?: "
+```
+**Expected:** Match found (conventional commit format)
+
+---
+
+## Usage in Task Definitions
+
+**Reference validations from this library:**
+
+```markdown
+## Validation Scripts
+
+**Validation 1: TypeScript Compilation**
+[Reference: TypeScript Validation → Basic Compilation Check]
+```bash
+npm run typecheck
+```
+Expected: "0 errors", exit code 0
+
+**Validation 2: Easel Compliance**
+[Reference: Easel Design System Compliance → No Custom CSS]
+```bash
+grep -r "\.css$" path/to/component/
+```
+Expected: No matches
+```
+
+**Template:** Link to specific validation from library instead of rewriting each time.

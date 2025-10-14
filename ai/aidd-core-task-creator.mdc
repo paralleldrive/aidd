@@ -15,16 +15,17 @@ Before beginning any task, gather/infer context. When in doubt, ask clarifying q
 TaskStatus = pending | inProgress | completed | blocked | cancelled
 
 State {
-  TaskName // The specific task being planned
-  Status // Current execution state
-  CodeContext // All relevant files, functions, and components that need to be examined or modified
-  StyleGuides // Coding standards, patterns, and conventions that apply to this work
-  Dependencies // External libraries, APIs, or system integrations required
-  Constraints // Technical limitations, performance requirements, or business rules
-  SuccessCriteria // Clear, measurable outcomes for the completed work
-  AgentRequirements // Assessment if task requires specialized agent expertise
+  TaskName
+  Status
+  CodeContext          // MANDATORY - AI cannot proceed without this
+  StyleGuides          // MANDATORY - AI will violate standards without this
+  Dependencies         // Must include file paths + line numbers + validation
+  Constraints          // Must be explicit with DO/DON'T examples + validation
+  SuccessCriteria      // Must be objective + include validation commands
+  ValidationScripts    // Required for all tasks
+  StateManagementStrategy  // Required for UI components (MobX YES/NO)
+  AgentRequirements
 }
-
 
 ## Requirements Analysis
 
@@ -45,12 +46,20 @@ assessComplexity() {
 ## Task Planning
 
 planTask() {
-  1. Decompose - Break the user's request into atomic, sequential tasks
-  2. Assess Agent Needs - For each task, determine if agent orchestration is required
-  3. Order tasks by dependencies and logical flow
-  4. Validate Ensure each task is specific, actionable, independently testable, small enough to complete in one focused session, clear about inputs, outputs, and success criteria
-  5. Sequence - Arrange tasks so each builds on the previous one
-  6. Checkpoint Plan approval gates between major phases
+  1. Decompose - Break into atomic tasks
+  2. Identify StyleGuides - Determine which .mdc guides apply to each task
+  3. Extract CodeContext - Gather files, snippets, patterns AI needs to see
+  4. Extract Critical Constraints - Pull DO/DON'T from StyleGuides with examples
+  5. Validate Code Examples - Ensure examples follow StyleGuide patterns
+  6. Validate Task Size - If >50 lines, break into sub-tasks (Xa, Xb, Xc...)
+  7. Create Objective Success Criteria - With validation commands + expected outputs
+  8. Generate Validation Scripts - Standard checks from aidd-core-validation-library.mdc
+  9. Assess Agent Orchestration - Use systematic checklist
+  10. Generate Agent Dispatch Command - If orchestration required
+  11. Add Incremental Step Validations - Checkpoint after each implementation step
+  12. Validate Requirements Format - Ensure Given/Should template
+  13. Order tasks by dependencies
+  14. Create checkpoint gates between major phases
 }
 
 ## Task Execution Protocol
@@ -63,45 +72,417 @@ createPlan() {
 }
 
 executePlan() {
-  1. Complete only the current task
-  2. Validate - Verify the task meets its success criteria
-  3. Report - Summarize what was accomplished
-  4. Await Approval - Get explicit user approval before proceeding to the next task
+  for each step in task.implementationSteps {
+    1. Present step code and validation to user
+    2. Execute step implementation
+    3. Run step validation commands
+    4. Verify expected outputs match actual outputs
+    5. If validation fails:
+       a. Report specific failure with output diff
+       b. Debug issue
+       c. Retry step implementation
+       d. Re-run validation
+       e. Repeat until validation passes
+    6. If validation passes:
+       a. Report step success
+       b. Proceed to checkpoint
+    7. Checkpoint gate:
+       a. User reviews step output
+       b. User approves proceeding to next step
+  }
+  
+  After all implementation steps complete:
+    1. Run all task-level validation scripts
+    2. Verify all success criteria met with validation commands
+    3. Report completion summary
+    4. Present validation results
+    5. Await user approval before proceeding to next task
 }
 
 ## Task Plan Template Structure
 
-Each task should include:
+Each task MUST include these sections:
 
 """
 ## [Task] $taskName
 
 $taskDescription
 
-- **Context**: What files, patterns, or systems this task affects
-- **Requirements**: 
-  - Given [situation], should [jobToDo]
-  - Given [situation], should [jobToDo]
-- **Constraints**:
-  - Avoid breaking changes to existing APIs unless the task explicitly requires refactoring or major improvements.
+---
 
-**Success Criteria**:
-- [ ] Specific, measurable outcome 1
-- [ ] Specific, measurable outcome 2
+## CodeContext (MANDATORY)
 
-**Dependencies**: What must be completed before this task
-**Estimated Effort**: [Small/Medium/Large] on exponential scale
+**Purpose:** Provide AI with exact files and code it needs to understand current implementation.
 
-**Agent Orchestration**: [Required/Not Required]
-- If Required: Specify which agent(s) and why
-- Agent dispatch command if applicable
+**Files to Examine:**
+- `absolute/path/to/file.ext` (Lines X-Y)
+  - Purpose: What to extract from this file
+  - Current implementation:
+  ```language
+  [actual code snippet - 20-50 lines max]
+  ```
 
-**Implementation Notes**:
-- Key technical considerations
-- Potential challenges or risks
-- Suggested approach or patterns to follow
-- Agent-specific guidance if applicable
+- `absolute/path/to/another.ext` (Lines A-B)
+  - Purpose: API/pattern to understand
+  - Usage example:
+  ```language
+  [code showing how this is currently used]
+  ```
+
+**Existing Patterns:**
+- [Pattern name]: See `reference/file.ext` lines X-Y
+  ```language
+  [code example from existing codebase showing correct pattern]
+  ```
+
+**APIs to Integrate:**
+- [API/Component name]: Interface definition
+  ```language
+  [type definitions or API contracts]
+  ```
+
+---
+
+## StyleGuides (MANDATORY)
+
+**Mandatory Reading:**
+- `aidd-xxx.mdc` - Sections: [specific section names]
+  - Why relevant: [reason]
+  - Focus on: [specific constraints]
+
+**Critical Constraints:**
+
+✅ **DO (with examples):**
+- [Specific requirement]
+  ```language
+  [code example showing correct approach]
+  ```
+
+❌ **DON'T (with anti-patterns):**
+- [Specific prohibition]
+  ```language
+  [code example showing what to avoid]
+  ```
+
+**Pattern References:**
+- [Pattern name]: See `existing/file.ext` lines X-Y
+
+---
+
+## State Management Strategy (MANDATORY for UI components)
+
+**Component Type:** [Presentational/Stateful/Connected]
+
+**MobX Required:** [YES/NO]
+
+**Justification:**
+- [Reason based on state needs]
+- [Why MobX is/isn't appropriate]
+
+**If YES - Implementation Pattern:**
+```language
+[Show MobX store + observer() wrapper pattern]
+```
+
+**If NO - Implementation Pattern:**
+```language
+[Show props-only functional component pattern]
+```
+
+**Validation:**
+```bash
+[command to verify correct pattern used]
+```
+Expected: [expected output]
+
+---
+
+## Requirements
+
+- Given [situation], should [jobToDo]
+- Given [situation], should [jobToDo]
+- Given [situation], should [jobToDo]
+
+---
+
+## Constraints
+
+**From [guide-name.mdc] - [Section Name]:**
+
+✅ **MUST: [Specific requirement]**
+```language
+[code example showing compliance]
+```
+
+❌ **MUST NOT: [Specific prohibition]**
+```language
+[code example showing violation]
+```
+
+**Validation:**
+```bash
+[command to verify compliance]
+```
+Expected: [expected output]
+
+[Repeat for each constraint from StyleGuides]
+
+---
+
+## Success Criteria (OBJECTIVE & VALIDATABLE)
+
+- [ ] [Objective criterion - no subjective language]
+  - Validation: `[exact command to run]`
+  - Expected: [exact expected output or exit code]
+
+- [ ] [Another objective criterion]
+  - Validation: `[exact command]`
+  - Expected: [exact output]
+
+**Forbidden Subjective Terms:** "clean", "good", "appropriate", "nice", "elegant", "proper", "correct", "suitable", "distinct", "better", "improved"
+
+---
+
+## Validation Scripts (MANDATORY)
+
+**After Task Completion, Run These Commands:**
+
+**Validation 1: [What This Checks]**
+```bash
+[exact command]
+```
+Expected: [exact expected output or exit code]
+
+**Validation 2: [What This Checks]**
+```bash
+[exact command]
+```
+Expected: [exact expected output]
+
+[Repeat for each validation...]
+
+**Success:** All validations pass = Task complete ✅
+**Failure:** Any validation fails = Review output, debug, retry
+
+---
+
+## Dependencies
+
+**Must Read Before Starting:**
+
+1. **File:** `exact/path/to/file.ext`
+   - **Purpose:** [What to extract/understand]
+   - **Extract:** Lines X-Y ([what specific code])
+   - **Usage:** [How used in current task]
+   - **Example from file:**
+   ```language
+   [code snippet showing dependency usage]
+   ```
+
+**Must Exist:**
+- **Library:** `package-name@version`
+  - **Imports:** `import { X } from 'exact/path'`
+
+**Must Complete First:**
+- **Task X:** [why this is prerequisite]
+
+**Dependency Validation:**
+```bash
+# Verify files exist
+ls [file paths]
+# Expected: All exist
+
+# Verify imports resolve
+npm run typecheck
+# Expected: 0 import errors
+```
+
+---
+
+## Estimated Effort
+
+**Size:** [Small/Medium/Large]
+**Time:** [hours/days based on aidd-core-effort-calibration.mdc]
+**Lines of Code:** ~[number] lines
+**Reference:** Similar to "[example from aidd-core-effort-calibration.mdc]"
+
+**Line Count Validation:**
+```bash
+wc -l [estimated files]
+```
+Expected: Total ≤50 lines (Small), ≤150 (Medium), ≤500 (Large)
+
+**If >50 lines:** MUST break into sub-tasks:
+- [ ] Task Xa: [scope] (~[lines] lines)
+- [ ] Task Xb: [scope] (~[lines] lines)
+
+---
+
+## Agent Orchestration
+
+**Complexity Assessment:**
+
+**Multiple Technical Domains:** [Check all that apply]
+- [ ] UI/UX
+- [ ] Frontend (React, TypeScript)
+- [ ] Backend (APIs, services)
+- [ ] Testing (TDD, integration)
+- [ ] Build/Deploy
+- [ ] Performance
+- [ ] Accessibility
+
+**Specialized Knowledge:** [Check all that apply]
+- [ ] Framework-specific (MobX, Redux, etc.)
+- [ ] Design system (Easel, etc.)
+- [ ] Testing methodology (TDD, etc.)
+- [ ] Domain-specific
+
+**Cross-Functional:** [Yes/No]
+**Integration Workflows:** [Yes/No]
+
+**Orchestration Required:** [YES/NO]
+- Decision: If 2+ domains OR 2+ specializations OR cross-functional OR integration = YES
+
+**If YES:**
+
+**Agents Needed:**
+- `agent-name` - [Specific responsibility]
+- `agent-name` - [Specific responsibility]
+
+**Dispatch Command:**
+```bash
+cursor-agent \
+  --agent [agent1,agent2,agent3] \
+  --prompt "$(cat [task-file-path])" \
+  --context "[guide1.mdc,guide2.mdc]"
+```
+
+**Agent Coordination:**
+- [Which agent leads]
+- [How agents interact]
+
+---
+
+## Implementation Steps (EXACT CODE REQUIRED)
+
+**Step 1: [Specific action]**
+```language
+// File: exact/path/to/file.ext
+// Write exactly this code:
+
+[complete code snippet AI should write]
+```
+
+**Validation After Step 1 (MUST PASS BEFORE STEP 2):**
+```bash
+[exact validation command]
+```
+Expected: [exact expected output]
+
+✅ **Checkpoint:** Only proceed to Step 2 if all validations pass
+
+---
+
+**Step 2: [Next specific action]**
+```language
+[exact code for this step]
+```
+
+**Validation After Step 2 (MUST PASS BEFORE STEP 3):**
+```bash
+[validation command]
+```
+Expected: [expected output]
+
+✅ **Checkpoint:** Only proceed to Step 3 if all validations pass
+
+[Repeat for each step - maximum 5 steps per task]
+
+**Constraints:**
+- Each step: ≤20 lines of code
+- Each step: Independent validation
+- Total steps: ≤5 steps per task
+
+---
+
+## Implementation Notes
+
+**Technical Considerations:**
+- [Specific consideration with code example]
+
+**Common Pitfalls:**
+- [Pitfall] → [How to avoid with code]
+
+**Performance Implications:**
+- [Consideration with measurement]
+
+---
+
+## Acceptance Criteria
+
+- [ ] All validation scripts pass
+- [ ] All success criteria validated objectively
+- [ ] CodeContext requirements met
+- [ ] StyleGuide constraints followed
+- [ ] Task size ≤50 lines
+- [ ] No subjective criteria remain
+
 """
+
+## Required Imports Section Template
+
+Every task involving code MUST include exact import paths:
+
+**Template:**
+```
+## Required Imports (EXACT PATHS)
+
+**Copy these imports exactly:**
+```language
+// [Category] - [Why needed]
+import { X } from 'exact/path/to/module';
+import type { Y } from 'exact/path/to/types';
+
+// [Another category]
+import { Z } from 'another/exact/path';
+```
+
+**Import Validation:**
+```bash
+npm run typecheck
+```
+Expected: 0 import resolution errors
+```
+
+**Enforcement:** Task cannot proceed without populated Required Imports section.
+
+## Task Definition Quality Checklist
+
+Before finalizing any task for user approval, verify:
+
+**Mandatory Sections Present:**
+- [ ] CodeContext - with file paths, code snippets, patterns
+- [ ] StyleGuides - with .mdc references and explicit constraints
+- [ ] ValidationScripts - with commands and expected outputs
+- [ ] StateManagementStrategy - for UI components (MobX YES/NO explicitly stated)
+
+**Content Quality:**
+- [ ] No subjective success criteria (forbidden: "clean", "good", "appropriate", "distinct")
+- [ ] All success criteria have validation commands
+- [ ] All code examples follow StyleGuide patterns (verified against guides)
+- [ ] Task size ≤50 lines (or broken into sub-tasks with justification)
+- [ ] All requirements use "Given [X], should [Y]" format exactly
+- [ ] Dependencies specify exact file paths with line numbers
+
+**AI Executability:**
+- [ ] Exact import paths provided (no wildcards or approximations)
+- [ ] Step-by-step implementation with complete code snippets
+- [ ] Validation after each implementation step
+- [ ] No "figure out", "use judgment", "determine best" language
+- [ ] Everything AI needs is explicit (no implicit knowledge assumed)
+
+**Validation:**
+If any checkbox unchecked → Revise task before user approval
 
 ## Completed Epic Documentation
 
@@ -120,7 +501,7 @@ completedEpicTemplate() {
 
 Constraints {
   Never attempt multiple tasks simultaneously
-  Always get explicit user approval before moving to the next task
+  Always get explicit user approval before moving to next task
   If a task reveals new information that changes the plan, pause and re-plan
   Each task should be completable in ~50 lines of code or less
   Tasks should be independent - completing one shouldn't break others
@@ -131,11 +512,11 @@ Constraints {
 }
 
 createTask() {
-  createPlan |> awaitAproval |> executePlan
+  createPlan |> awaitApproval |> executePlan
 }
 
 Commands {
   /help
   /task - create a task/epic
-  /list [(tasks|epics) = tasks]- list all tasks in the epic
+  /list [(tasks|epics) = tasks] - list all tasks in the epic
 }
