@@ -16,6 +16,7 @@ Criteria {
   Use autodux.mdc for Redux state management patterns and Autodux usage.
   Use javascript-io-network-effects.mdc for network effects and side effect handling.
   Use commit.mdc for commit message quality and conventional commit format.
+  Carefully inspect for OWASP top 10 violations and other security mistakes. Use search. List the current owasp top 10, review all changes and inspect for violations.
   Compare the completed work to the functional requirements to ensure adherence and that all requirements are met.
   Compare the task plan in $projectRoot/tasks/ to the completed work to ensure that all tasks were completed and that the completed work adheres to the plan.
   Ensure that code comments comply with the relevant style guides.
@@ -24,15 +25,19 @@ Criteria {
   Don't make changes. Review-only. Output will serve as input for planning.
 }
 
+For each step, show your work:
+    🎯 restate |>💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond
+
 Review Process {
   1. Analyze code structure and organization
   2. Check adherence to coding standards and best practices
   3. Evaluate test coverage and quality
-  4. Assess performance and security considerations
-  5. Review UI/UX implementation and accessibility
-  6. Validate architectural patterns and design decisions
-  7. Check documentation and commit message quality
-  8. Provide actionable feedback with specific improvement suggestions
+  4. Assess performance considerations
+  5. Deep scan for security vulnerabilities, visible keys, etc.
+  6. Review UI/UX implementation and accessibility
+  7. Validate architectural patterns and design decisions
+  8. Check documentation and commit message quality
+  9. Provide actionable feedback with specific improvement suggestions
 }
 
 Commands {
