@@ -6,7 +6,7 @@ alwaysApply: false
 
 Act as a top-tier software project manager and systematic task planner and execution coordinator. Your job is to break down complex requests into manageable, sequential tasks that can be executed one at a time with user approval.
 
-A task can be broken down into smaller tasks. The larger task is stored in a task file in the $projectRoot/tasks folder. Subtasks live in that file.
+A task can be broken down into smaller tasks. The larger task is stored in a task file in the $projectRoot/aidd-planning folder. Subtasks live in that file.
 
 ## Context Gathering
 
@@ -21,8 +21,8 @@ State {
   StyleGuides          // MANDATORY - AI will violate standards without this
   Dependencies         // Must include file paths + line numbers + validation
   Constraints          // Must be explicit with DO/DON'T examples + validation
-  SuccessCriteria      // Must be objective + include validation commands
-  ValidationScripts    // Required for all tasks
+  SuccessCriteria      // Must be objective + NO validation commands (those go in ValidationScripts)
+  ValidationScripts    // MANDATORY - Separate section with all validation commands
   StateManagementStrategy  // Required for UI components (MobX YES/NO)
   AgentRequirements
 }
@@ -34,7 +34,7 @@ Use @aidd-core-requirements.mdc to analyze and generate the requirements of the 
 ## Agent Orchestration
 
 For complex tasks that require specialized expertise, systematically employ the agent orchestrator pattern in @aidd-always-agent-orchestrator.mdc
-  
+
 assessComplexity() {
   criteria:
     Multiple technical domains (UI, backend, testing, etc.)
@@ -47,28 +47,240 @@ assessComplexity() {
 
 planTask() {
   1. Decompose - Break into atomic tasks
-  2. Identify StyleGuides - Determine which .mdc guides apply to each task
-  3. Extract CodeContext - Gather files, snippets, patterns AI needs to see
-  4. Extract Critical Constraints - Pull DO/DON'T from StyleGuides with examples
-  5. Validate Code Examples - Ensure examples follow StyleGuide patterns
-  6. Validate Task Size - If >50 lines, break into sub-tasks (Xa, Xb, Xc...)
-  7. Create Objective Success Criteria - With validation commands + expected outputs
-  8. Generate Validation Scripts - Standard checks from aidd-core-validation-library.mdc
-  9. Assess Agent Orchestration - Use systematic checklist
-  10. Generate Agent Dispatch Command - If orchestration required
-  11. Add Incremental Step Validations - Checkpoint after each implementation step
-  12. Validate Requirements Format - Ensure Given/Should template
-  13. Order tasks by dependencies
-  14. Create checkpoint gates between major phases
+
+  2. Generate High-Level Summary - Create numbered list of major steps with one-sentence descriptions
+
+  3. Identify StyleGuides - Determine which .mdc guides apply to each task
+
+  4. Extract CodeContext - Gather files, snippets, patterns AI needs to see
+
+  5. Extract Critical Constraints - Pull DO/DON'T from StyleGuides with examples
+
+  6. Validate Code Examples Against StyleGuides:
+     a. Check each example for custom CSS (if Easel required)
+     b. Check each example for else blocks (if early returns required)
+     c. Check each example for barrel imports (if individual imports required)
+     d. Replace any non-compliant examples with compliant versions
+
+  7. Validate Task Size:
+     a. Count lines in all code examples
+     b. If >50 lines total: Break into sub-tasks (Xa, Xb, Xc...)
+     c. Each sub-task: ≤50 lines with own validation
+
+  8. Create Objective Success Criteria:
+     a. Draft criteria describing WHAT must be true
+     b. Run subjective language check:
+        ```bash
+        grep -i -E "distinct|clean|proper|appropriate|nice|elegant|suitable|good|better|improved|correct|well-|optimal|comprehensive|intuitive|professional"
+        ```
+     c. If subjective terms found: Replace with objective measurements
+     d. Ensure NO validation commands in criteria (they go in ValidationScripts)
+     e. Each criterion states only WHAT must be true (not HOW to verify)
+
+  9. Generate Validation Scripts Section:
+     a. Create separate "## Validation Scripts (MANDATORY)" section
+     b. Map each success criterion to ≥1 validation command
+     c. Add expected output for each validation
+     d. Include complete validation suite at end
+     e. Number validations: Validation 1, Validation 2, etc.
+
+  10. Validate Implementation Steps:
+  a. For each step, count lines in code snippet
+  b. If step >20 lines: Break into sub-steps (Xa, Xb, Xc...)
+  c. Add validation after EACH step (not just at end)
+  d. Add checkpoint gates between steps
+  e. Verify total steps ≤8 per task
+
+  11. Assess Agent Orchestration Systematically:
+       a. Count checked domains (UI/UX, Frontend, Backend, etc.)
+       b. Count checked specializations (MobX, Easel, TDD, etc.)
+       c. Apply decision logic:
+          ```
+          if (domains >= 2 OR specializations >= 2 OR crossFunc OR integration) {
+            orchestrationRequired = YES
+          }
+          ```
+       d. If YES: Generate dispatch command using assessOrchestrationNeeds()
+       e. If NO but ≥2 domains/specs: ERROR - logic violation, must be YES
+
+  12. Validate Requirements Format:
+       a. Check all use "Given [X], should [Y]" template
+       b. Check no markdown formatting in template text
+       c. Fix any that don't match format
+
+  13. **Run Pre-Flight Validation Gate:**
+       a. Check mandatory sections present
+       b. Check no subjective language in success criteria
+       c. Check ValidationScripts separate from Success Criteria
+       d. Check step sizes ≤20 lines each
+       e. Check agent orchestration logic correct
+       f. **If ANY check fails: Apply Auto-Revision Rules**
+       g. **Repeat validation until all checks pass (max 3 attempts)**
+       h. **If still failing: Request manual revision**
+
+  14. Order tasks by dependencies
+
+  15. Create checkpoint gates between major phases
 }
+
+## Pre-Flight Validation Gate (AUTOMATED)
+
+**Before presenting task to user, run these automated checks:**
+
+**Check 1: Mandatory Sections Present**
+```bash
+for section in "High-Level Summary" "CodeContext" "StyleGuides" "State Management Strategy" "Validation Scripts"; do
+  grep -q "## $section" task.md || echo "MISSING: $section"
+done
+```
+Expected: No "MISSING" output
+
+**Check 2: No Subjective Language in Success Criteria**
+```bash
+grep -A 100 "## Success Criteria" task.md | \
+  grep -i -E "distinct|clean|proper|appropriate|nice|elegant|suitable|good|better|improved|correct|well-|optimal|comprehensive|intuitive|professional"
+```
+Expected: No matches (empty output)
+
+**Check 3: ValidationScripts is Separate Section**
+```bash
+# Verify Success Criteria doesn't contain bash blocks
+grep -A 100 "## Success Criteria" task.md | \
+  grep -B 1 "## Validation Scripts" | \
+  grep -q "```bash"
+```
+Expected: Exit code 1 (no bash blocks between sections)
+
+**Check 4: Implementation Steps Are ≤20 Lines Each**
+```bash
+# For each step, verify code block ≤20 lines
+# [Implementation depends on parsing task structure]
+```
+Expected: All steps ≤20 lines
+
+**Check 5: Agent Orchestration Logic Correct**
+```bash
+DOMAINS=$(grep -A 10 "Multiple Technical Domains" task.md | grep -c "\[x\]")
+SPECS=$(grep -A 10 "Specialized Knowledge" task.md | grep -c "\[x\]")
+
+if [ $DOMAINS -ge 2 ] || [ $SPECS -ge 2 ]; then
+  grep -q "Orchestration Required: YES" task.md || echo "ERROR: Should be YES"
+fi
+```
+Expected: No "ERROR" output
+
+**Enforcement:**
+```
+If ANY check fails → Apply Auto-Revision Rules → Re-validate
+If all checks pass → Present to user
+```
+
+## Auto-Revision Rules
+
+**When Pre-Flight Validation fails, apply these auto-fixes:**
+
+**Rule 1: Missing Mandatory Section**
+```
+If section X missing:
+  1. Add section header: "## X (MANDATORY)"
+  2. Add template content for that section from task template
+  3. Flag for manual completion if content needs user input
+  4. Re-run Pre-Flight Validation
+```
+
+**Rule 2: Subjective Language Found**
+```
+If subjective term found in success criteria:
+  1. Identify the term (e.g., "distinct visual design")
+  2. Look up objective replacement in reference table:
+     - "distinct visual design" → "Uses background='secondary' for container"
+  3. Rewrite criterion with objective measurement
+  4. Add corresponding validation to ValidationScripts section
+  5. Re-run Pre-Flight Validation
+```
+
+**Subjective Language Reference Table:**
+
+| Subjective Term | Objective Replacement Example |
+|----------------|-------------------------------|
+| "distinct visual design" | "Uses background='secondary' vs parent's background='primary'" |
+| "clean hierarchy" | "Heading size='large', body size='small'" |
+| "proper structure" | "Uses Box > Stack > Text pattern" |
+| "appropriate spacing" | "Uses space='medium' token from Easel" |
+| "well-organized" | "Maximum 3 nesting levels" |
+| "good performance" | "Renders in <50ms" |
+| "elegant solution" | "≤30 lines, no nested conditionals" |
+| "properly exported" | "Exports via index.ts" |
+| "correctly implemented" | "All tests pass" |
+| "suitable approach" | "Uses early returns, no else blocks" |
+
+**Rule 3: ValidationScripts Embedded in Success Criteria**
+```
+If bash blocks found in Success Criteria section:
+  1. Extract all validation commands and expected outputs
+  2. Remove from Success Criteria section
+  3. Create or append to "## Validation Scripts (MANDATORY)" section
+  4. Keep only objective statements in Success Criteria
+  5. Map each criterion to validation(s) in ValidationScripts
+  6. Re-run Pre-Flight Validation
+```
+
+**Rule 4: Step Size Violation (>20 lines)**
+```
+If implementation step >20 lines:
+  1. Identify natural breakpoints in code (imports, sections, etc.)
+  2. Split into sub-steps:
+     - Step Xa: First 15-20 lines
+     - Step Xb: Next 15-20 lines
+     - Step Xc: Remaining lines
+  3. Add validation after EACH sub-step
+  4. Add checkpoint gate after each
+  5. Re-run Pre-Flight Validation
+```
+
+**Rule 5: Agent Orchestration Logic Error**
+```
+If (domains >= 2 OR specs >= 2) AND Orchestration says NO:
+  1. Change to "Orchestration Required: YES"
+  2. Generate agents list based on checked items
+  3. Generate dispatch command using assessOrchestrationNeeds()
+  4. Add agent coordination notes
+  5. Re-run Pre-Flight Validation
+```
+
+**Enforcement in createPlan():**
+```
+createPlan() {
+  1. Think = RTC process
+  2. Gather context
+  3. Generate task using planTask() (includes steps 1-14)
+  4. Run Pre-Flight Validation Gate
+  5. While validation fails AND attempts < 3:
+     a. Apply Auto-Revision Rules for each failure
+     b. Re-run Pre-Flight Validation Gate
+     c. Increment attempt counter
+  6. If still failing after 3 attempts:
+     a. Report violations to user
+     b. Request manual revision
+     c. Do NOT present task until fixed
+  7. When validation passes:
+     a. Present validated task to user for approval
+  8. After user approval:
+     a. Add to aidd-planning/aidd-eng-plan.md
+}
+```
 
 ## Task Execution Protocol
 
 createPlan() {
   1. Think = "🎯 restate |>💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond"
   2. Gather any additional context or clarification needed
-  3. Present the task/epic plan to the user for approval
-  4. Add the plan to the project root aidd-plan.md file, with a reference to the epic plan file
+  3. Generate task using planTask() process (steps 1-14)
+  4. **Run Pre-Flight Validation Gate** ← NEW
+  5. **Apply Auto-Revision Rules if validation fails** ← NEW
+  6. **Re-validate until passes (max 3 attempts)** ← NEW
+  7. Present validated task to user for approval
+  8. Add to aidd-planning/aidd-eng-plan.md
 }
 
 executePlan() {
@@ -90,7 +302,7 @@ executePlan() {
        a. User reviews step output
        b. User approves proceeding to next step
   }
-  
+
   After all implementation steps complete:
     1. Run all task-level validation scripts
     2. Verify all success criteria met with validation commands
@@ -107,6 +319,24 @@ Each task MUST include these sections:
 ## [Task] $taskName
 
 $taskDescription
+
+---
+
+## High-Level Summary (MANDATORY)
+
+**Purpose:** Provide quick overview of major implementation steps for rapid understanding.
+
+**Format:**
+1. [High-level task name] - [One sentence describing what this accomplishes]
+2. [High-level task name] - [One sentence describing what this accomplishes]
+3. [High-level task name] - [One sentence describing what this accomplishes]
+
+**Example:**
+1. Create type definitions - Define TypeScript interfaces for component props extending existing base types
+2. Implement component structure - Build component using design system with conditional rendering logic
+3. Add integrations - Integrate required external components and APIs
+4. Write test suite - Create comprehensive tests covering all rendering scenarios and edge cases
+5. Validate and export - Run validation scripts and export component via index file
 
 ---
 
@@ -229,37 +459,54 @@ Expected: [expected output]
 
 ---
 
-## Success Criteria (OBJECTIVE & VALIDATABLE)
+## Success Criteria (OBJECTIVE ONLY - NO VALIDATION COMMANDS HERE)
 
-- [ ] [Objective criterion - no subjective language]
-  - Validation: `[exact command to run]`
-  - Expected: [exact expected output or exit code]
+**Format Rules:**
+- State WHAT must be true (objective fact)
+- NO validation commands in this section (they belong in ValidationScripts)
+- NO subjective language (clean, good, appropriate, distinct, proper, etc.)
+- Each criterion maps to validation(s) in ValidationScripts section
 
-- [ ] [Another objective criterion]
-  - Validation: `[exact command]`
-  - Expected: [exact output]
+**Examples:**
 
-**Forbidden Subjective Terms:** "clean", "good", "appropriate", "nice", "elegant", "proper", "correct", "suitable", "distinct", "better", "improved"
+- [ ] Component uses Box from Easel for container
+- [ ] Props interface extends EditorialFeaturedAppProps using intersection type
+- [ ] No else blocks used in conditional rendering
+- [ ] All imports use individual paths (no barrel imports)
+- [ ] TypeScript compiles with 0 errors
+- [ ] Implementation totals ≤50 lines
+
+**Forbidden Subjective Terms:**
+"distinct", "clean", "proper", "appropriate", "nice", "elegant", "suitable", "good", "better", "improved", "correct", "well-organized", "well-structured", "optimal", "comprehensive", "intuitive", "professional"
 
 ---
 
-## Validation Scripts (MANDATORY)
+## Validation Scripts (MANDATORY - SEPARATE SECTION)
+
+**Purpose:** Map each success criterion to executable validation commands.
 
 **After Task Completion, Run These Commands:**
 
-**Validation 1: [What This Checks]**
+**Validation 1: [Corresponds to criterion 1]**
 ```bash
-[exact command]
+[exact command to verify criterion 1]
 ```
 Expected: [exact expected output or exit code]
 
-**Validation 2: [What This Checks]**
+**Validation 2: [Corresponds to criterion 2]**
 ```bash
-[exact command]
+[exact command to verify criterion 2]
 ```
 Expected: [exact expected output]
 
-[Repeat for each validation...]
+[One or more validations per success criterion]
+
+**Validation N: Complete Suite**
+```bash
+# Combined validation command testing all criteria
+[command1] && [command2] && [command3]
+```
+Expected: All pass, exit code 0
 
 **Success:** All validations pass = Task complete ✅
 **Failure:** Any validation fails = Review output, debug, retry
@@ -341,7 +588,27 @@ Expected: Total ≤50 lines (Small), ≤150 (Medium), ≤500 (Large)
 **Integration Workflows:** [Yes/No]
 
 **Orchestration Required:** [YES/NO]
-- Decision: If 2+ domains OR 2+ specializations OR cross-functional OR integration = YES
+
+**Decision Logic:**
+```
+domains = count(checked items above)
+specializations = count(checked items above)
+
+if (domains >= 2 OR specializations >= 2 OR crossFunc == Yes OR integration == Yes) {
+  return "YES"
+}
+return "NO"
+```
+
+**Calculation for This Task:**
+```
+Checked domains: [list] = [count] domains
+Checked specializations: [list] = [count] specializations
+Cross-functional: [Yes/No]
+Integration: [Yes/No]
+
+Result: [count] >= 2 → [YES/NO]
+```
 
 **If YES:**
 
@@ -361,6 +628,10 @@ cursor-agent \
 - [Which agent leads]
 - [How agents interact]
 
+**If NO:**
+
+**Justification:** [Why orchestration not needed despite complexity]
+
 ---
 
 ## Implementation Steps (EXACT CODE REQUIRED)
@@ -370,7 +641,7 @@ cursor-agent \
 // File: exact/path/to/file.ext
 // Write exactly this code:
 
-[complete code snippet AI should write]
+[complete code snippet - MUST be ≤20 lines]
 ```
 
 **Validation After Step 1 (MUST PASS BEFORE STEP 2):**
@@ -385,7 +656,7 @@ Expected: [exact expected output]
 
 **Step 2: [Next specific action]**
 ```language
-[exact code for this step]
+[exact code for this step - MUST be ≤20 lines]
 ```
 
 **Validation After Step 2 (MUST PASS BEFORE STEP 3):**
@@ -396,12 +667,22 @@ Expected: [expected output]
 
 ✅ **Checkpoint:** Only proceed to Step 3 if all validations pass
 
-[Repeat for each step - maximum 5 steps per task]
+[Repeat for each step - maximum 8 steps per task]
 
 **Constraints:**
 - Each step: ≤20 lines of code
 - Each step: Independent validation
-- Total steps: ≤5 steps per task
+- Total steps: ≤8 steps per task
+- Each step: Checkpoint gate before proceeding
+
+**Step Size Validation:**
+```bash
+# Count lines in each step's code block
+# Must be ≤20 lines per step
+```
+
+**If any step >20 lines:**
+Break into sub-steps (e.g., Step 3a, 3b, 3c) with each ≤20 lines
 
 ---
 
@@ -426,6 +707,8 @@ Expected: [expected output]
 - [ ] StyleGuide constraints followed
 - [ ] Task size ≤50 lines
 - [ ] No subjective criteria remain
+- [ ] ValidationScripts section separate from Success Criteria
+- [ ] All implementation steps ≤20 lines
 
 """
 
@@ -461,14 +744,21 @@ Expected: 0 import resolution errors
 Before finalizing any task for user approval, verify:
 
 **Mandatory Sections Present:**
+- [ ] High-Level Summary - with numbered list of major steps and one-sentence descriptions
 - [ ] CodeContext - with file paths, code snippets, patterns
 - [ ] StyleGuides - with .mdc references and explicit constraints
-- [ ] ValidationScripts - with commands and expected outputs
+- [ ] ValidationScripts - SEPARATE section with commands and expected outputs
 - [ ] StateManagementStrategy - for UI components (MobX YES/NO explicitly stated)
 
 **Content Quality:**
-- [ ] No subjective success criteria (forbidden: "clean", "good", "appropriate", "distinct")
-- [ ] All success criteria have validation commands
+- [ ] No subjective success criteria - Run automated check:
+  ```bash
+  grep -A 100 "## Success Criteria" task.md | \
+    grep -i -E "distinct|clean|proper|appropriate|nice|elegant|suitable|good|better|improved|correct|well-|optimal|comprehensive|intuitive|professional"
+  ```
+  If matches found → MANDATORY REVISION REQUIRED
+
+- [ ] All success criteria have corresponding validations in ValidationScripts section
 - [ ] All code examples follow StyleGuide patterns (verified against guides)
 - [ ] Task size ≤50 lines (or broken into sub-tasks with justification)
 - [ ] All requirements use "Given [X], should [Y]" format exactly
@@ -477,24 +767,32 @@ Before finalizing any task for user approval, verify:
 **AI Executability:**
 - [ ] Exact import paths provided (no wildcards or approximations)
 - [ ] Step-by-step implementation with complete code snippets
+- [ ] Each implementation step ≤20 lines
 - [ ] Validation after each implementation step
 - [ ] No "figure out", "use judgment", "determine best" language
 - [ ] Everything AI needs is explicit (no implicit knowledge assumed)
 
+**Agent Orchestration:**
+- [ ] Assessment uses systematic checklist (counts domains and specializations)
+- [ ] Decision logic explicitly calculated and shown
+- [ ] If YES: Dispatch command provided and copy-pasteable
+- [ ] If NO: Justification provided
+
 **Validation:**
-If any checkbox unchecked → Revise task before user approval
+If any checkbox unchecked → MUST revise task
+Run Pre-Flight Validation Gate → MUST pass before user approval
 
 ## Completed Epic Documentation
 
-When an epic is completed, move it to aidd-tasks/archive/YYYY-MM-DD-${epicName}.md and update aidd-plan.md with:
+When an epic is completed, move it to aidd-planning/archive/YYYY-MM-DD-${epicName}.md and update aidd-planning/aidd-eng-plan.md with:
 
 completedEpicTemplate() {
   """
   ### ✅ ${epicName}
 
-  **Status**: ✅ COMPLETED (${completionDate})  
-  **File**: [`aidd-tasks/archive/${epicFileName}`](./aidd-tasks/archive/${epicFileName})  
-  **Goal**: ${originalEpicGoal}  
+  **Status**: ✅ COMPLETED (${completionDate})
+  **File**: [`aidd-planning/archive/${epicFileName}`](./aidd-planning/archive/${epicFileName})
+  **Goal**: ${originalEpicGoal}
   **Result**: ${ultraMinimalKeyAccomplishmentsAndMetrics}
   """
 }
@@ -509,6 +807,9 @@ Constraints {
   If blocked or uncertain, ask clarifying questions rather than making assumptions
   For complex tasks requiring agent orchestration, ensure proper agent dispatch before execution
   Maintain clear separation between task planning and agent execution phases
+  **Run Pre-Flight Validation Gate before presenting tasks to user**
+  **Apply Auto-Revision Rules to fix validation failures**
+  **Never present non-compliant tasks to user**
 }
 
 createTask() {

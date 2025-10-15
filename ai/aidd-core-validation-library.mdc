@@ -243,7 +243,6 @@ grep "^  if (.*) {$" -A 1 path/to/file.ts | grep "return"
 ### Nested Depth Check
 
 ```bash
-# Count maximum indentation depth
 awk '{print gsub(/\t/, "")}' path/to/file.ts | sort -rn | head -n 1
 ```
 **Expected:** ≤3 (max 3 levels of nesting)
@@ -413,265 +412,538 @@ grep "from '@canva/ui/[^']*'" task-file.md
 ### No Subjective Terms
 
 ```bash
-grep -i "clean\|good\|appropriate\|nice\|elegant\|proper\|distinct\|better\|improved" task-file.md
+grep -A 100 "## Success Criteria" task-file.md | \
+  grep -i -E "distinct|clean|proper|appropriate|nice|elegant|suitable|good|better|improved|correct|well-|optimal|comprehensive|intuitive|professional"
 ```
-**Expected:** No matches in success criteria section (may appear in descriptions)
+**Expected:** No matches (empty output)
 
 **Usage:** Verify all criteria are objective
 
+**If matches found:** Replace each term using subjective language reference table
+
 ---
 
-### All Criteria Have Validation Commands
+### All Criteria Have Validation Commands (In ValidationScripts Section)
 
 ```bash
-# Each success criterion should have "Validation:" line
-grep -A 3 "^- \[ \]" task-file.md | grep -c "Validation:"
+# Count success criteria
+CRITERIA=$(grep -A 100 "## Success Criteria" task.md | grep -c "^- \[ \]")
+
+# Count validations in ValidationScripts section
+VALIDATIONS=$(grep -A 200 "## Validation Scripts" task.md | grep -c "^**Validation [0-9]*:")
+
+# Verify sufficient validations
+[ $VALIDATIONS -ge $CRITERIA ] || echo "ERROR: Not enough validations ($VALIDATIONS < $CRITERIA)"
 ```
-**Expected:** Count matches number of success criteria
+**Expected:** No "ERROR" output (validations ≥ criteria)
 
 **Usage:** Verify each criterion can be validated
 
 ---
 
-### All Criteria Have Expected Outputs
+### ValidationScripts Section is Separate
 
 ```bash
-grep -A 4 "^- \[ \]" task-file.md | grep -c "Expected:"
+# Check that Success Criteria section doesn't contain bash blocks
+grep -A 100 "## Success Criteria" task.md | \
+  grep -B 1 "## Validation Scripts" | \
+  grep "```bash"
 ```
-**Expected:** Count matches number of success criteria
+**Expected:** Exit code 1 (no bash blocks found between sections)
 
-**Usage:** Verify each validation has expected output specified
+**Usage:** Verify proper separation of criteria and validations
 
 ---
 
 ## Agent Orchestration Validation
 
-### Complexity Assessment Present
+### Complexity Assessment Completed
 
 ```bash
 grep "Multiple Technical Domains:\|Specialized Knowledge:" task-file.md
 ```
-**Expected:** Both sections present
+**Expected:** Both sections present with checkboxes
 
 **Usage:** Verify systematic agent assessment completed
+
+---
+
+### Orchestration Logic Correct
+
+```bash
+# Count checked domains
+DOMAINS=$(grep -A 10 "Multiple Technical Domains" task.md | grep -c "\[x\]")
+
+# Count checked specializations
+SPECS=$(grep -A 10 "Specialized Knowledge" task.md | grep -c "\[x\]")
+
+# Verify logic
+if [ $DOMAINS -ge 2 ] || [ $SPECS -ge 2 ]; then
+  grep -q "Orchestration Required: YES" task.md || echo "ERROR: Should be YES (domains=$DOMAINS, specs=$SPECS)"
+else
+  grep -q "Orchestration Required: NO" task.md || echo "ERROR: Should be NO"
+fi
+```
+**Expected:** No "ERROR" output
+
+**Usage:** Verify agent orchestration decision matches criteria
 
 ---
 
 ### Dispatch Command Present (If Required)
 
 ```bash
-grep "cursor-agent" task-file.md
+if grep -q "Orchestration Required: YES" task.md; then
+  grep -q "cursor-agent" task.md || echo "ERROR: Missing dispatch command"
+fi
 ```
-**Expected:** Match found with full command (if orchestration required)
+**Expected:** No "ERROR" output
 
-**Usage:** Verify agent dispatch command provided when needed
+**Usage:** Verify dispatch command provided when orchestration required
 
 ---
 
-## Validation Script Section Validation
+## Implementation Step Size Check
 
-### Validation Scripts Section Exists
+### Count Lines in Each Step
 
 ```bash
-grep "## Validation Scripts" task-file.md
+# Extract step code block and count lines
+grep -A 30 "**Step 1:" task.md | \
+  awk '/```typescript/,/```/' | \
+  grep -v "```" | \
+  wc -l
 ```
-**Expected:** Section header found
+**Expected:** ≤20 lines
 
-**Usage:** Verify mandatory ValidationScripts section present
+**Usage:** Verify individual step size compliance
 
 ---
 
-### Each Validation Has Expected Output
+### Verify All Steps Are Sized Correctly
 
 ```bash
-grep -c "Expected:" task-file.md
+# For each step, check size
+for step_num in {1..8}; do
+  LINES=$(grep -A 30 "**Step $step_num:" task.md | \
+    awk '/```/,/```/' | grep -v "```" | wc -l)
+  if [ $LINES -gt 20 ]; then
+    echo "ERROR: Step $step_num has $LINES lines (exceeds 20 line limit)"
+  fi
+done
 ```
-**Expected:** Count ≥ number of validation commands in task
+**Expected:** No "ERROR" output
 
-**Usage:** Verify all validations specify expected output
+**Usage:** Validate all implementation steps meet size constraint
 
 ---
 
-## Mandatory Section Validation
+## Task Definition Quality Validation
 
-### CodeContext Section Present
+### Mandatory Section Presence Check
 
+**Check all mandatory sections exist:**
 ```bash
-grep "## CodeContext" task-file.md
+for section in "CodeContext" "StyleGuides" "State Management Strategy" "Validation Scripts" "Success Criteria" "Requirements"; do
+  grep -q "## $section" task.md || echo "MISSING: $section"
+done
 ```
-**Expected:** Section header found
+**Expected:** No "MISSING" output
 
-**Usage:** Verify mandatory CodeContext section present
+**Usage:** Validate task before presenting to user
 
 ---
 
-### StyleGuides Section Present
+### Complete Task Quality Validation Suite
 
+**Run all quality checks in sequence:**
 ```bash
-grep "## StyleGuides" task-file.md
-```
-**Expected:** Section header found
+#!/bin/bash
+# Task Quality Validation Script - Complete Suite
 
-**Usage:** Verify mandatory StyleGuides section present
+TASK_FILE=$1
+ERRORS=0
+
+echo "🔍 Validating task: $TASK_FILE"
+echo ""
+
+# Check 1: Mandatory sections
+echo "Check 1: Mandatory sections..."
+for section in "CodeContext" "StyleGuides" "State Management Strategy" "Validation Scripts"; do
+  if ! grep -q "## $section" "$TASK_FILE"; then
+    echo "  ❌ MISSING: $section"
+    ERRORS=$((ERRORS + 1))
+  else
+    echo "  ✅ Found: $section"
+  fi
+done
+
+# Check 2: Subjective language in Success Criteria
+echo ""
+echo "Check 2: Subjective language..."
+SUBJECTIVE=$(grep -A 100 "## Success Criteria" "$TASK_FILE" | \
+  grep -i -E "distinct|clean|proper|appropriate|nice|elegant|suitable|good|better|improved|correct|well-|optimal|comprehensive|intuitive|professional" | \
+  wc -l)
+if [ $SUBJECTIVE -gt 0 ]; then
+  echo "  ❌ Found $SUBJECTIVE subjective terms in success criteria:"
+  grep -A 100 "## Success Criteria" "$TASK_FILE" | \
+    grep -i -E "distinct|clean|proper|appropriate|nice|elegant|suitable|good|better" | \
+    head -n 3
+  ERRORS=$((ERRORS + 1))
+else
+  echo "  ✅ No subjective language found"
+fi
+
+# Check 3: ValidationScripts separate from Success Criteria
+echo ""
+echo "Check 3: ValidationScripts section format..."
+if ! grep -q "## Validation Scripts" "$TASK_FILE"; then
+  echo "  ❌ MISSING: Validation Scripts section"
+  ERRORS=$((ERRORS + 1))
+else
+  # Check that Success Criteria doesn't have bash blocks
+  EMBEDDED=$(grep -A 100 "## Success Criteria" "$TASK_FILE" | \
+    grep -B 1 "## Validation Scripts" | \
+    grep -c "```bash")
+  if [ $EMBEDDED -gt 0 ]; then
+    echo "  ❌ ValidationScripts embedded in Success Criteria (should be separate)"
+    ERRORS=$((ERRORS + 1))
+  else
+    echo "  ✅ ValidationScripts properly separated"
+  fi
+fi
+
+# Check 4: Sufficient validations for criteria
+echo ""
+echo "Check 4: Validation coverage..."
+CRITERIA=$(grep -A 100 "## Success Criteria" "$TASK_FILE" | grep -c "^- \[ \]")
+VALIDATIONS=$(grep -A 200 "## Validation Scripts" "$TASK_FILE" | grep -c "^**Validation [0-9]*:")
+
+if [ $VALIDATIONS -lt $CRITERIA ]; then
+  echo "  ⚠️  Only $VALIDATIONS validations for $CRITERIA criteria (should be at least equal)"
+  # Not a hard error, just a warning
+else
+  echo "  ✅ Sufficient validations ($VALIDATIONS for $CRITERIA criteria)"
+fi
+
+# Check 5: Agent orchestration logic
+echo ""
+echo "Check 5: Agent orchestration logic..."
+DOMAINS=$(grep -A 10 "Multiple Technical Domains" "$TASK_FILE" | grep -c "\[x\]")
+SPECS=$(grep -A 10 "Specialized Knowledge" "$TASK_FILE" | grep -c "\[x\]")
+
+echo "  Domains checked: $DOMAINS"
+echo "  Specializations checked: $SPECS"
+
+if [ $DOMAINS -ge 2 ] || [ $SPECS -ge 2 ]; then
+  if grep -q "Orchestration Required: YES" "$TASK_FILE"; then
+    echo "  ✅ Orchestration: YES (correct - 2+ domains or specs)"
+    # Verify dispatch command present
+    if ! grep -q "cursor-agent" "$TASK_FILE"; then
+      echo "  ❌ Missing dispatch command (required when Orchestration = YES)"
+      ERRORS=$((ERRORS + 1))
+    fi
+  else
+    echo "  ❌ Orchestration: Should be YES (has $DOMAINS domains, $SPECS specs)"
+    ERRORS=$((ERRORS + 1))
+  fi
+else
+  if grep -q "Orchestration Required: NO" "$TASK_FILE"; then
+    echo "  ✅ Orchestration: NO (correct - <2 domains and specs)"
+  else
+    echo "  ⚠️  Orchestration: Marked as YES but doesn't meet criteria"
+  fi
+fi
+
+# Summary
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+if [ $ERRORS -eq 0 ]; then
+  echo "✅ Task validation PASSED - Ready for user approval"
+  echo ""
+  exit 0
+else
+  echo "❌ Task validation FAILED with $ERRORS errors"
+  echo ""
+  echo "Action Required: Apply auto-revision rules or manual fixes"
+  exit 1
+fi
+```
+
+**Usage:**
+```bash
+bash validate-task.sh aidd-tasks/task-1-app-video-card-structure.md
+```
+
+**Save as:** `scripts/validate-task.sh` and make executable
 
 ---
 
-### StateManagementStrategy Present (UI Components)
+## Step Size Validation
+
+### Single Step Line Count
 
 ```bash
-grep "## State Management Strategy" task-file.md
+# Count lines in specific step code block
+grep -A 30 "**Step 1:" task.md | \
+  awk '/```typescript/,/```/' | \
+  grep -v "```" | \
+  wc -l
 ```
-**Expected:** Section header found (for UI component tasks)
+**Expected:** ≤20 lines
 
-**Usage:** Verify MobX decision documented
+**Usage:** Verify individual step size
 
 ---
 
-## Integration Validation
-
-### Imports Resolve in Target Codebase
+### All Steps Size Validation
 
 ```bash
-cd target/codebase && npm run typecheck
-```
-**Expected:** 0 errors after adding new code
+# Check all steps are ≤20 lines
+for step_num in {1..8}; do
+  LINES=$(grep -A 30 "**Step $step_num:" task.md 2>/dev/null | \
+    awk '/```/,/```/' | grep -v "```" | wc -l)
 
-**Usage:** Verify integration doesn't break existing code
+  if [ $LINES -gt 0 ] && [ $LINES -gt 20 ]; then
+    echo "Step $step_num: $LINES lines (EXCEEDS 20)"
+  fi
+done
+```
+**Expected:** No "EXCEEDS" output
+
+**Usage:** Validate all steps meet size constraint
 
 ---
 
-### New Component Renders in Storybook
+## Task Quality Validation Commands
+
+### Mandatory Sections Check
 
 ```bash
-npm run storybook &
-sleep 10
-curl -s http://localhost:6006/ | grep "ComponentName"
+#!/bin/bash
+# Check all mandatory sections present
+
+REQUIRED="CodeContext StyleGuides State_Management_Strategy Validation_Scripts Success_Criteria Requirements"
+
+for section in $REQUIRED; do
+  SECTION_NAME=$(echo "$section" | tr '_' ' ')
+  if ! grep -q "## $SECTION_NAME" task.md; then
+    echo "MISSING: $SECTION_NAME"
+  fi
+done
 ```
-**Expected:** Component name appears in Storybook
+**Expected:** No "MISSING" output
 
 ---
 
-### No Breaking Changes to Existing Tests
+### Subjective Language Detection
 
 ```bash
-npm run test -- --changed
-```
-**Expected:** All tests pass, no new failures
+#!/bin/bash
+# Detect subjective language in success criteria
 
-**Usage:** Verify new code doesn't break existing tests
+SUBJECTIVE_TERMS="distinct clean proper appropriate nice elegant suitable good better improved correct well- optimal comprehensive intuitive professional"
+
+echo "Checking for subjective language..."
+
+for term in $SUBJECTIVE_TERMS; do
+  MATCHES=$(grep -A 100 "## Success Criteria" task.md | grep -i "$term")
+  if [ -n "$MATCHES" ]; then
+    echo "FOUND: $term in success criteria"
+    echo "  $MATCHES"
+  fi
+done
+```
+**Expected:** No "FOUND:" output
 
 ---
 
-## Performance Validation
-
-### Bundle Size Impact
+### ValidationScripts Format Check
 
 ```bash
-npm run build:analyze
-# Compare before and after bundle sizes
+#!/bin/bash
+# Verify ValidationScripts is separate section with proper format
+
+# Check section exists
+if ! grep -q "## Validation Scripts" task.md; then
+  echo "ERROR: Missing Validation Scripts section"
+  exit 1
+fi
+
+# Check Success Criteria doesn't contain bash blocks
+EMBEDDED=$(grep -A 100 "## Success Criteria" task.md | \
+  grep -B 1 "## Validation Scripts" | \
+  grep -c "```bash")
+
+if [ $EMBEDDED -gt 0 ]; then
+  echo "ERROR: ValidationScripts embedded in Success Criteria (should be separate)"
+  exit 1
+fi
+
+# Check ValidationScripts has numbered validations
+VALIDATIONS=$(grep -A 200 "## Validation Scripts" task.md | grep -c "^**Validation [0-9]*:")
+
+if [ $VALIDATIONS -eq 0 ]; then
+  echo "ERROR: No numbered validations in ValidationScripts section"
+  exit 1
+fi
+
+echo "✅ ValidationScripts properly formatted with $VALIDATIONS validations"
 ```
-**Expected:** Bundle size increase <10KB (or specified limit)
 
 ---
 
-### Render Performance
+### Agent Orchestration Logic Check
 
 ```bash
-npm run test:perf -- ComponentName
+#!/bin/bash
+# Verify agent orchestration decision matches criteria
+
+DOMAINS=$(grep -A 10 "Multiple Technical Domains" task.md | grep -c "\[x\]")
+SPECS=$(grep -A 10 "Specialized Knowledge" task.md | grep -c "\[x\]")
+
+echo "Domains: $DOMAINS, Specializations: $SPECS"
+
+# Apply decision logic
+if [ $DOMAINS -ge 2 ] || [ $SPECS -ge 2 ]; then
+  EXPECTED="YES"
+else
+  EXPECTED="NO"
+fi
+
+# Check actual value
+if grep -q "Orchestration Required: $EXPECTED" task.md; then
+  echo "✅ Orchestration decision correct: $EXPECTED"
+else
+  echo "❌ Orchestration decision wrong (should be $EXPECTED based on $DOMAINS domains, $SPECS specs)"
+  exit 1
+fi
+
+# If YES, verify dispatch command present
+if [ "$EXPECTED" = "YES" ]; then
+  if ! grep -q "cursor-agent" task.md; then
+    echo "❌ Missing dispatch command (required when Orchestration = YES)"
+    exit 1
+  fi
+fi
 ```
-**Expected:** Component renders in <50ms (or specified limit)
 
 ---
 
-## Accessibility Validation
-
-### Color Contrast via Easel Tokens
+### Complete Pre-Flight Validation Script
 
 ```bash
-grep "color=\"primary\|secondary\|critical\|success\|warning\"" component.tsx
+#!/bin/bash
+# Complete Pre-Flight Validation Gate
+# Run all validation checks before presenting task to user
+
+TASK_FILE=$1
+ERRORS=0
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🚀 Pre-Flight Validation Gate"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+# Check 1: Mandatory sections present
+echo "✓ Check 1: Mandatory sections..."
+for section in "CodeContext" "StyleGuides" "State Management Strategy" "Validation Scripts"; do
+  if ! grep -q "## $section" "$TASK_FILE"; then
+    echo "  ❌ MISSING: $section"
+    ERRORS=$((ERRORS + 1))
+  fi
+done
+
+# Check 2: No subjective language
+echo ""
+echo "✓ Check 2: Subjective language..."
+SUBJECTIVE=$(grep -A 100 "## Success Criteria" "$TASK_FILE" | \
+  grep -i -E "distinct|clean|proper|appropriate|nice|elegant|suitable|good|better|improved|correct|well-|optimal|comprehensive|intuitive|professional" | \
+  wc -l)
+
+if [ $SUBJECTIVE -gt 0 ]; then
+  echo "  ❌ Found $SUBJECTIVE subjective terms:"
+  grep -A 100 "## Success Criteria" "$TASK_FILE" | \
+    grep -i -E "distinct|clean|proper|appropriate" | head -n 3
+  ERRORS=$((ERRORS + 1))
+fi
+
+# Check 3: ValidationScripts separate section
+echo ""
+echo "✓ Check 3: ValidationScripts format..."
+if ! grep -q "## Validation Scripts" "$TASK_FILE"; then
+  echo "  ❌ MISSING: Validation Scripts section"
+  ERRORS=$((ERRORS + 1))
+else
+  EMBEDDED=$(grep -A 100 "## Success Criteria" "$TASK_FILE" | \
+    grep -B 1 "## Validation Scripts" | \
+    grep -c "```bash")
+  if [ $EMBEDDED -gt 0 ]; then
+    echo "  ❌ Validations embedded in Success Criteria (should be separate)"
+    ERRORS=$((ERRORS + 1))
+  fi
+fi
+
+# Check 4: Step sizes ≤20 lines
+echo ""
+echo "✓ Check 4: Implementation step sizes..."
+OVERSIZED=0
+for step_num in {1..8}; do
+  LINES=$(grep -A 30 "**Step $step_num:" "$TASK_FILE" 2>/dev/null | \
+    awk '/```/,/```/' | grep -v "```" | wc -l)
+
+  if [ $LINES -gt 20 ]; then
+    echo "  ❌ Step $step_num: $LINES lines (exceeds 20 line limit)"
+    OVERSIZED=$((OVERSIZED + 1))
+  fi
+done
+
+if [ $OVERSIZED -gt 0 ]; then
+  ERRORS=$((ERRORS + 1))
+fi
+
+# Check 5: Agent orchestration logic
+echo ""
+echo "✓ Check 5: Agent orchestration logic..."
+DOMAINS=$(grep -A 10 "Multiple Technical Domains" "$TASK_FILE" 2>/dev/null | grep -c "\[x\]")
+SPECS=$(grep -A 10 "Specialized Knowledge" "$TASK_FILE" 2>/dev/null | grep -c "\[x\]")
+
+if [ $DOMAINS -ge 2 ] || [ $SPECS -ge 2 ]; then
+  if ! grep -q "Orchestration Required: YES" "$TASK_FILE"; then
+    echo "  ❌ Should be YES (domains=$DOMAINS, specs=$SPECS)"
+    ERRORS=$((ERRORS + 1))
+  else
+    # Verify dispatch command
+    if ! grep -q "cursor-agent" "$TASK_FILE"; then
+      echo "  ❌ Missing dispatch command"
+      ERRORS=$((ERRORS + 1))
+    fi
+  fi
+fi
+
+# Summary
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+if [ $ERRORS -eq 0 ]; then
+  echo "✅ PRE-FLIGHT VALIDATION PASSED"
+  echo ""
+  echo "Task is ready for user approval and AI execution"
+  exit 0
+else
+  echo "❌ PRE-FLIGHT VALIDATION FAILED"
+  echo ""
+  echo "Errors found: $ERRORS"
+  echo "Action: Apply auto-revision rules or request manual fixes"
+  exit 1
+fi
 ```
-**Expected:** Matches found (Easel color tokens used, not custom colors)
 
----
+**Save as:** `scripts/pre-flight-validation.sh`
 
-### ARIA Labels Present
-
+**Usage:**
 ```bash
-grep "aria-label\|aria-labelledby" component.tsx
-```
-**Expected:** Matches found for interactive elements
-
----
-
-### Keyboard Navigation Support
-
-```bash
-grep "onKeyDown\|onKeyPress\|tabIndex" component.tsx
-```
-**Expected:** Matches found (if interactive component)
-
----
-
-## Documentation Validation
-
-### JSDoc Comments for Public APIs
-
-```bash
-grep "/\*\*" path/to/module.ts
-```
-**Expected:** Matches found for exported functions/classes
-
----
-
-### Type Definitions Documented
-
-```bash
-grep "^\s*\*.*@" path/to/types.ts
-```
-**Expected:** JSDoc tags present (@param, @returns, etc.)
-
----
-
-## Git/Version Control Validation
-
-### No Uncommitted Changes
-
-```bash
-git status --porcelain
-```
-**Expected:** Empty output (all changes committed)
-
----
-
-### Commit Message Format
-
-```bash
-git log -1 --pretty=%B | head -n 1 | grep "^[a-z]*(\?[a-z]*)\?: "
-```
-**Expected:** Match found (conventional commit format)
-
----
-
-## Usage in Task Definitions
-
-**Reference validations from this library:**
-
-```markdown
-## Validation Scripts
-
-**Validation 1: TypeScript Compilation**
-[Reference: TypeScript Validation → Basic Compilation Check]
-```bash
-npm run typecheck
-```
-Expected: "0 errors", exit code 0
-
-**Validation 2: Easel Compliance**
-[Reference: Easel Design System Compliance → No Custom CSS]
-```bash
-grep -r "\.css$" path/to/component/
-```
-Expected: No matches
+bash scripts/pre-flight-validation.sh aidd-tasks/task-1-app-video-card-structure.md
 ```
 
-**Template:** Link to specific validation from library instead of rewriting each time.
+**Integration:**
+Call this script in `createPlan()` before presenting task to user

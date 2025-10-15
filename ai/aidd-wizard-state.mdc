@@ -1,0 +1,201 @@
+---
+description: State persistence for wizard workflows
+alwaysApply: false
+---
+
+# Wizard State Persistence
+
+Manages saving and resuming wizard progress.
+
+## State File
+
+Location: `aidd-planning/.aidd-wizard-state.json` (in planning directory, gitignored)
+
+Format:
+```json
+{
+  "version": "1.0",
+  "timestamp": 1705334400000,
+  "mode": "beginner",
+  "currentMenu": "executionMenu",
+  "navigationStack": ["mainMenu", "newFeature", "scopeMenu", "executionMenu"],
+  "choices": {
+    "workflow": "newFeature",
+    "scope": "medium",
+    "description": "Add video player to AppCard",
+    "stateManagement": "no",
+    "testing": "standard",
+    "designSystem": "easel",
+    "orchestration": "yes"
+  },
+  "taskInProgress": "task-1-video-player.md",
+  "currentStep": 2,
+  "totalSteps": 3
+}
+```
+
+## Save Operations
+
+saveWizardState(state) {
+  json = JSON.stringify(state, null, 2)
+  write('aidd-planning/.aidd-wizard-state.json', json)
+  
+  if (wizardMode === 'beginner') {
+    """
+    💾 Progress saved
+    
+    You can safely exit and resume later with /start
+    """
+  }
+}
+
+autoSave() {
+  if (wizardState.autoSaveEnabled) {
+    saveWizardState(wizardState)
+  }
+}
+
+## Resume Operations
+
+resumeWizardState() {
+  if (!exists('aidd-planning/.aidd-wizard-state.json')) {
+    return null
+  }
+  
+  state = readJSON('aidd-planning/.aidd-wizard-state.json')
+  age = now() - state.timestamp
+  
+  if (age > 7 * 24 * 60 * 60 * 1000) { // 7 days
+    """
+    📥 Found wizard progress from ${formatDate(state.timestamp)}
+    
+    This is quite old (${formatAge(age)}).
+    
+    [ 1 ] 🔄 Start fresh (recommended)
+    [ 2 ] ▶️  Resume anyway
+    [ 3 ] 📊 Show saved state
+    [ 4 ] 🗑️  Delete saved state
+    """
+  } else {
+    """
+    📥 Resume Previous Session
+    
+    Saved: ${formatAge(age)} ago
+    At: ${state.currentMenu}
+    Task: ${state.taskInProgress || 'None'}
+    Progress: ${state.currentStep}/${state.totalSteps} steps
+    
+    [ 1 ] ▶️  Resume from where you left off (recommended)
+    [ 2 ] 🔄 Start fresh
+    [ 3 ] 📊 Show what was saved
+    """
+  }
+}
+
+clearWizardState() {
+  delete('aidd-planning/.aidd-wizard-state.json')
+  
+  """
+  ✅ Wizard state cleared
+  
+  Starting fresh on next /start
+  """
+}
+
+showSavedState(state) {
+  """
+  📊 Saved Wizard State
+  
+  **Mode:** ${state.mode}
+  **Menu:** ${state.currentMenu}
+  **Progress:** ${state.currentStep}/${state.totalSteps}
+  
+  **Choices Made:**
+  ${Object.entries(state.choices).map(([k, v]) => 
+    `- ${k}: ${v}`
+  ).join('\n')}
+  
+  **Task:** ${state.taskInProgress || 'None'}
+  
+  What would you like to do?
+  
+  [ 1 ] ▶️  Resume from this point
+  [ 2 ] 🔄 Start fresh (discards this)
+  [ 3 ] 🏠 Back to menu
+  """
+}
+
+## Auto-Save Triggers
+
+When to save state:
+- After each menu selection
+- After task plan generation
+- After each implementation step completion
+- Before executing commands
+- On wizard exit (normal)
+- On mode change
+
+When NOT to save:
+- During read-only operations (/help, /plan, /review)
+- During validation runs (temporary state)
+- On errors (preserve last good state)
+- On forced exit (/exit with unsaved work warning)
+
+## State Recovery
+
+recoverFromError(error) {
+  lastGoodState = readJSON('aidd-planning/.aidd-wizard-state.json')
+  
+  """
+  ⚠️  Error occurred: ${error.message}
+  
+  I've preserved your progress up to the last checkpoint.
+  
+  [ 1 ] ▶️  Resume from last checkpoint
+  [ 2 ] 🔄 Restart this step
+  [ 3 ] 📊 Show what was saved
+  [ 4 ] 🏠 Exit to main menu
+  """
+}
+
+## Serialization
+
+serializeState(wizardState) {
+  return {
+    version: '1.0',
+    timestamp: Date.now(),
+    mode: wizardState.wizardMode,
+    currentMenu: wizardState.currentMenu,
+    navigationStack: wizardState.progressStack,
+    choices: wizardState.userChoices,
+    taskInProgress: wizardState.taskInProgress,
+    currentStep: wizardState.currentStep,
+    totalSteps: wizardState.totalSteps
+  }
+}
+
+deserializeState(json) {
+  data = JSON.parse(json)
+  
+  return {
+    wizardMode: data.mode,
+    currentMenu: data.currentMenu,
+    progressStack: data.navigationStack,
+    userChoices: data.choices,
+    taskInProgress: data.taskInProgress,
+    currentStep: data.currentStep,
+    totalSteps: data.totalSteps,
+    autoSaveEnabled: true
+  }
+}
+
+## Constraints
+
+- Save after every significant action
+- Preserve navigation history for back button
+- Include version for migration compatibility
+- Timestamp for staleness detection
+- Validate state on load (corrupted file detection)
+- Provide clear resume UI
+- Allow discarding stale state
+- Never lose work silently

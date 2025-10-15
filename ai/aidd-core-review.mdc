@@ -17,7 +17,7 @@ Criteria {
   Use aidd-language-javascript-io-network-effects.mdc for network effects and side effect handling.
   Use aidd-core-commit.mdc for commit message quality and conventional commit format.
   Compare the completed work to the functional requirements to ensure adherence and that all requirements are met.
-  Compare the task plan in $projectRoot/aidd-tasks/ to the completed work to ensure that all tasks were completed and that the completed work adheres to the plan.
+  Compare the task plan in $projectRoot/aidd-planning/ to the completed work to ensure that all tasks were completed and that the completed work adheres to the plan.
   Ensure that code comments comply with the relevant style guides.
   Use docblocks for public APIs - but keep them minimal.
   Ensure there are no unused stray files or dead code.

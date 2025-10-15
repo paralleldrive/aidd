@@ -28,17 +28,52 @@ Options {
 
 Commands {
   ❓ /help - List commands from aidd-always-please.mdc and report the available commands to the user without modifying any files
-  📝 /log - use aidd-core-log.mdc to collect salient changes, and log them to the root aidd-activity-log.md.
-  💾 /commit - use aidd-core-commit.mdc to commit the changes to the repository.
-  📋 /plan - review aidd-plan.md to identify priorities and suggest next steps to the user -d 10
-  🔍 /discover - use aidd-core-productmanager.mdc to discover a user journey, user story, or feature.
+
+  🧙 /start | /wizard - Launch interactive wizard with guided workflows and multiple choice menus
+    - Modes: beginner (full guidance), expert (minimal), quick (auto-defaults)
+    - Features: Numbered options, smart recommendations, progress saving, context-aware menus
+    - Navigation: Use numbers to select, ? for help, < to go back
+    - Implementation: Uses aidd-core-wizard.mdc for state management and menu logic
+
+  ⚡ Quick Actions - Single-command shortcuts for common workflows
+    - qq [description] - Quick task creation with smart defaults
+    - qe - Quick execute last pending task
+    - qc - Quick log and commit
+    - qa [task-file] - Quick full workflow (execute+log+commit+review)
+    - q? - Show quick action help
+
+  📝 /log - use aidd-core-log.mdc to collect salient changes, and log them to aidd-planning/aidd-activity-log.md
+
+  💾 /commit - use aidd-core-commit.mdc to commit the changes to the repository
+
+  📋 /plan - review aidd-planning/aidd-eng-plan.md to identify priorities and suggest next steps to the user -d 10
+
+  🔍 /discover - use aidd-core-productmanager.mdc to discover a user journey, user story, or feature
+
   ✅ /task - use the task creator to plan and execute a task epic
-    - Ensures: CodeContext, StyleGuides, ValidationScripts mandatory
-    - Validates: Task size ≤50 lines, objective success criteria
+    - Enforces: CodeContext, StyleGuides, ValidationScripts as mandatory sections
+    - Validates: Task size ≤50 lines, all success criteria objective
+    - Checks: No subjective language (distinct, clean, proper, etc.)
+    - Verifies: ValidationScripts separate from Success Criteria
+    - Ensures: Implementation steps ≤20 lines each
+    - Runs: Pre-Flight Validation Gate before user approval
+    - Auto-revises: Applies fixes if validation fails (max 3 attempts)
     - References: aidd-core-effort-calibration.mdc for sizing
     - Quality: Uses aidd-guide-ai-task-writing.mdc best practices
-  ⚙️ /execute - use the task creator to execute a task epic
-  🔬 /review - conduct a thorough code review focusing on code quality, best practices, and adherence to project standards
+
+  ⚙️ /execute - use the task creator to execute existing task epic
+    - Validates: Task passes Pre-Flight checks before execution
+    - Enforces: Incremental validation after each implementation step
+
+  🔬 /review - conduct thorough code review per aidd-core-review.mdc
+
+  🔍 /validate-task [task-file] - run Pre-Flight Validation Gate on existing task file
+    - Checks: All 5 quality requirements (sections, subjective language, validation format, step sizes, orchestration logic)
+    - Reports: Specific violations with line numbers and examples
+    - Suggests: Auto-revision fixes for each violation
+    - Offers: Option to auto-fix violations
+    - Blocks: Task execution until validation passes
+    - Output: Detailed validation report with pass/fail status
 }
 
 Constraints {

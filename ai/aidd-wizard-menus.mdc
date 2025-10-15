@@ -1,0 +1,509 @@
+---
+description: Menu definitions and templates for AIDD wizard workflows
+alwaysApply: false
+---
+
+# Wizard Menu Library
+
+Reusable menu templates for consistent wizard experience.
+
+## Menu Components
+
+MenuOption {
+  number: 1..9
+  icon: emoji
+  label: string
+  description?: string // shown in beginner mode
+  example?: string
+  recommended?: boolean
+}
+
+Menu {
+  id: string
+  title: string
+  context?: string
+  options: [MenuOption]
+  recommendation?: string
+  helpText?: string
+  nextMenu: (choice) => MenuId
+}
+
+## Standard Menus
+
+### Main Menu
+
+```
+mainMenu = {
+  id: 'main',
+  title: '👋 Welcome to AIDD!',
+  context: null,
+  options: [
+    {
+      number: 1,
+      icon: '🆕',
+      label: 'Start a new feature or task',
+      description: 'Create and execute new work'
+    },
+    {
+      number: 2,
+      icon: '▶️',
+      label: 'Continue working on existing task',
+      description: 'Resume in-progress or start pending task'
+    },
+    {
+      number: 3,
+      icon: '📊',
+      label: 'Review current project status',
+      description: 'See metrics, progress, and recommendations'
+    },
+    {
+      number: 4,
+      icon: '🔍',
+      label: 'Product discovery',
+      description: 'Plan a feature from user research'
+    },
+    {
+      number: 5,
+      icon: '❓',
+      label: 'Learn about AIDD',
+      description: 'Tutorial and command reference'
+    }
+  ],
+  helpText: 'Type the number of your choice',
+  nextMenu: routeToWorkflow
+}
+```
+
+### Knowledge Level Menu
+
+```
+knowledgeMenu = {
+  id: 'knowledge',
+  title: '🎯 Do you already know what you want to build?',
+  options: [
+    {
+      number: 1,
+      icon: '✅',
+      label: 'Yes - I know exactly what to build',
+      description: 'Skip to task creation'
+    },
+    {
+      number: 2,
+      icon: '🤔',
+      label: 'Partly - I have an idea but need help planning',
+      description: 'Product discovery with guidance'
+    },
+    {
+      number: 3,
+      icon: '❌',
+      label: 'No - I need to explore the problem first',
+      description: 'Full discovery process'
+    }
+  ],
+  recommendation: 'Choose [1] if you have clear requirements',
+  nextMenu: (choice) => choice === 1 ? 'scope' : 'discovery'
+}
+```
+
+### Scope Selection Menu
+
+```
+scopeMenu = {
+  id: 'scope',
+  title: '📏 What\'s the scope of this work?',
+  options: [
+    {
+      number: 1,
+      icon: '🔧',
+      label: 'Small fix or enhancement',
+      description: '1-2 hours, <50 lines',
+      example: 'Add prop, fix bug, update styling'
+    },
+    {
+      number: 2,
+      icon: '🏗️',
+      label: 'New component or feature',
+      description: '3-6 hours, 50-150 lines',
+      example: 'Create component, integrate API',
+      recommended: true
+    },
+    {
+      number: 3,
+      icon: '🏛️',
+      label: 'Complex feature',
+      description: '1-2 days, 150-500 lines',
+      example: 'Major feature with state management'
+    },
+    {
+      number: 4,
+      icon: '🌐',
+      label: 'Large epic',
+      description: 'Multiple days, >500 lines',
+      example: 'Complete feature set, system integration'
+    }
+  ],
+  recommendation: (desc) => inferScope(desc),
+  helpText: 'Large tasks auto-break into smaller sub-tasks',
+  nextMenu: () => 'description'
+}
+```
+
+### State Management Menu
+
+```
+stateManagementMenu = {
+  id: 'stateManagement',
+  title: '🔄 State Management Strategy',
+  context: 'Will this component need reactive state (data that changes over time)?',
+  options: [
+    {
+      number: 1,
+      icon: '🎯',
+      label: 'No - Component only displays data from props',
+      description: 'Best for: Presentational components, static layouts'
+    },
+    {
+      number: 2,
+      icon: '🔄',
+      label: 'Yes - Component manages its own state',
+      description: 'Best for: Interactive widgets, forms, dynamic UIs'
+    },
+    {
+      number: 3,
+      icon: '❓',
+      label: 'Not sure - Help me decide',
+      description: 'I\'ll analyze and recommend'
+    }
+  ],
+  recommendation: (component) => inferStateNeeds(component),
+  helpText: 'Affects whether we use MobX or keep it simple',
+  nextMenu: () => 'testing'
+}
+```
+
+### Testing Level Menu
+
+```
+testingMenu = {
+  id: 'testing',
+  title: '🧪 Testing Level',
+  context: 'How comprehensive should the test coverage be?',
+  options: [
+    {
+      number: 1,
+      icon: '⚡',
+      label: 'Basic',
+      description: 'Happy path + error case (4-6 tests, ~30 min)'
+    },
+    {
+      number: 2,
+      icon: '✅',
+      label: 'Standard',
+      description: 'All requirements covered (8-12 tests, ~1 hour)',
+      recommended: true
+    },
+    {
+      number: 3,
+      icon: '🎯',
+      label: 'Comprehensive',
+      description: 'Edge cases + integration (15+ tests, ~2 hours)'
+    }
+  ],
+  recommendation: '[2] - Good balance of coverage and speed',
+  helpText: 'TDD process used regardless of level chosen',
+  nextMenu: () => 'designSystem'
+}
+```
+
+### Design System Menu
+
+```
+designSystemMenu = {
+  id: 'designSystem',
+  title: '🎨 Design System Usage',
+  context: 'How should this component be styled?',
+  options: [
+    {
+      number: 1,
+      icon: '✅',
+      label: (ds) => `Use ${ds} exclusively`,
+      description: 'Follows your aidd-org-ui.mdc guidelines',
+      recommended: true
+    },
+    {
+      number: 2,
+      icon: '⚠️',
+      label: (ds) => `Mix of ${ds} + custom CSS`,
+      description: 'May violate project standards'
+    },
+    {
+      number: 3,
+      icon: '🎨',
+      label: 'Custom styling only',
+      description: 'Will need style guide review'
+    }
+  ],
+  recommendation: (policy) => `[1] - Your project policy: ${policy}`,
+  nextMenu: () => 'complexity'
+}
+```
+
+### Execution Mode Menu
+
+```
+executionMenu = {
+  id: 'execution',
+  title: '⚙️ Execution Mode',
+  context: 'How should I proceed with implementation?',
+  options: [
+    {
+      number: 1,
+      icon: '🤖',
+      label: 'Full auto',
+      description: 'Execute all steps, pause only on failures'
+    },
+    {
+      number: 2,
+      icon: '👀',
+      label: 'Semi-auto',
+      description: 'Show each step, wait for approval',
+      recommended: true
+    },
+    {
+      number: 3,
+      icon: '🐢',
+      label: 'Manual',
+      description: 'Explicit approval at every checkpoint'
+    }
+  ],
+  recommendation: '[2] for first-time tasks, [1] once familiar',
+  helpText: 'All modes use TDD and run validations',
+  nextMenu: () => 'execute'
+}
+```
+
+### Completion Menu
+
+```
+completionMenu = {
+  id: 'completion',
+  title: '🎉 Task Complete!',
+  context: (summary) => summary,
+  options: [
+    {
+      number: 1,
+      icon: '📝',
+      label: 'Log completion to activity log',
+      recommended: true
+    },
+    {
+      number: 2,
+      icon: '🔬',
+      label: 'Run code review first'
+    },
+    {
+      number: 3,
+      icon: '💾',
+      label: 'Commit immediately (skip logging)'
+    },
+    {
+      number: 4,
+      icon: '▶️',
+      label: 'Start next task'
+    },
+    {
+      number: 5,
+      icon: '📊',
+      label: 'Show detailed metrics'
+    }
+  ],
+  recommendation: 'Typical flow: [1] Log → [Commit]',
+  nextMenu: (choice) => {
+    1 => 'logging',
+    2 => 'review',
+    3 => 'commit',
+    4 => 'main',
+    5 => 'metrics'
+  }
+}
+```
+
+### Yes/No Menu Template
+
+```
+yesNoMenu(question, yesAction, noAction) {
+  return {
+    id: 'yesNo',
+    title: question,
+    options: [
+      { number: 1, icon: '✅', label: 'Yes' },
+      { number: 2, icon: '❌', label: 'No' }
+    ],
+    nextMenu: (choice) => choice === 1 ? yesAction : noAction
+  }
+}
+```
+
+### Confirmation Menu Template
+
+```
+confirmMenu(action, details) {
+  return {
+    id: 'confirm',
+    title: `Confirm ${action}`,
+    context: details,
+    options: [
+      { number: 1, icon: '✅', label: 'Confirm and proceed' },
+      { number: 2, icon: '✏️', label: 'Modify first' },
+      { number: 3, icon: '❌', label: 'Cancel' }
+    ],
+    recommendation: '[1] if details look correct'
+  }
+}
+```
+
+### Task Selection Menu
+
+```
+taskSelectionMenu(tasks) {
+  options = tasks.slice(0, 9).map((task, i) => ({
+    number: i + 1,
+    icon: task.status === 'inProgress' ? '▶️' : '📋',
+    label: task.name,
+    description: `${task.size}, ${task.progress || 'not started'}`
+  }))
+  
+  return {
+    id: 'taskSelection',
+    title: '📋 Select Task to Work On',
+    context: `Found ${tasks.length} task(s)`,
+    options: options,
+    recommendation: tasks[0].status === 'inProgress' 
+      ? '[1] - Continue in-progress task'
+      : '[1] - Start highest priority',
+    nextMenu: () => 'execution'
+  }
+}
+```
+
+## Menu Chains
+
+Common workflow sequences:
+
+### New Task Flow
+
+```
+mainMenu (choice 1)
+  → knowledgeMenu
+  → scopeMenu
+  → descriptionInput
+  → stateManagementMenu
+  → testingMenu
+  → designSystemMenu
+  → complexityMenu
+  → taskPreview
+  → confirmMenu
+  → executionMenu
+  → [execute steps]
+  → completionMenu
+  → loggingMenu
+  → commitMenu
+  → doneMenu
+```
+
+### Continue Task Flow
+
+```
+mainMenu (choice 2)
+  → taskSelectionMenu
+  → executionMenu
+  → [execute remaining steps]
+  → completionMenu
+  → [same as above]
+```
+
+### Discovery Flow
+
+```
+mainMenu (choice 4)
+  → problemDescriptionInput
+  → whoMenu
+  → frequencyMenu
+  → impactMenu
+  → successMetricsMenu
+  → journeyPreview
+  → prdMenu
+  → taskCreationMenu
+  → [into new task flow]
+```
+
+## Help Text Library
+
+Contextual help for each menu:
+
+```
+helpText = {
+  scope: """
+  Task sizing affects:
+  - How work is broken down
+  - Time estimation accuracy
+  - Sub-task creation
+  
+  If unsure, choose Medium [2] - most common
+  Large tasks auto-break into ≤50 line sub-tasks
+  """,
+  
+  stateManagement: """
+  State management decision affects:
+  - Whether MobX is used
+  - Component complexity
+  - Testing approach
+  
+  Props-only = simpler, faster
+  Reactive state = more power, more complexity
+  
+  When unsure, choose [3] for analysis
+  """,
+  
+  testing: """
+  Testing level affects:
+  - Test suite size
+  - Implementation time
+  - Bug catch rate
+  
+  Standard [2] recommended:
+  - Covers all requirements
+  - ~1 hour testing time
+  - Good ROI on quality
+  """,
+  
+  execution: """
+  Execution modes:
+  
+  Full auto [1]:
+  - Runs all steps without pausing
+  - Shows results at end
+  - Fastest option
+  
+  Semi-auto [2]:
+  - Shows each step
+  - Waits for approval
+  - Balanced control
+  
+  Manual [3]:
+  - Maximum control
+  - Slowest but safest
+  """
+}
+```
+
+## Constraints
+
+- Every menu must have numbered options [1], [2], etc.
+- Icons required for all options
+- Descriptions optional based on wizardMode
+- Recommendations always computed and shown
+- Help text always available
+- Maximum 9 options per menu
+- Keep option labels concise (≤50 chars)
+- Group related options together

@@ -1,0 +1,621 @@
+---
+description: Interactive wizard with multiple choice navigation and guided workflows
+alwaysApply: false
+---
+
+# Wizard
+
+Act as a friendly, knowledgeable guide helping users through AIDD workflows with multiple choice menus.
+
+## State Management
+
+WizardState {
+  currentMenu: MenuType
+  wizardMode: beginner | expert | quick
+  taskInProgress: TaskId?
+  userChoices: ChoiceHistory
+  progressStack: NavigationStack
+  autoSaveEnabled: boolean = true
+}
+
+MenuType = mainMenu | scopeMenu | stateMenu | testingMenu | styleMenu | complexityMenu | executionMenu | completionMenu
+
+NavigationStack = [Menu] // allows back navigation
+
+ChoiceHistory = {
+  scope?: small | medium | large
+  stateManagement?: yes | no | unsure
+  testingLevel?: basic | standard | comprehensive
+  designSystem?: easel | mixed | custom
+  orchestration?: yes | no
+  executionMode?: auto | semiAuto | manual
+}
+
+## Wizard Modes
+
+Mode {
+  beginner {
+    showExplanations: true
+    showRecommendations: true
+    requireConfirmations: true
+    verboseOutput: true
+  }
+  
+  expert {
+    showExplanations: false
+    showRecommendations: true
+    requireConfirmations: false
+    verboseOutput: false
+  }
+  
+  quick {
+    showExplanations: false
+    showRecommendations: false
+    requireConfirmations: false
+    useSmartDefaults: true
+  }
+}
+
+## Menu Templates
+
+mainMenu() {
+  """
+  👋 Welcome to AIDD!
+  
+  What would you like to do?
+  
+  [ 1 ] 🆕 Start a new feature or task
+  [ 2 ] ▶️  Continue working on existing task
+  [ 3 ] 📊 Review current project status
+  [ 4 ] 🔍 Product discovery (plan from scratch)
+  [ 5 ] ❓ Learn about AIDD
+  
+  Type the number of your choice
+  """
+}
+
+scopeMenu(description) {
+  """
+  📏 What's the scope of this work?
+  
+  [ 1 ] 🔧 Small fix or enhancement (1-2 hours, <50 lines)
+        ${exampleSmall}
+  
+  [ 2 ] 🏗️  New component or feature (3-6 hours, 50-150 lines)
+        ${exampleMedium}
+  
+  [ 3 ] 🏛️  Complex feature (1-2 days, 150-500 lines)
+        ${exampleLarge}
+  
+  [ 4 ] 🌐 Large epic (multiple days, >500 lines)
+        ${exampleEpic}
+  
+  Based on: "${description}"
+  Recommendation: ${inferScope(description)}
+  
+  Note: Large tasks auto-break into smaller sub-tasks
+  """
+}
+
+stateManagementMenu(component) {
+  """
+  🔄 State Management Strategy
+  
+  Will this component need reactive state (data that changes over time)?
+  
+  [ 1 ] No - Component only displays data from props
+        Best for: Presentational components, static layouts
+  
+  [ 2 ] Yes - Component manages its own state
+        Best for: Interactive widgets, forms, dynamic UIs
+  
+  [ 3 ] Not sure - Help me decide
+  
+  Context: Affects whether we use MobX or keep it simple
+  
+  Analyzing "${component}"...
+  Recommendation: ${inferStateNeeds(component)}
+  """
+}
+
+testingMenu() {
+  """
+  🧪 Testing Level
+  
+  How comprehensive should the test coverage be?
+  
+  [ 1 ] Basic - Happy path + error case (4-6 tests)
+        ~30 min testing time
+  
+  [ 2 ] Standard - All requirements covered (8-12 tests)
+        ~1 hour testing time
+  
+  [ 3 ] Comprehensive - Edge cases + integration (15+ tests)
+        ~2 hour testing time
+  
+  Recommendation: [2] - Good balance of coverage and speed
+  
+  Note: TDD process used regardless of level chosen
+  """
+}
+
+designSystemMenu() {
+  """
+  🎨 Design System Usage
+  
+  How should this component be styled?
+  
+  [ 1 ] Use ${projectDesignSystem} exclusively (recommended)
+        Follows your aidd-org-ui.mdc guidelines
+  
+  [ 2 ] Mix of ${projectDesignSystem} + custom CSS
+        May violate project standards
+  
+  [ 3 ] Custom styling only
+        Will need style guide review
+  
+  Your project policy: ${designSystemPolicy}
+  Recommendation: [1]
+  """
+}
+
+complexityMenu(analysis) {
+  """
+  🤖 Agent Orchestration
+  
+  I've analyzed the task complexity:
+  
+  Detected:
+  - Technical domains: ${analysis.domains} (${analysis.domainList})
+  - Specializations: ${analysis.specs} (${analysis.specList})
+  - Cross-functional: ${analysis.crossFunc}
+  - Integration work: ${analysis.integration}
+  
+  Decision: ${analysis.domains >= 2 || analysis.specs >= 2 ? 'YES' : 'NO'}
+  
+  ${if(analysis.orchestrationRequired) {
+    """
+    ✅ Multi-agent orchestration recommended
+    
+    Agents needed:
+    ${analysis.agentList}
+    
+    [ 1 ] ✅ Use orchestration (better quality)
+    [ 2 ] ❌ Single agent only (simpler but may miss patterns)
+    
+    Recommendation: [1] - Ensures each domain follows best practices
+    """
+  } else {
+    """
+    Single agent is sufficient for this task.
+    
+    [ 1 ] ✅ Continue with single agent
+    
+    Press Enter to continue
+    """
+  }}
+  """
+}
+
+executionMenu() {
+  """
+  ⚙️ Execution Mode
+  
+  How should I proceed with implementation?
+  
+  [ 1 ] 🤖 Full auto - Execute all steps, pause only on failures
+        Fastest, good for routine tasks
+  
+  [ 2 ] 👀 Semi-auto - Show each step, wait for approval (recommended)
+        Balanced control and speed
+  
+  [ 3 ] 🐢 Manual - Explicit approval at every checkpoint
+        Maximum control, slower
+  
+  Recommendation: [2] for first-time tasks, [1] once familiar
+  
+  All modes use TDD and run validations
+  """
+}
+
+completionMenu(taskSummary) {
+  """
+  🎉 Task Complete!
+  
+  ${taskSummary}
+  
+  What's next?
+  
+  [ 1 ] 📝 Log completion to activity log (recommended next)
+  [ 2 ] 🔬 Run code review first
+  [ 3 ] 💾 Commit immediately (skip logging)
+  [ 4 ] ▶️  Start next task
+  [ 5 ] 📊 Show detailed metrics
+  
+  Typical flow: [1] Log → [Commit]
+  Quick flow: [3] Skip to commit
+  """
+}
+
+loggingMenu(detectedChanges) {
+  """
+  📝 Logging Changes
+  
+  I detected these changes:
+  ${detectedChanges}
+  
+  Proposed log entry:
+  - ${emoji} - ${epicName} - ${description}
+  
+  [ 1 ] ✅ Log it as shown
+  [ 2 ] ✏️  Edit description
+  [ 3 ] 🔄 Change emoji/type
+  [ 4 ] ❌ Skip logging (not epic-level)
+  
+  Note: Only log epic-level completions
+  """
+}
+
+commitMenu(proposedCommit) {
+  """
+  💾 Git Commit
+  
+  Proposed commit message:
+  ${proposedCommit}
+  
+  [ 1 ] ✅ Commit as shown
+  [ 2 ] ✏️  Edit message
+  [ 3 ] 📦 Review staged files
+  [ 4 ] ❌ Cancel
+  
+  Format: Conventional commits (type(scope): description)
+  """
+}
+
+## Navigation Logic
+
+handleUserInput(input, currentMenu) {
+  match input {
+    /^[1-9]$/ => selectOption(currentMenu, input)
+    '?' => showHelp(currentMenu)
+    '<' => goBack()
+    '!' => skipStep()
+    '@' => showDetailedExplanation(currentMenu)
+    '/menu' => returnToMainMenu()
+    '/exit' => exitWizard()
+    default => invalidInput()
+  }
+}
+
+selectOption(menu, choice) {
+  saveChoice(menu, choice)
+  nextMenu = determineNextMenu(menu, choice)
+  
+  if (shouldAutoSave) {
+    saveProgress()
+  }
+  
+  displayMenu(nextMenu)
+}
+
+goBack() {
+  if (progressStack.length > 1) {
+    progressStack.pop()
+    previousMenu = progressStack.peek()
+    displayMenu(previousMenu)
+  } else {
+    showError("Already at first step")
+  }
+}
+
+## Smart Defaults
+
+inferScope(description) {
+  keywords = extractKeywords(description)
+  
+  match keywords {
+    contains('add prop', 'fix bug', 'update') => suggest(1, "Small")
+    contains('create component', 'new feature') => suggest(2, "Medium")
+    contains('refactor', 'integrate', 'system') => suggest(3, "Large")
+    contains('complete', 'full', 'entire') => suggest(4, "Epic")
+    default => suggest(2, "Medium - most common")
+  }
+}
+
+inferStateNeeds(description) {
+  statefulPatterns = ['form', 'editor', 'interactive', 'dynamic', 'loading', 'filter']
+  statelessPatterns = ['display', 'show', 'card', 'list', 'static']
+  
+  if (description.contains(statefulPatterns)) {
+    return suggest(2, "YES - Likely needs reactive state")
+  }
+  
+  if (description.contains(statelessPatterns)) {
+    return suggest(1, "NO - Likely props-only")
+  }
+  
+  return suggest(3, "Not sure - Let me analyze more")
+}
+
+## Progress Management
+
+saveProgress() {
+  state = serializeState(wizardState)
+  write(`aidd-planning/.aidd-wizard-state.json`, state)
+}
+
+resumeProgress() {
+  if (exists('aidd-planning/.aidd-wizard-state.json')) {
+    state = readState('aidd-planning/.aidd-wizard-state.json')
+    
+    prompt: """
+    📥 Found saved wizard progress
+    
+    You were: ${state.lastMenu}
+    
+    [ 1 ] ▶️  Resume from where you left off
+    [ 2 ] 🔄 Start fresh
+    [ 3 ] 📊 Show what was saved
+    """
+  }
+}
+
+## Workflow Routing
+
+routeToWorkflow(mainMenuChoice) {
+  match mainMenuChoice {
+    1 => newFeatureWizard()
+    2 => continueExistingWizard()
+    3 => statusReviewWizard()
+    4 => productDiscoveryWizard()
+    5 => learnAboutAIDDWizard()
+  }
+}
+
+newFeatureWizard() {
+  1. askKnowledgeLevel() -> knowledgeMenu
+  2. if (knowsWhatToBuild) {
+    askScope() -> scopeMenu
+    askDescription() -> freeTextInput
+    askStateManagement() -> stateManagementMenu
+    askTesting() -> testingMenu
+    askDesignSystem() -> designSystemMenu
+    analyzeComplexity() -> complexityMenu
+    generateTask() -> taskPreview
+    confirmAndExecute() -> executionMenu
+  } else {
+    routeToDiscovery()
+  }
+}
+
+continueExistingWizard() {
+  inProgressTasks = readEngPlan() |> filterByStatus('inProgress')
+  pendingTasks = readEngPlan() |> filterByStatus('pending')
+  
+  if (inProgressTasks.length > 0) {
+    displayTaskSelectionMenu(inProgressTasks, pendingTasks)
+  } else if (pendingTasks.length > 0) {
+    displayTaskSelectionMenu(pendingTasks)
+  } else {
+    """
+    No tasks found to continue.
+    
+    [ 1 ] 🆕 Create a new task
+    [ 2 ] 🏠 Back to main menu
+    """
+  }
+}
+
+statusReviewWizard() {
+  status = analyzeProjectStatus()
+  
+  displayStatus(status)
+  
+  """
+  What would you like to do?
+  
+  [ 1 ] 📋 See detailed task breakdown
+  [ 2 ] 📈 Show activity log
+  [ 3 ] 🚫 Review blocked tasks
+  [ 4 ] ▶️  Work on recommended task
+  [ 5 ] 🏠 Back to main menu
+  """
+}
+
+productDiscoveryWizard() {
+  1. askProblemDescription() -> freeTextInput
+  2. askWhoQuestion() -> multipleChoice
+  3. askFrequencyQuestion() -> multipleChoice
+  4. askImpactQuestion() -> multipleChoice
+  5. askSuccessMetrics() -> multipleChoice
+  6. generateUserJourney() -> preview
+  7. offerPRDGeneration() -> yesNoMenu
+  8. if (yes) { generatePRD() -> taskCreationMenu }
+}
+
+## Display Formatting
+
+formatMenu(menu) {
+  """
+  ${menu.title}
+  ${menu.context ? '\n' + menu.context : ''}
+  
+  ${menu.options.map((opt, i) => 
+    `[ ${i+1} ] ${opt.icon} ${opt.label}
+        ${wizardMode === 'beginner' ? opt.description : ''}`
+  ).join('\n\n')}
+  
+  ${menu.recommendation ? '\nRecommendation: ' + menu.recommendation : ''}
+  ${menu.help ? '\nPress ? for help' : ''}
+  """
+}
+
+formatProgress(current, total) {
+  filled = Math.floor((current / total) * 10)
+  bar = '█'.repeat(filled) + '░'.repeat(10 - filled)
+  percentage = Math.floor((current / total) * 100)
+  
+  return `${bar} ${percentage}% (${current} of ${total})`
+}
+
+formatTaskSummary(task) {
+  """
+  📊 **Task Summary**
+  
+  **What:** ${task.name}
+  **Size:** ${task.size} (${task.estimatedLines} lines, ${task.estimatedTime})
+  **Steps:** ${task.stepCount} implementation steps
+  **Tests:** ${task.testCount} tests
+  **Agents:** ${task.orchestration ? task.agents.join(', ') : 'Single agent'}
+  
+  **Will create:**
+  ${task.artifacts.map(a => `- ${a}`).join('\n')}
+  """
+}
+
+## Quick Actions Integration
+
+quickAction(action, args) {
+  match action {
+    'qq' => quickTask(args) {
+      description = args.join(' ')
+      
+      // Use smart defaults, skip questions
+      choices = {
+        scope: inferScope(description),
+        stateManagement: inferStateNeeds(description),
+        testingLevel: 'standard',
+        designSystem: 'easel',
+        executionMode: 'semiAuto'
+      }
+      
+      task = generateTaskWithDefaults(description, choices)
+      
+      """
+      ⚡ Quick Task Created
+      
+      ${formatTaskSummary(task)}
+      
+      Execute now? [y/n]
+      """
+    }
+    
+    'qe' => quickExecute() {
+      lastPending = getLastPendingTask()
+      
+      """
+      ⚡ Quick Execute
+      
+      Execute ${lastPending.name}? [y/n]
+      """
+    }
+    
+    'qc' => quickCommit() {
+      runCommand('/log')
+      runCommand('/commit')
+    }
+    
+    'qa' => quickAll(taskFile) {
+      // Execute → Log → Commit → Review
+      runCommand('/execute', taskFile)
+      runCommand('/log')
+      runCommand('/commit')
+      runCommand('/review')
+    }
+  }
+}
+
+## Context-Aware Behavior
+
+determineMainMenuOptions() {
+  tasks = readEngPlan()
+  inProgress = tasks.filter(status === 'inProgress')
+  pending = tasks.filter(status === 'pending')
+  hasActivityToday = checkActivityLog(today)
+  
+  options = [
+    { num: 1, label: 'Start new', always: true }
+  ]
+  
+  if (inProgress.length > 0) {
+    options.push({
+      num: 2,
+      label: `Continue ${inProgress[0].name}`,
+      highlight: true,
+      recommended: true
+    })
+  } else if (pending.length > 0) {
+    options.push({
+      num: 2,
+      label: `Start pending task`,
+      highlight: true
+    })
+  }
+  
+  options.push(
+    { num: 3, label: 'Review status' },
+    { num: 4, label: 'Product discovery' },
+    { num: 5, label: 'Learn AIDD' }
+  )
+  
+  return options
+}
+
+## Error Handling
+
+invalidInput(input, menu) {
+  """
+  ❌ Invalid input: "${input}"
+  
+  Expected: Number 1-${menu.options.length}
+  Or: ?, <, !, @, /menu, /exit
+  
+  Please try again:
+  """
+}
+
+validationFailed(step, errors) {
+  """
+  ⚠️  Validation Failed at ${step}
+  
+  Issues found:
+  ${errors.map(e => `- ${e.message}`).join('\n')}
+  
+  What would you like to do?
+  
+  [ 1 ] 🔄 Auto-fix violations (recommended)
+  [ 2 ] ✏️  Fix manually
+  [ 3 ] 📖 Explain what's wrong
+  [ 4 ] ⏭️  Skip validation (not recommended)
+  """
+}
+
+## Mode Switching
+
+switchMode(newMode) {
+  wizardState.mode = newMode
+  
+  """
+  ✅ Switched to ${newMode} mode
+  
+  ${newMode === 'beginner' && 'Showing full explanations and help text'}
+  ${newMode === 'expert' && 'Minimal prompts, smart recommendations'}
+  ${newMode === 'quick' && 'Auto-defaults, minimal interaction'}
+  
+  Continue where you left off? [y/n]
+  """
+}
+
+## Constraints
+
+- Always present numbered options in [ 1 ], [ 2 ] format
+- Show recommendations in beginner mode
+- Use icons for visual scanning
+- Keep option descriptions to 1-2 lines max
+- Group related options together
+- Highlight recommended choice
+- Allow back navigation with <
+- Auto-save after each decision
+- Respect wizardMode settings
+- Never skip validation steps
+- Provide help at every menu with ?
