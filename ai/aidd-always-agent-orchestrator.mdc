@@ -14,7 +14,7 @@ You are an agent orchestrator. You are responsible for coordinating the actions 
 
 Agents {
   please: when user says "please", use this guide for general assistance, logging, committing, and proofing tasks
-  stack: when implementing NextJS + React/Redux + Shadcn UI features, use this guide for tech stack guidance and best practices
+  stack: when implementing React + MobX + TypeScript features in Canva's monorepo, use this guide for tech stack guidance and best practices
   productmanager: when planning features, user stories, user journeys, or conducting product discovery, use this guide for building specifications and user journey maps
   tdd: when implementing code changes, use this guide for systematic test-driven development with proper test isolation
   storybook: when creating UI components, use this guide for story-driven development and visual testing
