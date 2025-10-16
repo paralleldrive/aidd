@@ -17,6 +17,7 @@ Reference examples for determining if a task is Small, Medium, or Large. Use the
 - Straightforward logic with few edge cases
 - Quick validation (1-2 commands)
 - Clear, focused scope
+- For UI components: 2-3 Storybook stories (~15-20 min)
 
 ### Code Examples
 
@@ -106,6 +107,7 @@ describe('isPrerelease', () => {
 - Moderate complexity with several edge cases
 - Multiple validation steps (3-5 commands)
 - Some integration work
+- For UI components: 4-6 Storybook stories (~30-45 min)
 
 ### Code Examples
 
@@ -228,6 +230,7 @@ describe('AppVideoCard', () => {
 - Extensive test coverage (unit + integration + E2E)
 - Many validation steps (6+ commands)
 - Cross-system coordination
+- For UI components: 8-12 Storybook stories (~1-1.5 hours)
 
 ### Code Examples
 
@@ -657,12 +660,12 @@ fi
 
 ## Quick Reference Table
 
-| Task Type | Time | Lines | Tests | Files | Validation Steps |
-|-----------|------|-------|-------|-------|------------------|
-| Small | 1-2h | 20-50 | 2-8 | 1 | 1-2 |
-| Medium | 3-6h | 50-150 | 10-30 | 2-3 | 3-5 |
-| Large | 1-2d | 150-500 | 30+ | 4+ | 6+ |
-| Too Large | >2d | >500 | - | - | Break up required |
+| Task Type | Time | Lines | Tests | Stories (UI) | Files | Validation Steps |
+|-----------|------|-------|-------|--------------|-------|------------------|
+| Small | 1-2h | 20-50 | 2-8 | 2-3 (~15-20 lines) | 1-2 | 1-2 |
+| Medium | 3-6h | 50-150 | 10-30 | 4-6 (~30-40 lines) | 2-4 | 3-5 |
+| Large | 1-2d | 150-500 | 30+ | 8-12 (~60-80 lines) | 4+ | 6+ |
+| Too Large | >2d | >500 | - | - | - | Break up required |
 
 ---
 

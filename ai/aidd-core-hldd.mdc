@@ -1,0 +1,659 @@
+---
+description: High-Level Design Doc creation with options analysis and decision-making workflow
+alwaysApply: false
+---
+
+# HLDD - High Level Design Doc
+
+Act as a senior software architect and technical lead to create comprehensive engineering plans through systematic options analysis and decision-making.
+
+## HLDD Workflow
+
+hlddWorkflow(featureDescription) {
+  1. analyzeFeature(featureDescription) -> featureContext
+  2. generateOptionsDocument(featureContext) -> optionsDoc
+  3. presentOptionsToUser(optionsDoc)
+  4. collectDecisions(optionsDoc) -> decisions
+  5. generateEngineeringPlan(decisions, featureContext) -> engPlan
+  6. presentForApproval(engPlan)
+  7. if (approved) { saveToFile('aidd-planning/aidd-eng-plan.md') }
+}
+
+## Options Document Generation
+
+OptionCategory = stateManagement | componentArchitecture | dataFetching | testing | styling | performance | errorHandling | typeSafety
+
+EngineeringDecision {
+  id: number
+  category: OptionCategory
+  question: string
+  context: string
+  options: [Option]
+  recommendation: OptionId
+  reasoning: string
+  confidence: high | medium | low
+  dependencies: [DecisionId]
+}
+
+Option {
+  id: string
+  name: string
+  pros: [string]
+  cons: [string]
+  impact: string  // complexity, timeline, maintenance
+  codeExample?: string
+  reference?: string  // link to docs or existing implementation
+}
+
+## Decision Categories
+
+analyzeFeature(description) {
+  detectRequiredDecisions(description) {
+    decisions = []
+    
+    // State Management - Always relevant for components
+    if (description.includes('component', 'ui', 'interface')) {
+      decisions.push('stateManagement')
+    }
+    
+    // Data Fetching - When data sources mentioned
+    if (description.includes('api', 'fetch', 'data', 'backend', 'cms')) {
+      decisions.push('dataFetching')
+    }
+    
+    // Component Architecture - For new components
+    if (description.includes('create component', 'new component')) {
+      decisions.push('componentArchitecture')
+    }
+    
+    // Testing Strategy - Always relevant
+    decisions.push('testing')
+    
+    // Styling Approach - For UI work
+    if (description.includes('ui', 'component', 'design', 'layout')) {
+      decisions.push('styling')
+    }
+    
+    // Performance - For data-heavy or list features
+    if (description.includes('list', 'carousel', 'many', 'large')) {
+      decisions.push('performance')
+    }
+    
+    // Error Handling - Always relevant
+    decisions.push('errorHandling')
+    
+    // Type Safety - For TypeScript projects
+    if (projectUsesTypeScript) {
+      decisions.push('typeSafety')
+    }
+    
+    return decisions
+  }
+}
+
+## Options Templates
+
+stateManagementOptions() {
+  return {
+    question: "How should the component manage state?",
+    context: "State management affects complexity, testability, and integration",
+    options: [
+      {
+        id: 'A',
+        name: 'Props-only (Presentational)',
+        pros: ['Simple and testable', 'Highly reusable', 'No state dependencies'],
+        cons: ['Parent must manage all state', 'Limited local interactivity'],
+        impact: 'Low complexity, 1-2 hours implementation',
+        codeExample: 'export const Component: React.FC<Props> = (props) => { ... }'
+      },
+      {
+        id: 'B',
+        name: 'MobX Store',
+        pros: ['Reactive updates', 'Local state management', 'Integrates with app state'],
+        cons: ['Additional complexity', 'More testing needed', 'MobX dependency'],
+        impact: 'Medium complexity, +2-3 hours',
+        codeExample: '@observable.ref data; @action fetchData() { ... }'
+      },
+      {
+        id: 'C',
+        name: 'React useState/useReducer',
+        pros: ['Built-in hooks', 'Simple for local state', 'No external dependencies'],
+        cons: ['Not reactive across components', 'Non-standard for MobX projects'],
+        impact: 'Low complexity, but diverges from project patterns'
+      }
+    ],
+    recommendation: (context) => inferStateManagementChoice(context),
+    defaultRecommendation: 'A'
+  }
+}
+
+dataFetchingOptions() {
+  return {
+    question: "How should data be fetched?",
+    context: "Data fetching strategy affects backend integration and performance",
+    options: [
+      {
+        id: 'A',
+        name: 'CMS Proto Infrastructure',
+        pros: ['Integrates with existing CMS', 'Type-safe proto definitions', 'Fallback support'],
+        cons: ['Requires proto registration', 'Backend coordination needed'],
+        impact: 'Medium complexity, requires backend work, +2-4 days',
+        reference: 'web/src/ui/apps/cms/ - existing CMS patterns'
+      },
+      {
+        id: 'B',
+        name: 'REST API',
+        pros: ['Simple HTTP requests', 'Quick to implement', 'Well understood'],
+        cons: ['Manual type definitions', 'No fallback infrastructure', 'Less type-safe'],
+        impact: 'Low complexity, +1 day, but less robust'
+      },
+      {
+        id: 'C',
+        name: 'GraphQL',
+        pros: ['Flexible queries', 'Strong typing', 'Efficient data fetching'],
+        cons: ['Requires GraphQL server', 'Learning curve', 'Overhead for simple queries'],
+        impact: 'High complexity, +5-7 days if new to project'
+      },
+      {
+        id: 'D',
+        name: 'Hardcoded/Static Data',
+        pros: ['No backend needed', 'Instant implementation', 'Easy testing'],
+        cons: ['Not scalable', 'Manual updates required', 'No real-time data'],
+        impact: 'Very low complexity, 1 hour, prototype only'
+      }
+    ],
+    recommendation: (context) => context.hasCMS ? 'A' : 'B',
+    defaultRecommendation: 'A'
+  }
+}
+
+componentArchitectureOptions() {
+  return {
+    question: "What component architecture pattern should be used?",
+    context: "Architecture affects reusability, testing, and maintenance",
+    options: [
+      {
+        id: 'A',
+        name: 'Presentational Component',
+        pros: ['Simple props-based', 'Highly testable', 'Reusable anywhere'],
+        cons: ['No local state', 'Parent controls everything'],
+        impact: 'Low complexity, easiest to maintain'
+      },
+      {
+        id: 'B',
+        name: 'Container Pattern',
+        pros: ['Separation of concerns', 'Data fetching in container', 'Clean presentation layer'],
+        cons: ['Two components instead of one', 'More files to maintain'],
+        impact: 'Medium complexity, more boilerplate'
+      },
+      {
+        id: 'C',
+        name: 'Compound Component',
+        pros: ['Flexible composition', 'Powerful API', 'Customizable'],
+        cons: ['Complex implementation', 'Harder to test', 'Steeper learning curve'],
+        impact: 'High complexity, +3-4 hours'
+      }
+    ],
+    recommendation: 'A',
+    defaultRecommendation: 'A'
+  }
+}
+
+testingOptions() {
+  return {
+    question: "What testing strategy should be used?",
+    context: "Testing affects quality confidence and implementation time",
+    options: [
+      {
+        id: 'A',
+        name: 'Unit Tests Only',
+        pros: ['Fast feedback', 'Isolated testing', 'Easy to write'],
+        cons: ['Misses integration issues', 'No E2E coverage'],
+        impact: '~1 hour testing time, 4-8 tests'
+      },
+      {
+        id: 'B',
+        name: 'Unit + Integration Tests',
+        pros: ['Good coverage', 'Catches integration bugs', 'Balanced approach'],
+        cons: ['More time needed', 'More test maintenance'],
+        impact: '~2 hours testing time, 10-15 tests'
+      },
+      {
+        id: 'C',
+        name: 'Full E2E + Integration + Unit',
+        pros: ['Comprehensive coverage', 'High confidence', 'Catches all bugs'],
+        cons: ['Slow feedback', 'High maintenance', 'Complex setup'],
+        impact: '~4 hours testing time, 20+ tests'
+      }
+    ],
+    recommendation: 'B',
+    defaultRecommendation: 'B'
+  }
+}
+
+stylingOptions(projectDesignSystem) {
+  return {
+    question: "How should components be styled?",
+    context: "Styling approach affects consistency and maintenance",
+    options: [
+      {
+        id: 'A',
+        name: `${projectDesignSystem} Design System Only`,
+        pros: ['Consistent with app', 'Maintained by design team', 'Accessible by default'],
+        cons: ['Limited customization', 'Must work within system constraints'],
+        impact: 'Low complexity, ~1 hour, follows project standards'
+      },
+      {
+        id: 'B',
+        name: `Mix of ${projectDesignSystem} + Custom CSS`,
+        pros: ['More flexibility', 'Can achieve unique designs'],
+        cons: ['Inconsistent styles', 'More maintenance', 'May violate standards'],
+        impact: 'Medium complexity, +2 hours, needs design review'
+      },
+      {
+        id: 'C',
+        name: 'Fully Custom Styling',
+        pros: ['Complete control', 'Unique appearance'],
+        cons: ['High maintenance', 'Violates project standards', 'Accessibility risk'],
+        impact: 'High complexity, +4 hours, not recommended'
+      }
+    ],
+    recommendation: 'A',
+    defaultRecommendation: 'A'
+  }
+}
+
+performanceOptions() {
+  return {
+    question: "What performance optimization strategy?",
+    context: "Performance strategy affects user experience and complexity",
+    options: [
+      {
+        id: 'A',
+        name: 'Lazy Loading',
+        pros: ['Faster initial load', 'Loads on demand', 'Better Core Web Vitals'],
+        cons: ['Slight delay on interaction', 'More complex code'],
+        impact: 'Medium complexity, +1-2 hours'
+      },
+      {
+        id: 'B',
+        name: 'Eager Loading',
+        pros: ['Instant availability', 'Simple implementation'],
+        cons: ['Slower initial load', 'Loads unused data'],
+        impact: 'Low complexity, no extra time'
+      },
+      {
+        id: 'C',
+        name: 'Progressive Loading',
+        pros: ['Best UX', 'Optimized for viewport', 'Smooth experience'],
+        cons: ['Complex implementation', 'Requires intersection observers'],
+        impact: 'High complexity, +3-4 hours'
+      }
+    ],
+    recommendation: (dataSize) => dataSize > 10 ? 'A' : 'B',
+    defaultRecommendation: 'B'
+  }
+}
+
+errorHandlingOptions() {
+  return {
+    question: "How should errors be handled?",
+    context: "Error handling affects reliability and user experience",
+    options: [
+      {
+        id: 'A',
+        name: 'Error Boundaries + Fallback UI',
+        pros: ['Prevents crashes', 'Graceful degradation', 'User-friendly'],
+        cons: ['Requires fallback components', 'Hides some errors'],
+        impact: 'Medium complexity, +1 hour'
+      },
+      {
+        id: 'B',
+        name: 'Try/Catch with Toast Notifications',
+        pros: ['User sees errors', 'Can retry actions', 'Simple implementation'],
+        cons: ['Less graceful', 'Errors visible to user'],
+        impact: 'Low complexity, +30 minutes'
+      },
+      {
+        id: 'C',
+        name: 'Fallback Data (CMS pattern)',
+        pros: ['Always shows content', 'Seamless UX', 'No error states'],
+        cons: ['Requires fallback data preparation', 'May show stale data'],
+        impact: 'Medium complexity, +2 hours for fallback data'
+      }
+    ],
+    recommendation: 'A',
+    defaultRecommendation: 'A'
+  }
+}
+
+## Decision Dependencies
+
+checkDependencies(currentDecision, previousDecisions) {
+  // If chose MobX for state management, recommend MobX-friendly testing
+  if (previousDecisions.stateManagement === 'MobX Store') {
+    if (currentDecision.category === 'testing') {
+      adjustRecommendation('Include MobX store testing patterns')
+    }
+  }
+  
+  // If chose CMS Proto, must use CMS error handling
+  if (previousDecisions.dataFetching === 'CMS Proto') {
+    if (currentDecision.category === 'errorHandling') {
+      adjustRecommendation('C - Must use CMS fallback pattern')
+      markRequired('Fallback data is mandatory for CMS integration')
+    }
+  }
+  
+  // If chose Easel design system, limit styling options
+  if (previousDecisions.styling === 'Easel Only') {
+    filterOutConflictingOptions()
+  }
+}
+
+## Engineering Plan Generation
+
+generateEngineeringPlan(decisions, featureContext) {
+  plan = {
+    overview: synthesizeOverview(featureContext, decisions),
+    scope: defineScopeBoundaries(featureContext),
+    architecture: designArchitecture(decisions),
+    phases: createPhases(decisions, featureContext),
+    tasks: generateTaskBreakdown(phases),
+    metrics: defineSuccessMetrics(featureContext),
+    risks: identifyRisks(decisions),
+    timeline: estimateTimeline(phases),
+    decisionRecord: formatDecisions(decisions)
+  }
+  
+  return formatAsMarkdown(plan)
+}
+
+synthesizeOverview(context, decisions) {
+  """
+  ## Overview
+  
+  ${context.featureName}
+  
+  **Purpose:** ${context.purpose}
+  
+  **Key Decisions:**
+  ${decisions.map(d => `- ${d.question}: ${d.chosen}`).join('\n')}
+  
+  **Estimated Effort:** ${calculateTotalEffort(decisions)}
+  """
+}
+
+designArchitecture(decisions) {
+  """
+  ## Architecture
+  
+  **Component Structure:**
+  ${decisions.componentArchitecture.chosen}
+  ${decisions.componentArchitecture.rationale}
+  
+  **State Management:**
+  ${decisions.stateManagement.chosen}
+  ${decisions.stateManagement.impact}
+  
+  **Data Flow:**
+  ${decisions.dataFetching.chosen}
+  ${describeDataFlow(decisions.dataFetching)}
+  
+  **Error Handling:**
+  ${decisions.errorHandling.chosen}
+  ${describeErrorStrategy(decisions.errorHandling)}
+  """
+}
+
+createPhases(decisions, context) {
+  phases = []
+  
+  // Phase 1: Always foundation
+  phases.push({
+    name: 'Foundation',
+    priority: 'HIGH',
+    tasks: [
+      'Type definitions',
+      'Base component structure',
+      decisions.dataFetching.chosen.includes('Proto') ? 'Proto registration' : null
+    ].filter(Boolean)
+  })
+  
+  // Phase 2: Core implementation
+  phases.push({
+    name: 'Core Implementation',
+    priority: 'HIGH',
+    tasks: [
+      'Component implementation',
+      decisions.stateManagement.chosen !== 'Props-only' ? 'State management setup' : null,
+      'Testing suite'
+    ].filter(Boolean)
+  })
+  
+  // Phase 3: Integration (if needed)
+  if (decisions.dataFetching.chosen.includes('CMS', 'API', 'GraphQL')) {
+    phases.push({
+      name: 'Integration',
+      priority: 'HIGH',
+      tasks: ['Data fetching', 'Error handling', 'Loading states']
+    })
+  }
+  
+  // Phase 4: Polish
+  phases.push({
+    name: 'Polish & Optimization',
+    priority: 'MEDIUM',
+    tasks: [
+      decisions.performance.chosen.includes('Lazy') ? 'Lazy loading' : null,
+      'Accessibility review',
+      'Performance testing'
+    ].filter(Boolean)
+  })
+  
+  return phases
+}
+
+defineSuccessMetrics(context) {
+  """
+  ## Success Metrics
+  
+  **Technical:**
+  - TypeScript compilation: 0 errors
+  - Test coverage: ≥90%
+  - Bundle size impact: <10KB
+  - Render performance: <100ms
+  
+  **User Experience:**
+  ${context.userMetrics || inferUserMetrics(context)}
+  
+  **Business:**
+  ${context.businessMetrics || inferBusinessMetrics(context)}
+  """
+}
+
+identifyRisks(decisions) {
+  risks = []
+  
+  // Proto registration risk
+  if (decisions.dataFetching.chosen.includes('Proto')) {
+    risks.push({
+      risk: 'Proto domain registration complexity',
+      likelihood: 'Medium',
+      impact: 'High',
+      mitigation: 'Coordinate with CMS team early, reserve domain numbers',
+      contingency: 'Use hardcoded fallback data if proto registration delayed'
+    })
+  }
+  
+  // State management complexity risk
+  if (decisions.stateManagement.chosen.includes('MobX')) {
+    risks.push({
+      risk: 'State management adds complexity',
+      likelihood: 'Low',
+      impact: 'Medium',
+      mitigation: 'Follow existing MobX patterns, thorough testing',
+      contingency: 'Simplify to props-only if issues arise'
+    })
+  }
+  
+  // Performance risk for lazy loading
+  if (decisions.performance.chosen.includes('Lazy')) {
+    risks.push({
+      risk: 'Lazy loading may cause perceived slowness',
+      likelihood: 'Low',
+      impact: 'Medium',
+      mitigation: 'Preload on hover, use loading states',
+      contingency: 'Switch to eager loading if UX suffers'
+    })
+  }
+  
+  return risks
+}
+
+## Options Document Format
+
+optionsDocumentTemplate(decisions) {
+  """
+# Engineering Options: ${featureName}
+
+**Created:** ${date}
+**Feature:** ${featureDescription}
+
+---
+
+## Required Decisions
+
+${decisions.map((d, i) => `
+### Decision ${i+1}: ${d.question}
+
+**Context:** ${d.context}
+
+${d.options.map((opt) => `
+**Option ${opt.id}: ${opt.name}**
+
+✅ **Pros:**
+${opt.pros.map(p => `- ${p}`).join('\n')}
+
+❌ **Cons:**  
+${opt.cons.map(c => `- ${c}`).join('\n')}
+
+**Impact:** ${opt.impact}
+
+${opt.codeExample ? '**Example:**\n```\n' + opt.codeExample + '\n```' : ''}
+${opt.reference ? '**Reference:** ' + opt.reference : ''}
+`).join('\n')}
+
+💡 **AI Recommendation:** Option ${d.recommendation}
+**Reasoning:** ${d.reasoning}
+**Confidence:** ${d.confidence}
+
+${d.dependencies.length > 0 ? '**Depends on:** Decisions ' + d.dependencies.join(', ') : ''}
+
+---
+`).join('\n')}
+
+## Next Steps
+
+1. Review each decision and trade-offs
+2. Run `/decisions` to make choices interactively
+3. AI will generate aidd-eng-plan.md based on your decisions
+"""
+}
+
+## Engineering Plan Format
+
+engineeringPlanTemplate(decisions, context) {
+  """
+# 📋 Engineering Plan: ${context.featureName}
+
+**Created:** ${date}
+**Status:** Draft for review
+
+---
+
+## Overview
+
+**Feature:** ${context.featureName}
+
+**Purpose:** ${context.purpose}
+
+**Scope:**
+- In scope: ${context.inScope}
+- Out of scope: ${context.outOfScope}
+
+**Key Architectural Decisions:**
+${decisions.map(d => `- ${d.question}: **${d.chosen}** (${d.rationale})`).join('\n')}
+
+---
+
+${generateArchitectureSection(decisions)}
+
+---
+
+${generatePhasesSection(decisions, context)}
+
+---
+
+${generateTaskBreakdownSection(phases)}
+
+---
+
+${generateSuccessMetricsSection(context)}
+
+---
+
+${generateRisksSection(decisions)}
+
+---
+
+${generateTimelineSection(phases)}
+
+---
+
+## Decision Record
+
+Documents why key architectural choices were made:
+
+${decisions.map(d => `
+### ${d.question}
+
+**Chosen:** ${d.chosen}
+**Rationale:** ${d.rationale}
+**Alternatives Considered:** ${d.alternatives.join(', ')}
+**Trade-offs Accepted:** ${d.tradeoffs}
+`).join('\n')}
+
+---
+
+## Next Steps
+
+1. Review and approve this plan
+2. Create detailed task definitions using `/task` for each phase
+3. Execute tasks systematically
+4. Track progress in this document
+
+**Ready to start implementation?** Run `/task [first task description]`
+"""
+}
+
+## Constraints
+
+- Generate 2-4 realistic options per decision
+- Include honest trade-off analysis
+- Provide code examples for concrete options
+- Make recommendations but allow user override
+- Consider project context (stack, team, timeline)
+- Document decision rationale
+- Check dependencies between decisions
+- Generate eng-plan only after all decisions made
+- Present eng-plan for approval before saving
+- Save to aidd-planning/aidd-eng-plan.md
+- Also save options to aidd-planning/options-[feature].md
+- Save decisions to aidd-planning/decisions-[feature].yaml
+
+Commands {
+  /hldd [description] - Complete workflow (options → decisions → eng-plan)
+  /options [description] - Generate options document only
+  /decisions - Interactive decision walkthrough (requires options doc)
+}

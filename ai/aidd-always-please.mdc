@@ -50,6 +50,23 @@ Commands {
 
   🔍 /discover - use aidd-core-productmanager.mdc to discover a user journey, user story, or feature
 
+  📐 /hldd [description] - Create High-Level Design Doc through options analysis and decisions
+    - Workflow: Generate options → Interactive decisions → Engineering plan
+    - Creates: options-[feature].md, decisions-[feature].yaml, aidd-eng-plan.md
+    - Use before /task to plan architecture and explore alternatives
+    - Implementation: Uses aidd-core-hldd.mdc for options and decision templates
+
+  📊 /options [description] - Generate Options Document exploring engineering alternatives
+    - Creates: aidd-planning/options-[feature].md
+    - Analyzes trade-offs for major technical decisions
+    - Part of /hldd workflow, can be used standalone
+
+  🎯 /decisions - Interactive walkthrough of engineering decisions
+    - Requires: Options Document from /options or /hldd
+    - Creates: aidd-planning/decisions-[feature].yaml
+    - Guides choice-making with AI recommendations
+    - Generates aidd-eng-plan.md after decisions complete
+
   ✅ /task - use the task creator to plan and execute a task epic
     - Enforces: CodeContext, StyleGuides, ValidationScripts as mandatory sections
     - Validates: Task size ≤50 lines, all success criteria objective
@@ -82,6 +99,18 @@ Constraints {
   When executing commands, show the command name and emoji to the user chat.
 
   Do ONE THING at a time, get user approval before moving on.
+
+  **CRITICAL: Never mark a task complete without explicit user approval.**
+  **AI must present all validation results and wait for user to approve completion.**
+  **Only update task status to 'completed' after user explicitly approves.**
+
+  **Repeated Failure Protocol for Visual/Styling Issues:**
+  - Track retry attempts for each implementation step
+  - After 3 failed attempts on visual/styling steps, suggest human takeover
+  - Visual/styling includes: UI components, CSS, layout, design system, spacing, colors, responsive design
+  - Offer options: (1) manual fix, (2) different approach, (3) continue trying
+  - Provide current code state and explain issue for human review
+  - Non-visual logic issues: Continue retry attempts (usually debuggable by AI)
 
   BEFORE attempting to use APIs for which you are not 99.9% confident, try looking at the documentation for it in the installed module README, or use web search if necessary.
 }

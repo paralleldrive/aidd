@@ -58,18 +58,24 @@ mainMenu = {
     },
     {
       number: 4,
-      icon: '🔍',
-      label: 'Product discovery',
-      description: 'Plan a feature from user research'
+      icon: '📐',
+      label: 'High-Level Design Doc',
+      description: 'Plan architecture with options analysis'
     },
     {
       number: 5,
+      icon: '🔍',
+      label: 'Product discovery',
+      description: 'Explore problem space and user research'
+    },
+    {
+      number: 6,
       icon: '❓',
       label: 'Learn about AIDD',
       description: 'Tutorial and command reference'
     }
   ],
-  helpText: 'Type the number of your choice',
+  helpText: 'Type the number of your choice. New feature? Try [4] for architecture planning.',
   nextMenu: routeToWorkflow
 }
 ```
@@ -79,29 +85,43 @@ mainMenu = {
 ```
 knowledgeMenu = {
   id: 'knowledge',
-  title: '🎯 Do you already know what you want to build?',
+  title: '🎯 Planning Approach',
+  context: 'How much planning have you done for this feature?',
   options: [
     {
       number: 1,
-      icon: '✅',
-      label: 'Yes - I know exactly what to build',
-      description: 'Skip to task creation'
+      icon: '📐',
+      label: 'Need architecture planning',
+      description: 'Explore options and make technical decisions first',
+      note: 'Recommended for new features - uses /hldd workflow'
     },
     {
       number: 2,
-      icon: '🤔',
-      label: 'Partly - I have an idea but need help planning',
-      description: 'Product discovery with guidance'
+      icon: '✅',
+      label: 'Architecture decided - ready for tasks',
+      description: 'Skip to task creation, know what to build'
     },
     {
       number: 3,
-      icon: '❌',
-      label: 'No - I need to explore the problem first',
-      description: 'Full discovery process'
+      icon: '🔍',
+      label: 'Need product discovery',
+      description: 'Explore problem space and user needs first'
+    },
+    {
+      number: 4,
+      icon: '🤔',
+      label: 'Not sure - help me decide',
+      description: 'AI will recommend approach'
     }
   ],
-  recommendation: 'Choose [1] if you have clear requirements',
-  nextMenu: (choice) => choice === 1 ? 'scope' : 'discovery'
+  recommendation: '[1] for new features, [2] if architecture is clear',
+  helpText: 'HLDD (option 1) helps avoid costly rework by planning architecture first',
+  nextMenu: (choice) => {
+    1 => 'hlddWizard',
+    2 => 'scopeMenu',
+    3 => 'productDiscovery',
+    4 => 'analyzeAndRecommend'
+  }
 }
 ```
 
@@ -211,6 +231,46 @@ testingMenu = {
   ],
   recommendation: '[2] - Good balance of coverage and speed',
   helpText: 'TDD process used regardless of level chosen',
+  nextMenu: () => 'storybook'
+}
+```
+
+### Storybook Coverage Menu
+
+```
+storybookMenu = {
+  id: 'storybook',
+  title: '📖 Storybook Coverage',
+  context: 'How many component states should have stories? (UI components only)',
+  options: [
+    {
+      number: 1,
+      icon: '⚡',
+      label: 'Basic',
+      description: 'Default + one variant (2-3 stories, ~15-20 min)'
+    },
+    {
+      number: 2,
+      icon: '✅',
+      label: 'Standard',
+      description: 'All major states (4-6 stories, ~30-45 min)',
+      recommended: true
+    },
+    {
+      number: 3,
+      icon: '🎯',
+      label: 'Comprehensive',
+      description: 'All states + responsive (8-12 stories, ~1-1.5 hours)'
+    },
+    {
+      number: 4,
+      icon: '❌',
+      label: 'Not Applicable',
+      description: 'This is not a UI component (utility/type/store)'
+    }
+  ],
+  recommendation: '[2] - Match testing coverage level',
+  helpText: 'Stories are as important as tests for UI components. Press ? for why.',
   nextMenu: () => 'designSystem'
 }
 ```
@@ -287,8 +347,63 @@ executionMenu = {
 ```
 completionMenu = {
   id: 'completion',
-  title: '🎉 Task Complete!',
-  context: (summary) => summary,
+  title: '🎉 All Steps Complete!',
+  context: (summary) => `${summary}
+
+**AWAITING YOUR APPROVAL TO MARK TASK COMPLETE**
+
+All validations have passed. Please review the results above.`,
+  options: [
+    {
+      number: 1,
+      icon: '✅',
+      label: 'Approve completion - Mark task complete',
+      recommended: true,
+      description: 'Updates task status to completed'
+    },
+    {
+      number: 2,
+      icon: '🔍',
+      label: 'Review validation details',
+      description: 'Show all validation outputs'
+    },
+    {
+      number: 3,
+      icon: '📊',
+      label: 'Show implementation summary',
+      description: 'Detailed breakdown of what was built'
+    },
+    {
+      number: 4,
+      icon: '❌',
+      label: 'Request changes - Task needs revision',
+      description: 'Return to implementation'
+    },
+    {
+      number: 5,
+      icon: '⏸️',
+      label: 'Pause here - Don\'t mark complete yet',
+      description: 'Save progress without completing'
+    }
+  ],
+  helpText: 'CRITICAL: Task status only updated to completed if you choose [1]',
+  nextMenu: (choice) => {
+    1 => 'postCompletion',
+    2 => 'validationDetails',
+    3 => 'implementationSummary',
+    4 => 'revisionRequest',
+    5 => 'pause'
+  }
+}
+```
+
+### Post-Completion Menu
+
+```
+postCompletionMenu = {
+  id: 'postCompletion',
+  title: '✅ Task Marked Complete!',
+  context: 'Task status updated to completed in aidd-planning/aidd-eng-plan.md',
   options: [
     {
       number: 1,
@@ -299,12 +414,12 @@ completionMenu = {
     {
       number: 2,
       icon: '🔬',
-      label: 'Run code review first'
+      label: 'Run code review'
     },
     {
       number: 3,
       icon: '💾',
-      label: 'Commit immediately (skip logging)'
+      label: 'Commit changes'
     },
     {
       number: 4,
@@ -317,7 +432,7 @@ completionMenu = {
       label: 'Show detailed metrics'
     }
   ],
-  recommendation: 'Typical flow: [1] Log → [Commit]',
+  recommendation: 'Typical flow: [1] Log → [3] Commit',
   nextMenu: (choice) => {
     1 => 'logging',
     2 => 'review',
@@ -358,6 +473,243 @@ confirmMenu(action, details) {
       { number: 3, icon: '❌', label: 'Cancel' }
     ],
     recommendation: '[1] if details look correct'
+  }
+}
+```
+
+### HLDD Options Review Menu
+
+```
+optionsReviewMenu = {
+  id: 'optionsReview',
+  title: '📊 Options Document Generated',
+  context: (optionsDoc) => `
+File created: aidd-planning/options-${optionsDoc.featureName}.md
+
+Found ${optionsDoc.decisions.length} engineering decisions to make.
+`,
+  options: [
+    {
+      number: 1,
+      icon: '🎯',
+      label: 'Start making decisions now',
+      description: 'Interactive walkthrough with recommendations',
+      recommended: true
+    },
+    {
+      number: 2,
+      icon: '📝',
+      label: 'Review options document first',
+      description: 'Read all options before deciding'
+    },
+    {
+      number: 3,
+      icon: '💾',
+      label: 'Save and decide later',
+      description: 'Exit wizard, run /decisions when ready'
+    },
+    {
+      number: 4,
+      icon: '✏️',
+      label: 'Modify options document',
+      description: 'Add or change alternatives'
+    }
+  ],
+  recommendation: '[1] to proceed with guided decision-making',
+  nextMenu: (choice) => {
+    1 => 'decisionWalkthrough',
+    2 => 'showOptionsDoc',
+    3 => 'saveAndExit',
+    4 => 'editOptions'
+  }
+}
+```
+
+### Decision Menu Template
+
+```
+decisionMenu(decisionData, currentNum, totalNum) {
+  return {
+    id: 'decision',
+    title: `🎯 Decision ${currentNum} of ${totalNum}: ${decisionData.question}`,
+    context: `
+**Context:** ${decisionData.context}
+
+${decisionData.options.map((opt, i) => `
+[ ${i+1} ] ${opt.name}
+      ✅ Pros: ${opt.pros.join(', ')}
+      ❌ Cons: ${opt.cons.join(', ')}
+      Impact: ${opt.impact}
+`).join('\n')}
+
+💡 AI Recommendation: [${decisionData.recommendationIndex}] ${decisionData.recommendation}
+   Reasoning: ${decisionData.reasoning}
+   Confidence: ${decisionData.confidence}
+`,
+    options: decisionData.options.map((opt, i) => ({
+      number: i + 1,
+      icon: i === decisionData.recommendationIndex - 1 ? '⭐' : '🔶',
+      label: opt.name
+    })),
+    recommendation: `[${decisionData.recommendationIndex}] - ${decisionData.reasoning}`,
+    helpText: 'Press ? to see detailed trade-off analysis',
+    nextMenu: () => 'rationaleCapture'
+  }
+}
+```
+
+### Decisions Complete Menu
+
+```
+decisionsCompleteMenu = {
+  id: 'decisionsComplete',
+  title: '🎉 All Decisions Made!',
+  context: (decisions) => `
+Decisions recorded: ${decisions.length}
+
+**Your Choices:**
+${decisions.map((d, i) => `${i+1}. ${d.question} → ${d.chosen}`).join('\n')}
+
+File saved: aidd-planning/decisions-${decisions.featureName}.yaml
+`,
+  options: [
+    {
+      number: 1,
+      icon: '📐',
+      label: 'Generate Engineering Plan',
+      description: 'Create aidd-eng-plan.md from decisions',
+      recommended: true
+    },
+    {
+      number: 2,
+      icon: '🔍',
+      label: 'Review decisions',
+      description: 'See all choices made'
+    },
+    {
+      number: 3,
+      icon: '✏️',
+      label: 'Change a decision',
+      description: 'Go back and modify'
+    },
+    {
+      number: 4,
+      icon: '💾',
+      label: 'Save and exit',
+      description: 'Generate eng-plan later'
+    }
+  ],
+  recommendation: '[1] to complete the HLDD process',
+  nextMenu: (choice) => {
+    1 => 'generateEngPlan',
+    2 => 'reviewDecisions',
+    3 => 'changeDecision',
+    4 => 'exit'
+  }
+}
+```
+
+### Engineering Plan Review Menu
+
+```
+engPlanReviewMenu = {
+  id: 'engPlanReview',
+  title: '📐 Engineering Plan Generated',
+  context: (engPlan) => `
+File: aidd-planning/aidd-eng-plan.md
+
+**Plan Includes:**
+- Overview and scope
+- Architecture based on your decisions
+- ${engPlan.phases.length} implementation phases
+- ${engPlan.tasks.length} high-level tasks
+- Success metrics and timeline
+- Risk mitigation strategies
+- Complete decision record
+
+**Estimated Timeline:** ${engPlan.estimatedTimeline}
+`,
+  options: [
+    {
+      number: 1,
+      icon: '✅',
+      label: 'Approve and save plan',
+      recommended: true
+    },
+    {
+      number: 2,
+      icon: '📝',
+      label: 'Show full plan',
+      description: 'Review complete document'
+    },
+    {
+      number: 3,
+      icon: '✏️',
+      label: 'Modify before saving',
+      description: 'Edit sections of the plan'
+    },
+    {
+      number: 4,
+      icon: '🔄',
+      label: 'Regenerate with changes',
+      description: 'Go back and change decisions'
+    },
+    {
+      number: 5,
+      icon: '❌',
+      label: 'Discard plan'
+    }
+  ],
+  recommendation: '[2] to review, then approve with [1]',
+  nextMenu: (choice) => {
+    1 => 'savePlan',
+    2 => 'showPlan',
+    3 => 'editPlan',
+    4 => 'regenerate',
+    5 => 'discard'
+  }
+}
+```
+
+### Task Creation Offer Menu
+
+```
+taskCreationOfferMenu = {
+  id: 'taskCreationOffer',
+  title: '✅ Engineering Plan Saved!',
+  context: 'Plan saved to: aidd-planning/aidd-eng-plan.md',
+  options: [
+    {
+      number: 1,
+      icon: '✅',
+      label: 'Create first task from plan',
+      description: 'Start implementing Phase 1',
+      recommended: true
+    },
+    {
+      number: 2,
+      icon: '📊',
+      label: 'Review plan in detail',
+      description: 'Read phases and tasks'
+    },
+    {
+      number: 3,
+      icon: '📝',
+      label: 'Share plan for review',
+      description: 'Discuss with team first'
+    },
+    {
+      number: 4,
+      icon: '🏠',
+      label: 'Back to main menu'
+    }
+  ],
+  recommendation: '[2] to review, then [1] to start',
+  nextMenu: (choice) => {
+    1 => 'taskCreationWizard',
+    2 => 'showPlan',
+    3 => 'exit',
+    4 => 'mainMenu'
   }
 }
 ```
@@ -404,8 +756,9 @@ mainMenu (choice 1)
   → taskPreview
   → confirmMenu
   → executionMenu
-  → [execute steps]
-  → completionMenu
+  → [execute steps with approvals]
+  → completionMenu [APPROVAL GATE - user must approve]
+  → postCompletionMenu [only shown after user approves]
   → loggingMenu
   → commitMenu
   → doneMenu
@@ -417,15 +770,18 @@ mainMenu (choice 1)
 mainMenu (choice 2)
   → taskSelectionMenu
   → executionMenu
-  → [execute remaining steps]
-  → completionMenu
-  → [same as above]
+  → [execute remaining steps with approvals]
+  → completionMenu [APPROVAL GATE - user must approve]
+  → postCompletionMenu [only shown after user approves]
+  → loggingMenu
+  → commitMenu
+  → doneMenu
 ```
 
 ### Discovery Flow
 
 ```
-mainMenu (choice 4)
+mainMenu (choice 5)
   → problemDescriptionInput
   → whoMenu
   → frequencyMenu
@@ -435,6 +791,24 @@ mainMenu (choice 4)
   → prdMenu
   → taskCreationMenu
   → [into new task flow]
+```
+
+### HLDD Flow
+
+```
+mainMenu (choice 4)
+  → featureDescriptionInput
+  → optionsGeneration [generates options-[feature].md]
+  → optionsReviewMenu
+  → decisionWalkthrough [for each decision]
+    → decisionMenu (shows options)
+    → rationaleInput (optional)
+    → [next decision or completion]
+  → decisionsCompleteMenu [all decisions made]
+  → engPlanGeneration [creates aidd-eng-plan.md]
+  → engPlanReviewMenu
+  → approvalMenu
+  → [if approved] taskCreationOfferMenu
 ```
 
 ## Help Text Library
@@ -477,6 +851,30 @@ helpText = {
   - Good ROI on quality
   """,
   
+  storybook: """
+  Storybook stories are equally important as tests:
+  
+  Why stories matter:
+  - Verify visual appearance
+  - Document component API
+  - Enable visual regression testing
+  - Help designers review
+  - Develop in isolation
+  
+  Coverage levels:
+  - Basic: Default + 1 variant (simple components)
+  - Standard: All major states (recommended)
+  - Comprehensive: All states + responsive (critical components)
+  - Not Applicable: Non-UI code (utils, types, stores)
+  
+  Time investment:
+  Stories take ~50% of testing time
+  Example: 1 hour tests = ~30 min stories
+  
+  Stories should be created early and updated at every step,
+  just like tests.
+  """,
+  
   execution: """
   Execution modes:
   
@@ -493,6 +891,22 @@ helpText = {
   Manual [3]:
   - Maximum control
   - Slowest but safest
+  """,
+  
+  hldd: """
+  HLDD (High-Level Design Doc) helps you:
+  - Explore alternative approaches
+  - Document trade-offs
+  - Make informed decisions
+  - Create comprehensive eng-plan
+  
+  Workflow:
+  1. Generate Options Document
+  2. Review alternatives and trade-offs
+  3. Make decisions interactively
+  4. AI generates eng-plan from decisions
+  
+  Use before /task for architecture planning
   """
 }
 ```

@@ -1,0 +1,319 @@
+---
+description: When building UI components, Storybook stories are mandatory and equally important as tests
+alwaysApply: false
+---
+
+# Storybook Development Process
+
+Act as a senior frontend engineer who treats Storybook stories as essential development artifacts, equal in importance to tests.
+
+## Core Principle
+
+**Stories = Tests for Visual Behavior**
+
+Just as tests verify logical correctness, stories verify visual correctness and component API design.
+
+## Story-Driven Development (SDD)
+
+Similar to TDD, but for visual components:
+
+```
+For each component:
+  1. Write story showing component usage
+  2. Verify story renders (watch it in Storybook)
+  3. Implement component
+  4. Verify story still renders correctly
+  5. Add story variants for different states
+  6. Get approval before moving on
+```
+
+## When Stories Are Required
+
+**ALWAYS for:**
+- UI components (any React component)
+- Design system components
+- Visual widgets and cards
+- Layout components
+- Interactive elements
+
+**NOT required for:**
+- Pure utility functions (use tests only)
+- Type definitions (no visual output)
+- Store/state management (use tests only)
+- Backend code (no visual component)
+
+## Story Coverage Levels
+
+Similar to test coverage:
+
+**Basic Coverage:**
+- Default state story
+- One interaction state
+- ~2-3 stories per component
+- ~15-20 minutes to create
+
+**Standard Coverage:**
+- All major component states
+- Props variations
+- Responsive breakpoints (mobile, desktop)
+- ~4-6 stories per component
+- ~30-45 minutes to create
+
+**Comprehensive Coverage:**
+- All props combinations
+- All interaction states
+- All breakpoints
+- Error states
+- Loading states
+- Edge cases
+- ~8-12 stories per component
+- ~1-1.5 hours to create
+
+## Story Structure
+
+```typescript
+// File: component.stories.tsx (colocate with component)
+
+import type { Meta, StoryObj } from '@storybook/react';
+import { Component } from './component';
+
+const meta: Meta<typeof Component> = {
+  title: 'Apps/AppCollectionCard',
+  component: Component,
+  parameters: {
+    layout: 'centered',
+  },
+  tags: ['autodocs'],
+};
+
+export default meta;
+type Story = StoryObj<typeof Component>;
+
+// Default state - ALWAYS include
+export const Default: Story = {
+  args: {
+    collection: {
+      id: 'test-1',
+      title: 'Design Tools',
+      description: 'Essential apps for designers',
+      imageUrl: 'https://example.com/image.png',
+      appIds: ['app1', 'app2', 'app3'],
+    },
+    onClick: () => console.log('clicked'),
+  },
+};
+
+// Variants - different states/props
+export const WithEditorialText: Story = {
+  args: {
+    ...Default.args,
+    collection: {
+      ...Default.args.collection,
+      editorialText: 'Curated by the Canva team',
+    },
+  },
+};
+
+export const LongTitle: Story = {
+  args: {
+    ...Default.args,
+    collection: {
+      ...Default.args.collection,
+      title: 'This is a very long collection title that might wrap to multiple lines',
+    },
+  },
+};
+
+// Responsive - mobile breakpoint
+export const Mobile: Story = {
+  args: Default.args,
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
+  },
+};
+```
+
+## Story Validation Commands
+
+### Story File Exists
+```bash
+ls path/to/component.stories.tsx
+```
+Expected: File exists
+
+### Story Renders in Storybook
+```bash
+npm run storybook &
+sleep 10
+curl -s http://localhost:6006/ | grep "ComponentName"
+```
+Expected: Component appears in Storybook
+
+### Minimum Story Count
+```bash
+grep "export const.*: Story" component.stories.tsx | wc -l
+```
+Expected: ≥ required story count (2 for basic, 4 for standard, 8 for comprehensive)
+
+### Default Story Present
+```bash
+grep "export const Default: Story" component.stories.tsx
+```
+Expected: Match found (Default story is mandatory)
+
+### Stories Use Component
+```bash
+grep "component: Component" component.stories.tsx
+```
+Expected: Match found
+
+## Integration with TDD
+
+Combined workflow for UI components:
+
+```
+For each component requirement:
+  1. Write test (logical behavior)
+  2. Write story (visual behavior)
+  3. Watch both fail
+  4. Implement component
+  5. Verify test passes
+  6. Verify story renders correctly
+  7. Get approval
+  8. Move to next requirement
+```
+
+## Story File Naming
+
+**Colocate with component:**
+```
+component.tsx → component.stories.tsx
+app_card.tsx → app_card.stories.tsx
+```
+
+**Location:** Same directory as component (not separate stories/ folder)
+
+## Task Requirements
+
+Every UI component task must include:
+
+**In Success Criteria:**
+- [ ] Story file exists with .stories.tsx extension
+- [ ] Default story defined and exports
+- [ ] Minimum [N] stories created (based on coverage level)
+- [ ] Stories render in Storybook without errors
+- [ ] All component states have corresponding stories
+
+**In Validation Scripts:**
+```bash
+# Story file exists
+ls path/to/component.stories.tsx
+
+# Minimum stories present
+grep "export const.*: Story" component.stories.tsx | wc -l
+
+# Default story exists
+grep "export const Default: Story" component.stories.tsx
+
+# Stories render successfully
+npm run storybook  # Verify no errors
+```
+
+**In Implementation Steps:**
+Should include story creation step early (usually Step 2 after types):
+```
+Step 1: Create types
+Step 2: Create Storybook story with default state
+Step 3: Implement component shell
+Step 4: Verify story renders
+Step 5: Add component logic
+...
+```
+
+## Effort Estimation
+
+**Include story time in task estimates:**
+
+```
+Component task estimation:
+- Implementation: 25 lines, 1 hour
+- Tests: 40 lines, 1 hour
+- Stories: 30 lines, 30 minutes  ← MUST INCLUDE
+- Total: 95 lines, 2.5 hours
+```
+
+**Story lines count toward task size:**
+- Implementation + Tests + Stories ≤ 50 lines for Small task
+- Must break down if total exceeds limits
+
+## Common Story Patterns
+
+**Default + Variants:**
+```typescript
+export const Default: Story = { ... };
+export const Loading: Story = { ... };
+export const Error: Story = { ... };
+export const Empty: Story = { ... };
+```
+
+**Props Exploration:**
+```typescript
+export const Default: Story = { ... };
+export const WithOptionalProp: Story = { ... };
+export const WithoutOptionalProp: Story = { ... };
+export const AllPropsProvided: Story = { ... };
+```
+
+**State Variations:**
+```typescript
+export const Idle: Story = { ... };
+export const Active: Story = { ... };
+export const Disabled: Story = { ... };
+export const Selected: Story = { ... };
+```
+
+**Responsive:**
+```typescript
+export const Desktop: Story = { ... };
+export const Mobile: Story = { 
+  parameters: { viewport: { defaultViewport: 'mobile1' } }
+};
+export const Tablet: Story = { 
+  parameters: { viewport: { defaultViewport: 'tablet' } }
+};
+```
+
+## Why Stories Matter
+
+**Design System Compliance:**
+- Stories show if Easel components used correctly
+- Visual verification that tokens produce expected results
+- Quick way to catch styling regressions
+
+**Component API:**
+- Stories document how to use the component
+- Show all possible prop combinations
+- Serve as living documentation
+
+**Visual Testing:**
+- Stories enable visual regression testing
+- Designers can review without running full app
+- QA can verify across breakpoints
+
+**Development Speed:**
+- Develop in isolation without app setup
+- Quick iteration on visual appearance
+- No need to navigate to component in full app
+
+## Constraints
+
+- Create story file alongside component file
+- Default story is mandatory
+- Story count scales with component complexity
+- Stories must render without errors
+- Include stories in validation scripts
+- Account for story time in effort estimates
+- Treat story failures like test failures
+- Never skip story creation for UI components

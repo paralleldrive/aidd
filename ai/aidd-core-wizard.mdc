@@ -18,7 +18,7 @@ WizardState {
   autoSaveEnabled: boolean = true
 }
 
-MenuType = mainMenu | scopeMenu | stateMenu | testingMenu | styleMenu | complexityMenu | executionMenu | completionMenu
+MenuType = mainMenu | scopeMenu | stateMenu | testingMenu | styleMenu | complexityMenu | executionMenu | completionMenu | postCompletionMenu
 
 NavigationStack = [Menu] // allows back navigation
 
@@ -26,6 +26,7 @@ ChoiceHistory = {
   scope?: small | medium | large
   stateManagement?: yes | no | unsure
   testingLevel?: basic | standard | comprehensive
+  storybookLevel?: basic | standard | comprehensive | notApplicable
   designSystem?: easel | mixed | custom
   orchestration?: yes | no
   executionMode?: auto | semiAuto | manual
@@ -67,10 +68,13 @@ mainMenu() {
   [ 1 ] 🆕 Start a new feature or task
   [ 2 ] ▶️  Continue working on existing task
   [ 3 ] 📊 Review current project status
-  [ 4 ] 🔍 Product discovery (plan from scratch)
-  [ 5 ] ❓ Learn about AIDD
+  [ 4 ] 📐 High-Level Design Doc (plan architecture)
+  [ 5 ] 🔍 Product discovery (explore problem space)
+  [ 6 ] ❓ Learn about AIDD
   
   Type the number of your choice
+  
+  Tip: New to this feature? Try [4] to plan architecture first, or [5] for product discovery
   """
 }
 
@@ -136,6 +140,38 @@ testingMenu() {
   Recommendation: [2] - Good balance of coverage and speed
   
   Note: TDD process used regardless of level chosen
+  """
+}
+
+storybookMenu(isUIComponent) {
+  if (!isUIComponent) {
+    // Skip Storybook for non-UI components
+    return null
+  }
+  
+  """
+  📖 Storybook Coverage (Required for UI Components)
+  
+  How many component states should have stories?
+  
+  [ 1 ] Basic - Default + one variant (2-3 stories)
+        ~15-20 min, good for simple components
+  
+  [ 2 ] Standard - All major states (4-6 stories)
+        ~30-45 min, recommended for most components
+  
+  [ 3 ] Comprehensive - All states + responsive (8-12 stories)
+        ~1-1.5 hours, for complex/critical components
+  
+  Stories include:
+  - Default state (mandatory)
+  - Props variations
+  - Interactive states
+  - Responsive breakpoints (if applicable)
+  
+  Recommendation: [2] - Same coverage as testing
+  
+  Note: Stories are as important as tests for UI components
   """
 }
 
@@ -220,22 +256,24 @@ executionMenu() {
 
 completionMenu(taskSummary) {
   """
-  🎉 Task Complete!
+  🎉 All Steps Complete!
   
   ${taskSummary}
   
-  What's next?
+  **AWAITING YOUR APPROVAL TO MARK TASK COMPLETE**
   
-  [ 1 ] 📝 Log completion to activity log (recommended next)
-  [ 2 ] 🔬 Run code review first
-  [ 3 ] 💾 Commit immediately (skip logging)
-  [ 4 ] ▶️  Start next task
-  [ 5 ] 📊 Show detailed metrics
+  All validations have passed. Please review the results above.
   
-  Typical flow: [1] Log → [Commit]
-  Quick flow: [3] Skip to commit
-  """
-}
+  [ 1 ] ✅ Approve completion - Mark task complete (recommended if all looks good)
+  [ 2 ] 🔍 Review validation details
+  [ 3 ] 📊 Show implementation summary
+  [ 4 ] ❌ Request changes - Task needs revision
+  [ 5 ] ⏸️  Pause here - Don't mark complete yet
+  
+  CRITICAL: Task status will ONLY be updated to 'completed' if you choose [1]
+  
+  What would you like to do?
+  """}
 
 loggingMenu(detectedChanges) {
   """
@@ -269,6 +307,24 @@ commitMenu(proposedCommit) {
   [ 4 ] ❌ Cancel
   
   Format: Conventional commits (type(scope): description)
+  """
+}
+
+postCompletionMenu() {
+  """
+  ✅ Task Marked Complete!
+  
+  Task status updated to 'completed' in aidd-planning/aidd-eng-plan.md
+  
+  What's next?
+  
+  [ 1 ] 📝 Log completion to activity log (recommended)
+  [ 2 ] 🔬 Run code review
+  [ 3 ] 💾 Commit changes
+  [ 4 ] ▶️  Start next task
+  [ 5 ] 📊 Show detailed metrics
+  
+  Typical flow: [1] Log → [3] Commit
   """
 }
 
@@ -337,6 +393,22 @@ inferStateNeeds(description) {
   return suggest(3, "Not sure - Let me analyze more")
 }
 
+inferStorybookNeeds(description) {
+  uiPatterns = ['component', 'ui', 'card', 'button', 'layout', 'widget', 'interface']
+  nonUIPatterns = ['util', 'helper', 'function', 'type', 'store', 'api']
+  
+  if (description.contains(nonUIPatterns)) {
+    return 'notApplicable'  // Not a UI component
+  }
+  
+  if (description.contains(uiPatterns)) {
+    // Match testing level by default
+    return 'standard'  // 4-6 stories
+  }
+  
+  return 'standard'  // Default to standard for ambiguous cases
+}
+
 ## Progress Management
 
 saveProgress() {
@@ -367,24 +439,47 @@ routeToWorkflow(mainMenuChoice) {
     1 => newFeatureWizard()
     2 => continueExistingWizard()
     3 => statusReviewWizard()
-    4 => productDiscoveryWizard()
-    5 => learnAboutAIDDWizard()
+    4 => hlddWizard()
+    5 => productDiscoveryWizard()
+    6 => learnAboutAIDDWizard()
+  }
+}
+
+hlddWizard(featureDescription) {
+  1. if (!featureDescription) {
+    askFeatureDescription() -> freeTextInput
+  }
+  2. generateOptionsDocument(featureDescription) -> optionsDoc
+  3. presentOptionsForReview(optionsDoc) -> reviewMenu
+  4. conductDecisionWalkthrough(optionsDoc) -> decisions
+  5. generateEngineeringPlan(decisions) -> engPlan
+  6. presentPlanForApproval(engPlan) -> approvalMenu
+  7. if (approved) {
+    saveEngineeringPlan(engPlan)
+    offerTaskCreation() -> taskCreationMenu
   }
 }
 
 newFeatureWizard() {
   1. askKnowledgeLevel() -> knowledgeMenu
-  2. if (knowsWhatToBuild) {
-    askScope() -> scopeMenu
-    askDescription() -> freeTextInput
-    askStateManagement() -> stateManagementMenu
-    askTesting() -> testingMenu
-    askDesignSystem() -> designSystemMenu
-    analyzeComplexity() -> complexityMenu
-    generateTask() -> taskPreview
-    confirmAndExecute() -> executionMenu
-  } else {
-    routeToDiscovery()
+  2. match userChoice {
+    1 => hlddWizard()  // Need architecture planning
+    2 => {  // Architecture decided - ready for tasks
+      askScope() -> scopeMenu
+      askDescription() -> freeTextInput
+      askStateManagement() -> stateManagementMenu
+      askTesting() -> testingMenu
+      askStorybook() -> storybookMenu  // NEW - Ask about story coverage
+      askDesignSystem() -> designSystemMenu
+      analyzeComplexity() -> complexityMenu
+      generateTask() -> taskPreview
+      confirmAndExecute() -> executionMenu
+    }
+    3 => productDiscoveryWizard()  // Need product discovery
+    4 => {  // Not sure - analyze and recommend
+      analyzeUserSituation()
+      recommendApproach() -> recommendationMenu
+    }
   }
 }
 
@@ -485,6 +580,7 @@ quickAction(action, args) {
         scope: inferScope(description),
         stateManagement: inferStateNeeds(description),
         testingLevel: 'standard',
+        storybookLevel: inferStorybookNeeds(description),  // NEW
         designSystem: 'easel',
         executionMode: 'semiAuto'
       }
@@ -526,6 +622,18 @@ quickAction(action, args) {
 }
 
 ## Context-Aware Behavior
+
+detectStepType(step) {
+  visualKeywords = ['component', 'ui', 'layout', 'css', 'style', 'design', 'spacing', 'color', 'responsive', 'alignment', 'margin', 'padding']
+  
+  stepDescription = step.description.toLowerCase()
+  
+  if (visualKeywords.some(keyword => stepDescription.includes(keyword))) {
+    return 'visual'
+  }
+  
+  return 'general'
+}
 
 determineMainMenuOptions() {
   tasks = readEngPlan()
@@ -574,20 +682,52 @@ invalidInput(input, menu) {
   """
 }
 
-validationFailed(step, errors) {
-  """
-  ⚠️  Validation Failed at ${step}
-  
-  Issues found:
-  ${errors.map(e => `- ${e.message}`).join('\n')}
-  
-  What would you like to do?
-  
-  [ 1 ] 🔄 Auto-fix violations (recommended)
-  [ 2 ] ✏️  Fix manually
-  [ 3 ] 📖 Explain what's wrong
-  [ 4 ] ⏭️  Skip validation (not recommended)
-  """
+validationFailed(step, errors, retryCount = 0, stepType = 'general') {
+  if (retryCount >= 3 && stepType.includes('visual', 'styling', 'ui', 'layout', 'design')) {
+    """
+    ⚠️  Repeated Validation Failures (${retryCount} attempts)
+    
+    I've attempted to fix this visual/styling issue ${retryCount} times without success.
+    
+    Issues:
+    ${errors.map(e => `- ${e.message}`).join('\n')}
+    
+    💡 Visual and styling issues often need human judgment for:
+    - Spacing and alignment nuances
+    - Color and contrast decisions
+    - Responsive behavior verification
+    - Design system interpretation
+    
+    **Recommended: Human takeover**
+    
+    [ 1 ] 👤 I'll fix it manually (recommended)
+          You take over, I'll provide current state
+    
+    [ 2 ] 🔄 Try a completely different approach
+          I'll redesign the solution
+    
+    [ 3 ] ⏭️  Continue automated attempts
+          Keep trying (not recommended after 3 failures)
+    
+    [ 4 ] ⏸️  Pause here - I'll review and decide
+    
+    What would you like to do?
+    """
+  } else {
+    """
+    ⚠️  Validation Failed at ${step}
+    
+    Issues found:
+    ${errors.map(e => `- ${e.message}`).join('\n')}
+    
+    What would you like to do?
+    
+    [ 1 ] 🔄 Auto-fix violations (recommended)
+    [ 2 ] ✏️  Fix manually
+    [ 3 ] 📖 Explain what's wrong
+    [ 4 ] ⏭️  Skip validation (not recommended)
+    """
+  }
 }
 
 ## Mode Switching
@@ -619,3 +759,10 @@ switchMode(newMode) {
 - Respect wizardMode settings
 - Never skip validation steps
 - Provide help at every menu with ?
+- **CRITICAL: Never mark task complete without explicit user approval**
+- **Always wait for user to approve task completion before updating status**
+- **Only update status to 'completed' after user explicitly chooses to approve**
+- **Track retry count for each implementation step**
+- **Detect step type (visual vs general) using detectStepType()**
+- **After 3 retries on visual/styling steps: Call validationFailed() with retryCount and stepType**
+- **validationFailed() will offer human takeover for visual issues**

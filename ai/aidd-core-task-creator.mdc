@@ -24,6 +24,7 @@ State {
   SuccessCriteria      // Must be objective + NO validation commands (those go in ValidationScripts)
   ValidationScripts    // MANDATORY - Separate section with all validation commands
   StateManagementStrategy  // Required for UI components (MobX YES/NO)
+  StorybookStrategy    // Required for UI components (coverage level, story count)
   AgentRequirements
 }
 
@@ -129,11 +130,13 @@ planTask() {
 
 **Check 1: Mandatory Sections Present**
 ```bash
-for section in "High-Level Summary" "CodeContext" "StyleGuides" "State Management Strategy" "Validation Scripts"; do
+for section in "High-Level Summary" "CodeContext" "StyleGuides" "State Management Strategy" "Storybook Strategy" "Validation Scripts"; do
   grep -q "## $section" task.md || echo "MISSING: $section"
 done
 ```
 Expected: No "MISSING" output
+
+Note: "Storybook Strategy" only required for UI component tasks
 
 **Check 2: No Subjective Language in Success Criteria**
 ```bash
@@ -294,10 +297,20 @@ executePlan() {
        b. Debug issue
        c. Retry step implementation
        d. Re-run validation
-       e. Repeat until validation passes
+       e. Track retry count for this step
+       f. **If step retry count >= 3:**
+          i. **If step involves visual/styling (UI components, CSS, layout, design system):**
+             - Report: "I've attempted this ${retryCount} times without success"
+             - Suggest: "Visual/styling issues often benefit from human review"
+             - Offer: "Would you like to (1) take over manually, (2) let me try a different approach, or (3) continue automated attempts?"
+             - If user chooses (1): Pause execution, provide current state, let user fix
+          ii. **If step is non-visual:**
+             - Continue retry attempts (non-visual logic usually debuggable)
+       g. Repeat until validation passes or user takes over
     6. If validation passes:
        a. Report step success
-       b. Proceed to checkpoint
+       b. Reset retry count for next step
+       c. Proceed to checkpoint
     7. Checkpoint gate:
        a. User reviews step output
        b. User approves proceeding to next step
@@ -308,7 +321,10 @@ executePlan() {
     2. Verify all success criteria met with validation commands
     3. Report completion summary
     4. Present validation results
-    5. Await user approval before proceeding to next task
+    5. **CRITICAL: Wait for explicit user approval to mark task complete**
+    6. **ONLY after user approves: Update task status to 'completed'**
+    7. **ONLY after user approves: Update aidd-planning/aidd-eng-plan.md status**
+    8. Await user approval before proceeding to next task
 }
 
 ## Task Plan Template Structure
@@ -427,6 +443,46 @@ Expected: [expected output]
 
 ---
 
+## Storybook Strategy (MANDATORY for UI components)
+
+**Component Type:** [UI Component/Utility/Store]
+
+**Stories Required:** [YES/NO]
+
+**Coverage Level:** [Basic (2-3 stories) / Standard (4-6 stories) / Comprehensive (8-12 stories)]
+
+**Justification:**
+- [Why stories are/aren't needed]
+- [What states need story coverage]
+
+**If YES - Story Plan:**
+```typescript
+// Required stories:
+1. Default - Base component state
+2. [State/variant name] - [What this demonstrates]
+3. [State/variant name] - [What this demonstrates]
+// ... list all required stories
+```
+
+**Story Creation Timing:**
+- Create after: [Step number - usually Step 2 after types]
+- Update when: [Component changes, new props added]
+
+**Validation:**
+```bash
+# Story file exists
+ls path/to/component.stories.tsx
+
+# Minimum story count
+grep "export const.*: Story" component.stories.tsx | wc -l
+```
+Expected: File exists, ≥[N] stories
+
+**If NO - Justification:**
+- [Why stories not needed - e.g., utility function, no visual output]
+
+---
+
 ## Requirements
 
 - Given [situation], should [jobToDo]
@@ -508,8 +564,14 @@ Expected: [exact expected output]
 ```
 Expected: All pass, exit code 0
 
-**Success:** All validations pass = Task complete ✅
-**Failure:** Any validation fails = Review output, debug, retry
+**Success:** All validations pass AND user approves = Task complete ✅
+**Failure:** Any validation fails OR user requests changes = Review output, debug, retry
+
+**CRITICAL: Task completion requires explicit user approval**
+- AI presents validation results
+- User reviews all validation outputs
+- User explicitly approves task completion ("approved", "looks good", "complete it", etc.)
+- ONLY then: AI marks task complete and updates status
 
 ---
 
@@ -697,6 +759,19 @@ Break into sub-steps (e.g., Step 3a, 3b, 3c) with each ≤20 lines
 **Performance Implications:**
 - [Consideration with measurement]
 
+**Human Takeover Protocol:**
+If AI fails to resolve visual/styling issues after 3 attempts:
+1. AI reports retry count and specific failures
+2. AI suggests human takeover with explanation
+3. AI provides:
+   - Current code state
+   - Validation output showing what's failing
+   - Specific issue explanation
+   - Suggested fixes for human to apply
+4. User chooses: (1) manual fix, (2) different approach, (3) continue trying
+5. If manual fix: AI pauses, provides context, user implements fix
+6. After human fix: Resume from next step or re-validate current step
+
 ---
 
 ## Acceptance Criteria
@@ -705,10 +780,13 @@ Break into sub-steps (e.g., Step 3a, 3b, 3c) with each ≤20 lines
 - [ ] All success criteria validated objectively
 - [ ] CodeContext requirements met
 - [ ] StyleGuide constraints followed
-- [ ] Task size ≤50 lines
+- [ ] Task size ≤50 lines (implementation + tests + stories for UI components)
 - [ ] No subjective criteria remain
 - [ ] ValidationScripts section separate from Success Criteria
 - [ ] All implementation steps ≤20 lines
+- [ ] For UI components: Storybook stories created and validated
+- [ ] For UI components: Stories render in Storybook without errors
+- [ ] For UI components: Minimum story count met based on coverage level
 
 """
 
@@ -749,6 +827,7 @@ Before finalizing any task for user approval, verify:
 - [ ] StyleGuides - with .mdc references and explicit constraints
 - [ ] ValidationScripts - SEPARATE section with commands and expected outputs
 - [ ] StateManagementStrategy - for UI components (MobX YES/NO explicitly stated)
+- [ ] StorybookStrategy - for UI components (coverage level, story count, timing)
 
 **Content Quality:**
 - [ ] No subjective success criteria - Run automated check:
@@ -800,6 +879,12 @@ completedEpicTemplate() {
 Constraints {
   Never attempt multiple tasks simultaneously
   Always get explicit user approval before moving to next task
+  **CRITICAL: Never mark a task complete without explicit user approval**
+  **AI must present validation results and wait for user to approve completion**
+  **Only update task status to 'completed' after user explicitly approves**
+  **After 3 failed retry attempts on visual/styling steps: Suggest human takeover**
+  **Visual/styling includes: UI components, CSS, layout, design system, spacing, colors**
+  **Offer human takeover with: (1) manual fix, (2) different approach, (3) continue trying**
   If a task reveals new information that changes the plan, pause and re-plan
   Each task should be completable in ~50 lines of code or less
   Tasks should be independent - completing one shouldn't break others

@@ -35,6 +35,15 @@ for section in "CodeContext" "StyleGuides" "Validation Scripts"; do
   fi
 done
 
+# Check for Storybook Strategy if UI component task
+if grep -qi "component\|ui\|card\|button\|widget" "$TASK_FILE"; then
+  if grep -q "## Storybook Strategy" "$TASK_FILE"; then
+    echo "  ✅ Storybook Strategy (UI component)"
+  else
+    echo "  ⚠️  Storybook Strategy missing (recommended for UI components)"
+  fi
+fi
+
 # Check 2: Subjective Language
 echo ""
 echo "✓ Check 2: Subjective Language"

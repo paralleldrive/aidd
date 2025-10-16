@@ -1,4 +1,115 @@
 ---
+
+## Storybook Validation
+
+### Story File Exists
+
+```bash
+ls path/to/component.stories.tsx
+```
+**Expected:** File exists (no "No such file or directory" error)
+
+**Usage:** Verify Storybook story file created for UI component
+
+---
+
+### Default Story Present
+
+```bash
+grep "export const Default: Story" path/to/component.stories.tsx
+```
+**Expected:** Match found
+
+**Usage:** Verify mandatory Default story exists
+
+---
+
+### Minimum Story Count
+
+```bash
+grep "export const.*: Story" path/to/component.stories.tsx | wc -l
+```
+**Expected:** Number matches required story count
+
+**Usage:** Verify story coverage level (≥2 for Basic, ≥4 for Standard, ≥8 for Comprehensive)
+
+---
+
+### Story Uses Component
+
+```bash
+grep "component: Component" path/to/component.stories.tsx
+```
+**Expected:** Match found in meta definition
+
+**Usage:** Verify story properly configured with component
+
+---
+
+### Story Imports Component
+
+```bash
+grep "import.*Component.*from.*component'" path/to/component.stories.tsx
+```
+**Expected:** Import statement found
+
+**Usage:** Verify component imported correctly
+
+---
+
+### Stories Render in Storybook
+
+```bash
+npm run storybook &
+sleep 10
+curl -s http://localhost:6006/ | grep "ComponentName"
+killall node
+```
+**Expected:** Component name found in Storybook UI
+
+**Usage:** Verify stories actually render without errors
+
+**Alternative (if Storybook already running):**
+```bash
+curl -s http://localhost:6006/iframe.html?id=apps-componentname--default
+```
+**Expected:** HTTP 200, story loads
+
+---
+
+### Story Args Defined
+
+```bash
+grep "args: {" path/to/component.stories.tsx | wc -l
+```
+**Expected:** At least one args definition per story
+
+**Usage:** Verify stories have prop data
+
+---
+
+### Responsive Stories Present (if needed)
+
+```bash
+grep "viewport:" path/to/component.stories.tsx
+```
+**Expected:** Match found if responsive component
+
+**Usage:** Verify responsive breakpoint stories included
+
+---
+
+### Story Colocation
+
+```bash
+# Component and story in same directory
+dirname $(find . -name "component.tsx") | xargs -I {} ls {}/component.stories.tsx
+```
+**Expected:** Story file found in same directory as component
+
+**Usage:** Verify proper file colocation
+
+---
 description: Standard validation commands and patterns for task validation - use these for objective task completion verification
 alwaysApply: false
 ---
