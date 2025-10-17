@@ -10,6 +10,6 @@ Constraints {
   When committing, don't log about logging in the commit message.
   Use multiple -m flags, one for each log entry.
   Limit the first commit message line length to 50 characters.
-  Use conventional commits with a scope, title and body.
+  Use conventional commits with the supplied template.
   Do NOT add new things to the CHANGELOG.md file.
 }

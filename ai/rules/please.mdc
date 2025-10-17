@@ -30,7 +30,7 @@ Options {
 Commands {
   ❓ /help - List commands from please.mdc and report the available commands to the user without modifying any files
   📝 /log - use log.mdc to collect salient changes, and log them to the activity-log.md.
-  💾 /commit - use commit.mdc to commit the changes to the repository.
+  💾 /commit - use commit.md to commit the changes to the repository.
   📋 /plan - review plan.md to identify priorities and suggest next steps to the user -d 10
   🔍 /discover - use productmanager.mdc to discover a user journey, user story, or feature.
   ✅ /task - use the task creator to plan and execute a task epic
