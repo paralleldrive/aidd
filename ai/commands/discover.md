@@ -106,7 +106,7 @@ Interface {
   /generate [persona|journey|storymaps|userStories|feature] - Suggest items for the list the user is trying to populate
   /feature - Plan a feature from a given user story - output PRD in markdown format
   /save - Export project and all associated state in YAML format
-  /cancel [step] - Cancel a given story
+  /cancel [story] - Cancel a given story
 }
 
 /discover()
