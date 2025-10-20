@@ -1,12 +1,92 @@
-# AIDD with SudoLang.ai
+# SudoLang AIDD Agent System
+
+[![SudoLang AIDD](https://img.shields.io/badge/✨_SudoLang_AIDD-black)](https://github.com/paralleldrive/sudolang.ai)
 
 **The standard library for AI Driven Development.**
 
-A public collection of reusable metaprograms, agent scripts, and prompt modules.
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [About SudoLang AIDD](#about-sudolang-aidd)
+- [🚀 Quick Start with AIDD CLI](#-quick-start-with-aidd-cli)
+  - [📋 Requirements](#-requirements)
+  - [Detailed Installation Instructions](#detailed-installation-instructions)
+- [Why SudoLang?](#why-sudolang)
+- [What's Included](#whats-included)
+- [🛠️ AIDD CLI Reference](#-aidd-cli-reference)
+  - [Installation & Usage](#installation--usage)
+  - [Command Options](#command-options)
+  - [Examples](#examples)
+- [📁 AI System Structure](#-ai-system-structure)
+  - [Key Components](#key-components)
+- [🎯 AI Integration](#-ai-integration)
+- [🔧 Cursor Editor Setup](#-cursor-editor-setup)
+  - [Automatic Setup (Recommended)](#automatic-setup-recommended)
+  - [When to Use `--cursor`](#when-to-use---cursor)
+  - [When NOT to Use `--cursor`](#when-not-to-use---cursor)
+  - [Manual Integration](#manual-integration)
+  - [Troubleshooting](#troubleshooting)
+- [📄 License](#-license)
+- [🤝 Contributing](#-contributing)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## About SudoLang AIDD
+
+A public collection of reusable metaprograms, agent scripts, and prompt modules. SudoLang agents put high quality software engineering process on autopilot rails.
+
+The collection includes a comprehensive AI agent orchestration system with commands and rules that enable AI Driven Development workflows.
+
+This system implements time-tested software engineering processes on autopilot rails, including:
+
+- Specification driven development with PRDs and concise, structured user stories.
+- Systematic task planning and execution with Test Driven Development (TDD).
+- Code review and refinement with automated code quality checks and best practices enforcement.
+
+The system also includes comprehensive code style guides for JavaScript, TypeScript, React, Redux, and we'll be adding more soon!
+
+**AI Workflow Commands** - Use these in your AI assistant chat (Cursor, ChatGPT, Claude, etc.):
+
+```
+/discover - what to build
+/task - plan a task epic to implement a user story from the discovery
+/execute - task epics with TDD
+/review - the results
+/log - log the changes to the activity log
+/commit - commit the changes to the repository
+```
 
 **SudoLang** is a pseudocode language for prompting large language models with clear structure, strong typing, and explicit control flow.
 
 ## 🚀 Quick Start with AIDD CLI
+
+```
+npx aidd --help
+```
+
+To install for Cursor:
+
+```
+# In your project folder
+npx aidd --cursor
+```
+
+Install without Cursor integration:
+
+```
+# You can also specify a project folder:
+npx aidd my-project
+```
+
+### 📋 Requirements
+
+- **Node.js**: 16.0.0+ (requires ESM support)
+- **Environment**: Unix/Linux shell (bash, zsh) or Windows with WSL
+- **Editors**: Works with any editor; optimized for Cursor
+- **LLM**: Works with any sufficiently advanced LLM. As of this writing, we recommend Claude 4.5 Sonnet.
+- **Agents**: You can ask most agent systems to use this system.
+
+### Detailed Installation Instructions
 
 1. **Install SudoLang syntax highlighting**: Visit the [SudoLang Github Repository](https://github.com/paralleldrive/sudolang-llm-support) and install syntax highlighting for your editor.
 
@@ -67,12 +147,6 @@ Coming soon:
 - 🎨 UI sketch prompts
 - 📄 Documentation generators
 - 🔌 API design
-
-## 📋 System Requirements
-
-- **Node.js**: 16.0.0+ (requires ESM support)
-- **Environment**: Unix/Linux shell (bash, zsh) or Windows with WSL
-- **Editors**: Works with any editor; optimized for Cursor
 
 ## 🛠️ AIDD CLI Reference
 
@@ -165,7 +239,7 @@ This system is designed to work with AI coding assistants:
 
 The rules provide context and structure for more effective AI interactions.
 
-## 🎯 Cursor Editor Integration
+## 🔧 Cursor Editor Setup
 
 The AIDD CLI can automatically set up the AI agent system for **Cursor editor** users.
 
@@ -194,20 +268,46 @@ npx aidd --cursor
 
 ### Manual Integration
 
-If you already have a `.cursor` folder, manually integrate our system:
+If you already have a `.cursor` folder or use a different editor:
 
 ```bash
 # 1. Clone without symlink
 npx aidd my-project
+```
 
-# 2. Manually reference our rules in your existing .cursor rules
-# Add to your .cursor/rules.md:
-# @import ../ai/rules/javascript/javascript.mdc
-# @import ../ai/rules/tdd.mdc
-# @import ../ai/rules/productmanager.mdc
+**For Cursor users with existing rules:**
+
+Reference the rules in your prompts or add to `.cursor/rules`:
+
+```
+See ai/rules/javascript/javascript.mdc for JavaScript best practices
+See ai/rules/tdd.mdc for test-driven development
+See ai/rules/productmanager.mdc for product management
+```
+
+**For other editors (VS Code, Vim, etc.):**
+
+Reference rules directly in your AI assistant prompts:
+
+```
+Please follow the guidelines in ai/rules/javascript/javascript.mdc
+Use the workflow from ai/commands/task.md
 ```
 
 ### Troubleshooting
+
+**Verify Installation**
+
+```bash
+# Check that ai/ folder was created
+ls ai/
+
+# Verify key files exist
+ls ai/rules/please.mdc
+ls ai/commands/
+```
+
+**Common Issues**
 
 ```bash
 # If .cursor already exists, use --force
@@ -215,6 +315,30 @@ npx aidd --cursor --force
 
 # Preview what --cursor will do
 npx aidd --cursor --dry-run --verbose
+
+# Clear npx cache if installation fails
+npx clear-npx-cache
+npx aidd --cursor
+
+# Check Node version (requires 16.0.0+)
+node --version
+```
+
+**Updating**
+
+```bash
+# Simply run aidd again to get latest version
+npx aidd --force
+```
+
+**Uninstalling**
+
+```bash
+# Remove the ai/ folder
+rm -rf ai/
+
+# Remove .cursor symlink if it exists
+rm .cursor
 ```
 
 ## 📄 License
