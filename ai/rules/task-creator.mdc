@@ -21,7 +21,7 @@ State {
   StyleGuides // Coding standards, patterns, and conventions that apply to this work
   Dependencies // External libraries, APIs, or system integrations required
   Constraints // Technical limitations, performance requirements, or business rules
-  SuccessCriteria // Clear, measurable outcomes for the completed work
+  Stories // Clear, measurable outcomes for the completed work
   AgentRequirements // Assessment if task requires specialized agent expertise
 }
 
@@ -56,7 +56,7 @@ planTask() {
 ## Task Execution Protocol
 
 createPlan() {
-  1. Think = "🎯 restate |>💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond"
+  1. Think = "🎯 restate |> 💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond"
   2. Gather any additional context or clarification needed
   3. Present the task/epic plan to the user for approval
   4. Add the plan to the project root .plan.md file, with a reference to the epic plan file
@@ -71,37 +71,55 @@ executePlan() {
 
 ## Task Plan Template Structure
 
-Each task should include:
+Epic files must be as simple as possible while clearly communicating what needs to be done.
 
-"""
-## [Task] $taskName
+epicTemplate() {
+  """
+  # ${EpicName} Epic
 
-$taskDescription
+  **Status**: 📋 PLANNED  
+  **Goal**: ${briefGoal}
 
-- **Context**: What files, patterns, or systems this task affects
-- **Requirements**: 
-  - Given [situation], should [jobToDo]
-  - Given [situation], should [jobToDo]
-- **Constraints**:
-  - Avoid breaking changes to existing APIs unless the task explicitly requires refactoring or major improvements.
+  ## Overview
 
-**Success Criteria**:
-- [ ] Specific, measurable outcome 1
-- [ ] Specific, measurable outcome 2
+  ${singleParagraphStartingWithWHY}
 
-**Dependencies**: What must be completed before this task
-**Estimated Effort**: [Small/Medium/Large] on exponential scale
+  ---
 
-**Agent Orchestration**: [Required/Not Required]
-- If Required: Specify which agent(s) and why
-- Agent dispatch command if applicable
+  ## ${TaskName}
 
-**Implementation Notes**:
-- Key technical considerations
-- Potential challenges or risks
-- Suggested approach or patterns to follow
-- Agent-specific guidance if applicable
-"""
+  ${briefTaskDescription}
+
+  **Requirements**:
+  - Given ${situation}, should ${jobToDo}
+  - Given ${situation}, should ${jobToDo}
+
+  ---
+  """
+}
+
+epicConstraints() {
+  Overview:
+    - Start with WHY (user benefit/problem being solved)
+    - Explain what gaps are being addressed
+    - Keep it terse
+
+  Tasks:
+    - No task numbering (use task names only)
+    - Brief description (1 sentence max)
+    - Requirements section with bullet points ONLY using "Given X, should Y" format
+    - Include ONLY novel, meaningful, insightful requirements
+    - NO extra sections, explanations or text
+}
+
+reviewEpic() {
+  After creating the epic file, verify:
+  1. Single paragraph overview starting with WHY
+  2. No task numbering
+  3. All requirements follow "Given X, should Y" format
+  4. Only novel/insightful requirements remain (eliminate obvious boilerplate)
+  5. No extra sections beyond template
+}
 
 ## Completed Epic Documentation
 
@@ -120,18 +138,18 @@ completedEpicTemplate() {
 
 Constraints {
   Never attempt multiple tasks simultaneously
+  Avoid breaking changes unless explicitly requested (open/closed principle)
   Always get explicit user approval before moving to the next task
-  If a task reveals new information that changes the plan, pause and re-plan
+  If a task reveals new information, pause and re-plan
   Each task should be completable in ~50 lines of code or less
   Tasks should be independent - completing one shouldn't break others
   Always validate task completion before proceeding
   If blocked or uncertain, ask clarifying questions rather than making assumptions
-  For complex tasks requiring agent orchestration, ensure proper agent dispatch before execution
-  Maintain clear separation between task planning and agent execution phases
+  For complex tasks, ensure proper agent dispatch before execution
 }
 
 createTask() {
-  createPlan |> awaitAproval |> executePlan
+  createPlan |> reviewEpic |> awaitApproval |> executePlan
 }
 
 Commands {

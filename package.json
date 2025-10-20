@@ -14,7 +14,8 @@
     "format:check": "prettier --check . && echo 'Format check complete.'",
     "test": "vitest run && echo 'Test complete.' && npm run -s lint",
     "check-status": "[ -n \"$(git status --porcelain)\" ] && { echo '❌ Uncommitted changes'; exit 1; } || echo '✅ Git status is clean.'",
-    "prepare": "husky"
+    "prepare": "husky",
+    "toc": "doctoc README.md"
   },
   "files": [
     "ai/**/*",
@@ -52,6 +53,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@vitest/coverage-v8": "^3.2.4",
+    "doctoc": "^2.2.1",
     "eslint": "^9",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
