@@ -46,27 +46,27 @@ assessComplexity() {
 
 planTask() {
   1. Decompose - Break the user's request into atomic, sequential tasks
-  2. Assess Agent Needs - For each task, determine if agent orchestration is required
-  3. Order tasks by dependencies and logical flow
-  4. Validate Ensure each task is specific, actionable, independently testable, small enough to complete in one focused session, clear about inputs, outputs, and success criteria
-  5. Sequence - Arrange tasks so each builds on the previous one
-  6. Checkpoint Plan approval gates between major phases
+  1. Assess Agent Needs - For each task, determine if agent orchestration is required
+  1. Order tasks by dependencies and logical flow
+  1. Validate - Ensure each task is specific, actionable, independently testable, small enough to complete in one focused session, clear about inputs, outputs, and success criteria
+  1. Sequence - Arrange tasks so each builds on the previous one
+  1. Checkpoint Plan approval gates between major phases
 }
 
 ## Task Execution Protocol
 
 createPlan() {
   1. Think = "🎯 restate |> 💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond"
-  2. Gather any additional context or clarification needed
-  3. Present the task/epic plan to the user for approval
-  4. Add the plan to the project root .plan.md file, with a reference to the epic plan file
+  1. Gather any additional context or clarification needed
+  1. Present the task/epic plan to the user for approval
+  1. Add the plan to the project root .plan.md file, with a reference to the epic plan file
 }
 
 executePlan() {
   1. Complete only the current task
-  2. Validate - Verify the task meets its success criteria
-  3. Report - Summarize what was accomplished
-  4. Await Approval - Get explicit user approval before proceeding to the next task
+  1. Validate - Verify the task meets its success criteria
+  1. Report - Summarize what was accomplished
+  1. Await Approval - Get explicit user approval before proceeding to the next task
 }
 
 ## Task Plan Template Structure
@@ -98,42 +98,36 @@ epicTemplate() {
   """
 }
 
-epicConstraints() {
-  Overview:
-    - Start with WHY (user benefit/problem being solved)
-    - Explain what gaps are being addressed
-    - Keep it terse
+epicConstraints {
+  // Overview:
+  Start with WHY (user benefit/problem being solved)
+  Explain what gaps are being addressed
+  Keep it terse
 
-  Tasks:
-    - No task numbering (use task names only)
-    - Brief description (1 sentence max)
-    - Requirements section with bullet points ONLY using "Given X, should Y" format
-    - Include ONLY novel, meaningful, insightful requirements
-    - NO extra sections, explanations or text
+  // Tasks:
+  No task numbering (use task names only)
+  Brief description (1 sentence max)
+  Requirements section with bullet points ONLY using "Given X, should Y" format
+  Include ONLY novel, meaningful, insightful requirements
+  NO extra sections, explanations or text
 }
 
 reviewEpic() {
   After creating the epic file, verify:
+
   1. Single paragraph overview starting with WHY
-  2. No task numbering
-  3. All requirements follow "Given X, should Y" format
-  4. Only novel/insightful requirements remain (eliminate obvious boilerplate)
-  5. No extra sections beyond template
+  1. No task numbering
+  1. All requirements follow "Given X, should Y" format
+  1. Only novel/insightful requirements remain (eliminate obvious boilerplate)
+  1. No extra sections beyond template
 }
 
 ## Completed Epic Documentation
 
-When an epic is completed, move it to tasks/archive/YYYY-MM-DD-${epicName}.md and update plan.md with:
-
-completedEpicTemplate() {
-  """
-  ### ✅ ${epicName}
-
-  **Status**: ✅ COMPLETED (${completionDate})  
-  **File**: [`tasks/archive/${epicFileName}`](./tasks/archive/${epicFileName})  
-  **Goal**: ${originalEpicGoal}  
-  **Result**: ${ultraMinimalKeyAccomplishmentsAndMetrics}
-  """
+onComplete() {
+  1. Update epic status to ✅ COMPLETED (${completionDate})
+  1. Move to tasks/archive/YYYY-MM-DD-${epicName}.md
+  1. Remove the epic entirely from plan.md
 }
 
 Constraints {
@@ -149,11 +143,16 @@ Constraints {
 }
 
 createTask() {
-  createPlan |> reviewEpic |> awaitApproval |> executePlan
+  createPlan |> reviewEpic |> awaitApproval
+}
+
+executeTask() {
+  executePlan |> awaitApproval |> onComplete
 }
 
 Commands {
   /help
   /task - create a task/epic
+  /execute - execute a task/epic
   /list [(tasks|epics) = tasks]- list all tasks in the epic
 }
