@@ -1,0 +1,616 @@
+/* ========================================
+   CYBERGLASSMORPHISM DARK MODE - STORY MAPPER
+   CSS Custom Properties & Base Styles
+   ======================================== */
+
+:root {
+  /* Dark mode cyber palette */
+  --bg-primary: linear-gradient(135deg, #0a0a1f 0%, #1a0a2e 50%, #16213e 100%);
+  --bg-secondary: #0f0f23;
+  --bg-tertiary: #1a1a2e;
+
+  /* Neon accent colors */
+  --neon-cyan: #00f5ff;
+  --neon-magenta: #ff00ff;
+  --neon-blue: #0084ff;
+  --neon-purple: #9d00ff;
+  --neon-green: #00ff88;
+
+  /* Glass surface properties */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-bg-hover: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-border-bright: rgba(255, 255, 255, 0.3);
+  --glass-blur: 12px;
+
+  /* Text colors */
+  --text-primary: #ffffff;
+  --text-secondary: #b8b8d4;
+  --text-muted: #6b7280;
+  --text-cyan: var(--neon-cyan);
+
+  /* Spacing & sizing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Border radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  /* Shadows & glows */
+  --glow-cyan: 0 0 20px rgba(0, 245, 255, 0.5);
+  --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.5);
+  --glow-blue: 0 0 20px rgba(0, 132, 255, 0.5);
+  --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* ========================================
+   RESET & BASE STYLES
+   ======================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background: var(--bg-primary);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ========================================
+   GLASSMORPHISM UTILITIES
+   ======================================== */
+
+.glass-surface {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-elevated);
+  transition: all 0.3s ease;
+}
+
+.glass-surface:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-bright);
+}
+
+/* Neon border variants */
+.neon-border-cyan {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--glow-cyan), var(--shadow-elevated);
+}
+
+.neon-border-magenta {
+  border-color: var(--neon-magenta);
+  box-shadow: var(--glow-magenta), var(--shadow-elevated);
+}
+
+.neon-border-blue {
+  border-color: var(--neon-blue);
+  box-shadow: var(--glow-blue), var(--shadow-elevated);
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+}
+
+.header-content {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.ai-sparkle {
+  font-size: 1.5rem;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.2); }
+}
+
+.beta-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
+  color: var(--bg-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.header-actions {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+.glass-button {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  transition: all 0.3s ease;
+}
+
+.glass-button:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--neon-cyan);
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-2px);
+}
+
+.ai-assist-btn {
+  border-color: var(--neon-cyan);
+}
+
+.ai-assist-btn:hover {
+  background: rgba(0, 245, 255, 0.1);
+}
+
+/* ========================================
+   MAIN CANVAS
+   ======================================== */
+
+.story-mapper-canvas {
+  position: relative;
+  min-height: calc(100vh - 100px);
+  padding: var(--spacing-xl);
+}
+
+.canvas-wrapper {
+  max-width: 1800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  contain: layout style;
+}
+
+/* ========================================
+   MINI-MAP
+   ======================================== */
+
+.mini-map {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  width: 200px;
+  height: 150px;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-lg);
+  z-index: 50;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.mini-map:hover {
+  opacity: 1;
+}
+
+.mini-map-viewport {
+  width: 40%;
+  height: 50%;
+  border: 2px solid var(--neon-cyan);
+  border-radius: var(--radius-sm);
+  background: rgba(0, 245, 255, 0.1);
+}
+
+/* ========================================
+   JOURNEY CONTAINER
+   ======================================== */
+
+.journey-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  contain: layout;
+}
+
+.journey-header {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-radius: var(--radius-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.journey-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(0, 245, 255, 0.1) 50%,
+    transparent 100%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.journey-header:hover::before {
+  opacity: 1;
+}
+
+.journey-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.journey-meta {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.meta-tag {
+  padding: 0.25rem 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* ========================================
+   STEPS CONTAINER
+   ======================================== */
+
+.steps-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+  padding: 0 var(--spacing-md);
+}
+
+.step-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  min-width: 280px;
+  contain: layout;
+}
+
+.step-header {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.step-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.step-badge {
+  padding: 0.25rem 0.5rem;
+  background: rgba(0, 245, 255, 0.15);
+  border: 1px solid var(--neon-cyan);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  color: var(--neon-cyan);
+}
+
+/* ========================================
+   STORIES STACK
+   ======================================== */
+
+.stories-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.story-card {
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  will-change: transform;
+}
+
+.story-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--neon-blue);
+  box-shadow: var(--glow-blue), var(--shadow-elevated);
+}
+
+/* AI-generated story indicator */
+.story-card.ai-generated {
+  border-color: rgba(0, 245, 255, 0.3);
+  position: relative;
+}
+
+.story-card.ai-generated::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg,
+    rgba(0, 245, 255, 0.05) 0%,
+    rgba(255, 0, 255, 0.05) 100%);
+  pointer-events: none;
+}
+
+.story-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.story-id {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.05em;
+}
+
+.ai-badge {
+  font-size: 0.9rem;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.story-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.story-description {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.story-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--spacing-xs);
+}
+
+.story-tag {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+
+.story-tag:contains("High") {
+  background: rgba(255, 0, 102, 0.2);
+  color: #ff6b9d;
+}
+
+.story-points {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--neon-cyan);
+}
+
+/* ========================================
+   ADD JOURNEY
+   ======================================== */
+
+.add-journey-container {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-xl) 0;
+}
+
+.add-journey-btn {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  font-size: 1.1rem;
+  cursor: pointer;
+  border: 2px dashed var(--glass-border);
+  background: transparent;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+
+.add-journey-btn:hover {
+  border-color: var(--neon-cyan);
+  background: rgba(0, 245, 255, 0.05);
+  color: var(--neon-cyan);
+  box-shadow: var(--glow-cyan);
+}
+
+.plus-icon {
+  font-size: 1.5rem;
+  font-weight: 300;
+}
+
+.ai-suggestion {
+  font-size: 1rem;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+/* ========================================
+   AI PANEL
+   ======================================== */
+
+.ai-panel {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 320px;
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  z-index: 50;
+  border-color: var(--neon-cyan);
+}
+
+.ai-panel-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.ai-icon-large {
+  font-size: 1.5rem;
+}
+
+.ai-panel h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ai-hint {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.ai-input {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.ai-input::placeholder {
+  color: var(--text-muted);
+}
+
+.ai-input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 0 3px rgba(0, 245, 255, 0.1);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 1440px) {
+  .steps-container {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+
+  .mini-map {
+    width: 150px;
+    height: 120px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .app-header {
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .app-title {
+    font-size: 1.5rem;
+  }
+
+  .steps-container {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  .ai-panel {
+    width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .story-mapper-canvas {
+    padding: var(--spacing-md);
+  }
+
+  .steps-container {
+    grid-template-columns: 1fr;
+  }
+
+  .mini-map {
+    display: none;
+  }
+
+  .ai-panel {
+    width: calc(100% - 40px);
+    right: 20px;
+    left: 20px;
+  }
+}
+
+/* ========================================
+   ANIMATIONS & PERFORMANCE
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Optimize rendering for many cards */
+.story-card,
+.step-header,
+.journey-header {
+  contain: layout style paint;
+}
