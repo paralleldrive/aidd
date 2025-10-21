@@ -54,17 +54,20 @@ const createCli = () => {
     .addHelpText(
       "before",
       `
-AIDD with SudoLang.ai
+SudoLang.ai AIDD
 
 The standard library for AI Driven Development.
 
-🚀 AI-Powered Development Workflow:
+🚀 AI Workflow Commands (use in your AI assistant chat):
 • /discover - what to build
-• /task - planning  
+• /task - planning
 • /execute - task epics with TDD
 • /review - the results
+• /log - activity logging
+• /commit - commit changes
 
-Use /help [command] to learn how to use individual commands
+After installation, ask your AI agent: /help
+For help with /commands, use /help [command] in your AI agent chat, e.g. /help discover
 
 A public collection of reusable metaprograms, agent scripts, and prompt modules.
 
@@ -74,43 +77,15 @@ SudoLang is a pseudocode language for prompting large language models with clear
     .addHelpText(
       "after",
       `
-Getting Started
+Quick Start
 
-1. Recommended: Creates ai/ folder + .cursor symlink for automatic integration
-   npx aidd --cursor my-project
+To install for Cursor:
 
-2. Alternative: Just the ai/ folder (manual integration required)
-   npx aidd my-project
+  npx aidd --cursor
 
-3. Explore the structure:
-   cd my-project
-   ls ai/                    # See available components
-   cat ai/rules/please.mdc   # Read the main orchestrator
+Install without Cursor integration:
 
-Examples
-
-Basic usage:
-  npx aidd                    # Current directory
-  npx aidd my-project         # Specific directory
-
-Preview and force options:
-  npx aidd --dry-run          # See what would be copied
-  npx aidd --force --verbose  # Overwrite with details
-
-Cursor editor integration:
-  npx aidd --cursor           # Create .cursor symlink
-  npx aidd my-project --cursor --verbose
-
-Multiple projects:
-  npx aidd frontend-app
-  npx aidd backend-api
-
-Recommended:
-
-- Install Cursor
-- Cursor: Open New Agent Chat
-- /help to learn how to use the system
-- Watch: https://www.youtube.com/watch?v=ybbfwu0Ykyg
+  npx aidd my-project
 `,
     )
     .addHelpText(
