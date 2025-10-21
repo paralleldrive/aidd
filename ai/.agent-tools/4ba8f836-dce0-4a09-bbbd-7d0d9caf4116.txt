@@ -1,0 +1,928 @@
+diff --git a/.husky/pre-commit b/.husky/pre-commit
+index 72c4429..6d0a766 100644
+--- a/.husky/pre-commit
++++ b/.husky/pre-commit
+@@ -1 +1 @@
+-npm test
++npm run test:unit
+diff --git a/README.md b/README.md
+index dc47cf9..d565c5e 100644
+--- a/README.md
++++ b/README.md
+@@ -1,8 +1,8 @@
+-# SudoLang AIDD Agent System
++# SudoLang.ai AIDD
+ 
+ [![SudoLang AIDD](https://img.shields.io/badge/✨_SudoLang_AIDD-black)](https://github.com/paralleldrive/sudolang.ai)
+ 
+-**The standard library for AI Driven Development.**
++**The standard library for AI Driven Development**
+ 
+ <!-- START doctoc generated TOC please keep comment here to allow auto update -->
+ <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+diff --git a/activity-log.md b/activity-log.md
+index ee54310..eadd0c2 100644
+--- a/activity-log.md
++++ b/activity-log.md
+@@ -1,3 +1,8 @@
++## October 20, 2025
++
++- 📱 - Help command clarity - AI workflow commands context
++- 🔧 - Agent system refinement - Role clarity, review process, task completion
++
+ ## October 19, 2025
+ 
+ - 📝 - README production-ready - ToC, troubleshooting, clear commands
+diff --git a/ai/rules/please.mdc b/ai/rules/please.mdc
+index 68242b4..45cf20e 100644
+--- a/ai/rules/please.mdc
++++ b/ai/rules/please.mdc
+@@ -4,7 +4,12 @@ alwaysApply: true
+ ---
+ # Aiden
+ 
+-Act as a senior software engineer, product manager, project manager, and technical writer. Your job is to assist with software development projects.
++Act as a top-tier senior software engineer, product manager, project manager, and technical writer. Your job is to assist with software development projects.
++
++## About You
++
++You are a SoTA AI agent system with access to advanced tools and computational resources. Gigs of memory, the best models and GPUs, and all the time you need to accomplish anything the user asks. You got this! 🦾
++
+ 
+ Think() deeply when a complex task is presented.
+ Read the project README.md and stack.mdc before responding.
+diff --git a/ai/rules/review.mdc b/ai/rules/review.mdc
+index c87a882..212b2b2 100644
+--- a/ai/rules/review.mdc
++++ b/ai/rules/review.mdc
+@@ -1,6 +1,5 @@
+ ---
+ description: Use this guide to conduct a thorough code review focusing on code quality, best practices, and adherence to project standards.
+-globs: **/*.js,**/*.jsx,**/*.ts,**/*.tsx
+ alwaysApply: false
+ ---
+ # 🔬 Code Review
+@@ -16,19 +15,23 @@ Criteria {
+   Use autodux.mdc for Redux state management patterns and Autodux usage.
+   Use javascript-io-network-effects.mdc for network effects and side effect handling.
+   Use commit.mdc for commit message quality and conventional commit format.
+-  Carefully inspect for OWASP top 10 violations and other security mistakes. Use search. List the current OWASP top 10, review all changes and inspect for violations.
++  Carefully inspect for OWASP top 10 violations and other security mistakes. Use search. Explicitly list each of the current OWASP top 10, review all changes and inspect for violations.
+   Compare the completed work to the functional requirements to ensure adherence and that all requirements are met.
+   Compare the task plan in $projectRoot/tasks/ to the completed work to ensure that all tasks were completed and that the completed work adheres to the plan.
+   Ensure that code comments comply with the relevant style guides.
+   Use docblocks for public APIs - but keep them minimal.
+   Ensure there are no unused stray files or dead code.
++}
++
++Constraints {
+   Don't make changes. Review-only. Output will serve as input for planning.
++  Avoid unfounded assumptions. If you're unsure, note and ask in the review response.
+ }
+ 
+ For each step, show your work:
+     🎯 restate |> 💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond
+ 
+-Review Process {
++ReviewProcess {
+   1. Analyze code structure and organization
+   2. Check adherence to coding standards and best practices
+   3. Evaluate test coverage and quality
+diff --git a/ai/rules/task-creator.mdc b/ai/rules/task-creator.mdc
+index 8aa1d3c..b45f4a4 100644
+--- a/ai/rules/task-creator.mdc
++++ b/ai/rules/task-creator.mdc
+@@ -46,27 +46,27 @@ assessComplexity() {
+ 
+ planTask() {
+   1. Decompose - Break the user's request into atomic, sequential tasks
+-  2. Assess Agent Needs - For each task, determine if agent orchestration is required
+-  3. Order tasks by dependencies and logical flow
+-  4. Validate Ensure each task is specific, actionable, independently testable, small enough to complete in one focused session, clear about inputs, outputs, and success criteria
+-  5. Sequence - Arrange tasks so each builds on the previous one
+-  6. Checkpoint Plan approval gates between major phases
++  1. Assess Agent Needs - For each task, determine if agent orchestration is required
++  1. Order tasks by dependencies and logical flow
++  1. Validate - Ensure each task is specific, actionable, independently testable, small enough to complete in one focused session, clear about inputs, outputs, and success criteria
++  1. Sequence - Arrange tasks so each builds on the previous one
++  1. Checkpoint Plan approval gates between major phases
+ }
+ 
+ ## Task Execution Protocol
+ 
+ createPlan() {
+   1. Think = "🎯 restate |> 💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond"
+-  2. Gather any additional context or clarification needed
+-  3. Present the task/epic plan to the user for approval
+-  4. Add the plan to the project root .plan.md file, with a reference to the epic plan file
++  1. Gather any additional context or clarification needed
++  1. Present the task/epic plan to the user for approval
++  1. Add the plan to the project root .plan.md file, with a reference to the epic plan file
+ }
+ 
+ executePlan() {
+   1. Complete only the current task
+-  2. Validate - Verify the task meets its success criteria
+-  3. Report - Summarize what was accomplished
+-  4. Await Approval - Get explicit user approval before proceeding to the next task
++  1. Validate - Verify the task meets its success criteria
++  1. Report - Summarize what was accomplished
++  1. Await Approval - Get explicit user approval before proceeding to the next task
+ }
+ 
+ ## Task Plan Template Structure
+@@ -98,42 +98,36 @@ epicTemplate() {
+   """
+ }
+ 
+-epicConstraints() {
+-  Overview:
+-    - Start with WHY (user benefit/problem being solved)
+-    - Explain what gaps are being addressed
+-    - Keep it terse
+-
+-  Tasks:
+-    - No task numbering (use task names only)
+-    - Brief description (1 sentence max)
+-    - Requirements section with bullet points ONLY using "Given X, should Y" format
+-    - Include ONLY novel, meaningful, insightful requirements
+-    - NO extra sections, explanations or text
++epicConstraints {
++  // Overview:
++  Start with WHY (user benefit/problem being solved)
++  Explain what gaps are being addressed
++  Keep it terse
++
++  // Tasks:
++  No task numbering (use task names only)
++  Brief description (1 sentence max)
++  Requirements section with bullet points ONLY using "Given X, should Y" format
++  Include ONLY novel, meaningful, insightful requirements
++  NO extra sections, explanations or text
+ }
+ 
+ reviewEpic() {
+   After creating the epic file, verify:
++
+   1. Single paragraph overview starting with WHY
+-  2. No task numbering
+-  3. All requirements follow "Given X, should Y" format
+-  4. Only novel/insightful requirements remain (eliminate obvious boilerplate)
+-  5. No extra sections beyond template
++  1. No task numbering
++  1. All requirements follow "Given X, should Y" format
++  1. Only novel/insightful requirements remain (eliminate obvious boilerplate)
++  1. No extra sections beyond template
+ }
+ 
+ ## Completed Epic Documentation
+ 
+-When an epic is completed, move it to tasks/archive/YYYY-MM-DD-${epicName}.md and update plan.md with:
+-
+-completedEpicTemplate() {
+-  """
+-  ### ✅ ${epicName}
+-
+-  **Status**: ✅ COMPLETED (${completionDate})  
+-  **File**: [`tasks/archive/${epicFileName}`](./tasks/archive/${epicFileName})  
+-  **Goal**: ${originalEpicGoal}  
+-  **Result**: ${ultraMinimalKeyAccomplishmentsAndMetrics}
+-  """
++onComplete() {
++  1. Update epic status to ✅ COMPLETED (${completionDate})
++  1. Move to tasks/archive/YYYY-MM-DD-${epicName}.md
++  1. Remove the epic entirely from plan.md
+ }
+ 
+ Constraints {
+@@ -149,11 +143,16 @@ Constraints {
+ }
+ 
+ createTask() {
+-  createPlan |> reviewEpic |> awaitApproval |> executePlan
++  createPlan |> reviewEpic |> awaitApproval
++}
++
++executeTask() {
++  executePlan |> awaitApproval |> onComplete
+ }
+ 
+ Commands {
+   /help
+   /task - create a task/epic
++  /execute - execute a task/epic
+   /list [(tasks|epics) = tasks]- list all tasks in the epic
+ }
+diff --git a/bin/aidd.js b/bin/aidd.js
+index c4cd146..e4222e0 100755
+--- a/bin/aidd.js
++++ b/bin/aidd.js
+@@ -54,17 +54,20 @@ const createCli = () => {
+     .addHelpText(
+       "before",
+       `
+-AIDD with SudoLang.ai
++SudoLang.ai AIDD
+ 
+ The standard library for AI Driven Development.
+ 
+-🚀 AI-Powered Development Workflow:
++🚀 AI Workflow Commands (use in your AI assistant chat):
+ • /discover - what to build
+-• /task - planning  
++• /task - planning
+ • /execute - task epics with TDD
+ • /review - the results
++• /log - activity logging
++• /commit - commit changes
+ 
+-Use /help [command] to learn how to use individual commands
++After installation, ask your AI agent: /help
++For help with /commands, use /help [command] in your AI agent chat, e.g. /help discover
+ 
+ A public collection of reusable metaprograms, agent scripts, and prompt modules.
+ 
+@@ -74,43 +77,15 @@ SudoLang is a pseudocode language for prompting large language models with clear
+     .addHelpText(
+       "after",
+       `
+-Getting Started
++Quick Start
+ 
+-1. Recommended: Creates ai/ folder + .cursor symlink for automatic integration
+-   npx aidd --cursor my-project
++To install for Cursor:
+ 
+-2. Alternative: Just the ai/ folder (manual integration required)
+-   npx aidd my-project
++  npx aidd --cursor
+ 
+-3. Explore the structure:
+-   cd my-project
+-   ls ai/                    # See available components
+-   cat ai/rules/please.mdc   # Read the main orchestrator
++Install without Cursor integration:
+ 
+-Examples
+-
+-Basic usage:
+-  npx aidd                    # Current directory
+-  npx aidd my-project         # Specific directory
+-
+-Preview and force options:
+-  npx aidd --dry-run          # See what would be copied
+-  npx aidd --force --verbose  # Overwrite with details
+-
+-Cursor editor integration:
+-  npx aidd --cursor           # Create .cursor symlink
+-  npx aidd my-project --cursor --verbose
+-
+-Multiple projects:
+-  npx aidd frontend-app
+-  npx aidd backend-api
+-
+-Recommended:
+-
+-- Install Cursor
+-- Cursor: Open New Agent Chat
+-- /help to learn how to use the system
+-- Watch: https://www.youtube.com/watch?v=ybbfwu0Ykyg
++  npx aidd my-project
+ `,
+     )
+     .addHelpText(
+diff --git a/bin/cli-help-e2e.test.js b/bin/cli-help-e2e.test.js
+new file mode 100644
+index 0000000..3562b15
+--- /dev/null
++++ b/bin/cli-help-e2e.test.js
+@@ -0,0 +1,185 @@
++import { assert } from "riteway/vitest";
++import { describe, test } from "vitest";
++import { exec } from "child_process";
++import { promisify } from "util";
++import { fileURLToPath } from "url";
++import path from "path";
++
++const execAsync = promisify(exec);
++const __filename = fileURLToPath(import.meta.url);
++const __dirname = path.dirname(__filename);
++const cliPath = path.join(__dirname, "./aidd.js");
++
++describe("CLI help command", () => {
++  test("help output includes README intro", async () => {
++    const { stdout } = await execAsync(`node ${cliPath} --help`);
++
++    assert({
++      given: "CLI help command is run",
++      should: "include SudoLang.ai AIDD intro from README",
++      actual:
++        stdout.includes("SudoLang.ai AIDD") &&
++        stdout.includes("The standard library for AI Driven Development"),
++      expected: true,
++    });
++  });
++
++  test("help output includes SudoLang description", async () => {
++    const { stdout } = await execAsync(`node ${cliPath} --help`);
++
++    assert({
++      given: "CLI help command is run",
++      should: "include SudoLang description from README",
++      actual: stdout.includes(
++        "SudoLang is a pseudocode language for prompting large language models",
++      ),
++      expected: true,
++    });
++  });
++
++  test("help output includes About the Author section at end", async () => {
++    const { stdout } = await execAsync(`node ${cliPath} --help`);
++
++    assert({
++      given: "CLI help command is run",
++      should: "include About the Author section",
++      actual:
++        stdout.includes("About the Author") &&
++        stdout.includes("Eric Elliott") &&
++        stdout.includes("The Art of Effortless Programming"),
++      expected: true,
++    });
++  });
++
++  test("About the Author appears after main help content", async () => {
++    const { stdout } = await execAsync(`node ${cliPath} --help`);
++    const authorIndex = stdout.indexOf("About the Author");
++    const optionsIndex = stdout.indexOf("Options:");
++
++    assert({
++      given: "CLI help command is run",
++      should: "show About the Author after the main help content",
++      actual: authorIndex > optionsIndex && authorIndex > 0,
++      expected: true,
++    });
++  });
++
++  test("help output includes Quick Start section", async () => {
++    const { stdout } = await execAsync(`node ${cliPath} --help`);
++
++    assert({
++      given: "CLI help command is run",
++      should: "include Quick Start section with installation commands",
++      actual:
++        stdout.includes("Quick Start") &&
++        stdout.includes("npx aidd --cursor") &&
++        stdout.includes("npx aidd my-project"),
++      expected: true,
++    });
++  });
++
++  test("Quick Start appears before About the Author", async () => {
++    const { stdout } = await execAsync(`node ${cliPath} --help`);
++    const quickStartIndex = stdout.indexOf("Quick Start");
++    const authorIndex = stdout.indexOf("About the Author");
++
++    assert({
++      given: "CLI help command is run",
++      should: "show Quick Start before About the Author section",
++      actual: quickStartIndex > 0 && quickStartIndex < authorIndex,
++      expected: true,
++    });
++  });
++
++  test("workflow commands include AI assistant context", async () => {
++    const { stdout } = await execAsync(`node ${cliPath} --help`);
++
++    assert({
++      given: "CLI help command is run",
++      should: "clarify that workflow commands are for AI assistants",
++      actual: stdout.includes("use in your AI assistant chat"),
++      expected: true,
++    });
++  });
++
++  test("workflow commands include complete command list", async () => {
++    const { stdout } = await execAsync(`node ${cliPath} --help`);
++
++    assert({
++      given: "CLI help command is run",
++      should: "include all six workflow commands",
++      actual:
++        stdout.includes("/discover") &&
++        stdout.includes("/task") &&
++        stdout.includes("/execute") &&
++        stdout.includes("/review") &&
++        stdout.includes("/log") &&
++        stdout.includes("/commit"),
++      expected: true,
++    });
++  });
++
++  test("workflow commands include AI agent instruction", async () => {
++    const { stdout } = await execAsync(`node ${cliPath} --help`);
++
++    assert({
++      given: "CLI help command is run",
++      should: "instruct users to ask their AI agent for help",
++      actual: stdout.includes("ask your AI agent: /help"),
++      expected: true,
++    });
++  });
++
++  test("help includes instruction for command-specific help", async () => {
++    const { stdout } = await execAsync(`node ${cliPath} --help`);
++
++    assert({
++      given: "CLI help command is run",
++      should: "show how to get help for specific commands in AI chat",
++      actual:
++        stdout.includes("/help [command]") &&
++        stdout.includes("e.g. /help discover"),
++      expected: true,
++    });
++  });
++
++  test("Quick Start matches README structure", async () => {
++    const { stdout } = await execAsync(`node ${cliPath} --help`);
++
++    assert({
++      given: "CLI help command is run",
++      should: "show Quick Start section with README format",
++      actual:
++        stdout.includes("Quick Start") &&
++        stdout.includes("To install for Cursor:") &&
++        stdout.includes("Install without Cursor integration:"),
++      expected: true,
++    });
++  });
++
++  test("help does not include redundant Examples section", async () => {
++    const { stdout } = await execAsync(`node ${cliPath} --help`);
++    const hasExamplesSection = stdout.includes("Examples\n\nBasic usage:");
++
++    assert({
++      given: "CLI help command is run",
++      should: "not include redundant Examples section after Quick Start",
++      actual: hasExamplesSection,
++      expected: false,
++    });
++  });
++});
++
++describe("CLI success message", () => {
++  test("success message excludes About the Author text", async () => {
++    // Test with dry-run and force to avoid file operation errors
++    const { stdout } = await execAsync(`node ${cliPath} --dry-run --force`);
++
++    assert({
++      given: "CLI command completes successfully",
++      should: "not include About the Author in success message",
++      actual: stdout.includes("About the Author"),
++      expected: false,
++    });
++  });
++});
+diff --git a/bin/cli-help.test.js b/bin/cli-help.test.js
+deleted file mode 100644
+index 9bca01a..0000000
+--- a/bin/cli-help.test.js
++++ /dev/null
+@@ -1,107 +0,0 @@
+-import { assert } from "riteway/vitest";
+-import { describe, test } from "vitest";
+-import { exec } from "child_process";
+-import { promisify } from "util";
+-import { fileURLToPath } from "url";
+-import path from "path";
+-
+-const execAsync = promisify(exec);
+-const __filename = fileURLToPath(import.meta.url);
+-const __dirname = path.dirname(__filename);
+-const cliPath = path.join(__dirname, "./aidd.js");
+-
+-describe("CLI help command", () => {
+-  test("help output includes README intro", async () => {
+-    const { stdout } = await execAsync(`node ${cliPath} --help`);
+-
+-    assert({
+-      given: "CLI help command is run",
+-      should: "include AIDD with SudoLang.ai intro from README",
+-      actual:
+-        stdout.includes("AIDD with SudoLang.ai") &&
+-        stdout.includes("The standard library for AI Driven Development"),
+-      expected: true,
+-    });
+-  });
+-
+-  test("help output includes SudoLang description", async () => {
+-    const { stdout } = await execAsync(`node ${cliPath} --help`);
+-
+-    assert({
+-      given: "CLI help command is run",
+-      should: "include SudoLang description from README",
+-      actual: stdout.includes(
+-        "SudoLang is a pseudocode language for prompting large language models",
+-      ),
+-      expected: true,
+-    });
+-  });
+-
+-  test("help output includes About the Author section at end", async () => {
+-    const { stdout } = await execAsync(`node ${cliPath} --help`);
+-
+-    assert({
+-      given: "CLI help command is run",
+-      should: "include About the Author section",
+-      actual:
+-        stdout.includes("About the Author") &&
+-        stdout.includes("Eric Elliott") &&
+-        stdout.includes("The Art of Effortless Programming"),
+-      expected: true,
+-    });
+-  });
+-
+-  test("About the Author appears after main help content", async () => {
+-    const { stdout } = await execAsync(`node ${cliPath} --help`);
+-    const authorIndex = stdout.indexOf("About the Author");
+-    const optionsIndex = stdout.indexOf("Options:");
+-
+-    assert({
+-      given: "CLI help command is run",
+-      should: "show About the Author after the main help content",
+-      actual: authorIndex > optionsIndex && authorIndex > 0,
+-      expected: true,
+-    });
+-  });
+-
+-  test("help output includes getting started examples", async () => {
+-    const { stdout } = await execAsync(`node ${cliPath} --help`);
+-
+-    assert({
+-      given: "CLI help command is run",
+-      should: "include getting started examples with installation commands",
+-      actual:
+-        stdout.includes("Getting Started") &&
+-        stdout.includes("npx aidd --cursor my-project") &&
+-        stdout.includes("cd my-project"),
+-      expected: true,
+-    });
+-  });
+-
+-  test("getting started examples appear before About the Author", async () => {
+-    const { stdout } = await execAsync(`node ${cliPath} --help`);
+-    const examplesIndex = stdout.indexOf("Getting Started");
+-    const authorIndex = stdout.indexOf("About the Author");
+-
+-    assert({
+-      given: "CLI help command is run",
+-      should: "show Getting Started examples before About the Author section",
+-      actual: examplesIndex > 0 && examplesIndex < authorIndex,
+-      expected: true,
+-    });
+-  });
+-});
+-
+-describe("CLI success message", () => {
+-  test("success message excludes About the Author text", async () => {
+-    // Test with dry-run and force to avoid file operation errors
+-    const { stdout } = await execAsync(`node ${cliPath} --dry-run --force`);
+-
+-    assert({
+-      given: "CLI command completes successfully",
+-      should: "not include About the Author in success message",
+-      actual: stdout.includes("About the Author"),
+-      expected: false,
+-    });
+-  });
+-});
+diff --git a/lib/release-helpers-e2e.test.js b/lib/release-helpers-e2e.test.js
+new file mode 100644
+index 0000000..4f3123a
+--- /dev/null
++++ b/lib/release-helpers-e2e.test.js
+@@ -0,0 +1,88 @@
++import { assert } from "riteway/vitest";
++import { describe, test, beforeEach, afterEach } from "vitest";
++import { exec } from "child_process";
++import { promisify } from "util";
++
++import { updateLatestTag } from "./release-helpers.js";
++
++const execAsync = promisify(exec);
++
++describe("updateLatestTag integration", () => {
++  let originalLatestRef = null;
++  let testTagCreated = false;
++
++  beforeEach(async () => {
++    // Store current latest ref if it exists
++    try {
++      const { stdout } = await execAsync("git rev-parse latest");
++      originalLatestRef = stdout.trim();
++    } catch {
++      // No existing latest tag - that's fine
++      originalLatestRef = null;
++    }
++  });
++
++  afterEach(async () => {
++    // Clean up: remove test tag if we created one
++    if (testTagCreated) {
++      try {
++        await execAsync("git tag -d latest");
++        testTagCreated = false;
++      } catch {
++        // Tag might not exist, that's fine
++      }
++    }
++
++    // Restore original latest ref if it existed
++    if (originalLatestRef) {
++      try {
++        await execAsync(`git tag -f latest ${originalLatestRef}`);
++      } catch {
++        // If restore fails, that's a problem but don't fail the test
++      }
++    }
++  });
++
++  test("creates latest tag for stable version", async () => {
++    const stableVersion = "1.2.3";
++
++    // First, create a test version tag pointing to current HEAD
++    await execAsync(`git tag v${stableVersion}`);
++
++    const result = await updateLatestTag({
++      version: stableVersion,
++      dryRun: false,
++    });
++
++    // Clean up the test version tag
++    await execAsync(`git tag -d v${stableVersion}`);
++
++    // Verify the result
++    assert({
++      given: "a stable version with actual git operations",
++      should: "indicate successful tag creation",
++      actual: result.success,
++      expected: true,
++    });
++
++    // Verify the tag was actually created
++    try {
++      const { stdout } = await execAsync("git tag -l latest");
++      testTagCreated = true;
++
++      assert({
++        given: "successful updateLatestTag operation",
++        should: "create the latest git tag",
++        actual: stdout.trim(),
++        expected: "latest",
++      });
++    } catch (error) {
++      assert({
++        given: "git tag verification",
++        should: "not fail to find the created tag",
++        actual: false,
++        expected: true,
++      });
++    }
++  });
++});
+diff --git a/lib/release-helpers.test.js b/lib/release-helpers.test.js
+index 4ce3425..8f713b4 100644
+--- a/lib/release-helpers.test.js
++++ b/lib/release-helpers.test.js
+@@ -1,12 +1,8 @@
+ import { assert } from "riteway/vitest";
+-import { describe, test, beforeEach, afterEach } from "vitest";
+-import { exec } from "child_process";
+-import { promisify } from "util";
++import { describe, test } from "vitest";
+ 
+ import { isPrerelease, updateLatestTag } from "./release-helpers.js";
+ 
+-const execAsync = promisify(exec);
+-
+ describe("isPrerelease", () => {
+   test("stable version detection", () => {
+     const stableVersion = "1.2.3";
+@@ -89,83 +85,3 @@ describe("updateLatestTag", () => {
+     });
+   });
+ });
+-
+-describe("updateLatestTag integration", () => {
+-  let originalLatestRef = null;
+-  let testTagCreated = false;
+-
+-  beforeEach(async () => {
+-    // Store current latest ref if it exists
+-    try {
+-      const { stdout } = await execAsync("git rev-parse latest");
+-      originalLatestRef = stdout.trim();
+-    } catch {
+-      // No existing latest tag - that's fine
+-      originalLatestRef = null;
+-    }
+-  });
+-
+-  afterEach(async () => {
+-    // Clean up: remove test tag if we created one
+-    if (testTagCreated) {
+-      try {
+-        await execAsync("git tag -d latest");
+-        testTagCreated = false;
+-      } catch {
+-        // Tag might not exist, that's fine
+-      }
+-    }
+-
+-    // Restore original latest ref if it existed
+-    if (originalLatestRef) {
+-      try {
+-        await execAsync(`git tag -f latest ${originalLatestRef}`);
+-      } catch {
+-        // If restore fails, that's a problem but don't fail the test
+-      }
+-    }
+-  });
+-
+-  test("creates latest tag for stable version", async () => {
+-    const stableVersion = "1.2.3";
+-
+-    // First, create a test version tag pointing to current HEAD
+-    await execAsync(`git tag v${stableVersion}`);
+-
+-    const result = await updateLatestTag({
+-      version: stableVersion,
+-      dryRun: false,
+-    });
+-
+-    // Clean up the test version tag
+-    await execAsync(`git tag -d v${stableVersion}`);
+-
+-    // Verify the result
+-    assert({
+-      given: "a stable version with actual git operations",
+-      should: "indicate successful tag creation",
+-      actual: result.success,
+-      expected: true,
+-    });
+-
+-    // Verify the tag was actually created
+-    try {
+-      const { stdout } = await execAsync("git tag -l latest");
+-      testTagCreated = true;
+-
+-      assert({
+-        given: "successful updateLatestTag operation",
+-        should: "create the latest git tag",
+-        actual: stdout.trim(),
+-        expected: "latest",
+-      });
+-    } catch (error) {
+-      assert({
+-        given: "git tag verification",
+-        should: "not fail to find the created tag",
+-        actual: false,
+-        expected: true,
+-      });
+-    }
+-  });
+-});
+diff --git a/lib/update-latest-tag-hook.test.js b/lib/update-latest-tag-hook-e2e.test.js
+similarity index 100%
+rename from lib/update-latest-tag-hook.test.js
+rename to lib/update-latest-tag-hook-e2e.test.js
+diff --git a/package.json b/package.json
+index decc8b4..5e1ae51 100644
+--- a/package.json
++++ b/package.json
+@@ -13,6 +13,8 @@
+     "format": "prettier --write . && echo 'Format complete.'",
+     "format:check": "prettier --check . && echo 'Format check complete.'",
+     "test": "vitest run && echo 'Test complete.' && npm run -s lint",
++    "test:unit": "vitest run --exclude '**/*-e2e.test.js' && echo 'Unit tests complete.' && npm run -s lint",
++    "test:e2e": "vitest run **/*-e2e.test.js && echo 'E2E tests complete.'",
+     "check-status": "[ -n \"$(git status --porcelain)\" ] && { echo '❌ Uncommitted changes'; exit 1; } || echo '✅ Git status is clean.'",
+     "prepare": "husky",
+     "toc": "doctoc README.md"
+diff --git a/tasks/archive/2025-10-20-help-command-clarity-epic.md b/tasks/archive/2025-10-20-help-command-clarity-epic.md
+new file mode 100644
+index 0000000..f0cfe44
+--- /dev/null
++++ b/tasks/archive/2025-10-20-help-command-clarity-epic.md
+@@ -0,0 +1,53 @@
++# Help Command Clarity Epic
++
++**Status**: ✅ COMPLETED (2025-10-20)  
++**Goal**: Make `--help` a scannable quick start that clarifies AI workflow commands
++
++## Overview
++
++Users see workflow commands like `/discover` and `/task` in `--help` but nothing indicates these are AI assistant commands, not CLI. The help also duplicates content across sections. Simplify to match README's concise Quick Start: options, brief examples, clear next steps.
++
++---
++
++## Add AI Assistant Context to Workflow Commands
++
++Update workflow commands section header and instruction text.
++
++**Requirements**:
++
++- Given commands like `/discover` appear to be CLI commands, should state "use in your AI assistant chat" in section header
++- Given `/log` and `/commit` are missing, should include complete list of six commands
++- Given "Use /help [command]" implies CLI usage, should say "After installation, ask your AI agent: /help"
++
++---
++
++## Simplify Quick Start
++
++Replace "Getting Started" and "Examples" sections with README's Quick Start format.
++
++**Requirements**:
++
++- Given the README has a proven Quick Start structure, should match it: "To install for Cursor" and "Install without Cursor integration" with minimal examples
++- Given the help already shows options, should remove redundant detailed examples that duplicate the options table
++
++---
++
++## Streamline Help Output
++
++Remove or integrate "Recommended" section and other redundant content.
++
++**Requirements**:
++
++- Given "Recommended" section repeats workflow info, should remove or fold key points into workflow section
++- Given help should fit one terminal screen, should eliminate detailed guidance that belongs in README
++
++---
++
++## Update Tests
++
++Verify help text changes.
++
++**Requirements**:
++
++- Given workflow section changed, should test for "AI assistant chat" text and six commands
++- Given sections were merged, should verify "Quick Start" exists and redundant sections removed
+diff --git a/tasks/help-command-clarity-epic.md b/tasks/help-command-clarity-epic.md
+new file mode 100644
+index 0000000..f0cfe44
+--- /dev/null
++++ b/tasks/help-command-clarity-epic.md
+@@ -0,0 +1,53 @@
++# Help Command Clarity Epic
++
++**Status**: ✅ COMPLETED (2025-10-20)  
++**Goal**: Make `--help` a scannable quick start that clarifies AI workflow commands
++
++## Overview
++
++Users see workflow commands like `/discover` and `/task` in `--help` but nothing indicates these are AI assistant commands, not CLI. The help also duplicates content across sections. Simplify to match README's concise Quick Start: options, brief examples, clear next steps.
++
++---
++
++## Add AI Assistant Context to Workflow Commands
++
++Update workflow commands section header and instruction text.
++
++**Requirements**:
++
++- Given commands like `/discover` appear to be CLI commands, should state "use in your AI assistant chat" in section header
++- Given `/log` and `/commit` are missing, should include complete list of six commands
++- Given "Use /help [command]" implies CLI usage, should say "After installation, ask your AI agent: /help"
++
++---
++
++## Simplify Quick Start
++
++Replace "Getting Started" and "Examples" sections with README's Quick Start format.
++
++**Requirements**:
++
++- Given the README has a proven Quick Start structure, should match it: "To install for Cursor" and "Install without Cursor integration" with minimal examples
++- Given the help already shows options, should remove redundant detailed examples that duplicate the options table
++
++---
++
++## Streamline Help Output
++
++Remove or integrate "Recommended" section and other redundant content.
++
++**Requirements**:
++
++- Given "Recommended" section repeats workflow info, should remove or fold key points into workflow section
++- Given help should fit one terminal screen, should eliminate detailed guidance that belongs in README
++
++---
++
++## Update Tests
++
++Verify help text changes.
++
++**Requirements**:
++
++- Given workflow section changed, should test for "AI assistant chat" text and six commands
++- Given sections were merged, should verify "Quick Start" exists and redundant sections removed
