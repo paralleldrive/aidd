@@ -12,15 +12,20 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [...compat.extends("prettier"), {
-  plugins: {
-    prettier: (await import("eslint-plugin-prettier")).default,
+const eslintConfig = [
+  ...compat.extends("prettier"),
+  {
+    plugins: {
+      prettier: (await import("eslint-plugin-prettier")).default,
+    },
+    rules: {
+      "prettier/prettier": "error",
+    },
   },
-  rules: {
-    "prettier/prettier": "error",
+  {
+    ignores: ["node_modules/**", "coverage/**"],
   },
-}, {
-  ignores: ["node_modules/**", "coverage/**"],
-}, ...storybook.configs["flat/recommended"]];
+  ...storybook.configs["flat/recommended"],
+];
 
 export default eslintConfig;

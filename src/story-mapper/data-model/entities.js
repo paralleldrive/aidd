@@ -1,4 +1,4 @@
-import { createId } from '@paralleldrive/cuid2';
+import { createId } from "@paralleldrive/cuid2";
 
 /**
  * Create a user story following the ProductManager schema
@@ -14,10 +14,10 @@ import { createId } from '@paralleldrive/cuid2';
 export const createStory = ({
   id = createId(),
   name,
-  description = '',
-  priority = 'medium',
+  description = "",
+  priority = "medium",
   points = 3,
-  status = 'backlog'
+  status = "backlog",
 } = {}) => {
   const now = Date.now();
 
@@ -29,7 +29,7 @@ export const createStory = ({
     points,
     status,
     createdAt: now,
-    updatedAt: now
+    updatedAt: now,
   };
 };
 
@@ -45,8 +45,8 @@ export const createStory = ({
 export const createStep = ({
   id = createId(),
   name,
-  description = '',
-  stories = []
+  description = "",
+  stories = [],
 } = {}) => {
   const now = Date.now();
 
@@ -56,7 +56,7 @@ export const createStep = ({
     description,
     stories,
     createdAt: now,
-    updatedAt: now
+    updatedAt: now,
   };
 };
 
@@ -72,8 +72,8 @@ export const createStep = ({
 export const createJourney = ({
   id = createId(),
   name,
-  description = '',
-  steps = []
+  description = "",
+  steps = [],
 } = {}) => {
   const now = Date.now();
 
@@ -83,6 +83,6 @@ export const createJourney = ({
     description,
     steps,
     createdAt: now,
-    updatedAt: now
+    updatedAt: now,
   };
 };
