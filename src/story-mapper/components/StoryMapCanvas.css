@@ -1,0 +1,99 @@
+/* StoryMapCanvas - Main container for the story mapping interface */
+
+.story-map-canvas {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0a1f 0%, #1a0a2e 50%, #16213e 100%);
+  padding: 2rem 1rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  contain: layout;
+}
+
+.journeys-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* Empty state */
+.journeys-container:empty::after {
+  content: 'No journeys yet. Click "Add Journey" to get started.';
+  display: block;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--color-text-secondary, #a0a0c0);
+  font-size: 1.125rem;
+  font-style: italic;
+  opacity: 0.7;
+  border: 3px dashed rgba(0, 217, 255, 0.3);
+  border-radius: 16px;
+  background: rgba(0, 217, 255, 0.05);
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .story-map-canvas {
+    padding: 3rem 2rem;
+  }
+
+  .journeys-container {
+    gap: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .story-map-canvas {
+    padding: 4rem 3rem;
+  }
+}
+
+/* Scrollbar styling */
+.story-map-canvas::-webkit-scrollbar {
+  width: 12px;
+}
+
+.story-map-canvas::-webkit-scrollbar-track {
+  background: rgba(10, 10, 31, 0.5);
+}
+
+.story-map-canvas::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(0, 217, 255, 0.4), rgba(0, 102, 255, 0.4));
+  border-radius: 6px;
+  border: 2px solid rgba(10, 10, 31, 0.5);
+}
+
+.story-map-canvas::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(0, 217, 255, 0.6), rgba(0, 102, 255, 0.6));
+}
+
+/* Add Journey Button (future enhancement) */
+.add-journey-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  border: 3px dashed rgba(0, 217, 255, 0.4);
+  border-radius: 16px;
+  background: rgba(0, 217, 255, 0.05);
+  color: var(--color-accent, #00d9ff);
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 80px;
+}
+
+.add-journey-btn:hover {
+  border-color: rgba(0, 217, 255, 0.6);
+  background: rgba(0, 217, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 217, 255, 0.2);
+}
+
+.add-journey-btn:active {
+  transform: translateY(0);
+}

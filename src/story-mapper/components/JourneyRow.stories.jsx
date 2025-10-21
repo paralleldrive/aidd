@@ -1,30 +1,34 @@
-import { JourneyRow } from './JourneyRow.jsx';
-import { createJourney, createStep, createStory } from '../data-model/entities.js';
-import './JourneyRow.css';
-import './StepColumn.css';
-import './StoryCard.css';
+import { JourneyRow } from "./JourneyRow.jsx";
+import {
+  createJourney,
+  createStep,
+  createStory,
+} from "../data-model/entities.js";
+import "./JourneyRow.css";
+import "./StepColumn.css";
+import "./StoryCard.css";
 
 export default {
-  title: 'Story Mapper/JourneyRow',
+  title: "Story Mapper/JourneyRow",
   component: JourneyRow,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
     backgrounds: {
-      default: 'dark',
+      default: "dark",
       values: [
         {
-          name: 'dark',
+          name: "dark",
           value:
-            'linear-gradient(135deg, #0a0a1f 0%, #1a0a2e 50%, #16213e 100%)',
+            "linear-gradient(135deg, #0a0a1f 0%, #1a0a2e 50%, #16213e 100%)",
         },
       ],
     },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
-    onEditJourney: { action: 'edit journey' },
-    onEditStep: { action: 'edit step' },
-    onEditStory: { action: 'edit story' },
+    onEditJourney: { action: "edit journey" },
+    onEditStep: { action: "edit step" },
+    onEditStory: { action: "edit story" },
   },
 };
 
@@ -34,11 +38,11 @@ export default {
 export const EmptyJourneyCyan = {
   args: {
     journey: createJourney({
-      name: 'User Onboarding',
-      description: 'Complete onboarding flow for new users',
+      name: "User Onboarding",
+      description: "Complete onboarding flow for new users",
       steps: [],
     }),
-    variant: 'cyan',
+    variant: "cyan",
   },
 };
 
@@ -48,11 +52,11 @@ export const EmptyJourneyCyan = {
 export const EmptyJourneyMagenta = {
   args: {
     journey: createJourney({
-      name: 'Premium Features',
-      description: 'Premium tier functionality',
+      name: "Premium Features",
+      description: "Premium tier functionality",
       steps: [],
     }),
-    variant: 'magenta',
+    variant: "magenta",
   },
 };
 
@@ -62,30 +66,32 @@ export const EmptyJourneyMagenta = {
 export const SingleStepCyan = {
   args: {
     journey: createJourney({
-      name: 'Authentication Journey',
-      description: 'User authentication and security',
+      name: "Authentication Journey",
+      description: "User authentication and security",
       steps: [
         createStep({
-          name: 'Login Flow',
-          description: 'Steps for user login',
+          name: "Login Flow",
+          description: "Steps for user login",
           stories: [
             createStory({
-              name: 'User login',
-              description: 'As a user, I want to log in so that I can access my account',
-              priority: 'high',
+              name: "User login",
+              description:
+                "As a user, I want to log in so that I can access my account",
+              priority: "high",
               points: 5,
             }),
             createStory({
-              name: 'Password reset',
-              description: 'As a user, I want to reset my password if I forget it',
-              priority: 'high',
+              name: "Password reset",
+              description:
+                "As a user, I want to reset my password if I forget it",
+              priority: "high",
               points: 3,
             }),
           ],
         }),
       ],
     }),
-    variant: 'cyan',
+    variant: "cyan",
   },
 };
 
@@ -95,66 +101,67 @@ export const SingleStepCyan = {
 export const MultipleStepsMagenta = {
   args: {
     journey: createJourney({
-      name: 'E-commerce Flow',
-      description: 'Complete shopping experience',
+      name: "E-commerce Flow",
+      description: "Complete shopping experience",
       steps: [
         createStep({
-          name: 'Browse Products',
-          description: 'Product discovery and browsing',
+          name: "Browse Products",
+          description: "Product discovery and browsing",
           stories: [
             createStory({
-              name: 'View product catalog',
-              description: 'As a customer, I want to browse products',
-              priority: 'high',
+              name: "View product catalog",
+              description: "As a customer, I want to browse products",
+              priority: "high",
               points: 8,
             }),
             createStory({
-              name: 'Filter products',
-              description: 'As a customer, I want to filter products by category',
-              priority: 'medium',
+              name: "Filter products",
+              description:
+                "As a customer, I want to filter products by category",
+              priority: "medium",
               points: 5,
             }),
           ],
         }),
         createStep({
-          name: 'Shopping Cart',
-          description: 'Cart management',
+          name: "Shopping Cart",
+          description: "Cart management",
           stories: [
             createStory({
-              name: 'Add to cart',
-              description: 'As a customer, I want to add products to my cart',
-              priority: 'high',
+              name: "Add to cart",
+              description: "As a customer, I want to add products to my cart",
+              priority: "high",
               points: 5,
             }),
             createStory({
-              name: 'Update quantities',
-              description: 'As a customer, I want to change item quantities',
-              priority: 'medium',
+              name: "Update quantities",
+              description: "As a customer, I want to change item quantities",
+              priority: "medium",
               points: 3,
             }),
           ],
         }),
         createStep({
-          name: 'Checkout',
-          description: 'Complete purchase',
+          name: "Checkout",
+          description: "Complete purchase",
           stories: [
             createStory({
-              name: 'Enter shipping info',
-              description: 'As a customer, I want to enter my shipping address',
-              priority: 'high',
+              name: "Enter shipping info",
+              description: "As a customer, I want to enter my shipping address",
+              priority: "high",
               points: 5,
             }),
             createStory({
-              name: 'Process payment',
-              description: 'As a customer, I want to pay securely',
-              priority: 'high',
+              name: "Process payment",
+              description: "As a customer, I want to pay securely",
+              priority: "high",
               points: 13,
             }),
           ],
         }),
       ],
     }),
-    variant: 'magenta',
+    variant: "magenta",
   },
 };
 
@@ -164,37 +171,37 @@ export const MultipleStepsMagenta = {
 export const EditableCyan = {
   args: {
     journey: createJourney({
-      name: 'User Dashboard',
-      description: 'Main application dashboard',
+      name: "User Dashboard",
+      description: "Main application dashboard",
       steps: [
         createStep({
-          name: 'Overview',
+          name: "Overview",
           stories: [
             createStory({
-              name: 'View metrics',
-              priority: 'high',
+              name: "View metrics",
+              priority: "high",
               points: 8,
             }),
           ],
         }),
         createStep({
-          name: 'Reports',
+          name: "Reports",
           stories: [
             createStory({
-              name: 'Generate report',
-              priority: 'medium',
+              name: "Generate report",
+              priority: "medium",
               points: 5,
             }),
             createStory({
-              name: 'Export data',
-              priority: 'low',
+              name: "Export data",
+              priority: "low",
               points: 3,
             }),
           ],
         }),
       ],
     }),
-    variant: 'cyan',
+    variant: "cyan",
     onEditJourney: (journey) => alert(`Edit journey: ${journey.name}`),
     onEditStep: (step) => alert(`Edit step: ${step.name}`),
     onEditStory: (story) => alert(`Edit story: ${story.name}`),
@@ -207,41 +214,53 @@ export const EditableCyan = {
 export const ComplexJourneyMagenta = {
   args: {
     journey: createJourney({
-      name: 'Platform Administration',
-      description: 'Admin and configuration features',
+      name: "Platform Administration",
+      description: "Admin and configuration features",
       steps: [
         createStep({
-          name: 'User Management',
+          name: "User Management",
           stories: [
-            createStory({ name: 'List users', priority: 'high', points: 5 }),
-            createStory({ name: 'Create user', priority: 'high', points: 5 }),
-            createStory({ name: 'Edit permissions', priority: 'medium', points: 8 }),
+            createStory({ name: "List users", priority: "high", points: 5 }),
+            createStory({ name: "Create user", priority: "high", points: 5 }),
+            createStory({
+              name: "Edit permissions",
+              priority: "medium",
+              points: 8,
+            }),
           ],
         }),
         createStep({
-          name: 'Settings',
+          name: "Settings",
           stories: [
-            createStory({ name: 'Configure app', priority: 'high', points: 8 }),
-            createStory({ name: 'Manage integrations', priority: 'medium', points: 5 }),
+            createStory({ name: "Configure app", priority: "high", points: 8 }),
+            createStory({
+              name: "Manage integrations",
+              priority: "medium",
+              points: 5,
+            }),
           ],
         }),
         createStep({
-          name: 'Analytics',
+          name: "Analytics",
           stories: [
-            createStory({ name: 'View analytics', priority: 'medium', points: 8 }),
-            createStory({ name: 'Custom reports', priority: 'low', points: 5 }),
+            createStory({
+              name: "View analytics",
+              priority: "medium",
+              points: 8,
+            }),
+            createStory({ name: "Custom reports", priority: "low", points: 5 }),
           ],
         }),
         createStep({
-          name: 'Security',
+          name: "Security",
           stories: [
-            createStory({ name: 'Audit logs', priority: 'high', points: 8 }),
-            createStory({ name: '2FA setup', priority: 'high', points: 5 }),
+            createStory({ name: "Audit logs", priority: "high", points: 8 }),
+            createStory({ name: "2FA setup", priority: "high", points: 5 }),
           ],
         }),
       ],
     }),
-    variant: 'magenta',
+    variant: "magenta",
     onEditJourney: (journey) => alert(`Edit journey: ${journey.name}`),
     onEditStep: (step) => alert(`Edit step: ${step.name}`),
     onEditStory: (story) => alert(`Edit story: ${story.name}`),
