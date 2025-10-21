@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Story Mapper - GenAI-First User Story Mapping</title>
+  <title>Story Mapper - User Story Mapping Tool</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -14,13 +14,8 @@
       <h1 class="app-title">
         <span class="ai-sparkle">✨</span>
         Story Mapper
-        <span class="beta-badge glass-badge">GenAI-First</span>
       </h1>
       <div class="header-actions">
-        <button class="glass-button ai-assist-btn">
-          <span class="ai-icon">🤖</span>
-          AI Assistant
-        </button>
         <button class="glass-button">
           <span>👤</span>
           Share
@@ -32,72 +27,69 @@
   <!-- Main Canvas -->
   <main class="story-mapper-canvas">
 
-    <!-- Mini-map (top-right corner) -->
-    <div class="mini-map glass-surface">
-      <div class="mini-map-viewport"></div>
-    </div>
-
     <!-- Canvas Wrapper with scroll -->
     <div class="canvas-wrapper">
 
-      <!-- Journey: User Onboarding -->
+      <!-- Journey: Product Discovery -->
       <div class="journey-container">
-        <div class="journey-header glass-surface neon-border-cyan">
-          <h2 class="journey-title">User Onboarding</h2>
-          <div class="journey-meta">
-            <span class="meta-tag">5 steps</span>
-            <span class="meta-tag">12 stories</span>
-          </div>
+        <div class="journey-header glass-surface neon-border-cyan editable"
+             data-type="journey"
+             data-id="journey-1"
+             data-name="Product Discovery"
+             data-description="Understanding user needs and planning the story mapping tool">
+          <h2 class="journey-title">Product Discovery</h2>
+          <button class="edit-hint" aria-label="Click to edit">✏️</button>
         </div>
 
         <div class="steps-container">
 
           <!-- Step 1 -->
           <div class="step-column">
-            <div class="step-header glass-surface">
-              <h3 class="step-title">Discover Product</h3>
-              <span class="step-badge">3 stories</span>
+            <div class="step-header glass-surface editable"
+                 data-type="step"
+                 data-id="step-1"
+                 data-name="Research Users"
+                 data-description="Understand who will use the story mapper and their pain points">
+              <h3 class="step-title">Research Users</h3>
+              <button class="edit-hint-sm" aria-label="Click to edit">✏️</button>
             </div>
 
             <div class="stories-stack">
               <!-- Story 1 -->
-              <div class="story-card glass-surface ai-generated">
+              <div class="story-card glass-surface editable"
+                   data-type="story"
+                   data-id="story-1"
+                   data-name="Interview product managers"
+                   data-description="As a product researcher, I want to interview 10 product managers, so that I understand their current story mapping workflow"
+                   data-priority="high"
+                   data-points="5">
                 <div class="story-header">
-                  <span class="story-id">USR-001</span>
-                  <span class="ai-badge" title="AI Generated">✨</span>
+                  <span class="story-id">DSC-001</span>
                 </div>
-                <h4 class="story-title">Landing page visit</h4>
-                <p class="story-description">As a visitor, I want to understand the product value within 5 seconds</p>
+                <h4 class="story-title">Interview product managers</h4>
+                <p class="story-description">As a product researcher, I want to interview 10 product managers, so that I understand their current story mapping workflow</p>
                 <div class="story-footer">
-                  <span class="story-tag">High Priority</span>
+                  <span class="story-tag priority-high">High</span>
                   <span class="story-points">5 pts</span>
                 </div>
               </div>
 
               <!-- Story 2 -->
-              <div class="story-card glass-surface">
+              <div class="story-card glass-surface editable"
+                   data-type="story"
+                   data-id="story-2"
+                   data-name="Analyze Avion UX"
+                   data-description="As a UX designer, I want to analyze Avion's interface patterns, so that I can learn proven story mapping UX"
+                   data-priority="high"
+                   data-points="3">
                 <div class="story-header">
-                  <span class="story-id">USR-002</span>
+                  <span class="story-id">DSC-002</span>
                 </div>
-                <h4 class="story-title">View demo video</h4>
-                <p class="story-description">As a visitor, I want to watch a quick demo to see the product in action</p>
+                <h4 class="story-title">Analyze Avion UX</h4>
+                <p class="story-description">As a UX designer, I want to analyze Avion's interface patterns, so that I can learn proven story mapping UX</p>
                 <div class="story-footer">
-                  <span class="story-tag">Medium Priority</span>
+                  <span class="story-tag priority-high">High</span>
                   <span class="story-points">3 pts</span>
-                </div>
-              </div>
-
-              <!-- Story 3 -->
-              <div class="story-card glass-surface ai-generated">
-                <div class="story-header">
-                  <span class="story-id">USR-003</span>
-                  <span class="ai-badge" title="AI Generated">✨</span>
-                </div>
-                <h4 class="story-title">Read testimonials</h4>
-                <p class="story-description">As a visitor, I want to see social proof from real users</p>
-                <div class="story-footer">
-                  <span class="story-tag">Low Priority</span>
-                  <span class="story-points">2 pts</span>
                 </div>
               </div>
             </div>
@@ -105,36 +97,32 @@
 
           <!-- Step 2 -->
           <div class="step-column">
-            <div class="step-header glass-surface">
-              <h3 class="step-title">Sign Up</h3>
-              <span class="step-badge">2 stories</span>
+            <div class="step-header glass-surface editable"
+                 data-type="step"
+                 data-id="step-2"
+                 data-name="Define Value Proposition"
+                 data-description="Clarify what makes our story mapper unique and valuable">
+              <h3 class="step-title">Define Value Proposition</h3>
+              <button class="edit-hint-sm" aria-label="Click to edit">✏️</button>
             </div>
 
             <div class="stories-stack">
-              <!-- Story 4 -->
-              <div class="story-card glass-surface ai-generated">
+              <!-- Story 3 -->
+              <div class="story-card glass-surface editable"
+                   data-type="story"
+                   data-id="story-3"
+                   data-name="Define GenAI integration points"
+                   data-description="As a product manager, I want to identify where AI adds value, so that we build a GenAI-first tool not just GenAI-wrapped"
+                   data-priority="high"
+                   data-points="8">
                 <div class="story-header">
-                  <span class="story-id">USR-004</span>
-                  <span class="ai-badge" title="AI Generated">✨</span>
+                  <span class="story-id">DSC-003</span>
                 </div>
-                <h4 class="story-title">OAuth registration</h4>
-                <p class="story-description">As a visitor, I want to sign up with Google/GitHub in one click</p>
+                <h4 class="story-title">Define GenAI integration points</h4>
+                <p class="story-description">As a product manager, I want to identify where AI adds value, so that we build a GenAI-first tool not just GenAI-wrapped</p>
                 <div class="story-footer">
-                  <span class="story-tag">High Priority</span>
+                  <span class="story-tag priority-high">High</span>
                   <span class="story-points">8 pts</span>
-                </div>
-              </div>
-
-              <!-- Story 5 -->
-              <div class="story-card glass-surface">
-                <div class="story-header">
-                  <span class="story-id">USR-005</span>
-                </div>
-                <h4 class="story-title">Email verification</h4>
-                <p class="story-description">As a new user, I want to verify my email to secure my account</p>
-                <div class="story-footer">
-                  <span class="story-tag">High Priority</span>
-                  <span class="story-points">5 pts</span>
                 </div>
               </div>
             </div>
@@ -142,124 +130,32 @@
 
           <!-- Step 3 -->
           <div class="step-column">
-            <div class="step-header glass-surface">
-              <h3 class="step-title">Complete Profile</h3>
-              <span class="step-badge">2 stories</span>
+            <div class="step-header glass-surface editable"
+                 data-type="step"
+                 data-id="step-3"
+                 data-name="Create Visual Design"
+                 data-description="Design the look and feel of the interface">
+              <h3 class="step-title">Create Visual Design</h3>
+              <button class="edit-hint-sm" aria-label="Click to edit">✏️</button>
             </div>
 
             <div class="stories-stack">
-              <!-- Story 6 -->
-              <div class="story-card glass-surface ai-generated">
+              <!-- Story 4 -->
+              <div class="story-card glass-surface editable"
+                   data-type="story"
+                   data-id="story-4"
+                   data-name="Design cyberglassmorphism theme"
+                   data-description="As a UI designer, I want to create a dark mode cyberglassmorphism design system, so that the interface feels modern and futuristic"
+                   data-priority="medium"
+                   data-points="5">
                 <div class="story-header">
-                  <span class="story-id">USR-006</span>
-                  <span class="ai-badge" title="AI Generated">✨</span>
+                  <span class="story-id">DSC-004</span>
                 </div>
-                <h4 class="story-title">Set preferences</h4>
-                <p class="story-description">As a new user, I want to configure my preferences for personalized experience</p>
+                <h4 class="story-title">Design cyberglassmorphism theme</h4>
+                <p class="story-description">As a UI designer, I want to create a dark mode cyberglassmorphism design system, so that the interface feels modern and futuristic</p>
                 <div class="story-footer">
-                  <span class="story-tag">Medium Priority</span>
-                  <span class="story-points">3 pts</span>
-                </div>
-              </div>
-
-              <!-- Story 7 -->
-              <div class="story-card glass-surface">
-                <div class="story-header">
-                  <span class="story-id">USR-007</span>
-                </div>
-                <h4 class="story-title">Upload avatar</h4>
-                <p class="story-description">As a new user, I want to add a profile picture</p>
-                <div class="story-footer">
-                  <span class="story-tag">Low Priority</span>
-                  <span class="story-points">2 pts</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Step 4 -->
-          <div class="step-column">
-            <div class="step-header glass-surface">
-              <h3 class="step-title">Take Interactive Tour</h3>
-              <span class="step-badge">3 stories</span>
-            </div>
-
-            <div class="stories-stack">
-              <!-- Story 8 -->
-              <div class="story-card glass-surface ai-generated">
-                <div class="story-header">
-                  <span class="story-id">USR-008</span>
-                  <span class="ai-badge" title="AI Generated">✨</span>
-                </div>
-                <h4 class="story-title">Guided walkthrough</h4>
-                <p class="story-description">As a new user, I want a step-by-step tour of key features</p>
-                <div class="story-footer">
-                  <span class="story-tag">High Priority</span>
+                  <span class="story-tag priority-medium">Medium</span>
                   <span class="story-points">5 pts</span>
-                </div>
-              </div>
-
-              <!-- Story 9 -->
-              <div class="story-card glass-surface">
-                <div class="story-header">
-                  <span class="story-id">USR-009</span>
-                </div>
-                <h4 class="story-title">Skip tour option</h4>
-                <p class="story-description">As an experienced user, I want to skip the tour and start immediately</p>
-                <div class="story-footer">
-                  <span class="story-tag">Medium Priority</span>
-                  <span class="story-points">1 pt</span>
-                </div>
-              </div>
-
-              <!-- Story 10 -->
-              <div class="story-card glass-surface ai-generated">
-                <div class="story-header">
-                  <span class="story-id">USR-010</span>
-                  <span class="ai-badge" title="AI Generated">✨</span>
-                </div>
-                <h4 class="story-title">Interactive tooltips</h4>
-                <p class="story-description">As a new user, I want contextual tooltips when I hover over features</p>
-                <div class="story-footer">
-                  <span class="story-tag">Medium Priority</span>
-                  <span class="story-points">3 pts</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Step 5 -->
-          <div class="step-column">
-            <div class="step-header glass-surface">
-              <h3 class="step-title">Complete First Action</h3>
-              <span class="step-badge">2 stories</span>
-            </div>
-
-            <div class="stories-stack">
-              <!-- Story 11 -->
-              <div class="story-card glass-surface ai-generated">
-                <div class="story-header">
-                  <span class="story-id">USR-011</span>
-                  <span class="ai-badge" title="AI Generated">✨</span>
-                </div>
-                <h4 class="story-title">Create first project</h4>
-                <p class="story-description">As a new user, I want to create my first project to experience core functionality</p>
-                <div class="story-footer">
-                  <span class="story-tag">High Priority</span>
-                  <span class="story-points">8 pts</span>
-                </div>
-              </div>
-
-              <!-- Story 12 -->
-              <div class="story-card glass-surface">
-                <div class="story-header">
-                  <span class="story-id">USR-012</span>
-                </div>
-                <h4 class="story-title">Celebrate success</h4>
-                <p class="story-description">As a new user, I want positive feedback when I complete onboarding</p>
-                <div class="story-footer">
-                  <span class="story-tag">Medium Priority</span>
-                  <span class="story-points">2 pts</span>
                 </div>
               </div>
             </div>
@@ -268,49 +164,84 @@
         </div>
       </div>
 
-      <!-- Journey: Core Workflow -->
+      <!-- Journey: Build UI Prototype -->
       <div class="journey-container">
-        <div class="journey-header glass-surface neon-border-magenta">
-          <h2 class="journey-title">Core Workflow</h2>
-          <div class="journey-meta">
-            <span class="meta-tag">4 steps</span>
-            <span class="meta-tag">8 stories</span>
-          </div>
+        <div class="journey-header glass-surface neon-border-magenta editable"
+             data-type="journey"
+             data-id="journey-2"
+             data-name="Build UI Prototype"
+             data-description="Creating the interactive prototype with mobile-first design">
+          <h2 class="journey-title">Build UI Prototype</h2>
+          <button class="edit-hint" aria-label="Click to edit">✏️</button>
         </div>
 
         <div class="steps-container">
 
           <!-- Step 1 -->
           <div class="step-column">
-            <div class="step-header glass-surface">
-              <h3 class="step-title">Navigate Dashboard</h3>
-              <span class="step-badge">2 stories</span>
+            <div class="step-header glass-surface editable"
+                 data-type="step"
+                 data-id="step-4"
+                 data-name="Build Three-Tier Layout"
+                 data-description="Implement journeys, steps, and stories hierarchy">
+              <h3 class="step-title">Build Three-Tier Layout</h3>
+              <button class="edit-hint-sm" aria-label="Click to edit">✏️</button>
             </div>
 
             <div class="stories-stack">
-              <!-- Story 13 -->
-              <div class="story-card glass-surface ai-generated">
+              <!-- Story 5 -->
+              <div class="story-card glass-surface editable"
+                   data-type="story"
+                   data-id="story-5"
+                   data-name="Create journey rows"
+                   data-description="As a developer, I want to implement horizontal journey rows, so that users can see all user journeys at a glance"
+                   data-priority="high"
+                   data-points="5">
                 <div class="story-header">
-                  <span class="story-id">WRK-001</span>
-                  <span class="ai-badge" title="AI Generated">✨</span>
+                  <span class="story-id">UI-001</span>
                 </div>
-                <h4 class="story-title">View project overview</h4>
-                <p class="story-description">As a user, I want to see all my projects at a glance with status indicators</p>
+                <h4 class="story-title">Create journey rows</h4>
+                <p class="story-description">As a developer, I want to implement horizontal journey rows, so that users can see all user journeys at a glance</p>
                 <div class="story-footer">
-                  <span class="story-tag">High Priority</span>
+                  <span class="story-tag priority-high">High</span>
                   <span class="story-points">5 pts</span>
                 </div>
               </div>
 
-              <!-- Story 14 -->
-              <div class="story-card glass-surface">
+              <!-- Story 6 -->
+              <div class="story-card glass-surface editable"
+                   data-type="story"
+                   data-id="story-6"
+                   data-name="Build step columns"
+                   data-description="As a developer, I want to create step columns beneath journeys, so that the sequential flow is clear"
+                   data-priority="high"
+                   data-points="5">
                 <div class="story-header">
-                  <span class="story-id">WRK-002</span>
+                  <span class="story-id">UI-002</span>
                 </div>
-                <h4 class="story-title">Search projects</h4>
-                <p class="story-description">As a user with many projects, I want to quickly search and filter</p>
+                <h4 class="story-title">Build step columns</h4>
+                <p class="story-description">As a developer, I want to create step columns beneath journeys, so that the sequential flow is clear</p>
                 <div class="story-footer">
-                  <span class="story-tag">Medium Priority</span>
+                  <span class="story-tag priority-high">High</span>
+                  <span class="story-points">5 pts</span>
+                </div>
+              </div>
+
+              <!-- Story 7 -->
+              <div class="story-card glass-surface editable"
+                   data-type="story"
+                   data-id="story-7"
+                   data-name="Stack story cards vertically"
+                   data-description="As a developer, I want to stack user story cards beneath steps, so that all stories contributing to a step are visible"
+                   data-priority="high"
+                   data-points="3">
+                <div class="story-header">
+                  <span class="story-id">UI-003</span>
+                </div>
+                <h4 class="story-title">Stack story cards vertically</h4>
+                <p class="story-description">As a developer, I want to stack user story cards beneath steps, so that all stories contributing to a step are visible</p>
+                <div class="story-footer">
+                  <span class="story-tag priority-high">High</span>
                   <span class="story-points">3 pts</span>
                 </div>
               </div>
@@ -319,49 +250,50 @@
 
           <!-- Step 2 -->
           <div class="step-column">
-            <div class="step-header glass-surface">
-              <h3 class="step-title">Create Story Map</h3>
-              <span class="step-badge">3 stories</span>
+            <div class="step-header glass-surface editable"
+                 data-type="step"
+                 data-id="step-5"
+                 data-name="Optimize for Mobile"
+                 data-description="Ensure the story mapper works great on small screens">
+              <h3 class="step-title">Optimize for Mobile</h3>
+              <button class="edit-hint-sm" aria-label="Click to edit">✏️</button>
             </div>
 
             <div class="stories-stack">
-              <!-- Story 15 -->
-              <div class="story-card glass-surface ai-generated">
+              <!-- Story 8 -->
+              <div class="story-card glass-surface editable"
+                   data-type="story"
+                   data-id="story-8"
+                   data-name="Mobile-first responsive layout"
+                   data-description="As a mobile user, I want the layout to adapt to my screen size, so that I can use the tool on my phone"
+                   data-priority="high"
+                   data-points="8">
                 <div class="story-header">
-                  <span class="story-id">WRK-003</span>
-                  <span class="ai-badge" title="AI Generated">✨</span>
+                  <span class="story-id">UI-004</span>
                 </div>
-                <h4 class="story-title">AI-generated journeys</h4>
-                <p class="story-description">As a product manager, I want AI to suggest user journeys based on my product description</p>
+                <h4 class="story-title">Mobile-first responsive layout</h4>
+                <p class="story-description">As a mobile user, I want the layout to adapt to my screen size, so that I can use the tool on my phone</p>
                 <div class="story-footer">
-                  <span class="story-tag">High Priority</span>
-                  <span class="story-points">13 pts</span>
-                </div>
-              </div>
-
-              <!-- Story 16 -->
-              <div class="story-card glass-surface ai-generated">
-                <div class="story-header">
-                  <span class="story-id">WRK-004</span>
-                  <span class="ai-badge" title="AI Generated">✨</span>
-                </div>
-                <h4 class="story-title">Drag-and-drop stories</h4>
-                <p class="story-description">As a product manager, I want to reorganize stories by dragging them</p>
-                <div class="story-footer">
-                  <span class="story-tag">High Priority</span>
+                  <span class="story-tag priority-high">High</span>
                   <span class="story-points">8 pts</span>
                 </div>
               </div>
 
-              <!-- Story 17 -->
-              <div class="story-card glass-surface">
+              <!-- Story 9 -->
+              <div class="story-card glass-surface editable"
+                   data-type="story"
+                   data-id="story-9"
+                   data-name="Touch-friendly interactions"
+                   data-description="As a mobile user, I want large tap targets and swipe gestures, so that the tool is easy to use on touchscreens"
+                   data-priority="high"
+                   data-points="5">
                 <div class="story-header">
-                  <span class="story-id">WRK-005</span>
+                  <span class="story-id">UI-005</span>
                 </div>
-                <h4 class="story-title">Inline editing</h4>
-                <p class="story-description">As a product manager, I want to edit story details without opening modals</p>
+                <h4 class="story-title">Touch-friendly interactions</h4>
+                <p class="story-description">As a mobile user, I want large tap targets and swipe gestures, so that the tool is easy to use on touchscreens</p>
                 <div class="story-footer">
-                  <span class="story-tag">Medium Priority</span>
+                  <span class="story-tag priority-high">High</span>
                   <span class="story-points">5 pts</span>
                 </div>
               </div>
@@ -370,59 +302,69 @@
 
           <!-- Step 3 -->
           <div class="step-column">
-            <div class="step-header glass-surface">
-              <h3 class="step-title">Collaborate with Team</h3>
-              <span class="step-badge">2 stories</span>
+            <div class="step-header glass-surface editable"
+                 data-type="step"
+                 data-id="step-6"
+                 data-name="Add Editing Capabilities"
+                 data-description="Enable users to edit journeys, steps, and stories">
+              <h3 class="step-title">Add Editing Capabilities</h3>
+              <button class="edit-hint-sm" aria-label="Click to edit">✏️</button>
             </div>
 
             <div class="stories-stack">
-              <!-- Story 18 -->
-              <div class="story-card glass-surface ai-generated">
+              <!-- Story 10 -->
+              <div class="story-card glass-surface editable"
+                   data-type="story"
+                   data-id="story-10"
+                   data-name="Click-to-edit journeys"
+                   data-description="As a product manager, I want to click journey titles to edit them, so that I can refine my user journeys"
+                   data-priority="high"
+                   data-points="5">
                 <div class="story-header">
-                  <span class="story-id">WRK-006</span>
-                  <span class="ai-badge" title="AI Generated">✨</span>
+                  <span class="story-id">UI-006</span>
                 </div>
-                <h4 class="story-title">Real-time collaboration</h4>
-                <p class="story-description">As a team member, I want to see others' cursors and edits in real-time</p>
+                <h4 class="story-title">Click-to-edit journeys</h4>
+                <p class="story-description">As a product manager, I want to click journey titles to edit them, so that I can refine my user journeys</p>
                 <div class="story-footer">
-                  <span class="story-tag">High Priority</span>
-                  <span class="story-points">13 pts</span>
-                </div>
-              </div>
-
-              <!-- Story 19 -->
-              <div class="story-card glass-surface">
-                <div class="story-header">
-                  <span class="story-id">WRK-007</span>
-                </div>
-                <h4 class="story-title">Comment on stories</h4>
-                <p class="story-description">As a team member, I want to add comments and questions to specific stories</p>
-                <div class="story-footer">
-                  <span class="story-tag">Medium Priority</span>
+                  <span class="story-tag priority-high">High</span>
                   <span class="story-points">5 pts</span>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <!-- Step 4 -->
-          <div class="step-column">
-            <div class="step-header glass-surface">
-              <h3 class="step-title">Plan Release</h3>
-              <span class="step-badge">1 story</span>
-            </div>
-
-            <div class="stories-stack">
-              <!-- Story 20 -->
-              <div class="story-card glass-surface ai-generated">
+              <!-- Story 11 -->
+              <div class="story-card glass-surface editable"
+                   data-type="story"
+                   data-id="story-11"
+                   data-name="Click-to-edit steps"
+                   data-description="As a product manager, I want to click step titles to edit them, so that I can adjust the journey flow"
+                   data-priority="high"
+                   data-points="3">
                 <div class="story-header">
-                  <span class="story-id">WRK-008</span>
-                  <span class="ai-badge" title="AI Generated">✨</span>
+                  <span class="story-id">UI-007</span>
                 </div>
-                <h4 class="story-title">Horizontal slicing for MVP</h4>
-                <p class="story-description">As a product manager, I want to draw horizontal lines to define release boundaries</p>
+                <h4 class="story-title">Click-to-edit steps</h4>
+                <p class="story-description">As a product manager, I want to click step titles to edit them, so that I can adjust the journey flow</p>
                 <div class="story-footer">
-                  <span class="story-tag">High Priority</span>
+                  <span class="story-tag priority-high">High</span>
+                  <span class="story-points">3 pts</span>
+                </div>
+              </div>
+
+              <!-- Story 12 -->
+              <div class="story-card glass-surface editable"
+                   data-type="story"
+                   data-id="story-12"
+                   data-name="Click-to-edit stories"
+                   data-description="As a product manager, I want to click story cards to edit all properties, so that I can maintain accurate story details"
+                   data-priority="high"
+                   data-points="8">
+                <div class="story-header">
+                  <span class="story-id">UI-008</span>
+                </div>
+                <h4 class="story-title">Click-to-edit stories</h4>
+                <p class="story-description">As a product manager, I want to click story cards to edit all properties, so that I can maintain accurate story details</p>
+                <div class="story-footer">
+                  <span class="story-tag priority-high">High</span>
                   <span class="story-points">8 pts</span>
                 </div>
               </div>
@@ -437,22 +379,61 @@
         <button class="add-journey-btn glass-surface">
           <span class="plus-icon">+</span>
           <span>Add Journey</span>
-          <span class="ai-suggestion" title="AI can suggest journeys">✨</span>
         </button>
       </div>
 
     </div>
   </main>
 
-  <!-- AI Chat Panel (collapsed state) -->
-  <aside class="ai-panel glass-surface">
-    <div class="ai-panel-header">
-      <span class="ai-icon-large">🤖</span>
-      <h3>AI Assistant</h3>
+  <!-- Edit Modal -->
+  <div class="modal-overlay" id="editModal" style="display: none;">
+    <div class="modal-content glass-surface">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Edit Journey</h2>
+        <button class="modal-close" id="closeModal" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="editForm">
+          <input type="hidden" id="editType">
+          <input type="hidden" id="editId">
+
+          <div class="form-group">
+            <label for="editName">Name</label>
+            <input type="text" id="editName" class="form-input glass-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="editDescription">Description</label>
+            <textarea id="editDescription" class="form-textarea glass-input" rows="3"></textarea>
+          </div>
+
+          <!-- Story-specific fields -->
+          <div id="storyFields" style="display: none;">
+            <div class="form-group">
+              <label for="editPriority">Priority</label>
+              <select id="editPriority" class="form-select glass-input">
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="editPoints">Story Points</label>
+              <input type="number" id="editPoints" class="form-input glass-input" min="1" max="100">
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary glass-button" id="cancelEdit">Cancel</button>
+            <button type="submit" class="btn-primary glass-button">Save Changes</button>
+          </div>
+        </form>
+      </div>
     </div>
-    <p class="ai-hint">Ask me to generate user journeys, refine stories, or suggest improvements...</p>
-    <input type="text" class="ai-input glass-input" placeholder="Describe your product or ask a question...">
-  </aside>
+  </div>
+
+  <script src="app.js"></script>
 
 </body>
 </html>
