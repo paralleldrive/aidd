@@ -1,0 +1,124 @@
+// Authentication API Interface Definitions
+// RESTful API contracts for Next.js serverless functions
+
+// POST /api/auth/signin
+SigninRequest {
+  email: Email
+}
+
+SigninResponse {
+  success: boolean
+  message: string // "Magic link sent to your email"
+}
+
+// POST /api/auth/signup
+SignupRequest {
+  email: Email
+  name: string
+}
+
+SignupResponse {
+  success: boolean
+  message: string
+  userId: UserId
+}
+
+// GET /api/auth/verify?token=xxx
+VerifyRequest {
+  token: Token
+}
+
+VerifyResponse {
+  success: boolean
+  user: User
+  sessionToken: Token
+  error?: string // "Invalid or expired link" | "Link has expired"
+}
+
+// POST /api/passkey/create (step 1: get challenge)
+PasskeyCreateChallengeRequest {
+  userId: UserId
+}
+
+PasskeyCreateChallengeResponse {
+  challenge: string // Base64 encoded challenge
+  options: PublicKeyCredentialCreationOptions
+}
+
+// POST /api/passkey/create (step 2: store credential)
+PasskeyCreateRequest {
+  userId: UserId
+  credentialId: string
+  publicKey: string
+  deviceName?: string
+}
+
+PasskeyCreateResponse {
+  success: boolean
+  passkeyId: string
+}
+
+// GET /api/passkey/list
+PasskeyListRequest {
+  userId: UserId
+}
+
+PasskeyListResponse {
+  passkeys: PasskeyInfo[]
+}
+
+PasskeyInfo {
+  id: string
+  deviceName: string
+  createdAt: TimeStamp
+}
+
+// POST /api/passkey/authenticate (step 1: get challenge)
+PasskeyAuthChallengeRequest {
+  email: Email
+}
+
+PasskeyAuthChallengeResponse {
+  challenge: string
+  options: PublicKeyCredentialRequestOptions
+}
+
+// POST /api/passkey/authenticate (step 2: verify)
+PasskeyAuthRequest {
+  credentialId: string
+  signature: string
+  authenticatorData: string
+  clientDataJSON: string
+}
+
+PasskeyAuthResponse {
+  success: boolean
+  user: User
+  sessionToken: Token
+  error?: string
+}
+
+// POST /api/activity/log
+ActivityLogRequest {
+  userId: UserId
+  eventType: EventType
+  metadata?: object
+}
+
+ActivityLogResponse {
+  success: boolean
+  logId: string
+}
+
+// POST /api/sendemail (authenticated only)
+SendEmailRequest {
+  to: Email
+  subject: string
+  html: string
+}
+
+SendEmailResponse {
+  success: boolean
+  messageId: string
+  error?: string // "Unauthorized" for unauthed requests
+}

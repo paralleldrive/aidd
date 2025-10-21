@@ -1,0 +1,60 @@
+// Authentication Type Definitions
+// SudoLang format for Next.js + Supabase authentication system
+
+type TimeStamp = number // epoch milliseconds
+
+type UserId = string
+type Email = string
+type Token = string
+
+// Core User type
+User {
+  id: UserId
+  email: Email
+  name: string
+  createdAt: TimeStamp
+}
+
+// Passkey credential storage
+Passkey {
+  id: string
+  userId: UserId
+  credentialId: string // Base64 encoded credential ID from WebAuthn
+  publicKey: string // Base64 encoded public key
+  deviceName: string // Human-readable device name or generated fallback
+  createdAt: TimeStamp
+}
+
+// Magic link for passwordless authentication
+MagicLink {
+  token: Token // Cryptographically secure random token (min 32 bytes)
+  userId: UserId
+  expiresAt: TimeStamp // 1 hour from creation
+  used: boolean // Single-use token
+  createdAt: TimeStamp
+}
+
+// User activity event log
+ActivityLog {
+  id: string
+  userId: UserId
+  eventType: EventType
+  timestamp: TimeStamp
+  metadata: object // Optional event-specific data
+}
+
+EventType =
+  | "signin"
+  | "signup"
+  | "passkey_created"
+  | "passkey_used"
+  | "welcome_dismissed"
+  | "signout"
+
+// Session data
+Session {
+  token: Token
+  userId: UserId
+  expiresAt: TimeStamp
+  createdAt: TimeStamp
+}
