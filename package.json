@@ -15,7 +15,9 @@
     "test": "vitest run && echo 'Test complete.' && npm run -s lint",
     "check-status": "[ -n \"$(git status --porcelain)\" ] && { echo '❌ Uncommitted changes'; exit 1; } || echo '✅ Git status is clean.'",
     "prepare": "husky",
-    "toc": "doctoc README.md"
+    "toc": "doctoc README.md",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "files": [
     "ai/**/*",
@@ -45,22 +47,41 @@
   },
   "homepage": "https://github.com/paralleldrive/sudolang.ai#readme",
   "dependencies": {
+    "@paralleldrive/cuid2": "^3.1.0",
     "chalk": "^4.1.2",
     "commander": "^11.1.0",
     "error-causes": "^3.0.2",
     "fs-extra": "^11.1.1"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^4.1.1",
     "@eslint/eslintrc": "^3",
+    "@storybook/addon-a11y": "^9.1.13",
+    "@storybook/addon-docs": "^9.1.13",
+    "@storybook/addon-onboarding": "^9.1.13",
+    "@storybook/addon-vitest": "^9.1.13",
+    "@storybook/react-vite": "^9.1.13",
+    "@testing-library/react": "^14.3.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@vitejs/plugin-react": "^4.7.0",
+    "@vitest/browser": "3.2.4",
     "@vitest/coverage-v8": "^3.2.4",
     "doctoc": "^2.2.1",
     "eslint": "^9",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-storybook": "^9.1.13",
+    "happy-dom": "^13.10.1",
     "husky": "^9.1.7",
+    "jsdom": "^24.1.3",
+    "playwright": "^1.56.1",
     "prettier": "^3.6.2",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "release-it": "^19.0.5",
     "riteway": "^9.0.0-rc.1",
+    "storybook": "^9.1.13",
     "vitest": "^3.2.4"
   }
 }
