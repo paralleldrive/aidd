@@ -1,0 +1,140 @@
+/* JourneyRow - Horizontal/vertical container for journey and its steps */
+
+.journey-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 2px solid transparent;
+  background: rgba(10, 10, 31, 0.4);
+  transition: all 0.3s ease;
+}
+
+/* Neon border variants */
+.journey-row.neon-border-cyan {
+  border-color: rgba(0, 217, 255, 0.5);
+  box-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+}
+
+.journey-row.neon-border-magenta {
+  border-color: rgba(255, 0, 217, 0.5);
+  box-shadow: 0 0 20px rgba(255, 0, 217, 0.2);
+}
+
+.journey-row.neon-border-cyan:hover {
+  border-color: rgba(0, 217, 255, 0.7);
+  box-shadow: 0 0 30px rgba(0, 217, 255, 0.3);
+}
+
+.journey-row.neon-border-magenta:hover {
+  border-color: rgba(255, 0, 217, 0.7);
+  box-shadow: 0 0 30px rgba(255, 0, 217, 0.3);
+}
+
+.journey-header {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  min-height: 44px;
+}
+
+.journey-header.editable {
+  cursor: pointer;
+}
+
+.journey-header.editable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 217, 255, 0.3);
+  border: 1px solid rgba(0, 217, 255, 0.5);
+}
+
+.neon-border-magenta .journey-header.editable:hover {
+  box-shadow: 0 8px 24px rgba(255, 0, 217, 0.3);
+  border: 1px solid rgba(255, 0, 217, 0.5);
+}
+
+.journey-header.editable:active {
+  transform: translateY(0);
+}
+
+.journey-name {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #e0e0ff);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.journey-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Empty state */
+.journey-steps:empty::after {
+  content: 'No steps yet';
+  display: block;
+  padding: 3rem;
+  text-align: center;
+  color: var(--color-text-secondary, #a0a0c0);
+  font-style: italic;
+  opacity: 0.6;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+}
+
+/* Responsive layout - mobile first */
+@media (min-width: 768px) {
+  .journey-steps {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .journey-row {
+    padding: 2rem;
+  }
+
+  .journey-name {
+    font-size: 1.75rem;
+  }
+
+  .journey-steps {
+    gap: 2rem;
+  }
+}
+
+/* Horizontal scrolling for very wide content */
+@media (min-width: 768px) {
+  .journey-steps {
+    overflow-x: auto;
+    overflow-y: visible;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .journey-steps::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .journey-steps::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+  }
+
+  .journey-steps::-webkit-scrollbar-thumb {
+    background: rgba(0, 217, 255, 0.3);
+    border-radius: 4px;
+  }
+
+  .journey-steps::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 217, 255, 0.5);
+  }
+}

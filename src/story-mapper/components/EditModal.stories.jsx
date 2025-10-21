@@ -1,27 +1,31 @@
-import { EditModal } from './EditModal.jsx';
-import { createStory, createStep, createJourney } from '../data-model/entities.js';
-import './EditModal.css';
+import { EditModal } from "./EditModal.jsx";
+import {
+  createStory,
+  createStep,
+  createJourney,
+} from "../data-model/entities.js";
+import "./EditModal.css";
 
 export default {
-  title: 'Story Mapper/EditModal',
+  title: "Story Mapper/EditModal",
   component: EditModal,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
     backgrounds: {
-      default: 'dark',
+      default: "dark",
       values: [
         {
-          name: 'dark',
+          name: "dark",
           value:
-            'linear-gradient(135deg, #0a0a1f 0%, #1a0a2e 50%, #16213e 100%)',
+            "linear-gradient(135deg, #0a0a1f 0%, #1a0a2e 50%, #16213e 100%)",
         },
       ],
     },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
-    onClose: { action: 'closed' },
-    onSave: { action: 'saved' },
+    onClose: { action: "closed" },
+    onSave: { action: "saved" },
   },
 };
 
@@ -31,11 +35,12 @@ export default {
 export const EditStory = {
   args: {
     isOpen: true,
-    entityType: 'story',
+    entityType: "story",
     entity: createStory({
-      name: 'User login',
-      description: 'As a user, I want to log in so that I can access my account',
-      priority: 'high',
+      name: "User login",
+      description:
+        "As a user, I want to log in so that I can access my account",
+      priority: "high",
       points: 5,
     }),
   },
@@ -47,10 +52,10 @@ export const EditStory = {
 export const EditStep = {
   args: {
     isOpen: true,
-    entityType: 'step',
+    entityType: "step",
     entity: createStep({
-      name: 'User Authentication',
-      description: 'Steps for user to authenticate and access the system',
+      name: "User Authentication",
+      description: "Steps for user to authenticate and access the system",
     }),
   },
 };
@@ -61,10 +66,10 @@ export const EditStep = {
 export const EditJourney = {
   args: {
     isOpen: true,
-    entityType: 'journey',
+    entityType: "journey",
     entity: createJourney({
-      name: 'User Onboarding',
-      description: 'Complete journey for onboarding new users to the platform',
+      name: "User Onboarding",
+      description: "Complete journey for onboarding new users to the platform",
     }),
   },
 };
@@ -75,10 +80,10 @@ export const EditJourney = {
 export const Closed = {
   args: {
     isOpen: false,
-    entityType: 'story',
+    entityType: "story",
     entity: createStory({
-      name: 'Hidden story',
-      description: 'This modal should not be visible',
+      name: "Hidden story",
+      description: "This modal should not be visible",
     }),
   },
 };
@@ -89,11 +94,11 @@ export const Closed = {
 export const MediumPriorityStory = {
   args: {
     isOpen: true,
-    entityType: 'story',
+    entityType: "story",
     entity: createStory({
-      name: 'Dashboard view',
-      description: 'As a user, I want to see my personalized dashboard',
-      priority: 'medium',
+      name: "Dashboard view",
+      description: "As a user, I want to see my personalized dashboard",
+      priority: "medium",
       points: 3,
     }),
   },
@@ -105,11 +110,12 @@ export const MediumPriorityStory = {
 export const LowPriorityStory = {
   args: {
     isOpen: true,
-    entityType: 'story',
+    entityType: "story",
     entity: createStory({
-      name: 'Update footer links',
-      description: 'As a user, I want updated footer links for better navigation',
-      priority: 'low',
+      name: "Update footer links",
+      description:
+        "As a user, I want updated footer links for better navigation",
+      priority: "low",
       points: 1,
     }),
   },
