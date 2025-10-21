@@ -1,10 +1,10 @@
 # Story Mapper UI Prototype
 
-A GenAI-first user story mapping tool with Avion-like UX and cyberglassmorphism dark mode design.
+A mobile-first, interactive user story mapping tool with Avion-like UX, cyberglassmorphism dark mode design, and click-to-edit functionality.
 
 ## Overview
 
-This prototype demonstrates the visual design and layout for a modern story mapping tool that integrates AI assistance naturally into the product planning workflow.
+This prototype demonstrates the visual design, responsive layout, and interactive editing capabilities for a modern story mapping tool. It's built with mobile-first principles and features self-referential content (a story map about building the story mapper itself).
 
 ## Design Philosophy
 
@@ -35,25 +35,34 @@ A fusion of glassmorphism (frosted glass effects) with cyberpunk-inspired neon a
 
 ## Features Demonstrated
 
-### Core Layout
-- Horizontal journey rows with color-coded neon borders
-- Responsive grid of step columns
-- Vertical stacking of user story cards
-- Mini-map for large canvas navigation
+### Mobile-First Responsive Design
+- **Touch-friendly**: 44px+ minimum tap targets throughout
+- **Adaptive layout**: Stacks vertically on mobile, flows horizontally on desktop
+- **Breakpoints**: 768px (tablet), 1024px (desktop)
+- **Performance**: CSS containment, will-change properties
+- **Accessibility**: Focus-visible outlines, ARIA labels, semantic HTML
 
-### GenAI Integration Points
-- AI-generated story indicators (sparkle badges)
-- AI Assistant panel (bottom-right)
-- Suggested journey creation
-- Hover states showing AI refinement availability
+### Interactive Editing
+- **Click-to-edit**: Click any journey, step, or story title to edit
+- **Modal interface**: Glassmorphic modal with form fields for all properties
+- **Edit hints**: Pencil (✏️) icons appear on hover
+- **Live updates**: Changes reflect immediately without page refresh
+- **Success feedback**: Green glow animation confirms saves
+- **Keyboard support**: ESC to close modal, focus management
+
+### Core Layout
+- **Journey rows**: Horizontal bands with color-coded neon borders (cyan, magenta)
+- **Step columns**: Responsive grid beneath each journey
+- **Story cards**: Vertically stacked, touch-friendly cards
+- **Add journey**: Dashed button to create new journeys
 
 ### UX Patterns
 - Glassmorphic surfaces with depth and hierarchy
 - Smooth hover transitions and elevation changes
-- Color-coded priority tags
+- Color-coded priority tags (High=red, Medium=orange, Low=green)
 - Story point estimation display
-- Real-time collaboration indicators (placeholder)
-- Horizontal slicing for MVP planning (placeholder)
+- Simplified header (no extraneous badges)
+- Clean, focused interface
 
 ## Design System
 
@@ -87,8 +96,9 @@ box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 
 ```
 features/storymapper/prototype/
-├── index.html          # Main prototype HTML
-├── styles.css          # Cyberglassmorphism CSS
+├── index.html          # Main prototype HTML with editable data attributes
+├── styles.css          # Mobile-first cyberglassmorphism CSS
+├── app.js              # Click-to-edit functionality and modal management
 └── README.md           # This file
 ```
 
@@ -96,25 +106,31 @@ features/storymapper/prototype/
 
 Simply open `index.html` in a modern web browser (Chrome, Firefox, Safari, Edge).
 
-**Best viewed at:**
-- Desktop: 1440px+ width
-- Browser with backdrop-filter support (all modern browsers)
+**Responsive across all screen sizes:**
+- Mobile: 320px+ (optimized for touch)
+- Tablet: 768px+ (hybrid layout)
+- Desktop: 1024px+ (full horizontal layout)
+- Browser with backdrop-filter support required (all modern browsers)
 
-## Mock Data
+## Self-Referential Content
 
-The prototype includes two complete user journeys:
+The prototype uses dogfooding content - a story map about building the story mapper itself!
 
-1. **User Onboarding** (5 steps, 12 stories)
-   - Discover Product → Sign Up → Complete Profile → Take Tour → First Action
+### Journey 1: Product Discovery (4 stories)
+- **Research Users**: Interview PMs, analyze Avion UX
+- **Define Value Proposition**: Define GenAI integration points
+- **Create Visual Design**: Design cyberglassmorphism theme
 
-2. **Core Workflow** (4 steps, 8 stories)
-   - Navigate Dashboard → Create Story Map → Collaborate → Plan Release
+### Journey 2: Build UI Prototype (8 stories)
+- **Build Three-Tier Layout**: Create journeys, steps, story cards
+- **Optimize for Mobile**: Mobile-first layout, touch interactions
+- **Add Editing Capabilities**: Click-to-edit for journeys, steps, stories
 
-Stories are tagged with:
-- Story IDs (e.g., USR-001, WRK-003)
-- Priority levels (High/Medium/Low)
-- Story point estimates
-- AI-generated indicators
+All stories follow proper user story format:
+- **Format**: "As a [persona], I want [action], so that [benefit]"
+- **Story IDs**: DSC-001, UI-001, etc.
+- **Priority levels**: High (red), Medium (orange), Low (green)
+- **Story points**: Fibonacci-style estimates (1, 2, 3, 5, 8, etc.)
 
 ## Design Decisions
 
@@ -151,20 +167,32 @@ will-change: transform;
 }
 ```
 
-## Next Steps (Not Implemented in Prototype)
+## Interactive Features
 
-This is a **static visual prototype**. Future iterations would add:
+✅ **Implemented:**
+- Click-to-edit journeys, steps, and stories
+- Modal form interface for editing
+- Live UI updates on save
+- Mobile-responsive layout
+- Touch-friendly interactions
+- Keyboard shortcuts (ESC to close modal)
+- Success feedback animations
+
+## Next Steps (Future Iterations)
+
+Additional features to enhance the prototype:
 
 - [ ] Drag-and-drop story reorganization
-- [ ] Inline editing of journeys/steps/stories
-- [ ] AI chat integration (functional)
+- [ ] Persistence (LocalStorage or backend API)
+- [ ] AI chat integration (functional GenAI assistance)
+- [ ] Add/delete journeys, steps, and stories
 - [ ] Real-time collaboration cursors
 - [ ] Horizontal slicing lines for release planning
 - [ ] Zoom/pan canvas controls
 - [ ] Export to Jira/Linear/GitHub
 - [ ] Story templates and AI generation
-- [ ] Keyboard shortcuts
 - [ ] Undo/redo history
+- [ ] Bulk operations (multi-select, batch edit)
 
 ## Browser Support
 
