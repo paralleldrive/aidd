@@ -1,0 +1,131 @@
+/* StoryCard Component Styles - Cyberglassmorphism */
+
+.story-card {
+  padding: var(--spacing-md, 1rem);
+  border-radius: var(--radius-lg, 0.75rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 0.75rem);
+  cursor: default;
+  transition: all 0.3s ease;
+  will-change: transform;
+  min-height: 100px;
+}
+
+.story-card.editable {
+  cursor: pointer;
+}
+
+.story-card.editable:hover {
+  transform: translateY(-4px);
+  border-color: var(--neon-blue, #0084ff);
+  box-shadow:
+    0 0 20px rgba(0, 132, 255, 0.5),
+    0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.story-card.editable:active {
+  transform: translateY(-2px);
+}
+
+.story-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.story-id {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary, #b8b8d4);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.05em;
+}
+
+.story-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #ffffff);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.story-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary, #b8b8d4);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.story-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--spacing-xs, 0.5rem);
+  gap: var(--spacing-sm, 0.75rem);
+  flex-wrap: wrap;
+}
+
+.story-tag {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm, 0.375rem);
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.priority-high {
+  background: rgba(255, 0, 102, 0.2);
+  border: 1px solid var(--priority-high, #ff0066);
+  color: #ff6b9d;
+}
+
+.priority-medium {
+  background: rgba(255, 170, 0, 0.2);
+  border: 1px solid var(--priority-medium, #ffaa00);
+  color: #ffcc66;
+}
+
+.priority-low {
+  background: rgba(0, 255, 136, 0.2);
+  border: 1px solid var(--priority-low, #00ff88);
+  color: var(--priority-low, #00ff88);
+}
+
+.story-points {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--neon-cyan, #00f5ff);
+}
+
+/* Glass surface base styles */
+.glass-surface {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.glass-surface:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* CSS Custom Properties - can be overridden by parent */
+:root {
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --neon-cyan: #00f5ff;
+  --neon-blue: #0084ff;
+  --text-primary: #ffffff;
+  --text-secondary: #b8b8d4;
+  --priority-high: #ff0066;
+  --priority-medium: #ffaa00;
+  --priority-low: #00ff88;
+}
