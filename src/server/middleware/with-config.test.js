@@ -1,6 +1,10 @@
 import { describe, test, beforeEach, afterEach } from "vitest";
 import { assert } from "riteway/vitest";
-import { createWithConfig, loadConfigFromEnv, createConfigObject } from "./with-config.js";
+import {
+  createWithConfig,
+  loadConfigFromEnv,
+  createConfigObject,
+} from "./with-config.js";
 import { createServer } from "../test-utils.js";
 
 describe("createConfigObject", () => {
@@ -198,7 +202,10 @@ describe("withConfig", () => {
   });
 
   test("config.get() throws for missing keys", async () => {
-    const withConfig = createWithConfig(async () => ({ API_KEY: "abc123", DATABASE_URL: "postgres://localhost" }));
+    const withConfig = createWithConfig(async () => ({
+      API_KEY: "abc123",
+      DATABASE_URL: "postgres://localhost",
+    }));
     const result = await withConfig(createServer());
     let error;
 
