@@ -1,10 +1,105 @@
 import { describe, test, beforeEach, afterEach } from "vitest";
 import { assert } from "riteway/vitest";
-import { createWithConfig, loadConfigFromEnv } from "./with-config.js";
+import { createWithConfig, loadConfigFromEnv, createConfigObject } from "./with-config.js";
 import { createServer } from "../test-utils.js";
 
+describe("createConfigObject", () => {
+  test("returns config object with get() method", () => {
+    const config = createConfigObject({ API_KEY: "test-123" });
+
+    assert({
+      given: "config data",
+      should: "have get method",
+      actual: typeof config.get,
+      expected: "function",
+    });
+  });
+
+  test("get() returns value for existing key", () => {
+    const config = createConfigObject({ API_KEY: "test-123", PORT: "3000" });
+
+    assert({
+      given: "existing key",
+      should: "return the value",
+      actual: config.get("API_KEY"),
+      expected: "test-123",
+    });
+
+    assert({
+      given: "another existing key",
+      should: "return the value",
+      actual: config.get("PORT"),
+      expected: "3000",
+    });
+  });
+
+  test("get() throws for missing key", () => {
+    const config = createConfigObject({ API_KEY: "test-123", PORT: "3000" });
+    let error;
+
+    try {
+      config.get("MISSING_KEY");
+    } catch (e) {
+      error = e;
+    }
+
+    assert({
+      given: "missing key",
+      should: "throw Error with cause",
+      actual: error instanceof Error && error.cause !== undefined,
+      expected: true,
+    });
+
+    assert({
+      given: "missing key",
+      should: "have ConfigurationError name",
+      actual: error.cause.name,
+      expected: "ConfigurationError",
+    });
+
+    assert({
+      given: "missing key",
+      should: "include the missing key name in error message",
+      actual: error.cause.message.includes("MISSING_KEY"),
+      expected: true,
+    });
+
+    assert({
+      given: "missing key",
+      should: "include requested key in cause",
+      actual: error.cause.requestedKey,
+      expected: "MISSING_KEY",
+    });
+
+    assert({
+      given: "missing key",
+      should: "include available keys in cause",
+      actual: Array.isArray(error.cause.availableKeys),
+      expected: true,
+    });
+
+    assert({
+      given: "missing key",
+      should: "list API_KEY in available keys",
+      actual: error.cause.availableKeys.includes("API_KEY"),
+      expected: true,
+    });
+  });
+
+  test("get() handles undefined values", () => {
+    const config = createConfigObject({ OPTIONAL_VAR: undefined });
+
+    assert({
+      given: "key with undefined value",
+      should: "return undefined (key exists)",
+      actual: config.get("OPTIONAL_VAR"),
+      expected: undefined,
+    });
+  });
+});
+
 describe("withConfig", () => {
-  test("loads and attaches config to response.locals", async () => {
+  test("creates config object with get() method", async () => {
     const mockConfig = {
       apiKey: "test-key",
       baseUrl: "https://api.example.com",
@@ -15,9 +110,16 @@ describe("withConfig", () => {
 
     assert({
       given: "config loader",
-      should: "attach config to response.locals",
-      actual: result.response.locals.config,
-      expected: mockConfig,
+      should: "attach config with get method to response.locals",
+      actual: typeof result.response.locals.config.get,
+      expected: "function",
+    });
+
+    assert({
+      given: "config loader",
+      should: "allow getting config values",
+      actual: result.response.locals.config.get("apiKey"),
+      expected: "test-key",
     });
   });
 
@@ -73,7 +175,7 @@ describe("withConfig", () => {
     assert({
       given: "async config loader",
       should: "load config asynchronously",
-      actual: result.response.locals.config.loaded,
+      actual: result.response.locals.config.get("loaded"),
       expected: true,
     });
   });
@@ -89,8 +191,55 @@ describe("withConfig", () => {
       given: "two factory-created middleware",
       should: "have different configs",
       actual:
-        result1.response.locals.config.instance !==
-        result2.response.locals.config.instance,
+        result1.response.locals.config.get("instance") !==
+        result2.response.locals.config.get("instance"),
+      expected: true,
+    });
+  });
+
+  test("config.get() throws for missing keys", async () => {
+    const withConfig = createWithConfig(async () => ({ API_KEY: "abc123", DATABASE_URL: "postgres://localhost" }));
+    const result = await withConfig(createServer());
+    let error;
+
+    try {
+      result.response.locals.config.get("MISSING");
+    } catch (e) {
+      error = e;
+    }
+
+    assert({
+      given: "attempt to get missing key",
+      should: "throw Error with cause",
+      actual: error instanceof Error && error.cause !== undefined,
+      expected: true,
+    });
+
+    assert({
+      given: "attempt to get missing key",
+      should: "have ConfigurationError name",
+      actual: error.cause.name,
+      expected: "ConfigurationError",
+    });
+
+    assert({
+      given: "attempt to get missing key",
+      should: "mention the missing key in message",
+      actual: error.cause.message.includes("MISSING"),
+      expected: true,
+    });
+
+    assert({
+      given: "attempt to get missing key",
+      should: "include requested key in cause",
+      actual: error.cause.requestedKey,
+      expected: "MISSING",
+    });
+
+    assert({
+      given: "attempt to get missing key",
+      should: "include available keys in cause",
+      actual: error.cause.availableKeys.includes("API_KEY"),
       expected: true,
     });
   });

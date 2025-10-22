@@ -3,6 +3,15 @@
  * Type definitions for aidd/server
  */
 
+// Config object with get() method
+export interface ConfigObject {
+  /**
+   * Get configuration value by key
+   * @throws {ErrorWithCause} When key is not found in configuration
+   */
+  get(key: string): any;
+}
+
 // Request/Response types compatible with Node.js HTTP and Express
 export interface Request {
   method?: string;
@@ -22,7 +31,7 @@ export interface Response {
   getHeader(name: string): string | number | string[] | undefined;
   locals?: {
     requestId?: string;
-    config?: any;
+    config?: ConfigObject;
     serverError?: (options?: ErrorOptions) => ErrorResponse;
     [key: string]: any;
   };
@@ -126,7 +135,17 @@ export function createWithCors(options: CorsOptions): Middleware;
 export const withRequestId: Middleware;
 
 // Config middleware
-export type ConfigLoader = () => Promise<any>;
+export type ConfigLoader = () => Promise<Record<string, any>>;
+
+/**
+ * Creates a config object with get() method that throws on missing keys
+ *
+ * @example
+ * const config = createConfigObject({ API_KEY: 'abc123' });
+ * config.get('API_KEY'); // => 'abc123'
+ * config.get('MISSING'); // => throws ErrorWithCause
+ */
+export function createConfigObject(configData: Record<string, any>): ConfigObject;
 
 /**
  * Loads configuration from environment variables
@@ -139,6 +158,7 @@ export function loadConfigFromEnv(keys?: string[]): Promise<Record<string, strin
 
 /**
  * Creates config injection middleware with custom loader
+ * Config is wrapped in ConfigObject and attached to response.locals.config
  *
  * @example
  * // Using loadConfigFromEnv helper
@@ -146,6 +166,9 @@ export function loadConfigFromEnv(keys?: string[]): Promise<Record<string, strin
  * const withConfig = createWithConfig(() =>
  *   loadConfigFromEnv(['DATABASE_URL', 'API_KEY'])
  * );
+ *
+ * // In your handler
+ * const apiKey = response.locals.config.get('API_KEY'); // throws if missing
  *
  * @example
  * // Using custom loader

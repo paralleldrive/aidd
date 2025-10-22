@@ -41,6 +41,7 @@ export {
   createWithCors,
   withRequestId,
   createWithConfig,
+  createConfigObject,
   loadConfigFromEnv,
   withServerError,
 } from "./middleware/index.js";

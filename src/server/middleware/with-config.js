@@ -1,3 +1,5 @@
+import { createError } from "error-causes";
+
 /**
  * Loads configuration from environment variables
  *
@@ -18,6 +20,31 @@ const loadConfigFromEnv = async (keys = []) =>
   );
 
 /**
+ * Creates a config object with a get() method that throws on missing keys
+ *
+ * @param {Object} configData - Raw config key-value pairs
+ * @returns {Object} Config object with get() method
+ *
+ * @example
+ * const config = createConfigObject({ API_KEY: 'abc123' });
+ * config.get('API_KEY'); // => 'abc123'
+ * config.get('MISSING'); // => throws caused error
+ */
+const createConfigObject = (configData) => ({
+  get(key) {
+    if (!(key in configData)) {
+      throw createError({
+        name: "ConfigurationError",
+        message: `Required configuration key "${key}" is not defined.`,
+        requestedKey: key,
+        availableKeys: Object.keys(configData),
+      });
+    }
+    return configData[key];
+  },
+});
+
+/**
  * Config injection middleware factory
  * Loads configuration and attaches to response.locals
  *
@@ -31,6 +58,9 @@ const loadConfigFromEnv = async (keys = []) =>
  *   loadConfigFromEnv(['DATABASE_URL', 'API_KEY'])
  * );
  *
+ * // In your handler
+ * const apiKey = response.locals.config.get('API_KEY'); // throws if missing
+ *
  * @example
  * // Using custom loader
  * import { createWithConfig } from 'aidd/server';
@@ -41,9 +71,9 @@ const loadConfigFromEnv = async (keys = []) =>
  */
 const createWithConfig = (configLoader) => {
   const appendConfig = async (response) => {
-    const config = await configLoader();
+    const configData = await configLoader();
     if (!response.locals) response.locals = {};
-    response.locals.config = config;
+    response.locals.config = createConfigObject(configData);
     return response;
   };
 
@@ -53,4 +83,4 @@ const createWithConfig = (configLoader) => {
   });
 };
 
-export { createWithConfig, loadConfigFromEnv };
+export { createWithConfig, loadConfigFromEnv, createConfigObject };
