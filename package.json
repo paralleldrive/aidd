@@ -1,6 +1,6 @@
 {
   "name": "aidd",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "description": "The standard library for AI Driven Development.",
   "main": "index.js",
   "type": "module",
@@ -13,6 +13,8 @@
     "format": "prettier --write . && echo 'Format complete.'",
     "format:check": "prettier --check . && echo 'Format check complete.'",
     "test": "vitest run && echo 'Test complete.' && npm run -s lint",
+    "test:unit": "vitest run --exclude '**/*-e2e.test.js' && echo 'Unit tests complete.' && npm run -s lint",
+    "test:e2e": "vitest run **/*-e2e.test.js && echo 'E2E tests complete.'",
     "check-status": "[ -n \"$(git status --porcelain)\" ] && { echo '❌ Uncommitted changes'; exit 1; } || echo '✅ Git status is clean.'",
     "prepare": "husky",
     "toc": "doctoc README.md",

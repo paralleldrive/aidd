@@ -138,5 +138,9 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
+# Storybook
 *storybook.log
 storybook-static
+
+# AI agent tools
+.agent-tools/

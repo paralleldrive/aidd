@@ -1,8 +1,8 @@
-# SudoLang AIDD Agent System
+# SudoLang.ai AIDD
 
 [![SudoLang AIDD](https://img.shields.io/badge/✨_SudoLang_AIDD-black)](https://github.com/paralleldrive/sudolang.ai)
 
-**The standard library for AI Driven Development.**
+**The standard library for AI Driven Development**
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
