@@ -1,0 +1,250 @@
+---
+description: When implementing Node.js API routes, use this guide for functional middleware composition patterns
+globs: **/api/**/*.js,**/routes/**/*.js,**/server/**/*.js
+alwaysApply: false
+---
+
+# API Routes & Server Middleware
+
+Act as a top-tier backend engineer implementing secure, composable API routes using functional programming patterns.
+
+## Before Writing Server Code
+
+- Read and respect the constraints in please.mdc
+- Follow javascript.mdc for functional programming best practices
+- Use the aidd module's server utilities for route handling
+- Never use Express middleware chains - use asyncPipe composition instead
+
+## Core Utilities
+
+Import from aidd module:
+
+```javascript
+import { createRoute, asyncPipe } from 'aidd/server';
+import {
+  withRequestId,
+  withCors,
+  withConfig,
+  withServerError,
+  withCsrf,
+  withAuth,
+  withValidation,
+  withSecurityHeaders,
+} from 'aidd/server/middleware';
+```
+
+## Route Pattern
+
+```javascript
+import { createRoute } from 'aidd/server';
+import withRequestId from 'aidd/server/middleware/with-request-id';
+import withCors from 'aidd/server/middleware/with-cors';
+
+const myRoute = createRoute(
+  withRequestId,
+  withCors,
+  async ({ request, response }) => {
+    // Your route logic here
+    response.status(200).json({ message: 'Success' });
+  }
+);
+
+export default myRoute;
+```
+
+## Middleware Composition
+
+Constraints {
+  Always use asyncPipe for middleware composition
+  Never mutate request or response objects
+  Always return { request, response } from middleware
+  Use response.locals for passing data between middleware
+  Always set status and send response in route handler
+}
+
+## Standard Middleware Stack
+
+For typical API routes, use this middleware order:
+
+1. `withRequestId` - Generate unique request ID
+2. `withCors` - Handle CORS headers
+3. `withSecurityHeaders` - Add security headers
+4. `withConfig` - Inject configuration
+5. `withServerError` - Attach error helper
+6. `withCsrf` - Validate CSRF token (POST/PUT/PATCH/DELETE only)
+7. `withAuth` - Validate session (protected routes only)
+8. `withValidation` - Validate input (as needed)
+9. Route handler - Your business logic
+
+Example:
+
+```javascript
+const protectedRoute = createRoute(
+  withRequestId,
+  withCors,
+  withSecurityHeaders,
+  withServerError,
+  withCsrf,
+  withAuth,
+  withValidation(schema),
+  async ({ request, response }) => {
+    const user = response.locals.user;
+    const data = request.body;
+    // Process request
+    response.status(200).json({ success: true });
+  }
+);
+```
+
+## Error Handling
+
+createRoute automatically catches errors:
+
+```javascript
+// Don't do this:
+try {
+  await riskyOperation();
+} catch (err) {
+  response.status(500).json({ error: err.message });
+}
+
+// Let createRoute handle it:
+await riskyOperation(); // Error logged with requestId, 500 returned automatically
+```
+
+For custom errors, throw with message:
+
+```javascript
+if (!user) {
+  throw new Error('User not found'); // Caught by createRoute, logged, 500 returned
+}
+```
+
+Use serverError helper for specific status codes:
+
+```javascript
+const myRoute = createRoute(
+  withServerError,
+  async ({ request, response }) => {
+    if (!data) {
+      return response.status(404).json(
+        response.locals.serverError({
+          message: 'Not Found',
+          status: 404,
+        })
+      );
+    }
+    response.status(200).json({ data });
+  }
+);
+```
+
+## Security Best Practices
+
+Constraints {
+  Always validate CSRF tokens on state-changing requests (POST/PUT/PATCH/DELETE)
+  Always validate authentication tokens on protected routes
+  Always sanitize and validate user input
+  Never log sensitive data (passwords, tokens, session data)
+  Always use parameterized queries for database operations
+  Always set appropriate security headers
+  Use constant-time comparison for token validation
+}
+
+## Testing
+
+Use createServer helper for middleware tests:
+
+```javascript
+import { describe, test } from 'vitest';
+import { assert } from 'riteway/vitest';
+import { createServer } from 'aidd/server/test-utils';
+import myMiddleware from './my-middleware.js';
+
+describe('myMiddleware', () => {
+  test('middleware behavior', async () => {
+    const result = await myMiddleware(createServer());
+
+    assert({
+      given: 'server object',
+      should: 'attach data to response.locals',
+      actual: typeof result.response.locals.data,
+      expected: 'object',
+    });
+  });
+});
+```
+
+## Response Helpers
+
+Always set status explicitly:
+
+```javascript
+// Success responses
+response.status(200).json({ data });        // OK
+response.status(201).json({ id: newId });   // Created
+response.status(204).send();                 // No Content
+
+// Client error responses
+response.status(400).json({ error });        // Bad Request
+response.status(401).json({ error });        // Unauthorized
+response.status(403).json({ error });        // Forbidden
+response.status(404).json({ error });        // Not Found
+response.status(422).json({ errors });       // Unprocessable Entity
+
+// Server error responses (use createRoute error handling instead)
+// response.status(500).json({ error });    // Handled automatically
+```
+
+## Custom Middleware
+
+Create middleware following the pattern:
+
+```javascript
+const myMiddleware = async ({ request, response }) => {
+  // Do work
+  if (!response.locals) response.locals = {};
+  response.locals.myData = { /* ... */ };
+
+  // Return both objects
+  return { request, response };
+};
+
+export default myMiddleware;
+```
+
+## Logging
+
+Use structured logging with requestId:
+
+```javascript
+const myRoute = createRoute(
+  withRequestId,
+  async ({ request, response }) => {
+    const requestId = response.locals.requestId;
+    console.log({
+      requestId,
+      action: 'user_login',
+      userId: user.id,
+      timestamp: new Date().toISOString(),
+    });
+    response.status(200).json({ success: true });
+  }
+);
+```
+
+Constraints {
+  Always include requestId in logs
+  Use JSON format for structured logging
+  Never log sensitive data (passwords, tokens, PII)
+  Log errors with full context (method, url, headers, body)
+  Redact sensitive fields before logging
+}
+
+## Examples
+
+See `/tasks/api-route-handling-epic/context/` for complete reference implementations.
+
+Commands {
+  /help
+}
