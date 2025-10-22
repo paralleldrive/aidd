@@ -10,14 +10,13 @@ import { createError } from "error-causes";
  * const config = await loadConfigFromEnv(['DATABASE_URL', 'API_KEY', 'PORT']);
  * // => { DATABASE_URL: 'postgres://...', API_KEY: 'abc123', PORT: '3000' }
  */
-const loadConfigFromEnv = async (keys = []) =>
-  keys.reduce(
-    (config, key) => ({
-      ...config,
-      [key]: process.env[key],
-    }),
-    {},
-  );
+const loadConfigFromEnv = async (keys = []) => {
+  const config = {};
+  for (const key of keys) {
+    config[key] = process.env[key];
+  }
+  return config;
+};
 
 /**
  * Creates a config object with a get() method that throws on missing keys
