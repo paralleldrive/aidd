@@ -1,6 +1,6 @@
-import { describe, test } from "vitest";
+import { describe, test, beforeEach, afterEach } from "vitest";
 import { assert } from "riteway/vitest";
-import { createWithConfig } from "./with-config.js";
+import { createWithConfig, loadConfigFromEnv } from "./with-config.js";
 import { createServer } from "../test-utils.js";
 
 describe("withConfig", () => {
@@ -92,6 +92,60 @@ describe("withConfig", () => {
         result1.response.locals.config.instance !==
         result2.response.locals.config.instance,
       expected: true,
+    });
+  });
+});
+
+describe("loadConfigFromEnv", () => {
+  const originalEnv = { ...process.env };
+
+  beforeEach(() => {
+    process.env.DATABASE_URL = "postgres://localhost/test";
+    process.env.API_KEY = "test-api-key-123";
+    process.env.PORT = "3000";
+  });
+
+  afterEach(() => {
+    process.env = { ...originalEnv };
+  });
+
+  test("loads specified environment variables", async () => {
+    const config = await loadConfigFromEnv(["DATABASE_URL", "API_KEY"]);
+
+    assert({
+      given: "list of environment variable names",
+      should: "return object with those variables",
+      actual: config.DATABASE_URL,
+      expected: "postgres://localhost/test",
+    });
+
+    assert({
+      given: "list of environment variable names",
+      should: "include all specified variables",
+      actual: config.API_KEY,
+      expected: "test-api-key-123",
+    });
+  });
+
+  test("returns empty object when given empty array", async () => {
+    const config = await loadConfigFromEnv([]);
+
+    assert({
+      given: "empty array",
+      should: "return empty object",
+      actual: Object.keys(config).length,
+      expected: 0,
+    });
+  });
+
+  test("handles undefined for missing environment variables", async () => {
+    const config = await loadConfigFromEnv(["NONEXISTENT_VAR"]);
+
+    assert({
+      given: "nonexistent environment variable",
+      should: "return undefined for that key",
+      actual: config.NONEXISTENT_VAR,
+      expected: undefined,
     });
   });
 });

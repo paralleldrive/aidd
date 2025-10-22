@@ -1,39 +1,46 @@
 /**
  * Server utilities for API route composition
+ *
+ * @example
+ * // Compose custom middleware stack for your app
+ * import { asyncPipe } from 'aidd/lib';
+ * import {
+ *   createRoute,
+ *   withRequestId,
+ *   createWithCors,
+ *   withServerError,
+ *   createWithConfig,
+ *   loadConfigFromEnv
+ * } from 'aidd/server';
+ *
+ * // Create app-specific config middleware
+ * const withConfig = createWithConfig(() =>
+ *   loadConfigFromEnv(['DATABASE_URL', 'API_KEY'])
+ * );
+ *
+ * // Create CORS middleware with your allowed origins
+ * const withCors = createWithCors({
+ *   allowedOrigins: ['https://example.com', 'https://app.example.com']
+ * });
+ *
+ * // Compose your default middleware stack
+ * const defaultMiddleware = asyncPipe(
+ *   withRequestId,
+ *   withCors,
+ *   withServerError,
+ *   withConfig
+ * );
+ *
+ * // Use in routes
+ * export default createRoute(defaultMiddleware, myHandler);
  */
-
-import { asyncPipe } from "../../lib/asyncPipe.js";
-import {
-  withCors,
-  createWithCors,
-  withRequestId,
-  withConfig,
-  createWithConfig,
-  withServerError,
-} from "./middleware/index.js";
 
 export { createRoute, convertMiddleware } from "./create-route.js";
 export { createServer } from "./test-utils.js";
 export {
-  withCors,
   createWithCors,
   withRequestId,
-  withConfig,
   createWithConfig,
+  loadConfigFromEnv,
   withServerError,
 } from "./middleware/index.js";
-
-/**
- * Pre-composed standard middleware stack
- * Includes: withRequestId, withCors, withServerError, withConfig
- *
- * Usage:
- *   import { createRoute, defaultMiddleware } from 'aidd/server'
- *   export default createRoute(defaultMiddleware, myHandler)
- */
-export const defaultMiddleware = asyncPipe(
-  withRequestId,
-  withCors,
-  withServerError,
-  withConfig,
-);

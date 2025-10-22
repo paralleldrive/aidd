@@ -1,6 +1,6 @@
 /**
  * Request ID middleware
- * Generates unique request ID for tracking and logging
+ * Generates unique CUID2 request ID for tracking and logging
  */
 
 import { createId } from "@paralleldrive/cuid2";

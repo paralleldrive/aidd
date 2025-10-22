@@ -95,7 +95,7 @@ export function createServer(options?: {
 
 // CORS middleware
 export interface CorsOptions {
-  allowedOrigins?: string | string[];
+  allowedOrigins: string | string[];  // Required for security
   allowedHeaders?: string[];
   allowedMethods?: string[];
 }
@@ -103,20 +103,25 @@ export interface CorsOptions {
 /**
  * Creates CORS middleware with configurable origins
  *
+ * Security: allowedOrigins is REQUIRED to prevent accidental exposure.
+ * For same-origin only apps, omit CORS middleware entirely.
+ *
  * @example
+ * // Recommended: Explicit origin whitelist
  * const withCors = createWithCors({
  *   allowedOrigins: ['https://example.com', 'https://app.example.com']
  * });
+ *
+ * @example
+ * // Public API only: Explicit wildcard
+ * const withCors = createWithCors({
+ *   allowedOrigins: '*'
+ * });
  */
-export function createWithCors(options?: CorsOptions): Middleware;
+export function createWithCors(options: CorsOptions): Middleware;
 
 /**
- * CORS middleware with wildcard origin (less secure, for development)
- */
-export const withCors: Middleware;
-
-/**
- * Request ID middleware - generates unique UUID for request tracking
+ * Request ID middleware - generates unique CUID2 for request tracking
  */
 export const withRequestId: Middleware;
 
@@ -124,30 +129,34 @@ export const withRequestId: Middleware;
 export type ConfigLoader = () => Promise<any>;
 
 /**
+ * Loads configuration from environment variables
+ *
+ * @example
+ * const config = await loadConfigFromEnv(['DATABASE_URL', 'API_KEY', 'PORT']);
+ * // => { DATABASE_URL: 'postgres://...', API_KEY: 'abc123', PORT: '3000' }
+ */
+export function loadConfigFromEnv(keys?: string[]): Promise<Record<string, string | undefined>>;
+
+/**
  * Creates config injection middleware with custom loader
  *
  * @example
- * import configure from './config/config.js';
- * const withConfig = createWithConfig(configure);
+ * // Using loadConfigFromEnv helper
+ * import { createWithConfig, loadConfigFromEnv } from 'aidd/server';
+ * const withConfig = createWithConfig(() =>
+ *   loadConfigFromEnv(['DATABASE_URL', 'API_KEY'])
+ * );
+ *
+ * @example
+ * // Using custom loader
+ * const withConfig = createWithConfig(async () => {
+ *   const config = await fetchFromConfigService();
+ *   return config;
+ * });
  */
 export function createWithConfig(configLoader: ConfigLoader): Middleware;
-
-/**
- * Config middleware with no-op loader (for testing)
- */
-export const withConfig: Middleware;
 
 /**
  * Server error middleware - provides standardized error response helper
  */
 export const withServerError: Middleware;
-
-/**
- * Pre-composed standard middleware stack
- * Includes: withRequestId, withCors, withServerError, withConfig
- *
- * @example
- * import { createRoute, defaultMiddleware } from 'aidd/server';
- * export default createRoute(defaultMiddleware, myHandler);
- */
-export const defaultMiddleware: Middleware;

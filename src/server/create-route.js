@@ -18,6 +18,8 @@ const sanitizeBody = (body) => {
 
 /**
  * Converts traditional Express middleware to functional middleware
+ * Errors bubble up to createRoute's error handler
+ *
  * @param {Function} middleware - Express-style middleware function
  * @returns {Function} Functional middleware
  */
@@ -25,10 +27,7 @@ const convertMiddleware =
   (middleware) =>
   async ({ request, response }) => {
     await middleware(request, response, () => {});
-    return {
-      request,
-      response,
-    };
+    return { request, response };
   };
 
 /**

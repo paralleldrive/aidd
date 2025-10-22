@@ -1,5 +1,6 @@
 import { describe, test } from "vitest";
 import { assert } from "riteway/vitest";
+import { isCuid } from "@paralleldrive/cuid2";
 import withRequestId from "./with-request-id.js";
 import { createServer } from "../test-utils.js";
 
@@ -65,13 +66,11 @@ describe("withRequestId", () => {
 
   test("generates CUID2 format", async () => {
     const result = await withRequestId(createServer());
-    // CUID2 format: starts with a letter, length 24-32 chars, alphanumeric
-    const cuid2Regex = /^[a-z][a-z0-9]{23,31}$/;
 
     assert({
       given: "generated requestId",
       should: "match CUID2 format",
-      actual: cuid2Regex.test(result.response.locals.requestId),
+      actual: isCuid(result.response.locals.requestId),
       expected: true,
     });
   });

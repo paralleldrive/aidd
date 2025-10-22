@@ -1,30 +1,39 @@
 /**
  * CORS middleware factory for handling cross-origin requests
  *
+ * Security: allowedOrigins is REQUIRED. This forces explicit configuration
+ * and prevents accidental exposure of APIs to all origins.
+ *
  * @param {Object} options
- * @param {string|string[]} [options.allowedOrigins='*'] - Allowed origins (single origin or array)
+ * @param {string|string[]} options.allowedOrigins - Allowed origins (REQUIRED)
  * @param {string[]} [options.allowedHeaders] - Allowed headers
  * @param {string[]} [options.allowedMethods] - Allowed HTTP methods
  * @returns {Function} CORS middleware
  *
  * @example
- * // Allow specific origins
+ * // Secure: Allow specific origins (recommended)
  * const withCors = createWithCors({
  *   allowedOrigins: ['https://example.com', 'https://app.example.com']
  * })
  *
  * @example
- * // Allow any origin (default, less secure)
- * const withCors = createWithCors({ allowedOrigins: '*' })
+ * // Public API: Allow all origins (only for public, read-only APIs)
+ * const withCors = createWithCors({
+ *   allowedOrigins: '*'  // Explicitly opt-in to wildcard
+ * })
  *
  * @example
- * // Use environment variable
+ * // Environment-based configuration
  * const withCors = createWithCors({
- *   allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || '*'
+ *   allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000']
  * })
+ *
+ * @example
+ * // Same-origin only: Don't use CORS middleware at all
+ * // Just omit createWithCors from your middleware chain
  */
 const createWithCors = ({
-  allowedOrigins = "*",
+  allowedOrigins,
   allowedHeaders = [
     "Origin",
     "X-Requested-With",
@@ -34,7 +43,21 @@ const createWithCors = ({
   ],
   allowedMethods = ["GET", "POST", "PUT", "PATCH", "DELETE"],
 } = {}) => {
+  // Security: Require explicit origin configuration
+  if (!allowedOrigins) {
+    throw new Error(
+      "CORS configuration error: allowedOrigins is required. " +
+        'Specify allowed origins array, a single origin string, or "*" for public APIs. ' +
+        "For same-origin only, omit CORS middleware from your route.",
+    );
+  }
+
   const getOrigin = (requestOrigin) => {
+    // Security: Never allow null origin (can be exploited)
+    if (requestOrigin === "null") {
+      return null;
+    }
+
     if (allowedOrigins === "*") return "*";
     if (typeof allowedOrigins === "string") {
       return allowedOrigins === requestOrigin ? requestOrigin : null;
@@ -72,9 +95,4 @@ const createWithCors = ({
   });
 };
 
-// Default export with wildcard for backward compatibility
-// For production, use createWithCors({ allowedOrigins: [...] })
-const withCors = createWithCors();
-
 export { createWithCors };
-export default withCors;
