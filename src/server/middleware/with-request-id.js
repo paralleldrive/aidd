@@ -16,4 +16,4 @@ const withRequestId = async ({ request, response }) => ({
   response: appendId(response),
 });
 
-export default withRequestId;
+export { withRequestId };

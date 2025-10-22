@@ -1,6 +1,6 @@
 import { describe, test } from "vitest";
 import { assert } from "riteway/vitest";
-import withServerError from "./with-server-error.js";
+import { withServerError } from "./with-server-error.js";
 import { createServer } from "../test-utils.js";
 
 describe("withServerError", () => {

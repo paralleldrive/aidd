@@ -24,4 +24,4 @@ const withServerError = async ({ request, response }) => ({
   response: appendServerError(response),
 });
 
-export default withServerError;
+export { withServerError };
