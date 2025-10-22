@@ -74,20 +74,6 @@ describe("createConfigObject", () => {
       actual: error.cause.requestedKey,
       expected: "MISSING_KEY",
     });
-
-    assert({
-      given: "missing key",
-      should: "include available keys in cause",
-      actual: Array.isArray(error.cause.availableKeys),
-      expected: true,
-    });
-
-    assert({
-      given: "missing key",
-      should: "list API_KEY in available keys",
-      actual: error.cause.availableKeys.includes("API_KEY"),
-      expected: true,
-    });
   });
 
   test("get() handles undefined values", () => {
@@ -241,13 +227,6 @@ describe("withConfig", () => {
       should: "include requested key in cause",
       actual: error.cause.requestedKey,
       expected: "MISSING",
-    });
-
-    assert({
-      given: "attempt to get missing key",
-      should: "include available keys in cause",
-      actual: error.cause.availableKeys.includes("API_KEY"),
-      expected: true,
     });
   });
 });
