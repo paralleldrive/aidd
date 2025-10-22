@@ -3,11 +3,11 @@
  * Generates unique request ID for tracking and logging
  */
 
-import { randomUUID } from "crypto";
+import { createId } from "@paralleldrive/cuid2";
 
 const appendId = (response) => {
   if (!response.locals) response.locals = {};
-  response.locals.requestId = randomUUID();
+  response.locals.requestId = createId();
   return response;
 };
 

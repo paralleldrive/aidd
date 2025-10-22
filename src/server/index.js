@@ -5,8 +5,10 @@
 import { asyncPipe } from "../../lib/asyncPipe.js";
 import {
   withCors,
+  createWithCors,
   withRequestId,
   withConfig,
+  createWithConfig,
   withServerError,
 } from "./middleware/index.js";
 

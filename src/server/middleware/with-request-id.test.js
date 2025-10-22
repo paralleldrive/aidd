@@ -63,15 +63,15 @@ describe("withRequestId", () => {
     });
   });
 
-  test("generates UUID format", async () => {
+  test("generates CUID2 format", async () => {
     const result = await withRequestId(createServer());
-    const uuidRegex =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    // CUID2 format: starts with a letter, length 24-32 chars, alphanumeric
+    const cuid2Regex = /^[a-z][a-z0-9]{23,31}$/;
 
     assert({
       given: "generated requestId",
-      should: "match UUID format",
-      actual: uuidRegex.test(result.response.locals.requestId),
+      should: "match CUID2 format",
+      actual: cuid2Regex.test(result.response.locals.requestId),
       expected: true,
     });
   });
