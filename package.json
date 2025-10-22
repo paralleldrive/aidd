@@ -17,10 +17,15 @@
     "prepare": "husky",
     "toc": "doctoc README.md"
   },
+  "exports": {
+    ".": "./index.js",
+    "./server": "./src/server/index.js"
+  },
   "files": [
     "ai/**/*",
     "bin/**/*",
     "lib/**/*",
+    "src/**/*",
     "README.md",
     "LICENSE"
   ],
