@@ -5,6 +5,17 @@
 
 import { asyncPipe } from "../../lib/asyncPipe.js";
 
+const sanitizeHeaders = (headers = {}) => {
+  const { authorization, cookie, "x-api-key": apiKey, ...safe } = headers;
+  return safe;
+};
+
+const sanitizeBody = (body) => {
+  if (!body || typeof body !== "object") return body;
+  const { password, token, apiKey, secret, ...safe } = body;
+  return safe;
+};
+
 /**
  * Converts traditional Express middleware to functional middleware
  * @param {Function} middleware - Express-style middleware function
@@ -13,15 +24,11 @@ import { asyncPipe } from "../../lib/asyncPipe.js";
 const convertMiddleware =
   (middleware) =>
   async ({ request, response }) => {
-    try {
-      await middleware(request, response, () => {});
-      return {
-        request,
-        response,
-      };
-    } catch (error) {
-      throw new Error(error);
-    }
+    await middleware(request, response, () => {});
+    return {
+      request,
+      response,
+    };
   };
 
 /**
@@ -54,14 +61,13 @@ const createRoute =
       const { url, method, headers } = request;
       console.log({
         time: new Date().toISOString(),
-        body: JSON.stringify(request.body),
+        body: JSON.stringify(sanitizeBody(request.body)),
         query: JSON.stringify(request.query),
         method,
-        headers: JSON.stringify(headers),
+        headers: JSON.stringify(sanitizeHeaders(headers)),
         error: true,
         url,
         message: e.message,
-        stack: e.stack,
         requestId,
       });
       response.status(500);

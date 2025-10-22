@@ -14,6 +14,7 @@ export { createRoute, convertMiddleware } from "./create-route.js";
 export { createServer } from "./test-utils.js";
 export {
   withCors,
+  createWithCors,
   withRequestId,
   withConfig,
   createWithConfig,
