@@ -50,6 +50,7 @@
   },
   "homepage": "https://github.com/paralleldrive/sudolang.ai#readme",
   "dependencies": {
+    "@paralleldrive/cuid2": "^3.1.0",
     "chalk": "^4.1.2",
     "commander": "^11.1.0",
     "error-causes": "^3.0.2",

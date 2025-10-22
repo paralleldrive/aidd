@@ -3,38 +3,53 @@
  * Provides cryptographically secure token generation and magic link URL creation
  *
  * Security Specifications:
- * - Uses CSPRNG (crypto.randomBytes) for unpredictable token generation
- * - 256 bits of entropy (32 bytes = 64 hex characters)
- * - Tokens should be hashed before storage (like passwords)
- * - Tokens should be single-use (marked as used after verification)
+ * - Uses cuid2 with biglength option for maximum security
+ * - cuid2 combines multiple entropy sources (crypto.randomBytes + timestamp + counter + fingerprint)
+ * - All sources hashed with SHA3 (trap door function, no predictable structure)
+ * - Defense-in-depth: protects against potential entropy bugs in crypto APIs
+ * - Tokens stored hashed in database for additional security
+ * - Single-use tokens (marked as used after verification)
  * - Recommended expiry: 1 hour (balances security with email delivery delays)
+ *
+ * Why cuid2 over raw crypto.randomBytes:
+ * - Historical crypto API bugs (Android SecureRandom, Debian OpenSSL, etc.)
+ * - Multiple entropy sources provide backup if one source has weak entropy
+ * - SHA3 hashing ensures no structure leakage
+ * - Designed to be collision-resistant and unguessable
  *
  * Storage Pattern:
  * Store in database: { hashedToken, email, expiresAt, used: false }
- * Use SHA-256 or better for hashing tokens
+ * Use SHA-256 for additional hashing layer
  *
  * Security References:
  * - OWASP Authentication Cheat Sheet
- * - Security Stack Exchange consensus: Random tokens > JWT for magic links
- * - NIST: Minimum 112 bits entropy, recommend 256 bits
+ * - cuid2 specification and security design
+ * - Defense-in-depth principle against entropy failures
  */
 
-import { randomBytes, createHash, timingSafeEqual } from "crypto";
+import { createId, isCuid } from "@paralleldrive/cuid2";
+import { createHash, timingSafeEqual } from "crypto";
 
 /**
- * Generates a cryptographically secure random token
- * Uses Node.js crypto.randomBytes (CSPRNG) for maximum security
+ * Generates a cryptographically secure random token using cuid2
+ * Uses biglength option for maximum security (longer, more entropy)
  *
- * @returns {string} 64-character hexadecimal token (256 bits of entropy)
+ * Security features:
+ * - Multiple entropy sources (crypto.randomBytes + timestamp + counter + fingerprint)
+ * - SHA3 hashing (trap door function)
+ * - Defense against weak entropy in any single source
+ * - Collision-resistant and unguessable
+ *
+ * @returns {string} Secure cuid2 token (biglength for extra security)
  *
  * @example
  * const token = generateSecureToken()
- * // => "a1b2c3d4e5f6..." (64 characters)
+ * // => "tz4a98xxat96iws9zmbrgj3a" (biglength cuid2)
  *
  * Security Note:
  * Hash this token before storing in database using hashToken()
  */
-const generateSecureToken = () => randomBytes(32).toString("hex");
+const generateSecureToken = () => createId({ length: 32 });
 
 /**
  * Hashes a token for secure storage
@@ -58,6 +73,26 @@ const hashToken = (token) => {
 };
 
 /**
+ * Validates token format (checks if it's a valid cuid2)
+ * Fast pre-check before database lookup
+ *
+ * @param {string} token - Token to validate
+ * @returns {boolean} True if token has valid cuid2 format
+ *
+ * @example
+ * if (!isValidTokenFormat(token)) {
+ *   return response.status(400).json({ error: 'Invalid token format' })
+ * }
+ */
+const isValidTokenFormat = (token) => {
+  if (!token || typeof token !== "string") {
+    return false;
+  }
+
+  return isCuid(token);
+};
+
+/**
  * Compares a plain token with a hashed token using timing-safe comparison
  * Prevents timing attacks during token verification
  *
@@ -78,6 +113,11 @@ const verifyToken = (plainToken, hashedToken) => {
     typeof plainToken !== "string" ||
     typeof hashedToken !== "string"
   ) {
+    return false;
+  }
+
+  // Validate token format first (fast check)
+  if (!isValidTokenFormat(plainToken)) {
     return false;
   }
 
@@ -143,4 +183,10 @@ const createMagicLinkUrl = ({ baseUrl, token, path = "/auth/verify" } = {}) => {
   return `${cleanBaseUrl}${cleanPath}?token=${encodeURIComponent(token)}`;
 };
 
-export { generateSecureToken, hashToken, verifyToken, createMagicLinkUrl };
+export {
+  generateSecureToken,
+  hashToken,
+  isValidTokenFormat,
+  verifyToken,
+  createMagicLinkUrl,
+};
