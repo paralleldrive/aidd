@@ -65,7 +65,7 @@ await signin(email) // handles CSRF, error messages
 Users create their own route handlers using the utilities:
 
 ```javascript
-import { createRoute, withRequestId, withCors, withServerError } from 'aidd/server'
+import { createRoute, defaultMiddleware } from 'aidd/server'
 import { generateSecureToken, createMagicLinkUrl } from 'aidd/auth/tokens'
 import { validateEmail } from 'aidd/auth/validation'
 
@@ -110,20 +110,16 @@ const emailVerify = async ({ request, response }) => {
   response.json({ user })
 }
 
-// 3. Compose with middleware
-export const signinRoute = createRoute(
-  withRequestId,
-  withCors,
-  withServerError,
-  emailSignIn
-)
+// 3. Compose with defaultMiddleware (includes withRequestId, withCors, withServerError, withConfig)
+export const signinRoute = createRoute(defaultMiddleware, emailSignIn)
+export const verifyRoute = createRoute(defaultMiddleware, emailVerify)
 
-export const verifyRoute = createRoute(
-  withRequestId,
-  withCors,
-  withServerError,
-  emailVerify
-)
+// Or compose custom middleware for specific needs:
+// import { asyncPipe } from 'aidd/lib'
+// import { withRequestId, withAuth } from 'aidd/server'
+//
+// const authMiddleware = asyncPipe(withRequestId, withAuth)
+// export const protectedRoute = createRoute(authMiddleware, protectedHandler)
 ```
 
 ## Implementation Plan
@@ -217,9 +213,11 @@ docs/recipes/email-auth/
 ```
 
 ## Dependencies
-- ✅ Server utilities (`createRoute`, middleware) - already implemented
+- ⚠️ Server utilities (`createRoute`, middleware) - already implemented, needs `defaultMiddleware` export added
 - ✅ asyncPipe - already exists in `lib/`
 - Node.js `crypto` module for secure token generation
+
+**Note:** Before starting this epic, the server utilities PR needs to be updated to export `defaultMiddleware = asyncPipe(withRequestId, withCors, withServerError, withConfig)`
 
 ## Security Considerations
 - Use `crypto.randomBytes()` for token generation (cryptographically secure)
