@@ -69,7 +69,8 @@ const createWithCors = ({
   };
 
   const appendHeaders = ({ request, response }) => {
-    const requestOrigin = request.headers?.origin || request.headers?.Origin;
+    // Node.js normalizes all incoming headers to lowercase
+    const requestOrigin = request.headers?.origin;
     const origin = getOrigin(requestOrigin);
 
     if (origin) {
