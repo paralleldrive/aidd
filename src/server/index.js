@@ -3,7 +3,7 @@
  *
  * @example
  * // Compose custom middleware stack for your app
- * import { asyncPipe } from 'aidd/lib';
+ * import { asyncPipe } from 'aidd/lib/asyncPipe.js';
  * import {
  *   createRoute,
  *   withRequestId,
