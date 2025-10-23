@@ -148,6 +148,49 @@ Coming soon:
 - 📄 Documentation generators
 - 🔌 API design
 
+## 🚀 AIDD Server Framework
+
+A lightweight alternative to Express, built for function composition and type-safe development.
+
+**Why AIDD Server?**
+- **Function composition** - Clean asyncPipe patterns instead of middleware chains
+- **Type-safe** - Complete TypeScript definitions included
+- **Secure by default** - Sanitized logging, explicit CORS, fail-fast configuration
+- **Production-ready** - Comprehensive test coverage, battle-tested patterns
+
+**Quick Example:**
+```javascript
+import { createRoute, withRequestId, createWithConfig, loadConfigFromEnv } from 'aidd/server';
+
+// Load API keys from environment with fail-fast validation
+const withConfig = createWithConfig(() =>
+  loadConfigFromEnv(['OPENAI_API_KEY', 'DATABASE_URL'])
+);
+
+export default createRoute(
+  withRequestId,
+  withConfig,
+  async ({ request, response }) => {
+    // Throws immediately if OPENAI_API_KEY is missing
+    const apiKey = response.locals.config.get('OPENAI_API_KEY');
+
+    response.status(200).json({
+      message: 'Config loaded securely',
+      requestId: response.locals.requestId
+    });
+  }
+);
+```
+
+**Core Features:**
+- `createRoute` - Compose middleware with automatic error handling
+- `createWithConfig` - Fail-fast configuration with `config.get()`
+- `withRequestId` - CUID2 request tracking for logging
+- `createWithCors` - Explicit origin validation (secure by default)
+- `withServerError` - Standardized error responses
+
+📖 **[See complete Server Framework documentation →](docs/server/README.md)**
+
 ## 🛠️ AIDD CLI Reference
 
 The **AI Driven Development (AIDD)** CLI tool clones the complete AI agent orchestration system to any directory.
