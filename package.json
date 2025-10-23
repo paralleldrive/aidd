@@ -19,10 +19,15 @@
     "prepare": "husky",
     "toc": "doctoc README.md"
   },
+  "exports": {
+    ".": "./index.js",
+    "./server": "./src/server/index.js"
+  },
   "files": [
     "ai/**/*",
     "bin/**/*",
     "lib/**/*",
+    "src/**/*",
     "README.md",
     "LICENSE"
   ],
@@ -47,6 +52,7 @@
   },
   "homepage": "https://github.com/paralleldrive/sudolang.ai#readme",
   "dependencies": {
+    "@paralleldrive/cuid2": "^3.1.0",
     "chalk": "^4.1.2",
     "commander": "^11.1.0",
     "error-causes": "^3.0.2",
