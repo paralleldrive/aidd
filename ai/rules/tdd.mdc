@@ -61,7 +61,7 @@ For Vitest/Riteway tests:
 - Spies and stubs: vi.fn and vi.spyOn
   - Vitest ships tinyspy under the hood. Simple, fast, and no extra deps.
 - Module mocking: vi.mock with vi.importActual for partial mocks
-  Works cleanly with ESM. Avoid require.
+  - Works cleanly with ESM. Avoid require.
 - Timers: vi.useFakeTimers and vi.setSystemTime
 
 Constraints {
