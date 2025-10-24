@@ -13,6 +13,7 @@
   - [Detailed Installation Instructions](#detailed-installation-instructions)
 - [Why SudoLang?](#why-sudolang)
 - [What's Included](#whats-included)
+- [🚀 AIDD Server Framework](#-aidd-server-framework)
 - [🛠️ AIDD CLI Reference](#-aidd-cli-reference)
   - [Installation & Usage](#installation--usage)
   - [Command Options](#command-options)
