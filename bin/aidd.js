@@ -71,7 +71,7 @@ For help with /commands, use /help [command] in your AI agent chat, e.g. /help d
 
 🚀 Server Framework: Optional lightweight Express alternative for Node/Next.js
    Import from 'aidd/server' for composable, type-safe server development.
-   See README for usage: https://github.com/paralleldrive/sudolang.ai#readme
+   See docs: https://github.com/paralleldrive/sudolang.ai#-aidd-server-framework
 
 A public collection of reusable metaprograms, agent scripts, and prompt modules.
 
