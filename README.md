@@ -2,7 +2,7 @@
 
 [![SudoLang AIDD](https://img.shields.io/badge/✨_SudoLang_AIDD-black)](https://github.com/paralleldrive/sudolang.ai)
 
-**The standard library for AI Driven Development**
+**The standard framework for AI Driven Development**
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -13,6 +13,7 @@
   - [Detailed Installation Instructions](#detailed-installation-instructions)
 - [Why SudoLang?](#why-sudolang)
 - [What's Included](#whats-included)
+- [🚀 AIDD Server Framework](#-aidd-server-framework)
 - [🛠️ AIDD CLI Reference](#-aidd-cli-reference)
   - [Installation & Usage](#installation--usage)
   - [Command Options](#command-options)
@@ -141,6 +142,7 @@ Modules include:
 - 🤖 Agent behaviors and workflows
 - 🧪 Test generators
 - 🛠️ Development process automation scripts
+- 🚀 Optional composable server framework (lightweight Express alternative)
 
 Coming soon:
 

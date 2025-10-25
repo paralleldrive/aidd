@@ -19,7 +19,7 @@ describe("CLI help command", () => {
       should: "include SudoLang.ai AIDD intro from README",
       actual:
         stdout.includes("SudoLang.ai AIDD") &&
-        stdout.includes("The standard library for AI Driven Development"),
+        stdout.includes("The standard framework for AI Driven Development"),
       expected: true,
     });
   });
