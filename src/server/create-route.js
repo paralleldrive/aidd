@@ -3,7 +3,7 @@
  * This pattern replaces Express middleware chains with functional composition
  */
 
-import { asyncPipe } from "../../lib/asyncPipe.js";
+import { asyncPipe } from "../utils/asyncPipe.js";
 
 const sanitizeHeaders = (headers = {}) => {
   const { authorization, cookie, "x-api-key": apiKey, ...safe } = headers;

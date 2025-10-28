@@ -13,6 +13,8 @@
   - [Detailed Installation Instructions](#detailed-installation-instructions)
 - [Why SudoLang?](#why-sudolang)
 - [What's Included](#whats-included)
+- [🔧 Utils Library](#-utils-library)
+  - [`asyncPipe`](#asyncpipe)
 - [🚀 AIDD Server Framework](#-aidd-server-framework)
 - [🛠️ AIDD CLI Reference](#-aidd-cli-reference)
   - [Installation & Usage](#installation--usage)
@@ -143,12 +145,56 @@ Modules include:
 - 🧪 Test generators
 - 🛠️ Development process automation scripts
 - 🚀 Optional composable server framework (lightweight Express alternative)
+- 🔧 Utility library for async composition
 
 Coming soon:
 
 - 🎨 UI sketch prompts
 - 📄 Documentation generators
 - 🔌 API design
+- 🌊 Observables API with pipeable operators
+- 🗄️ State management with Supabase sync
+- ⚡ Saga builder for async workflows
+- 🎨 Skinnable UI components
+- 💰 Billing and subscription management
+- 🔐 Integrated wallet for Web3 apps
+
+## 🔧 Utils Library
+
+Utility functions for async function composition and data flow.
+
+**Import:**
+```javascript
+import { asyncPipe } from 'aidd/utils';
+```
+
+### `asyncPipe`
+
+Compose async functions from left to right. Similar to Unix pipes but for async JavaScript functions.
+
+```javascript
+import { asyncPipe } from 'aidd/utils';
+
+const processUser = asyncPipe(
+  validateInput,
+  fetchUserFromDB,
+  enrichWithProfile,
+  formatResponse
+);
+
+const result = await processUser({ userId: 123 });
+```
+
+**Type signature:**
+```typescript
+function asyncPipe<T>(...fns: Array<(x: T) => T | Promise<T>>): (x: T) => Promise<T>
+```
+
+**Benefits:**
+- **Readable** - Data flow is clear and linear
+- **Composable** - Build complex operations from simple functions
+- **Type-safe** - Full TypeScript support with type inference
+- **Async-native** - Handles promises automatically
 
 ## 🚀 AIDD Server Framework
 
