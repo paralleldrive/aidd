@@ -1,4 +1,4 @@
-# SudoLang.ai AIDD
+# SudoLang AIDD
 
 [![SudoLang AIDD](https://img.shields.io/badge/✨_SudoLang_AIDD-black)](https://github.com/paralleldrive/sudolang.ai)
 
