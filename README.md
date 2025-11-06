@@ -392,11 +392,22 @@ MIT © [ParallelDrive](https://github.com/paralleldrive)
 
 ## 🤝 Contributing
 
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on:
+
+- Development workflow using `/task`, `/review`, and `/execute` commands
+- Code style and standards (favor named exports, TDD, etc.)
+- Testing requirements
+- Commit message format
+- Pull request process
+
+**Quick Start for Contributors:**
+
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Use `/task` to plan your changes
+4. Use `/execute` with TDD to implement
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
 
 ---
 
