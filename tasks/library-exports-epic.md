@@ -3,6 +3,8 @@
 **Status**: 📋 PLANNED  
 **Goal**: Establish consistent, tree-shakeable export conventions using explicit paths
 
+**Note**: All export changes should include automated tests to verify imports work correctly.
+
 ## Overview
 
 Users need explicit import paths (`'aidd/asyncPipe'`) instead of barrel exports to ensure optimal tree shaking and faster builds. The current package.json references a non-existent root `index.js` file, and documentation shows imports from `'aidd'` that don't work. By adopting the convention `import { utilName } from 'aidd/<utilName>'` we match the existing `'aidd/server'` pattern, eliminate barrel file complexity, and guarantee users only bundle what they import.
@@ -41,6 +43,18 @@ Add TypeScript definitions for exported utilities.
 - Given asyncPipe.js, should create asyncPipe.d.ts with proper function signature
 - Given package.json exports, should map .d.ts files for TypeScript resolution
 - Given TypeScript projects, should resolve types without additional configuration
+
+---
+
+## Setup TypeScript Type Checking
+
+Add TypeScript tooling to validate .d.ts files are correct.
+
+**Requirements**:
+- Given .d.ts files, should install typescript as devDependency
+- Given type validation needs, should create tsconfig.json for type checking only
+- Given CI/testing workflow, should add typecheck npm script
+- Given pre-commit hooks, should run typecheck before allowing commits
 
 ---
 
