@@ -1,90 +1,70 @@
-# Epic: Fix Library Exports and Document Conventions
+# Fix Library Exports Epic
 
-## Goal
+**Status**: 📋 PLANNED  
+**Goal**: Establish consistent, tree-shakeable export conventions using explicit paths
 
-Establish and implement consistent, tree-shakeable export conventions for the aidd library. Remove non-existent root exports and ensure all utilities are accessible via explicit paths.
+## Overview
 
-## Context
+Users need explicit import paths (`'aidd/asyncPipe'`) instead of barrel exports to ensure optimal tree shaking and faster builds. The current package.json references a non-existent root `index.js` file, and documentation shows imports from `'aidd'` that don't work. By adopting the convention `import { utilName } from 'aidd/<utilName>'` we match the existing `'aidd/server'` pattern, eliminate barrel file complexity, and guarantee users only bundle what they import.
 
-Currently, package.json declares a root export (`"."`) pointing to `index.js` which doesn't exist. Documentation shows imports from `'aidd'` but the file is missing. The library should use explicit path exports for better tree shaking, consistency with existing patterns (`'aidd/server'`), and clearer module boundaries.
+---
 
-## Export Convention
+## Audit Current Exports
 
-**Lib utilities**: `import { utilName } from 'aidd/<utilName>'`
+Review package.json exports and identify which lib utilities should be publicly accessible.
 
-Examples:
-- `import { asyncPipe } from 'aidd/asyncPipe'`
-- `import { createRoute } from 'aidd/server'` (already exists)
+**Requirements**:
+- Given package.json exports field, should document all declared exports
+- Given lib/ directory, should identify utilities suitable for public export
+- Given existing documentation, should list all referenced import paths
+- Given current state, should identify non-existent files referenced in exports
 
-## Benefits
+---
 
-1. **Tree shaking**: Guaranteed - only import what you use
-2. **Consistency**: Matches existing `'aidd/server'` pattern
-3. **Explicit**: Clear what module you're importing
-4. **Maintainable**: No barrel files to manage
-5. **Fast builds**: Bundlers don't analyze barrel exports
+## Update Package Exports
 
-## Tasks
+Remove non-existent root export and add explicit path exports for lib utilities.
 
-### 1. Audit Current Exports
-- [ ] Review package.json exports field
-- [ ] Identify all lib utilities that should be exported
-- [ ] Check which utilities are currently importable
-- [ ] Document current vs. desired state
+**Requirements**:
+- Given non-existent root export, should remove `"."` from package.json exports
+- Given asyncPipe utility, should add `"./asyncPipe": "./lib/asyncPipe.js"` export
+- Given TypeScript users, should include type definitions in exports map
+- Given server export, should verify it includes proper type resolution
 
-### 2. Update package.json Exports
-- [ ] Remove non-existent root `"."` export
-- [ ] Add explicit export for asyncPipe: `"./asyncPipe": "./lib/asyncPipe.js"`
-- [ ] Add TypeScript type definitions for asyncPipe
-- [ ] Verify server export is correct with types
-- [ ] Add any other lib utilities that should be public
+---
 
-### 3. Create Type Definitions
-- [ ] Create `lib/asyncPipe.d.ts` with TypeScript definitions
-- [ ] Ensure types are discoverable via package.json exports
-- [ ] Verify TypeScript can resolve types correctly
+## Create Type Definitions
 
-### 4. Update Documentation
-- [ ] Update README.md: change `'aidd'` imports to `'aidd/asyncPipe'`
-- [ ] Update docs/server/README.md with correct import paths
-- [ ] Update any code examples in comments/docstrings
-- [ ] Document export conventions in README or contributing guide
+Add TypeScript definitions for exported utilities.
 
-### 5. Verify and Test
-- [ ] Test that imports work: `import { asyncPipe } from 'aidd/asyncPipe'`
-- [ ] Test that server imports still work: `import { createRoute } from 'aidd/server'`
-- [ ] Verify TypeScript types are resolved correctly
-- [ ] Check that invalid imports fail appropriately
-- [ ] Run existing tests to ensure nothing breaks
+**Requirements**:
+- Given asyncPipe.js, should create asyncPipe.d.ts with proper function signature
+- Given package.json exports, should map .d.ts files for TypeScript resolution
+- Given TypeScript projects, should resolve types without additional configuration
 
-### 6. Update Version and Release
-- [ ] Determine if this is a breaking change (likely yes - import paths change)
-- [ ] Update version appropriately (major bump if breaking)
-- [ ] Update CHANGELOG/activity log
-- [ ] Prepare release notes explaining the change
+---
 
-## Acceptance Criteria
+## Update Documentation
 
-- [ ] No non-existent files referenced in package.json exports
-- [ ] All lib utilities accessible via `'aidd/<utilName>'` pattern
-- [ ] TypeScript definitions work correctly for all exports
-- [ ] Documentation reflects actual import paths
-- [ ] All existing tests pass
-- [ ] Export conventions documented for future contributors
+Change all import examples to use explicit path convention.
 
-## Notes
+**Requirements**:
+- Given README.md examples, should change `'aidd'` to `'aidd/asyncPipe'`
+- Given docs/server/README.md, should update asyncPipe import paths
+- Given code comments and docstrings, should update import examples
+- Given future contributors, should document export convention pattern
 
-- Users should NOT import from `ai/` or `bin/` - these are internal
-- Keep `files` field in package.json as-is (includes lib, src, bin, ai)
-- Server utilities remain at `'aidd/server'` (no change)
-- This is a breaking change for anyone using `'aidd'` root imports
+---
 
-## Definition of Done
+## Verify Implementation
 
-- Package can be imported using documented conventions
-- TypeScript users get proper type hints
-- Documentation is accurate and complete
-- All tests pass
-- No console warnings or errors about missing modules
+Test that new import paths work and existing functionality is preserved.
+
+**Requirements**:
+- Given new export paths, should successfully import from `'aidd/asyncPipe'`
+- Given existing server exports, should continue working at `'aidd/server'`
+- Given TypeScript projects, should provide IntelliSense and type checking
+- Given invalid import paths, should fail with clear module not found errors
+- Given existing test suite, should pass without modifications
 
 
