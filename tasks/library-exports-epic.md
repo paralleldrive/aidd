@@ -3,7 +3,7 @@
 **Status**: 📋 PLANNED  
 **Goal**: Establish consistent, tree-shakeable export conventions using explicit paths
 
-**Note**: All export changes should include automated tests to verify imports work correctly.
+**Note**: All export changes should include automated tests to verify imports work correctly. Favor named exports over default exports.
 
 ## Overview
 
