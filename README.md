@@ -406,7 +406,7 @@ MIT © [ParallelDrive](https://github.com/paralleldrive)
 
 ## 🤝 Contributing
 
-We welcome contributions! Follow the [Development Workflow](#development-workflow) above, then see [CONTRIBUTING.md](CONTRIBUTING.md) for code style, testing requirements, and commit message format.
+We welcome contributions! Follow the [Development Workflow](#development-workflow) above, and see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ---
 
