@@ -11,6 +11,7 @@
 - [🚀 Quick Start with AIDD CLI](#-quick-start-with-aidd-cli)
   - [📋 Requirements](#-requirements)
   - [Detailed Installation Instructions](#detailed-installation-instructions)
+- [Development Workflow](#development-workflow)
 - [Why SudoLang?](#why-sudolang)
 - [What's Included](#whats-included)
 - [🚀 AIDD Server Framework](#-aidd-server-framework)
@@ -120,6 +121,18 @@ This gives you immediate access to:
 - ⚙️ **AI workflow commands** (`ai/commands/`)
 - 📋 **Development best practices** (JavaScript, TDD, UI/UX)
 - 🎯 **Product management tools** (user stories, journey mapping)
+
+## Development Workflow
+
+For features or bug fixes spanning more than a few lines:
+
+1. **Create a branch**: `git checkout -b your-branch-name`
+2. **Plan with `/task`**: Create a structured epic with clear requirements
+3. **Review with `/review`**: Eliminate duplication, simplify without losing requirements
+4. **Execute with `/execute`**: Implement using TDD, one requirement at a time
+5. **Push and PR**: `git push origin your-branch-name` then open a Pull Request
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on code style, testing, and commit messages.
 
 ## Why SudoLang?
 
@@ -392,22 +405,7 @@ MIT © [ParallelDrive](https://github.com/paralleldrive)
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on:
-
-- Development workflow using `/task`, `/review`, and `/execute` commands
-- Code style and standards (favor named exports, TDD, etc.)
-- Testing requirements
-- Commit message format
-- Pull request process
-
-**Quick Start for Contributors:**
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Use `/task` to plan your changes
-4. Use `/execute` with TDD to implement
-5. Push to the branch (`git push origin feature/amazing-feature`)
-6. Open a Pull Request
+We welcome contributions! Follow the [Development Workflow](#development-workflow) above, then see [CONTRIBUTING.md](CONTRIBUTING.md) for code style, testing requirements, and commit message format.
 
 ---
 

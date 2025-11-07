@@ -1,44 +1,10 @@
 # Contributing to AIDD
 
-Thank you for your interest in contributing to AIDD! This document provides guidelines for contributing to the project.
-
-## Getting Started
-
-If you haven't already, please read the [README](README.md) for an overview of the project, installation instructions, and how to use the AIDD CLI.
+Thank you for your interest in contributing! This document provides code style guidelines and standards.
 
 ## Development Workflow
 
-For new features or bug fixes spanning more than a few lines of code, we use an AI-driven development workflow:
-
-1. **Create a semantically named branch**
-   ```bash
-   git checkout -b fix-exports
-   # or
-   git checkout -b feature-add-logging
-   ```
-
-2. **Create a plan using the `/task` command**
-   - Use the `/task` command in your AI assistant to create a structured epic
-   - The epic should follow the template in `ai/rules/task-creator.mdc`
-   - Include clear "Given X, should Y" requirements
-
-3. **Review the plan using `/review`**
-   - Use `/review` to eliminate duplication and simplify
-   - Ensure no key requirements are lost
-   - Keep the epic concise and focused
-
-4. **Execute the plan using `/execute` with TDD**
-   - Use `/execute` to implement the plan
-   - Follow Test-Driven Development (TDD) - see `ai/rules/tdd.mdc`
-   - Implement one requirement at a time
-   - Get approval before moving to the next requirement
-
-5. **Push the branch and wait for reviews**
-   ```bash
-   git push origin your-branch-name
-   ```
-   - Open a Pull Request
-   - Wait for code review and feedback
+See the [Development Workflow](README.md#development-workflow) section in the README for the step-by-step process using `/task`, `/review`, and `/execute` commands.
 
 ## Code Style & Standards
 
@@ -53,29 +19,11 @@ For new features or bug fixes spanning more than a few lines of code, we use an 
 
 ### Export Conventions
 
-When adding new utilities to the library:
-
 - **Use explicit path exports**: `import { utilName } from 'aidd/<utilName>'`
 - **Favor named exports** over default exports
 - Add exports to `package.json` exports field
 - Include TypeScript `.d.ts` definitions
 - Add automated tests for all exports
-
-Example:
-```javascript
-// lib/myUtil.js
-export const myUtil = () => { /* ... */ };
-
-// package.json
-{
-  "exports": {
-    "./myUtil": "./lib/myUtil.js"
-  }
-}
-
-// Usage
-import { myUtil } from 'aidd/myUtil';
-```
 
 ### Testing
 
