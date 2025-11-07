@@ -127,12 +127,13 @@ This gives you immediate access to:
 For features or bug fixes spanning more than a few lines:
 
 1. **Create a branch**: `git checkout -b your-branch-name`
-2. **Plan with `/task`**: Create a structured epic with clear requirements
+2. **Discover what to build with `/discover`**: Set up your project profile and discover key user journeys to create a user story map
+2. **Plan execution with `/task`**: Create a structured epic with clear requirements
 3. **Review with `/review`**: Eliminate duplication, simplify without losing requirements
 4. **Execute with `/execute`**: Implement using TDD, one requirement at a time
 5. **Push and PR**: `git push origin your-branch-name` then open a Pull Request
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on code style, testing, and commit messages.
+Note: We use this process to build the `aidd` framework. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## Why SudoLang?
 
