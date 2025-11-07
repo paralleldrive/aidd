@@ -11,6 +11,7 @@
 - [🚀 Quick Start with AIDD CLI](#-quick-start-with-aidd-cli)
   - [📋 Requirements](#-requirements)
   - [Detailed Installation Instructions](#detailed-installation-instructions)
+- [Development Workflow](#development-workflow)
 - [Why SudoLang?](#why-sudolang)
 - [What's Included](#whats-included)
 - [🚀 AIDD Server Framework](#-aidd-server-framework)
@@ -120,6 +121,19 @@ This gives you immediate access to:
 - ⚙️ **AI workflow commands** (`ai/commands/`)
 - 📋 **Development best practices** (JavaScript, TDD, UI/UX)
 - 🎯 **Product management tools** (user stories, journey mapping)
+
+## Development Workflow
+
+For features or bug fixes spanning more than a few lines:
+
+1. **Create a branch**: `git checkout -b your-branch-name`
+2. **Discover what to build with `/discover`**: Set up your project profile and discover key user journeys to create a user story map
+3. **Plan execution with `/task`**: Create a structured epic with clear requirements
+4. **Review with `/review`**: Eliminate duplication, simplify without losing requirements
+5. **Execute with `/execute`**: Implement using TDD, one requirement at a time
+6. **Push and PR**: `git push origin your-branch-name` then open a Pull Request
+
+Note: We use this process to build the `aidd` framework. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## Why SudoLang?
 
@@ -392,11 +406,7 @@ MIT © [ParallelDrive](https://github.com/paralleldrive)
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+We welcome contributions! Follow the [Development Workflow](#development-workflow) above, and see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ---
 
