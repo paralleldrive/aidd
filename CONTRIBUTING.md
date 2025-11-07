@@ -11,7 +11,6 @@ See the [Development Workflow](README.md#development-workflow) section in the RE
 ### JavaScript/TypeScript
 
 - Follow the guidelines in `ai/rules/javascript/javascript.mdc`
-- **Favor named exports over default exports**
 - Use functional programming patterns
 - Keep functions small, pure, and composable
 - Use `const`, avoid mutation
