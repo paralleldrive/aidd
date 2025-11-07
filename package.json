@@ -15,13 +15,20 @@
     "test": "vitest run && echo 'Test complete.' && npm run -s lint",
     "test:unit": "vitest run --exclude '**/*-e2e.test.js' && echo 'Unit tests complete.' && npm run -s lint",
     "test:e2e": "vitest run **/*-e2e.test.js && echo 'E2E tests complete.'",
+    "typecheck": "tsc --noEmit && echo 'Type check complete.'",
     "check-status": "[ -n \"$(git status --porcelain)\" ] && { echo '❌ Uncommitted changes'; exit 1; } || echo '✅ Git status is clean.'",
     "prepare": "husky",
     "toc": "doctoc README.md"
   },
   "exports": {
-    ".": "./index.js",
-    "./server": "./src/server/index.js"
+    "./asyncPipe": {
+      "types": "./lib/asyncPipe.d.ts",
+      "default": "./lib/asyncPipe.js"
+    },
+    "./server": {
+      "types": "./src/server/index.d.ts",
+      "default": "./src/server/index.js"
+    }
   },
   "files": [
     "ai/**/*",
@@ -69,6 +76,7 @@
     "prettier": "^3.6.2",
     "release-it": "^19.0.5",
     "riteway": "^9.0.0-rc.1",
+    "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   }
 }
