@@ -85,7 +85,7 @@ createRoute(...middleware: Middleware[]): RouteHandler
 **Example:**
 ```javascript
 import { createRoute, withRequestId } from 'aidd/server';
-import { asyncPipe } from 'aidd/asyncPipe';
+import { asyncPipe } from 'aidd/utils';
 
 const myRoute = createRoute(
   withRequestId,
@@ -402,7 +402,7 @@ test('withRequestId adds request ID', async () => {
 
 ```javascript
 import { createRoute, withRequestId, createWithCors, createWithConfig, loadConfigFromEnv } from 'aidd/server';
-import { asyncPipe } from 'aidd/asyncPipe';
+import { asyncPipe } from 'aidd/utils';
 
 // CORS for your frontend
 const withCors = createWithCors({

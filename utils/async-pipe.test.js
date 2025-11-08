@@ -1,7 +1,7 @@
 import { assert } from "riteway/vitest";
 import { describe, test } from "vitest";
 
-import { asyncPipe } from "./asyncPipe.js";
+import { asyncPipe } from "./async-pipe.js";
 
 describe("asyncPipe", () => {
   test("pipes async functions in sequence", async () => {
@@ -13,8 +13,8 @@ describe("asyncPipe", () => {
     const result = await pipeline(5);
 
     assert({
-      given: "a pipeline of async functions and initial value 5",
-      should: "apply functions in sequence: (5 + 1) * 2 - 3 = 9",
+      given: "multiple async functions",
+      should: "apply functions left-to-right, awaiting each result",
       actual: result,
       expected: 9,
     });
@@ -26,8 +26,8 @@ describe("asyncPipe", () => {
     const result = await pipeline(4);
 
     assert({
-      given: "a pipeline with single async function",
-      should: "apply the function correctly",
+      given: "a single async function",
+      should: "apply the function and return its result",
       actual: result,
       expected: 8,
     });

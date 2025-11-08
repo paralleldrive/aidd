@@ -21,6 +21,7 @@ Criteria {
   Ensure that code comments comply with the relevant style guides.
   Use docblocks for public APIs - but keep them minimal.
   Ensure there are no unused stray files or dead code.
+  Dig deep. Look for: redundancies, forgotten files (d.ts, etc), things that should have been moved or deleted that were not. Simplicity is removing the obvious and adding the meaningful. Perfection is attained not when there is nothing more to add, but when there is nothing more to remove.
 }
 
 Constraints {

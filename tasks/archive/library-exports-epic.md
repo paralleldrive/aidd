@@ -10,17 +10,19 @@
 Successfully implemented tree-shakeable exports for the aidd package:
 
 - ✅ Removed non-existent root export from package.json
-- ✅ Added `aidd/asyncPipe` subpath export with TypeScript definitions
-- ✅ Created comprehensive type definitions (lib/asyncPipe.d.ts)
+- ✅ Added `aidd/utils` barrel export with TypeScript definitions
+- ✅ Created comprehensive type definitions (utils/index.d.ts)
+- ✅ Added utilities: asyncPipe, pipe, compose
 - ✅ Installed TypeScript and added typecheck npm script
 - ✅ Created automated tests verifying import paths work correctly (lib/exports.test.js)
 - ✅ Updated docs/server/README.md to use correct import paths
-- ✅ All tests passing (94 tests)
+- ✅ All tests passing
 - ✅ Type checking passing
+- ✅ Added sideEffects: false for optimal tree-shaking
 
 ## Overview
 
-Users need explicit import paths (`'aidd/asyncPipe'`) instead of barrel exports to ensure optimal tree shaking and faster builds. The current package.json references a non-existent root `index.js` file, and documentation shows imports from `'aidd'` that don't work. By adopting the convention `import { utilName } from 'aidd/<utilName>'` we match the existing `'aidd/server'` pattern, eliminate barrel file complexity, and guarantee users only bundle what they import.
+Users need explicit import paths (`'aidd/utils'`, `'aidd/server'`) with barrel exports to ensure optimal tree shaking and faster builds. The package uses subpath exports with `sideEffects: false` to enable modern bundlers to eliminate unused code. By adopting the convention `import { utilName } from 'aidd/utils'` we match the existing `'aidd/server'` pattern and guarantee users only bundle what they import.
 
 ---
 
@@ -44,9 +46,10 @@ Remove non-existent root export and add explicit path exports for lib utilities.
 **Requirements**:
 
 - Given non-existent root export, should remove `"."` from package.json exports
-- Given asyncPipe utility, should add `"./asyncPipe": "./lib/asyncPipe.js"` export
+- Given utility functions, should add `"./utils": "./utils/index.js"` barrel export
 - Given TypeScript users, should include type definitions in exports map
 - Given server export, should verify it includes proper type resolution
+- Given tree-shaking optimization, should add `"sideEffects": false` to package.json
 
 ---
 
@@ -56,7 +59,7 @@ Add TypeScript definitions for exported utilities.
 
 **Requirements**:
 
-- Given asyncPipe.js, should create asyncPipe.d.ts with proper function signature
+- Given async-pipe.js, should create TypeScript definitions with proper function signature
 - Given package.json exports, should map .d.ts files for TypeScript resolution
 - Given TypeScript projects, should resolve types without additional configuration
 
@@ -81,7 +84,7 @@ Change all import examples to use explicit path convention.
 
 **Requirements**:
 
-- Given README.md examples, should change `'aidd'` to `'aidd/asyncPipe'`
+- Given README.md examples, should change `'aidd'` to `'aidd/utils'`
 - Given docs/server/README.md, should update asyncPipe import paths
 - Given code comments and docstrings, should update import examples
 - Given future contributors, should document export convention pattern
@@ -94,7 +97,7 @@ Test that new import paths work and existing functionality is preserved.
 
 **Requirements**:
 
-- Given new export paths, should successfully import from `'aidd/asyncPipe'`
+- Given new export paths, should successfully import from `'aidd/utils'`
 - Given existing server exports, should continue working at `'aidd/server'`
 - Given TypeScript projects, should provide IntelliSense and type checking
 - Given invalid import paths, should fail with clear module not found errors

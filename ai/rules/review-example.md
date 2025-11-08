@@ -26,7 +26,7 @@
 
 ```
 lib/
-├── asyncPipe.js + asyncPipe.test.js ✅
+├── async-pipe.js + async-pipe.test.js ✅
 ├── release-helpers.js + release-helpers.test.js ✅
 ├── update-latest-tag-hook.js + update-latest-tag-hook.test.js ✅
 └── release-process-e2e.test.js ✅
