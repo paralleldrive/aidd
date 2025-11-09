@@ -33,9 +33,12 @@
   "files": [
     "ai/**/*",
     "bin/**/*",
+    "docs/**/*",
     "lib/**/*",
     "src/**/*",
     "utils/**/*",
+    "!**/*.test.js",
+    "!**/*-e2e.test.js",
     "README.md",
     "LICENSE",
     "CHANGELOG.md",
