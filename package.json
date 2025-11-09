@@ -37,11 +37,13 @@
     "src/**/*",
     "utils/**/*",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/paralleldrive/sudolang.ai.git"
+    "url": "git+https://github.com/paralleldrive/aidd.git"
   },
   "keywords": [
     "ai-driven-development",
@@ -56,9 +58,9 @@
   "author": "ParallelDrive",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/paralleldrive/sudolang.ai/issues"
+    "url": "https://github.com/paralleldrive/aidd/issues"
   },
-  "homepage": "https://github.com/paralleldrive/sudolang.ai#readme",
+  "homepage": "https://github.com/paralleldrive/aidd#readme",
   "dependencies": {
     "@paralleldrive/cuid2": "^3.1.0",
     "chalk": "^4.1.2",
