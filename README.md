@@ -4,6 +4,13 @@
 
 **The standard framework for AI Driven Development**
 
+Includes:
+- **AIDD CLI** – project bootstrap and automation
+- **Agent Runtime** – workflows from product discovery to commit and release
+- **SudoLang Prompt Language** – typed pseudocode for AI orchestration
+- **Server Framework** – composable backend for Node and Next.js
+- **Utilities & Component Library** – common patterns and reusable recipes to accelerate your app development
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
@@ -35,17 +42,11 @@
 
 ## About SudoLang AIDD
 
-A public collection of reusable metaprograms, agent scripts, and prompt modules. SudoLang agents put high quality software engineering process on autopilot rails.
+**AI-Driven Development (AIDD)** is a methodology where AI systems take primary responsibility for generating, testing, and documenting code, automating most of the software creation process so humans can focus on the big picture and 10× their productivity.
 
-The collection includes a comprehensive AI agent orchestration system with commands and rules that enable AI Driven Development workflows.
+SudoLang AIDD is a collection of reusable metaprograms, agent orchestration systems, and prompt modules that put high-quality software engineering processes on autopilot rails. It implements time-tested workflows including specification-driven development, systematic task planning with Test Driven Development (TDD), and automated code review with best practices enforcement.
 
-This system implements time-tested software engineering processes on autopilot rails, including:
-
-- Specification driven development with PRDs and concise, structured user stories.
-- Systematic task planning and execution with Test Driven Development (TDD).
-- Code review and refinement with automated code quality checks and best practices enforcement.
-
-The system also includes comprehensive code style guides for JavaScript, TypeScript, React, Redux, and we'll be adding more soon!
+**SudoLang** is a pseudocode language for prompting large language models with clear structure, strong typing, and explicit control flow.
 
 **AI Workflow Commands** - Use these in your AI assistant chat (Cursor, ChatGPT, Claude, etc.):
 
@@ -57,8 +58,6 @@ The system also includes comprehensive code style guides for JavaScript, TypeScr
 /log - log the changes to the activity log
 /commit - commit the changes to the repository
 ```
-
-**SudoLang** is a pseudocode language for prompting large language models with clear structure, strong typing, and explicit control flow.
 
 ## 🚀 Quick Start with AIDD CLI
 

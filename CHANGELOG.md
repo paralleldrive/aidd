@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2024-11-08
+## [2.0.0] - 2025-11-08
 
 ### Added
 - New `aidd/utils` barrel export with composition utilities
@@ -28,7 +28,7 @@ import { asyncPipe } from 'aidd/asyncPipe';
 import { asyncPipe } from 'aidd/utils';
 ```
 
-## [1.13.0] - 2024-11-08
+## [1.13.0] - 2025-11-06
 
 ### Added
 - AIDD Server Framework with production-ready middleware
@@ -39,7 +39,7 @@ import { asyncPipe } from 'aidd/utils';
 - Flaky E2E tests now robust with git state verification
 - Test redundancies removed for cleaner test suite
 
-## [1.12.0] - 2024-10-20
+## [1.12.0] - 2025-10-21
 
 ### Added
 - Release automation improvements
