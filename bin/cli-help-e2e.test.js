@@ -16,9 +16,9 @@ describe("CLI help command", () => {
 
     assert({
       given: "CLI help command is run",
-      should: "include SudoLang.ai AIDD intro from README",
+      should: "include SudoLang AIDD intro from README",
       actual:
-        stdout.includes("SudoLang.ai AIDD") &&
+        stdout.includes("SudoLang AIDD") &&
         stdout.includes("The standard framework for AI Driven Development"),
       expected: true,
     });

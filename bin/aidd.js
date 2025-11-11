@@ -54,7 +54,7 @@ const createCli = () => {
     .addHelpText(
       "before",
       `
-SudoLang.ai AIDD
+SudoLang AIDD
 The standard framework for AI Driven Development.
 
 Includes:
