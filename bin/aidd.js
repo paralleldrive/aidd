@@ -54,20 +54,23 @@ const createCli = () => {
     .addHelpText(
       "before",
       `
-# SudoLang AIDD
+SudoLang AIDD
 The standard framework for AI-Driven Development.
 
 Includes:
-- **AIDD CLI** – project bootstrap and automation
-- **Agent Runtime** – workflows from product discovery to commit and release
-- **SudoLang Prompt Language** – typed pseudocode for AI orchestration
-- **Server Framework** – composable backend for Node and Next.js
-- **Utilities & Component Library** – common patterns and reusable recipes to accelerate your app development
+- AIDD CLI – project bootstrap and automation
+- Agent Runtime – workflows from product discovery to commit and release
+- SudoLang Prompt Language – typed pseudocode for AI orchestration
+- Server Framework – composable backend for Node and Next.js
+- Utilities & Component Library – common patterns and reusable recipes to accelerate your app development
 
-**AI-Driven Development (AIDD)** is a methodology where AI systems take primary
+AI-Driven Development (AIDD) is a methodology where AI systems take primary
 responsibility for generating, testing, and documenting code, automating most of
 the software creation process so humans can focus on the big picture and 10× their
 productivity.
+
+🚀 Server Framework: Import from 'aidd/server' for composable, type-safe server development.
+   See documentation: https://github.com/paralleldrive/aidd#-aidd-server-framework
 
 🚀 AI Workflow Commands (use in your AI assistant chat):
 • /discover - what to build
