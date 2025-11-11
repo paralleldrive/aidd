@@ -73,12 +73,12 @@ productivity.
    See documentation: https://github.com/paralleldrive/aidd#-aidd-server-framework
 
 🚀 AI Workflow Commands (use in your AI assistant chat):
-• /discover - what to build
-• /task - planning
-• /execute - task epics with TDD
-• /review - the results
-• /log - activity logging
-• /commit - commit changes
+- /discover - what to build
+- /task - planning
+- /execute - task epics with TDD
+- /review - the results
+- /log - activity logging
+- /commit - commit changes
 
 After installation, ask your AI agent: /help
 For help with /commands, use /help [command] in your AI agent chat, e.g. /help discover
