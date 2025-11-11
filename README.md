@@ -1,6 +1,6 @@
 # SudoLang AIDD
 
-[![SudoLang AIDD](https://img.shields.io/badge/✨_SudoLang_AIDD-black)](https://github.com/paralleldrive/sudolang.ai)
+[![SudoLang AIDD](https://img.shields.io/badge/✨_SudoLang_AIDD-black)](https://github.com/paralleldrive/aidd)
 
 **The standard framework for AI Driven Development**
 
