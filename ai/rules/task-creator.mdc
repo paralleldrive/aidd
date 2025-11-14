@@ -77,12 +77,40 @@ epicTemplate() {
   """
   # ${EpicName} Epic
 
-  **Status**: 📋 PLANNED  
+  **Status**: 📋 PLANNED
   **Goal**: ${briefGoal}
 
   ## Overview
 
   ${singleParagraphStartingWithWHY}
+
+  ---
+
+  ## Interfaces
+
+  Define key types and interfaces in SudoLang format:
+
+  ```sudo
+  $InterfaceName {
+    ...otherInterfaceToMixIn
+    [$keyName]: $type
+  }
+  ```
+
+  Example:
+  ```sudo
+  type ID = string(cuid2)
+  type Timestamp = number(epoch ms)
+
+  User {
+    id: ID
+    name: string
+    createdAt: Timestamp
+    meta {
+      lastSignedIn: Timestamp
+    }
+  }
+  ```
 
   ---
 
@@ -104,11 +132,18 @@ epicConstraints {
   Explain what gaps are being addressed
   Keep it terse
 
+  // Interfaces:
+  Define all key types and interfaces in SudoLang format
+  Interfaces take precedence - requirements must align with defined interfaces
+  Include types for configuration, events, payloads, and return values
+  Use clear, descriptive names
+
   // Tasks:
   No task numbering (use task names only)
   Brief description (1 sentence max)
   Requirements section with bullet points ONLY using "Given X, should Y" format
   Include ONLY novel, meaningful, insightful requirements
+  Requirements must be consistent with defined interfaces
   NO extra sections, explanations or text
 }
 
@@ -116,6 +151,8 @@ reviewEpic() {
   After creating the epic file, verify:
 
   1. Single paragraph overview starting with WHY
+  1. Interfaces section includes all key types in SudoLang format
+  1. Requirements align with defined interfaces
   1. No task numbering
   1. All requirements follow "Given X, should Y" format
   1. Only novel/insightful requirements remain (eliminate obvious boilerplate)
