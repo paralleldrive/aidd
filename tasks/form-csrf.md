@@ -87,6 +87,7 @@ withCSRF // Direct export, no parameters
 7. Given setting the CSRF cookie, should set `SameSite=Strict` and `Secure=true` (in production)
 8. Given setting the CSRF cookie, should not set `HttpOnly` (client must read token to submit it)
 9. Given any CSRF rejection, should log the failure with request ID but without exposing token values
+10. Given token comparison, should compare SHA3 hashes of tokens to prevent timing attacks
 
 ### Implementation Notes
 
