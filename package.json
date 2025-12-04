@@ -71,6 +71,14 @@
     "error-causes": "^3.0.2",
     "fs-extra": "^11.1.1"
   },
+  "peerDependencies": {
+    "better-auth": "^1.4.5"
+  },
+  "peerDependenciesMeta": {
+    "better-auth": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@vitest/coverage-v8": "^3.2.4",

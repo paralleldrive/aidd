@@ -44,4 +44,6 @@ export {
   createConfigObject,
   loadConfigFromEnv,
   withServerError,
+  createWithAuth,
+  createWithOptionalAuth,
 } from "./middleware/index.js";

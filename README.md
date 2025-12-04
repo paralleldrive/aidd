@@ -25,6 +25,7 @@ Includes:
 - [Why SudoLang?](#why-sudolang)
 - [What's Included](#whats-included)
 - [🚀 AIDD Server Framework](#-aidd-server-framework)
+  - [Authentication Middleware](#authentication-middleware)
 - [🛠️ AIDD CLI Reference](#-aidd-cli-reference)
   - [Installation & Usage](#installation--usage)
   - [Command Options](#command-options)
@@ -206,6 +207,124 @@ export default createRoute(
 - `withRequestId` - CUID2 request tracking for logging
 - `createWithCors` - Explicit origin validation (secure by default)
 - `withServerError` - Standardized error responses
+- `createWithAuth` / `createWithOptionalAuth` - Session validation with [better-auth](https://www.better-auth.com/)
+
+### Authentication Middleware
+
+AIDD Server includes optional auth middleware that wraps [better-auth](https://www.better-auth.com/) for session validation.
+
+**1. Install better-auth:**
+```bash
+npm install better-auth
+```
+
+**2. Configure better-auth** (see [better-auth docs](https://www.better-auth.com/docs)):
+```javascript
+// lib/auth.server.js
+import { betterAuth } from 'better-auth';
+
+export const auth = betterAuth({
+  database: yourDatabaseAdapter,
+  emailAndPassword: { enabled: true },
+});
+```
+
+**3. Create auth API route** (framework-specific):
+```javascript
+// Next.js: app/api/auth/[...all]/route.js
+import { toNextJsHandler } from 'better-auth/next-js';
+import { auth } from '@/lib/auth.server';
+
+export const { GET, POST } = toNextJsHandler(auth);
+```
+
+**4. Use AIDD auth middleware in protected routes:**
+```javascript
+import { createRoute, withRequestId, createWithAuth } from 'aidd/server';
+import { auth } from '@/lib/auth.server';
+
+const withAuth = createWithAuth({ auth });
+
+// Protected route - returns 401 if not authenticated
+export default createRoute(
+  withRequestId,
+  withAuth,
+  async ({ response }) => {
+    const { user } = response.locals.auth;
+    response.json({ email: user.email });
+  }
+);
+```
+
+**Optional auth** for public routes that benefit from user context:
+```javascript
+import { createWithOptionalAuth } from 'aidd/server';
+
+const withOptionalAuth = createWithOptionalAuth({ auth });
+
+// Public route - user attached if logged in, null otherwise
+export default createRoute(
+  withOptionalAuth,
+  async ({ response }) => {
+    const user = response.locals.auth?.user;
+    response.json({
+      greeting: user ? `Hello, ${user.name}` : 'Hello, guest'
+    });
+  }
+);
+```
+
+**Passkey authentication** (passwordless):
+```bash
+npm install @better-auth/passkey
+```
+
+```javascript
+// lib/auth.server.js
+import { betterAuth } from 'better-auth';
+import { passkey } from '@better-auth/passkey';
+
+export const auth = betterAuth({
+  database: yourDatabaseAdapter,
+  plugins: [passkey()],
+});
+```
+
+```javascript
+// API route: Register passkey (requires authentication)
+import { createRoute, createWithAuth } from 'aidd/server';
+import { auth } from '@/lib/auth.server';
+
+const withAuth = createWithAuth({ auth });
+
+export default createRoute(
+  withAuth,
+  async ({ request, response }) => {
+    const { user } = response.locals.auth;
+    
+    // User is authenticated, register their passkey
+    const result = await auth.api.addPasskey({
+      body: { name: `${user.email}'s passkey` },
+      headers: request.headers,
+    });
+    
+    response.json(result);
+  }
+);
+```
+
+```javascript
+// API route: List user's passkeys
+export default createRoute(
+  withAuth,
+  async ({ request, response }) => {
+    const passkeys = await auth.api.listPasskeys({
+      headers: request.headers,
+    });
+    response.json({ passkeys });
+  }
+);
+```
 
 📖 **[See complete Server Framework documentation →](docs/server/README.md)**
 

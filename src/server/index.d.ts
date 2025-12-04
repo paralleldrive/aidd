@@ -3,6 +3,8 @@
  * Type definitions for aidd/server
  */
 
+import type { Session, User } from "better-auth/types";
+
 // Config object with get() method
 export interface ConfigObject {
   /**
@@ -33,6 +35,7 @@ export interface Response {
     requestId?: string;
     config?: ConfigObject;
     serverError?: (options?: ErrorOptions) => ErrorResponse;
+    auth?: { user: User; session: Session } | null;
     [key: string]: any;
   };
   [key: string]: any;
@@ -183,3 +186,61 @@ export function createWithConfig(configLoader: ConfigLoader): Middleware;
  * Server error middleware - provides standardized error response helper
  */
 export const withServerError: Middleware;
+
+// Auth middleware types
+export interface BetterAuthInstance {
+  api: {
+    getSession(options: { headers: Record<string, any> }): Promise<{ session: Session; user: User } | null>;
+  };
+  [key: string]: any;
+}
+
+export interface WithAuthOptions {
+  /** better-auth instance (required) */
+  auth: BetterAuthInstance;
+  /** Custom handler called when user is not authenticated */
+  onUnauthenticated?: (context: ServerContext) => void;
+}
+
+export interface WithOptionalAuthOptions {
+  /** better-auth instance (required) */
+  auth: BetterAuthInstance;
+}
+
+/**
+ * Creates auth middleware that requires authentication
+ * Returns 401 if no valid session
+ *
+ * @example
+ * import { createWithAuth } from 'aidd/server';
+ * import { auth } from '~/lib/auth.server';
+ *
+ * const withAuth = createWithAuth({ auth });
+ *
+ * // Protected route - 401 if not logged in
+ * export default createRoute(withAuth, async ({ response }) => {
+ *   const { user } = response.locals.auth;
+ *   response.json({ email: user.email });
+ * });
+ */
+export function createWithAuth(options: WithAuthOptions): Middleware;
+
+/**
+ * Creates auth middleware that allows anonymous requests
+ * Attaches user if session exists, otherwise sets auth to null
+ *
+ * @example
+ * import { createWithOptionalAuth } from 'aidd/server';
+ * import { auth } from '~/lib/auth.server';
+ *
+ * const withOptionalAuth = createWithOptionalAuth({ auth });
+ *
+ * // Public route with optional user context
+ * export default createRoute(withOptionalAuth, async ({ response }) => {
+ *   const user = response.locals.auth?.user;
+ *   response.json({
+ *     greeting: user ? `Hello, ${user.name}` : 'Hello, guest'
+ *   });
+ * });
+ */
+export function createWithOptionalAuth(options: WithOptionalAuthOptions): Middleware;
