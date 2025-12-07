@@ -1,20 +1,19 @@
 import { describe, test, vi } from "vitest";
 import { assert } from "riteway/vitest";
+import { Type } from "@sinclair/typebox";
 import { handleForm } from "./handle-form.js";
 
 describe("handleForm", () => {
   // Req 1: Valid body passes to processSubmission
   test("passes validated fields to processSubmission when body matches schema", async () => {
     const processSubmission = vi.fn().mockResolvedValue({});
-    const schema = {
-      type: "object",
-      properties: {
-        name: { type: "string" },
-        email: { type: "string" },
+    const schema = Type.Object(
+      {
+        name: Type.String(),
+        email: Type.String(),
       },
-      required: ["name", "email"],
-      additionalProperties: false,
-    };
+      { additionalProperties: false },
+    );
 
     const middleware = handleForm({
       name: "contact",
@@ -47,15 +46,13 @@ describe("handleForm", () => {
   // Req 2: Invalid body returns 400 with validation errors
   test("returns 400 with validation errors when body fails schema", async () => {
     const processSubmission = vi.fn();
-    const schema = {
-      type: "object",
-      properties: {
-        name: { type: "string" },
-        age: { type: "number" },
+    const schema = Type.Object(
+      {
+        name: Type.String(),
+        age: Type.Number(),
       },
-      required: ["name", "age"],
-      additionalProperties: false,
-    };
+      { additionalProperties: false },
+    );
 
     const middleware = handleForm({
       name: "profile",
@@ -102,14 +99,13 @@ describe("handleForm", () => {
   // Req 3: Honeypot field filled rejects with generic error
   test("rejects with 400 and generic error when honeypot field is filled", async () => {
     const processSubmission = vi.fn();
-    const schema = {
-      type: "object",
-      properties: {
-        name: { type: "string" },
-        website: { type: "string" },
+    const schema = Type.Object(
+      {
+        name: Type.String(),
+        website: Type.String(),
       },
-      additionalProperties: false,
-    };
+      { additionalProperties: false },
+    );
 
     const middleware = handleForm({
       name: "signup",
@@ -159,15 +155,13 @@ describe("handleForm", () => {
   // Req 4: Missing required fields returns 400 with specific errors
   test("returns 400 with missing field errors when required fields absent", async () => {
     const processSubmission = vi.fn();
-    const schema = {
-      type: "object",
-      properties: {
-        name: { type: "string" },
-        email: { type: "string" },
+    const schema = Type.Object(
+      {
+        name: Type.String(),
+        email: Type.String(),
       },
-      required: ["name", "email"],
-      additionalProperties: false,
-    };
+      { additionalProperties: false },
+    );
 
     const middleware = handleForm({
       name: "contact",
@@ -208,11 +202,10 @@ describe("handleForm", () => {
   // Req 5: processSubmission error surfaces through createRoute
   test("throws error when processSubmission throws", async () => {
     const processSubmission = vi.fn().mockRejectedValue(new Error("DB error"));
-    const schema = {
-      type: "object",
-      properties: { name: { type: "string" } },
-      additionalProperties: false,
-    };
+    const schema = Type.Object(
+      { name: Type.String() },
+      { additionalProperties: false },
+    );
 
     const middleware = handleForm({
       name: "test",
@@ -248,11 +241,10 @@ describe("handleForm", () => {
   // Req 6: Successful submission returns { request, response } without setting status/body
   test("returns request/response without setting status on success", async () => {
     const processSubmission = vi.fn().mockResolvedValue({});
-    const schema = {
-      type: "object",
-      properties: { name: { type: "string" } },
-      additionalProperties: false,
-    };
+    const schema = Type.Object(
+      { name: Type.String() },
+      { additionalProperties: false },
+    );
 
     const middleware = handleForm({
       name: "test",
@@ -298,14 +290,13 @@ describe("handleForm", () => {
   test("passes PII fields to logger.scrub", async () => {
     const processSubmission = vi.fn().mockResolvedValue({});
     const scrubFn = vi.fn();
-    const schema = {
-      type: "object",
-      properties: {
-        name: { type: "string" },
-        ssn: { type: "string" },
+    const schema = Type.Object(
+      {
+        name: Type.String(),
+        ssn: Type.String(),
       },
-      additionalProperties: false,
-    };
+      { additionalProperties: false },
+    );
 
     const middleware = handleForm({
       name: "sensitive",
@@ -336,14 +327,12 @@ describe("handleForm", () => {
   // Req 8: Undeclared fields return 400
   test("returns 400 when request contains undeclared fields", async () => {
     const processSubmission = vi.fn();
-    const schema = {
-      type: "object",
-      properties: {
-        name: { type: "string" },
+    const schema = Type.Object(
+      {
+        name: Type.String(),
       },
-      required: ["name"],
-      additionalProperties: false,
-    };
+      { additionalProperties: false },
+    );
 
     const middleware = handleForm({
       name: "strict",
@@ -386,14 +375,13 @@ describe("handleForm", () => {
   // Req 9: Honeypot omitted skips validation
   test("skips honeypot validation when honeypotField not provided", async () => {
     const processSubmission = vi.fn().mockResolvedValue({});
-    const schema = {
-      type: "object",
-      properties: {
-        name: { type: "string" },
-        website: { type: "string" },
+    const schema = Type.Object(
+      {
+        name: Type.String(),
+        website: Type.String(),
       },
-      additionalProperties: false,
-    };
+      { additionalProperties: false },
+    );
 
     const middleware = handleForm({
       name: "no-honeypot",

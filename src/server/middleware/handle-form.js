@@ -1,22 +1,21 @@
 /**
- * Form handling middleware factory with JSON Schema validation
+ * Form handling middleware factory with TypeBox validation
  */
 
-import Ajv from "ajv";
-
-const ajv = new Ajv({ allErrors: true });
+import { TypeCompiler } from "@sinclair/typebox/compiler";
 
 const formatErrors = (errors) => {
-  return errors.map((err) => {
-    if (err.keyword === "required") {
-      return `Missing required field: ${err.params.missingProperty}`;
+  return [...errors].map((err) => {
+    const path = err.path.slice(1) || "root";
+
+    if (err.message.includes("Required")) {
+      return `Missing required field: ${path}`;
     }
-    if (err.keyword === "additionalProperties") {
-      return `Undeclared field not allowed: ${err.params.additionalProperty}`;
+    if (err.message.includes("Unexpected property")) {
+      return `Undeclared field not allowed: ${path}`;
     }
-    if (err.keyword === "type") {
-      const field = err.instancePath.slice(1) || "root";
-      return `Field '${field}' ${err.message}`;
+    if (err.message.includes("Expected")) {
+      return `Field '${path}' ${err.message.toLowerCase()}`;
     }
     return err.message;
   });
@@ -41,14 +40,14 @@ const handleForm =
       return { request, response };
     }
 
-    // Validate against schema
-    const validate = ajv.compile(schema);
-    const valid = validate(body);
+    // Validate against schema using TypeBox compiler
+    const validator = TypeCompiler.Compile(schema);
+    const valid = validator.Check(body);
 
     if (!valid) {
       response.status(400);
       response.json({
-        errors: formatErrors(validate.errors),
+        errors: formatErrors(validator.Errors(body)),
       });
       return { request, response };
     }

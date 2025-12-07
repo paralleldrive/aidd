@@ -66,7 +66,7 @@
   "homepage": "https://github.com/paralleldrive/aidd#readme",
   "dependencies": {
     "@paralleldrive/cuid2": "^3.1.0",
-    "ajv": "^8.17.1",
+    "@sinclair/typebox": "^0.34.41",
     "chalk": "^4.1.2",
     "commander": "^11.1.0",
     "error-causes": "^3.0.2",
