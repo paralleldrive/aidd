@@ -1,9 +1,9 @@
 {
   "name": "aidd",
-  "version": "1.12.0",
-  "description": "The standard library for AI Driven Development.",
-  "main": "index.js",
+  "version": "2.1.0",
+  "description": "The standard framework for AI Driven Development.",
   "type": "module",
+  "sideEffects": false,
   "bin": {
     "aidd": "bin/aidd.js"
   },
@@ -15,25 +15,38 @@
     "test": "vitest run && echo 'Test complete.' && npm run -s lint",
     "test:unit": "vitest run --exclude '**/*-e2e.test.js' && echo 'Unit tests complete.' && npm run -s lint",
     "test:e2e": "vitest run **/*-e2e.test.js && echo 'E2E tests complete.'",
+    "typecheck": "tsc --noEmit && echo 'Type check complete.'",
     "check-status": "[ -n \"$(git status --porcelain)\" ] && { echo '❌ Uncommitted changes'; exit 1; } || echo '✅ Git status is clean.'",
     "prepare": "husky",
     "toc": "doctoc README.md"
   },
   "exports": {
-    ".": "./index.js",
-    "./server": "./src/server/index.js"
+    "./utils": {
+      "types": "./utils/index.d.ts",
+      "default": "./utils/index.js"
+    },
+    "./server": {
+      "types": "./src/server/index.d.ts",
+      "default": "./src/server/index.js"
+    }
   },
   "files": [
     "ai/**/*",
     "bin/**/*",
+    "docs/**/*",
     "lib/**/*",
     "src/**/*",
+    "utils/**/*",
+    "!**/*.test.js",
+    "!**/*-e2e.test.js",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/paralleldrive/sudolang.ai.git"
+    "url": "git+https://github.com/paralleldrive/aidd.git"
   },
   "keywords": [
     "ai-driven-development",
@@ -48,15 +61,23 @@
   "author": "ParallelDrive",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/paralleldrive/sudolang.ai/issues"
+    "url": "https://github.com/paralleldrive/aidd/issues"
   },
-  "homepage": "https://github.com/paralleldrive/sudolang.ai#readme",
+  "homepage": "https://github.com/paralleldrive/aidd#readme",
   "dependencies": {
     "@paralleldrive/cuid2": "^3.1.0",
     "chalk": "^4.1.2",
     "commander": "^11.1.0",
     "error-causes": "^3.0.2",
     "fs-extra": "^11.1.1"
+  },
+  "peerDependencies": {
+    "better-auth": "^1.4.5"
+  },
+  "peerDependenciesMeta": {
+    "better-auth": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -69,6 +90,7 @@
     "prettier": "^3.6.2",
     "release-it": "^19.0.5",
     "riteway": "^9.0.0-rc.1",
+    "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   }
 }

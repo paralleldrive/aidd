@@ -1,9 +1,19 @@
-# SudoLang.ai AIDD
+# SudoLang AIDD
 
-[![SudoLang AIDD](https://img.shields.io/badge/✨_SudoLang_AIDD-black)](https://github.com/paralleldrive/sudolang.ai)
+[![SudoLang AIDD](https://img.shields.io/badge/✨_SudoLang_AIDD-black)](https://github.com/paralleldrive/aidd)[![Parallel Drive](https://img.shields.io/badge/🖤_Parallel_Drive-000000?style=flat)](https://paralleldrive.com)
 
-**The standard library for AI Driven Development**
 
+**The standard framework for AI Driven Development**
+
+Includes:
+- **AIDD CLI** – project bootstrap and automation
+- **Agent Runtime** – workflows from product discovery to commit and release
+- **SudoLang Prompt Language** – typed pseudocode for AI orchestration
+- **Server Framework** – composable backend for Node and Next.js
+- **Utilities & Component Library** – common patterns and reusable recipes to accelerate your app development
+
+
+## Table of Contents
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
@@ -11,8 +21,11 @@
 - [🚀 Quick Start with AIDD CLI](#-quick-start-with-aidd-cli)
   - [📋 Requirements](#-requirements)
   - [Detailed Installation Instructions](#detailed-installation-instructions)
+- [Development Workflow](#development-workflow)
 - [Why SudoLang?](#why-sudolang)
 - [What's Included](#whats-included)
+- [🚀 AIDD Server Framework](#-aidd-server-framework)
+  - [Authentication Middleware](#authentication-middleware)
 - [🛠️ AIDD CLI Reference](#-aidd-cli-reference)
   - [Installation & Usage](#installation--usage)
   - [Command Options](#command-options)
@@ -33,17 +46,11 @@
 
 ## About SudoLang AIDD
 
-A public collection of reusable metaprograms, agent scripts, and prompt modules. SudoLang agents put high quality software engineering process on autopilot rails.
+**AI-Driven Development (AIDD)** is a methodology where AI systems take primary responsibility for generating, testing, and documenting code, automating most of the software creation process so humans can focus on the big picture and 10× their productivity.
 
-The collection includes a comprehensive AI agent orchestration system with commands and rules that enable AI Driven Development workflows.
+SudoLang AIDD is a collection of reusable metaprograms, agent orchestration systems, and prompt modules that put high-quality software engineering processes on autopilot rails. It implements time-tested workflows including specification-driven development, systematic task planning with Test Driven Development (TDD), and automated code review with best practices enforcement.
 
-This system implements time-tested software engineering processes on autopilot rails, including:
-
-- Specification driven development with PRDs and concise, structured user stories.
-- Systematic task planning and execution with Test Driven Development (TDD).
-- Code review and refinement with automated code quality checks and best practices enforcement.
-
-The system also includes comprehensive code style guides for JavaScript, TypeScript, React, Redux, and we'll be adding more soon!
+**SudoLang** is a pseudocode language for prompting large language models with clear structure, strong typing, and explicit control flow.
 
 **AI Workflow Commands** - Use these in your AI assistant chat (Cursor, ChatGPT, Claude, etc.):
 
@@ -55,8 +62,6 @@ The system also includes comprehensive code style guides for JavaScript, TypeScr
 /log - log the changes to the activity log
 /commit - commit the changes to the repository
 ```
-
-**SudoLang** is a pseudocode language for prompting large language models with clear structure, strong typing, and explicit control flow.
 
 ## 🚀 Quick Start with AIDD CLI
 
@@ -120,6 +125,19 @@ This gives you immediate access to:
 - 📋 **Development best practices** (JavaScript, TDD, UI/UX)
 - 🎯 **Product management tools** (user stories, journey mapping)
 
+## Development Workflow
+
+For features or bug fixes spanning more than a few lines:
+
+1. **Create a branch**: `git checkout -b your-branch-name`
+2. **Discover what to build with `/discover`**: Set up your project profile and discover key user journeys to create a user story map
+3. **Plan execution with `/task`**: Create a structured epic with clear requirements
+4. **Review with `/review`**: Eliminate duplication, simplify without losing requirements
+5. **Execute with `/execute`**: Implement using TDD, one requirement at a time
+6. **Push and PR**: `git push origin your-branch-name` then open a Pull Request
+
+Note: We use this process to build the `aidd` framework. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
 ## Why SudoLang?
 
 For most simple prompts, natural language is better. Use it. But if you need the AI to follow a program, obey constraints, keep track of complex state, or implement complex algorithms, SudoLang can be extremely useful.
@@ -141,6 +159,7 @@ Modules include:
 - 🤖 Agent behaviors and workflows
 - 🧪 Test generators
 - 🛠️ Development process automation scripts
+- 🚀 Optional composable server framework (lightweight Express alternative)
 
 Coming soon:
 
@@ -188,6 +207,124 @@ export default createRoute(
 - `withRequestId` - CUID2 request tracking for logging
 - `createWithCors` - Explicit origin validation (secure by default)
 - `withServerError` - Standardized error responses
+- `createWithAuth` / `createWithOptionalAuth` - Session validation with [better-auth](https://www.better-auth.com/)
+
+### Authentication Middleware
+
+AIDD Server includes optional auth middleware that wraps [better-auth](https://www.better-auth.com/) for session validation.
+
+**1. Install better-auth:**
+```bash
+npm install better-auth
+```
+
+**2. Configure better-auth** (see [better-auth docs](https://www.better-auth.com/docs)):
+```javascript
+// lib/auth.server.js
+import { betterAuth } from 'better-auth';
+
+export const auth = betterAuth({
+  database: yourDatabaseAdapter,
+  emailAndPassword: { enabled: true },
+});
+```
+
+**3. Create auth API route** (framework-specific):
+```javascript
+// Next.js: app/api/auth/[...all]/route.js
+import { toNextJsHandler } from 'better-auth/next-js';
+import { auth } from '@/lib/auth.server';
+
+export const { GET, POST } = toNextJsHandler(auth);
+```
+
+**4. Use AIDD auth middleware in protected routes:**
+```javascript
+import { createRoute, withRequestId, createWithAuth } from 'aidd/server';
+import { auth } from '@/lib/auth.server';
+
+const withAuth = createWithAuth({ auth });
+
+// Protected route - returns 401 if not authenticated
+export default createRoute(
+  withRequestId,
+  withAuth,
+  async ({ response }) => {
+    const { user } = response.locals.auth;
+    response.json({ email: user.email });
+  }
+);
+```
+
+**Optional auth** for public routes that benefit from user context:
+```javascript
+import { createWithOptionalAuth } from 'aidd/server';
+
+const withOptionalAuth = createWithOptionalAuth({ auth });
+
+// Public route - user attached if logged in, null otherwise
+export default createRoute(
+  withOptionalAuth,
+  async ({ response }) => {
+    const user = response.locals.auth?.user;
+    response.json({
+      greeting: user ? `Hello, ${user.name}` : 'Hello, guest'
+    });
+  }
+);
+```
+
+**Passkey authentication** (passwordless):
+```bash
+npm install @better-auth/passkey
+```
+
+```javascript
+// lib/auth.server.js
+import { betterAuth } from 'better-auth';
+import { passkey } from '@better-auth/passkey';
+
+export const auth = betterAuth({
+  database: yourDatabaseAdapter,
+  plugins: [passkey()],
+});
+```
+
+```javascript
+// API route: Register passkey (requires authentication)
+import { createRoute, createWithAuth } from 'aidd/server';
+import { auth } from '@/lib/auth.server';
+
+const withAuth = createWithAuth({ auth });
+
+export default createRoute(
+  withAuth,
+  async ({ request, response }) => {
+    const { user } = response.locals.auth;
+    
+    // User is authenticated, register their passkey
+    const result = await auth.api.addPasskey({
+      body: { name: `${user.email}'s passkey` },
+      headers: request.headers,
+    });
+    
+    response.json(result);
+  }
+);
+```
+
+```javascript
+// API route: List user's passkeys
+export default createRoute(
+  withAuth,
+  async ({ request, response }) => {
+    const passkeys = await auth.api.listPasskeys({
+      headers: request.headers,
+    });
+    response.json({ passkeys });
+  }
+);
+```
 
 📖 **[See complete Server Framework documentation →](docs/server/README.md)**
 
@@ -390,11 +527,7 @@ MIT © [ParallelDrive](https://github.com/paralleldrive)
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+We welcome contributions! Follow the [Development Workflow](#development-workflow) above, and see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ---
 
