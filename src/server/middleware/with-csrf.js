@@ -15,7 +15,9 @@
  */
 
 import { createId } from "@paralleldrive/cuid2";
-import { sha3_256 } from "js-sha3";
+import sha3 from "js-sha3";
+
+const { sha3_256 } = sha3;
 
 const SAFE_METHODS = ["GET", "HEAD", "OPTIONS"];
 const COOKIE_NAME = "csrf_token";
