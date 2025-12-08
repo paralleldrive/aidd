@@ -29,9 +29,31 @@ describe("createWithAuth", () => {
 
     assert({
       given: "no configuration",
-      should: "throw error requiring auth",
+      should: "throw error with cause",
+      actual: error instanceof Error && error.cause !== undefined,
+      expected: true,
+    });
+
+    assert({
+      given: "no configuration",
+      should: "have ValidationError name in cause",
+      actual: error.cause.name,
+      expected: "ValidationError",
+    });
+
+    assert({
+      given: "no configuration",
+      should: "have MISSING_AUTH_INSTANCE code in cause",
+      actual: error.cause.code,
+      expected: "MISSING_AUTH_INSTANCE",
+    });
+
+    assert({
+      given: "no configuration",
+      should: "include 'auth' and 'required' in message",
       actual:
-        error?.message.includes("auth") && error?.message.includes("required"),
+        error.cause.message.includes("auth") &&
+        error.cause.message.includes("required"),
       expected: true,
     });
   });
@@ -235,9 +257,31 @@ describe("createWithOptionalAuth", () => {
 
     assert({
       given: "no configuration",
-      should: "throw error requiring auth",
+      should: "throw error with cause",
+      actual: error instanceof Error && error.cause !== undefined,
+      expected: true,
+    });
+
+    assert({
+      given: "no configuration",
+      should: "have ValidationError name in cause",
+      actual: error.cause.name,
+      expected: "ValidationError",
+    });
+
+    assert({
+      given: "no configuration",
+      should: "have MISSING_AUTH_INSTANCE code in cause",
+      actual: error.cause.code,
+      expected: "MISSING_AUTH_INSTANCE",
+    });
+
+    assert({
+      given: "no configuration",
+      should: "include 'auth' and 'required' in message",
       actual:
-        error?.message.includes("auth") && error?.message.includes("required"),
+        error.cause.message.includes("auth") &&
+        error.cause.message.includes("required"),
       expected: true,
     });
   });

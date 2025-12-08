@@ -32,6 +32,9 @@
  * // Same-origin only: Don't use CORS middleware at all
  * // Just omit createWithCors from your middleware chain
  */
+
+import { createError } from "error-causes";
+
 const createWithCors = ({
   allowedOrigins,
   allowedHeaders = [
@@ -45,11 +48,14 @@ const createWithCors = ({
 } = {}) => {
   // Security: Require explicit origin configuration
   if (!allowedOrigins) {
-    throw new Error(
-      "CORS configuration error: allowedOrigins is required. " +
+    throw createError({
+      name: "ConfigurationError",
+      message:
+        "CORS configuration error: allowedOrigins is required. " +
         'Specify allowed origins array, a single origin string, or "*" for public APIs. ' +
         "For same-origin only, omit CORS middleware from your route.",
-    );
+      code: "MISSING_ALLOWED_ORIGINS",
+    });
   }
 
   const getOrigin = (requestOrigin) => {

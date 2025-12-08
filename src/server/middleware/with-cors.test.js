@@ -14,8 +14,29 @@ describe("createWithCors", () => {
 
     assert({
       given: "no configuration",
-      should: "throw error requiring allowedOrigins",
-      actual: error?.message.includes("allowedOrigins is required"),
+      should: "throw error with cause",
+      actual: error instanceof Error && error.cause !== undefined,
+      expected: true,
+    });
+
+    assert({
+      given: "no configuration",
+      should: "have ConfigurationError name in cause",
+      actual: error.cause.name,
+      expected: "ConfigurationError",
+    });
+
+    assert({
+      given: "no configuration",
+      should: "have MISSING_ALLOWED_ORIGINS code in cause",
+      actual: error.cause.code,
+      expected: "MISSING_ALLOWED_ORIGINS",
+    });
+
+    assert({
+      given: "no configuration",
+      should: "mention allowedOrigins is required in message",
+      actual: error.cause.message.includes("allowedOrigins is required"),
       expected: true,
     });
   });

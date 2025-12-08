@@ -3,6 +3,8 @@
  * Wraps better-auth to validate sessions and attach user to response.locals
  */
 
+import { createError } from "error-causes";
+
 const defaultOnUnauthenticated = ({ response }) => {
   response.status(401).json({ error: "Unauthorized" });
 };
@@ -40,7 +42,11 @@ const createWithAuth = ({
   onUnauthenticated = defaultOnUnauthenticated,
 } = {}) => {
   if (!auth) {
-    throw new Error("auth is required. Pass your better-auth instance.");
+    throw createError({
+      name: "ValidationError",
+      message: "auth is required. Pass your better-auth instance.",
+      code: "MISSING_AUTH_INSTANCE",
+    });
   }
 
   return async ({ request, response }) => {
@@ -83,7 +89,11 @@ const createWithAuth = ({
  */
 const createWithOptionalAuth = ({ auth } = {}) => {
   if (!auth) {
-    throw new Error("auth is required. Pass your better-auth instance.");
+    throw createError({
+      name: "ValidationError",
+      message: "auth is required. Pass your better-auth instance.",
+      code: "MISSING_AUTH_INSTANCE",
+    });
   }
 
   return async ({ request, response }) => {
