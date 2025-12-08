@@ -1,5 +1,25 @@
 /**
- * Form handling middleware factory with TypeBox validation
+ * Create a form handler with validation, honeypot support, and PII scrubbing.
+ *
+ * @param {Object} opts
+ * @param {string} opts.name - Name of the form for logging, metrics, and errors
+ * @param {import('@sinclair/typebox').TObject} opts.schema - TypeBox schema for the request body
+ * @param {(body: Record<string, unknown>) => Promise<void>} opts.processSubmission -
+ *   Async function that processes a valid submission
+ * @param {string[]} [opts.pii] -
+ *   Field names that may contain PII, used to configure logger scrubbing
+ * @param {string} [opts.honeypotField] -
+ *   Optional honeypot field. Any non-empty value causes the submission to be rejected
+ * @returns {Function} Middleware function that validates and processes the form
+ *
+ * @example
+ * const withContactForm = handleForm({
+ *   name: 'contact',
+ *   schema: Type.Object({ email: Type.String() }),
+ *   processSubmission: async (body) => { await sendEmail(body.email); },
+ *   pii: ['email'],
+ *   honeypotField: 'website',
+ * });
  */
 
 import { TypeCompiler } from "@sinclair/typebox/compiler";
@@ -26,9 +46,17 @@ const formatErrors = (errors) => {
   });
 };
 
-const handleForm =
-  ({ name, schema, processSubmission, pii, honeypotField }) =>
-  async ({ request, response }) => {
+const handleForm = ({
+  name,
+  schema,
+  processSubmission,
+  pii,
+  honeypotField,
+}) => {
+  // Compile schema once when middleware is created, not on every request
+  const validator = TypeCompiler.Compile(schema);
+
+  return async ({ request, response }) => {
     // Register PII fields with logger scrubber
     if (pii?.length && response.locals?.logger?.scrub) {
       response.locals.logger.scrub(pii);
@@ -50,8 +78,7 @@ const handleForm =
       return { request, response };
     }
 
-    // Validate against schema using TypeBox compiler
-    const validator = TypeCompiler.Compile(schema);
+    // Validate against pre-compiled schema
     const valid = validator.Check(body);
 
     if (!valid) {
@@ -72,5 +99,6 @@ const handleForm =
 
     return { request, response };
   };
+};
 
 export { handleForm };

@@ -51,7 +51,7 @@ handleForm({ name, schema, processSubmission, pii, honeypotField })
 4. Given a request missing required fields per schema, should return 400 status with validation failures indicating missing fields
 5. Given `processSubmission` throws an error, should surface error through standard `createRoute` error handling
 6. Given a successful submission, should return `{ request, response }` without setting status or body (caller handles success response)
-7. Given PII fields, should pass them to `request.locals.logger.scrub(pii)`
+7. Given PII fields, should pass them to `response.locals.logger.scrub(pii)`
 8. Given a request with fields not defined in schema, should return 400 status with validation failures indicating undeclared fields
 9. Given the `honeypotField` parameter is omitted, should skip honeypot validation
 
@@ -87,7 +87,7 @@ withCSRF // Direct export, no parameters
 7. Given setting the CSRF cookie, should set `SameSite=Strict` and `Secure=true` (in production)
 8. Given setting the CSRF cookie, should not set `HttpOnly` (client must read token to submit it)
 9. Given any CSRF rejection, should log the failure with request ID but without exposing token values
-10. Given token comparison, should compare SHA3 hashes of tokens to prevent timing attacks
+10. Given token comparison, should hash both the cookie token and the request token with SHA3 before comparing. This serves two purposes: (1) It makes the comparison robust against timing attacks even if low-level timing-safe comparison helpers or JIT optimizations are imperfect, because any change in the input completely changes the hash, preventing prefix-based guessing. (2) It keeps raw CSRF token values out of logs and error messages.
 
 ### Implementation Notes
 

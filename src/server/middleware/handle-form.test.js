@@ -102,7 +102,7 @@ describe("handleForm", () => {
     const schema = Type.Object(
       {
         name: Type.String(),
-        website: Type.String(),
+        website: Type.Optional(Type.String()),
       },
       { additionalProperties: false },
     );
@@ -148,6 +148,53 @@ describe("handleForm", () => {
       given: "a request with filled honeypot field",
       should: "not call processSubmission",
       actual: processSubmission.mock.calls.length,
+      expected: 0,
+    });
+  });
+
+  // Req 3b: Empty string honeypot allows submission
+  test("allows submission when honeypot field is empty string", async () => {
+    const processSubmission = vi.fn().mockResolvedValue({});
+    const schema = Type.Object(
+      {
+        name: Type.String(),
+        website: Type.Optional(Type.String()),
+      },
+      { additionalProperties: false },
+    );
+
+    const middleware = handleForm({
+      name: "contact",
+      schema,
+      processSubmission,
+      pii: [],
+      honeypotField: "website",
+    });
+
+    const mockResponse = {
+      locals: { logger: { scrub: vi.fn() } },
+      status: vi.fn().mockReturnThis(),
+      json: vi.fn(),
+    };
+
+    await middleware({
+      request: {
+        body: { name: "Human", website: "" },
+      },
+      response: mockResponse,
+    });
+
+    assert({
+      given: "a request with empty string honeypot field",
+      should: "allow submission (call processSubmission)",
+      actual: processSubmission.mock.calls.length,
+      expected: 1,
+    });
+
+    assert({
+      given: "a request with empty string honeypot field",
+      should: "not return error status",
+      actual: mockResponse.status.mock.calls.length,
       expected: 0,
     });
   });

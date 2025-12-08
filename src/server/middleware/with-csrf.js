@@ -24,7 +24,10 @@ const DEFAULT_MAX_AGE = 3 * 60 * 60; // 3 hours in seconds
 const parseCookies = (cookieHeader) => {
   if (!cookieHeader) return {};
   return cookieHeader.split(";").reduce((cookies, cookie) => {
-    const [name, value] = cookie.trim().split("=");
+    const parts = cookie.trim().split("=");
+    const name = parts[0];
+    // Rejoin remaining parts to handle values containing '='
+    const value = parts.slice(1).join("=");
     cookies[name] = value;
     return cookies;
   }, {});
@@ -32,6 +35,14 @@ const parseCookies = (cookieHeader) => {
 
 const hashToken = (token) => sha3_256(token || "");
 
+// Hash both tokens before comparison.
+// Reasons:
+//   1. Comparing raw tokens is vulnerable to subtle timing leaks,
+//      especially if timing-safe compare helpers get broken by
+//      compiler or engine optimizations.
+//   2. A cryptographic hash makes any change in the input completely
+//      change the output, so there is no prefix-based timing signal.
+//   3. Hashing also keeps raw CSRF token values out of logs and errors.
 const tokensMatch = (token1, token2) => hashToken(token1) === hashToken(token2);
 
 const log = (response, data) => {

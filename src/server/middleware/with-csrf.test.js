@@ -33,6 +33,64 @@ describe("withCSRF", () => {
     });
   });
 
+  // Req 1b: HEAD requests are treated as safe methods
+  test("sets CSRF token cookie for HEAD request", async () => {
+    const mockResponse = {
+      locals: {},
+      setHeader: vi.fn(),
+      status: vi.fn(),
+      json: vi.fn(),
+    };
+
+    await withCSRF({
+      request: { method: "HEAD", headers: {} },
+      response: mockResponse,
+    });
+
+    assert({
+      given: "a HEAD request",
+      should: "attach csrfToken to response.locals",
+      actual: typeof mockResponse.locals.csrfToken,
+      expected: "string",
+    });
+
+    assert({
+      given: "a HEAD request",
+      should: "not return 403 status",
+      actual: mockResponse.status.mock.calls.length,
+      expected: 0,
+    });
+  });
+
+  // Req 1c: OPTIONS requests are treated as safe methods
+  test("sets CSRF token cookie for OPTIONS request", async () => {
+    const mockResponse = {
+      locals: {},
+      setHeader: vi.fn(),
+      status: vi.fn(),
+      json: vi.fn(),
+    };
+
+    await withCSRF({
+      request: { method: "OPTIONS", headers: {} },
+      response: mockResponse,
+    });
+
+    assert({
+      given: "an OPTIONS request",
+      should: "attach csrfToken to response.locals",
+      actual: typeof mockResponse.locals.csrfToken,
+      expected: "string",
+    });
+
+    assert({
+      given: "an OPTIONS request",
+      should: "not return 403 status",
+      actual: mockResponse.status.mock.calls.length,
+      expected: 0,
+    });
+  });
+
   // Req 2: POST with matching token in header allowed
   test("allows POST request with matching token in header", async () => {
     const token = "test-token-123";
