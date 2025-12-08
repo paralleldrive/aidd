@@ -36,6 +36,9 @@ export interface Response {
     config?: ConfigObject;
     serverError?: (options?: ErrorOptions) => ErrorResponse;
     auth?: { user: User; session: Session } | null;
+    csrfToken?: string;
+    log?: (data: Record<string, unknown>) => void;
+    logger?: { scrub: (fields: string[]) => void };
     [key: string]: any;
   };
   [key: string]: any;
@@ -244,3 +247,82 @@ export function createWithAuth(options: WithAuthOptions): Middleware;
  * });
  */
 export function createWithOptionalAuth(options: WithOptionalAuthOptions): Middleware;
+
+// Form handling middleware
+import type { TObject } from "@sinclair/typebox";
+
+export interface HandleFormOptions<T extends TObject = TObject> {
+  /** Identifier for the form, used in logging */
+  name: string;
+  /** TypeBox schema for validating request body */
+  schema: T;
+  /** Async function receiving validated form data */
+  processSubmission: (data: Record<string, unknown>) => Promise<void>;
+  /** Field names to register with logger scrubber for PII protection */
+  pii?: string[];
+  /** Field name that must be empty - rejects submission if filled (bot protection) */
+  honeypotField?: string;
+}
+
+/**
+ * Creates middleware for secure form submission handling with TypeBox validation
+ *
+ * @example
+ * import { Type } from '@sinclair/typebox';
+ * import { handleForm } from 'aidd/server';
+ *
+ * const ContactSchema = Type.Object({
+ *   name: Type.String(),
+ *   email: Type.String({ format: 'email' }),
+ *   message: Type.String(),
+ * }, { additionalProperties: false });
+ *
+ * const withContactForm = handleForm({
+ *   name: 'contact',
+ *   schema: ContactSchema,
+ *   processSubmission: async (data) => {
+ *     await sendEmail(data.email, data.message);
+ *   },
+ *   pii: ['email'],
+ *   honeypotField: 'website',
+ * });
+ */
+export function handleForm<T extends TObject>(options: HandleFormOptions<T>): Middleware;
+
+// CSRF middleware
+export interface CSRFOptions {
+  /** Cookie max age in seconds (default: 3 hours = 10800) */
+  maxAge?: number;
+}
+
+/**
+ * Creates CSRF protection middleware with configurable options
+ *
+ * Uses double-submit cookie pattern:
+ * - GET/HEAD/OPTIONS: Sets cookie, exposes token via response.locals.csrfToken
+ * - POST/PUT/PATCH/DELETE: Validates token from header or body against cookie
+ * - Compares using SHA3 hash (timing-attack safe)
+ *
+ * @example
+ * // Custom 1-hour cookie lifetime
+ * const withCSRF = createWithCSRF({ maxAge: 60 * 60 });
+ */
+export function createWithCSRF(options?: CSRFOptions): Middleware;
+
+/**
+ * Default CSRF middleware with 3-hour cookie lifetime
+ *
+ * @example
+ * import { createRoute, withCSRF } from 'aidd/server';
+ *
+ * // Form page - sets cookie and provides token
+ * export const getForm = createRoute(withCSRF, async ({ response }) => {
+ *   response.json({ csrfToken: response.locals.csrfToken });
+ * });
+ *
+ * // Form submission - validates token
+ * export const submitForm = createRoute(withCSRF, handleContactForm, async ({ response }) => {
+ *   response.json({ success: true });
+ * });
+ */
+export const withCSRF: Middleware;

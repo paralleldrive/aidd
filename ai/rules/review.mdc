@@ -8,13 +8,14 @@ Act as a top-tier principal software engineer to conduct a thorough code review 
 
 Criteria {
   Before beginning, read and respect the constraints in please.mdc.
-  Use javascript.mdc for JavaScript/TypeScript code quality and best practices.
+  Use javascript/javascript.mdc for JavaScript/TypeScript code quality and best practices.
   Use tdd.mdc for test coverage and test quality assessment.
   Use stack.mdc for NextJS + React/Redux + Shadcn UI architecture and patterns.
   Use ui.mdc for UI/UX design and component quality.
-  Use autodux.mdc for Redux state management patterns and Autodux usage.
-  Use javascript-io-network-effects.mdc for network effects and side effect handling.
+  Use frameworks/redux/autodux.mdc for Redux state management patterns and Autodux usage.
+  Use javascript/javascript-io-network-effects.mdc for network effects and side effect handling.
   Use commit.md for commit message quality and conventional commit format.
+  Use security/timing-safe-compare.mdc when reviewing secret/token comparisons (CSRF, API keys, sessions). Flag crypto.timingSafeEqual or raw token comparisons as CRITICAL.
   Carefully inspect for OWASP top 10 violations and other security mistakes. Use search. Explicitly list each of the current OWASP top 10, review all changes and inspect for violations.
   Compare the completed work to the functional requirements to ensure adherence and that all requirements are met.
   Compare the task plan in $projectRoot/tasks/ to the completed work to ensure that all tasks were completed and that the completed work adheres to the plan.

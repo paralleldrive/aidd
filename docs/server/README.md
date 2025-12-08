@@ -37,6 +37,10 @@ export default createRoute(
   - [createWithConfig](#createwithconfig)
   - [loadConfigFromEnv](#loadconfigfromenv)
   - [withServerError](#withservererror)
+  - [createWithAuth](#createwithauth)
+  - [createWithOptionalAuth](#createwithoptionalauth)
+  - [handleForm](#handleform)
+  - [createWithCSRF / withCSRF](#createwithcsrf--withcsrf)
   - [convertMiddleware](#convertmiddleware)
   - [createServer](#createserver)
 - [Examples](#examples)
@@ -330,6 +334,233 @@ response.locals.serverError({
 
 ---
 
+### createWithAuth
+
+Factory that creates authentication middleware requiring a valid session.
+
+```javascript
+createWithAuth(options: WithAuthOptions): Middleware
+
+interface WithAuthOptions {
+  auth: BetterAuthInstance;  // better-auth instance (required)
+  onUnauthenticated?: (context: ServerContext) => void;  // Custom 401 handler
+}
+```
+
+**Example:**
+```javascript
+import { createRoute, createWithAuth } from 'aidd/server';
+import { auth } from '~/lib/auth.server';
+
+const withAuth = createWithAuth({ auth });
+
+export default createRoute(
+  withAuth,
+  async ({ response }) => {
+    const { user } = response.locals.auth;
+    response.json({ email: user.email });
+  }
+);
+```
+
+**Features:**
+- Returns 401 if no valid session
+- Attaches user and session to `response.locals.auth`
+- Integrates with [better-auth](https://github.com/better-auth/better-auth)
+
+---
+
+### createWithOptionalAuth
+
+Factory that creates auth middleware allowing anonymous requests.
+
+```javascript
+createWithOptionalAuth(options: WithOptionalAuthOptions): Middleware
+
+interface WithOptionalAuthOptions {
+  auth: BetterAuthInstance;  // better-auth instance (required)
+}
+```
+
+**Example:**
+```javascript
+import { createRoute, createWithOptionalAuth } from 'aidd/server';
+import { auth } from '~/lib/auth.server';
+
+const withOptionalAuth = createWithOptionalAuth({ auth });
+
+export default createRoute(
+  withOptionalAuth,
+  async ({ response }) => {
+    const user = response.locals.auth?.user;
+    response.json({
+      greeting: user ? `Hello, ${user.name}` : 'Hello, guest'
+    });
+  }
+);
+```
+
+**Features:**
+- Attaches user if session exists
+- Sets `response.locals.auth` to `null` if no session
+- Never returns 401
+
+---
+
+### handleForm
+
+Factory that creates form handling middleware with TypeBox validation.
+
+```javascript
+handleForm(options: HandleFormOptions): Middleware
+
+interface HandleFormOptions {
+  name: string;           // Form identifier for logging
+  schema: TObject;        // TypeBox schema
+  processSubmission: (data: object) => Promise<void>;
+  pii?: string[];         // Fields to scrub from logs
+  honeypotField?: string; // Bot trap field (must be empty)
+}
+```
+
+**Example:**
+```javascript
+import { createRoute, handleForm, withCSRF } from 'aidd/server';
+import { Type } from '@sinclair/typebox';
+
+const ContactSchema = Type.Object({
+  name: Type.String(),
+  email: Type.String({ format: 'email' }),
+  message: Type.String(),
+}, { additionalProperties: false });
+
+const withContactForm = handleForm({
+  name: 'contact',
+  schema: ContactSchema,
+  processSubmission: async (data) => {
+    await sendEmail(data.email, data.message);
+  },
+  pii: ['email'],
+  honeypotField: 'website',  // Hidden field - bots fill it
+});
+
+export default createRoute(
+  withCSRF,
+  withContactForm,
+  async ({ response }) => {
+    response.json({ success: true });
+  }
+);
+```
+
+**Features:**
+- **TypeBox Validation** - Type-safe schema with JSON Schema output
+- **Honeypot Protection** - Rejects bots that fill hidden fields
+- **PII Scrubbing** - Registers sensitive fields with logger
+- **Detailed Errors** - Returns 400 with validation failure descriptions
+- **Undeclared Field Rejection** - Rejects fields not in schema
+
+**Error Response (400):**
+```json
+{
+  "errors": [
+    "Missing required field: email",
+    "Field 'age' expected number"
+  ]
+}
+```
+
+---
+
+### createWithCSRF / withCSRF
+
+CSRF protection middleware using the double-submit cookie pattern.
+
+```javascript
+createWithCSRF(options?: CSRFOptions): Middleware
+
+interface CSRFOptions {
+  maxAge?: number;  // Cookie lifetime in seconds (default: 3 hours)
+}
+
+// Pre-configured with 3-hour cookie
+const withCSRF: Middleware;
+```
+
+**Example - Default Configuration:**
+```javascript
+import { createRoute, withCSRF } from 'aidd/server';
+
+// GET - Sets cookie, provides token
+export const getForm = createRoute(
+  withCSRF,
+  async ({ response }) => {
+    response.json({
+      csrfToken: response.locals.csrfToken
+    });
+  }
+);
+
+// POST - Validates token
+export const submitForm = createRoute(
+  withCSRF,
+  async ({ response }) => {
+    response.json({ success: true });
+  }
+);
+```
+
+**Example - Custom Cookie Lifetime:**
+```javascript
+import { createWithCSRF } from 'aidd/server';
+
+const withCSRF = createWithCSRF({ maxAge: 60 * 60 }); // 1 hour
+```
+
+**Client-Side Usage:**
+```javascript
+// Read token from response or cookie
+const csrfToken = response.csrfToken;
+
+// Submit with header
+fetch('/api/submit', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-CSRF-Token': csrfToken
+  },
+  body: JSON.stringify({ name: 'John' })
+});
+
+// Or include in body
+fetch('/api/submit', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'John', _csrf: csrfToken })
+});
+```
+
+**Security Features:**
+- **Double-Submit Cookie** - Token in cookie + header/body must match
+- **SHA3 Hash Comparison** - Prevents timing attacks
+- **SameSite=Strict** - Prevents CSRF from other sites
+- **Secure Flag** - HTTPS-only in production
+- **Path=/** - Works across all routes
+- **No HttpOnly** - Client must read cookie (by design)
+- **3-Hour Default Lifetime** - Configurable via `maxAge`
+
+**Safe Methods (GET, HEAD, OPTIONS):**
+- Sets CSRF cookie
+- Attaches token to `response.locals.csrfToken`
+- No validation required
+
+**Unsafe Methods (POST, PUT, PATCH, DELETE):**
+- Validates token from `X-CSRF-Token` header OR `_csrf` body field
+- Returns 403 if validation fails
+- Logs failure with request details (no token values)
+
+---
+
 ### convertMiddleware
 
 Converts traditional Express-style middleware to AIDD functional middleware.
@@ -393,6 +624,66 @@ test('withRequestId adds request ID', async () => {
 - Creates mock objects for testing middleware
 - Includes `setHeader` and `getHeader` methods
 - Mergeable with custom request/response properties
+
+---
+
+## Recommended Default Middleware Stack
+
+Every route should include these essential middleware. **All form submissions require CSRF protection.**
+
+```javascript
+import {
+  createRoute,
+  withRequestId,
+  withServerError,
+  withCSRF,
+  createWithCors,
+  createWithConfig,
+  loadConfigFromEnv
+} from 'aidd/server';
+import { asyncPipe } from 'aidd/utils';
+
+// Configure once
+const withCors = createWithCors({
+  allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000']
+});
+
+const withConfig = createWithConfig(() =>
+  loadConfigFromEnv(['DATABASE_URL', 'API_SECRET'])
+);
+
+// Default middleware for all routes
+const defaultMiddleware = asyncPipe(
+  withRequestId,    // Always first - enables request tracking
+  withServerError,  // Standardized error responses
+  withCors,         // CORS headers
+  withConfig,       // Environment configuration
+);
+
+// Default middleware for form routes (includes CSRF)
+const formMiddleware = asyncPipe(
+  defaultMiddleware,
+  withCSRF,  // REQUIRED for all form submissions
+);
+
+// API route (no forms)
+export const apiRoute = createRoute(
+  defaultMiddleware,
+  async ({ response }) => {
+    response.json({ data: 'ok' });
+  }
+);
+
+// Form route (CSRF required)
+export const formRoute = createRoute(
+  formMiddleware,
+  async ({ response }) => {
+    response.json({ csrfToken: response.locals.csrfToken });
+  }
+);
+```
+
+> ⚠️ **Security**: All form submissions MUST include `withCSRF` middleware. Omitting CSRF protection exposes your application to cross-site request forgery attacks.
 
 ---
 
@@ -477,6 +768,132 @@ export default createRoute(
   }
 );
 ```
+
+### Frontend CSRF Integration
+
+**React Example:**
+```jsx
+import { useState, useEffect } from 'react';
+
+function ContactForm() {
+  const [csrfToken, setCsrfToken] = useState('');
+
+  // Fetch CSRF token on mount
+  useEffect(() => {
+    fetch('/api/csrf')
+      .then(res => res.json())
+      .then(data => setCsrfToken(data.csrfToken));
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken,  // Include token in header
+      },
+      body: JSON.stringify(Object.fromEntries(formData)),
+    });
+
+    if (response.ok) {
+      alert('Message sent!');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="name" placeholder="Name" required />
+      <input name="email" type="email" placeholder="Email" required />
+      <textarea name="message" placeholder="Message" required />
+      <button type="submit">Send</button>
+    </form>
+  );
+}
+```
+
+**Vanilla JavaScript Example:**
+```html
+<form id="contact-form">
+  <input name="name" placeholder="Name" required />
+  <input name="email" type="email" placeholder="Email" required />
+  <textarea name="message" placeholder="Message" required></textarea>
+  <!-- Hidden honeypot field (CSS: display: none) -->
+  <input name="website" style="display: none" />
+  <button type="submit">Send</button>
+</form>
+
+<script>
+  let csrfToken = '';
+
+  // Fetch CSRF token
+  fetch('/api/csrf')
+    .then(res => res.json())
+    .then(data => { csrfToken = data.csrfToken; });
+
+  document.getElementById('contact-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken,
+      },
+      body: JSON.stringify(Object.fromEntries(formData)),
+    });
+
+    if (response.ok) {
+      alert('Message sent!');
+    }
+  });
+</script>
+```
+
+**Backend for Frontend Examples:**
+```javascript
+import { createRoute, handleForm, withCSRF } from 'aidd/server';
+import { Type } from '@sinclair/typebox';
+
+// GET /api/csrf - Provides token to frontend
+export const getCsrf = createRoute(
+  withCSRF,
+  async ({ response }) => {
+    response.json({ csrfToken: response.locals.csrfToken });
+  }
+);
+
+// POST /api/contact - Validates and processes form
+const ContactSchema = Type.Object({
+  name: Type.String(),
+  email: Type.String(),
+  message: Type.String(),
+  website: Type.Optional(Type.String()),  // Honeypot
+}, { additionalProperties: false });
+
+const withContactForm = handleForm({
+  name: 'contact',
+  schema: ContactSchema,
+  processSubmission: async (data) => {
+    await sendEmail(data);
+  },
+  pii: ['email'],
+  honeypotField: 'website',
+});
+
+export const postContact = createRoute(
+  withCSRF,
+  withContactForm,
+  async ({ response }) => {
+    response.json({ success: true });
+  }
+);
+```
+
+---
 
 ### Rate Limiting Middleware
 
