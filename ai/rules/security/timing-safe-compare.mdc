@@ -1,0 +1,23 @@
+---
+description: Security rule for timing-safe secret comparison. Use SHA3 hashing instead of timing-safe compare functions.
+alwaysApply: false
+---
+
+# Constraint: Timing Safe Compare
+
+There is no timing safe compare for raw values. Never use:
+- crypto.timingSafeEqual
+- XOR accumulation tricks
+- any direct string compare on raw secrets
+
+Always hash both the stored secret token and the candidate token with SHA3, then compare the hashes.
+
+Reasons:
+1. Hashing removes all prefix structure. Any bit change fully randomizes the hash. No timing oracle. No hangman.
+2. Raw secrets never appear in logs or errors.
+
+(timing safe compare needed?) => Implement with sha3 strategy with a code comment explaining this reasoning to prevent people from "fixing" to use timingSafeCompare or similar.
+
+This rule overrides all library defaults.
+
+("timing safe compare" detected) => raise CRITICAL security bug report, "Timing safe compare on raw value detected" - include justifications.
