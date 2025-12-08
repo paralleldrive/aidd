@@ -458,4 +458,110 @@ describe("handleForm", () => {
       expected: 1,
     });
   });
+
+  // Req 10: Parameter validation at factory time
+  test("throws error when name is missing", () => {
+    const schema = Type.Object({ name: Type.String() });
+
+    let error;
+    try {
+      handleForm({
+        schema,
+        processSubmission: async () => {},
+      });
+    } catch (e) {
+      error = e;
+    }
+
+    assert({
+      given: "handleForm called without name",
+      should: "throw error with clear message",
+      actual: error?.message,
+      expected: "handleForm: name is required",
+    });
+  });
+
+  test("throws error when schema is missing", () => {
+    let error;
+    try {
+      handleForm({
+        name: "test",
+        processSubmission: async () => {},
+      });
+    } catch (e) {
+      error = e;
+    }
+
+    assert({
+      given: "handleForm called without schema",
+      should: "throw error with clear message",
+      actual: error?.message,
+      expected: "handleForm: schema is required",
+    });
+  });
+
+  test("throws error when processSubmission is missing", () => {
+    const schema = Type.Object({ name: Type.String() });
+
+    let error;
+    try {
+      handleForm({
+        name: "test",
+        schema,
+      });
+    } catch (e) {
+      error = e;
+    }
+
+    assert({
+      given: "handleForm called without processSubmission",
+      should: "throw error with clear message",
+      actual: error?.message,
+      expected: "handleForm: processSubmission is required",
+    });
+  });
+
+  // Req 11: Strip _csrf from body before validation (for withCSRF compatibility)
+  test("strips _csrf field from body before validation", async () => {
+    const processSubmission = vi.fn().mockResolvedValue({});
+    const schema = Type.Object(
+      {
+        name: Type.String(),
+      },
+      { additionalProperties: false },
+    );
+
+    const middleware = handleForm({
+      name: "csrf-compat",
+      schema,
+      processSubmission,
+    });
+
+    const mockResponse = {
+      locals: {},
+      status: vi.fn().mockReturnThis(),
+      json: vi.fn(),
+    };
+
+    await middleware({
+      request: {
+        body: { name: "John", _csrf: "csrf-token-value" },
+      },
+      response: mockResponse,
+    });
+
+    assert({
+      given: "a request with _csrf field and strict schema",
+      should: "allow submission (strip _csrf before validation)",
+      actual: processSubmission.mock.calls.length,
+      expected: 1,
+    });
+
+    assert({
+      given: "a request with _csrf field",
+      should: "pass body without _csrf to processSubmission",
+      actual: processSubmission.mock.calls[0]?.[0],
+      expected: { name: "John" },
+    });
+  });
 });

@@ -53,6 +53,12 @@ const handleForm = ({
   pii,
   honeypotField,
 }) => {
+  // Validate required parameters at factory creation time
+  if (!name) throw new Error("handleForm: name is required");
+  if (!schema) throw new Error("handleForm: schema is required");
+  if (!processSubmission)
+    throw new Error("handleForm: processSubmission is required");
+
   // Compile schema once when middleware is created, not on every request
   const validator = TypeCompiler.Compile(schema);
 
@@ -62,7 +68,8 @@ const handleForm = ({
       response.locals.logger.scrub(pii);
     }
 
-    const body = request.body || {};
+    // Strip _csrf token from body before validation (used by withCSRF middleware)
+    const { _csrf, ...body } = request.body || {};
 
     // Check honeypot field if configured
     if (honeypotField && body[honeypotField]) {
