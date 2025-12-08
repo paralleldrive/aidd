@@ -77,8 +77,13 @@ const createWithCSRF = ({ maxAge = DEFAULT_MAX_AGE } = {}) => {
     if (!response.locals) response.locals = {};
 
     if (SAFE_METHODS.includes(request.method)) {
-      const token = createId();
+      // Reuse existing token if present, otherwise generate new one
+      const cookies = parseCookies(request.headers?.cookie);
+      const existingToken = cookies[COOKIE_NAME];
+      const token = existingToken || createId();
+
       response.locals.csrfToken = token;
+      // Always set cookie to refresh expiry
       response.setHeader("Set-Cookie", buildCookieString(token));
       return { request, response };
     }

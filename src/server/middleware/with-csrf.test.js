@@ -358,6 +358,71 @@ describe("withCSRF", () => {
     });
   });
 
+  // Req 10: Reuse existing token on subsequent GET requests
+  test("reuses existing token from cookie on GET request", async () => {
+    const existingToken = "existing-token-abc123";
+    let cookieValue = "";
+    const mockResponse = {
+      locals: {},
+      setHeader: vi.fn((name, value) => {
+        if (name === "Set-Cookie") cookieValue = value;
+      }),
+    };
+
+    await withCSRF({
+      request: {
+        method: "GET",
+        headers: {
+          cookie: `csrf_token=${existingToken}`,
+        },
+      },
+      response: mockResponse,
+    });
+
+    assert({
+      given: "a GET request with existing CSRF cookie",
+      should: "reuse the existing token in response.locals",
+      actual: mockResponse.locals.csrfToken,
+      expected: existingToken,
+    });
+
+    assert({
+      given: "a GET request with existing CSRF cookie",
+      should: "set cookie with same token (to refresh expiry)",
+      actual: cookieValue.includes(`csrf_token=${existingToken}`),
+      expected: true,
+    });
+  });
+
+  test("generates new token on GET when no cookie exists", async () => {
+    const mockResponse = {
+      locals: {},
+      setHeader: vi.fn(),
+    };
+
+    await withCSRF({
+      request: {
+        method: "GET",
+        headers: {},
+      },
+      response: mockResponse,
+    });
+
+    assert({
+      given: "a GET request with no existing CSRF cookie",
+      should: "generate a new token",
+      actual: typeof mockResponse.locals.csrfToken,
+      expected: "string",
+    });
+
+    assert({
+      given: "a GET request with no existing CSRF cookie",
+      should: "generate token with CUID2 format",
+      actual: /^[a-z0-9]{24,}$/.test(mockResponse.locals.csrfToken),
+      expected: true,
+    });
+  });
+
   test("sets Path=/ on CSRF cookie", async () => {
     let cookieValue = "";
     const mockResponse = {
