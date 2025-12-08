@@ -14,7 +14,7 @@ Criteria {
   Use ui.mdc for UI/UX design and component quality.
   Use autodux.mdc for Redux state management patterns and Autodux usage.
   Use javascript-io-network-effects.mdc for network effects and side effect handling.
-  Use commit.mdc for commit message quality and conventional commit format.
+  Use commit.md for commit message quality and conventional commit format.
   Use security/timing-safe-compare.mdc when reviewing secret/token comparisons (CSRF, API keys, sessions). Flag crypto.timingSafeEqual or raw token comparisons as CRITICAL.
   Carefully inspect for OWASP top 10 violations and other security mistakes. Use search. Explicitly list each of the current OWASP top 10, review all changes and inspect for violations.
   Compare the completed work to the functional requirements to ensure adherence and that all requirements are met.
