@@ -1,6 +1,9 @@
 import { describe, test, vi } from "vitest";
 import { assert } from "riteway/vitest";
+import { Type } from "@sinclair/typebox";
 import { withCSRF } from "./with-csrf.js";
+import { handleForm } from "./handle-form.js";
+import { asyncPipe } from "../../../utils/async-pipe.js";
 
 describe("withCSRF", () => {
   // Req 1: GET/HEAD/OPTIONS sets token cookie and response.locals.csrfToken
@@ -500,6 +503,178 @@ describe("withCSRF", () => {
       should: "include Path=/ for all routes",
       actual: cookieValue.includes("Path=/"),
       expected: true,
+    });
+  });
+});
+
+describe("withCSRF + handleForm integration", () => {
+  test("CSRF rejection prevents handleForm from calling processSubmission", async () => {
+    const processSubmission = vi.fn();
+    const schema = Type.Object(
+      { name: Type.String() },
+      { additionalProperties: false },
+    );
+
+    const pipeline = asyncPipe(
+      withCSRF,
+      handleForm({
+        name: "protected-form",
+        schema,
+        processSubmission,
+      }),
+    );
+
+    let statusCode = null;
+    let jsonBody = null;
+    const mockResponse = {
+      locals: {},
+      setHeader: vi.fn(),
+      status: vi.fn((code) => {
+        statusCode = code;
+        mockResponse.statusCode = code;
+        return mockResponse;
+      }),
+      json: vi.fn((body) => {
+        jsonBody = body;
+      }),
+    };
+
+    // POST with no CSRF token - should be rejected
+    await pipeline({
+      request: {
+        method: "POST",
+        headers: {},
+        body: { name: "Attacker" },
+      },
+      response: mockResponse,
+    });
+
+    assert({
+      given: "a POST request without CSRF token through pipeline",
+      should: "return 403 status",
+      actual: statusCode,
+      expected: 403,
+    });
+
+    assert({
+      given: "a POST request without CSRF token through pipeline",
+      should: "return CSRF error message",
+      actual: jsonBody?.error,
+      expected: "CSRF validation failed",
+    });
+
+    assert({
+      given: "a POST request rejected by withCSRF",
+      should: "NOT call processSubmission (prevent side effects)",
+      actual: processSubmission.mock.calls.length,
+      expected: 0,
+    });
+  });
+
+  test("valid CSRF token allows handleForm to call processSubmission", async () => {
+    const processSubmission = vi.fn().mockResolvedValue({});
+    const schema = Type.Object(
+      { name: Type.String() },
+      { additionalProperties: false },
+    );
+    const token = "valid-csrf-token";
+
+    const pipeline = asyncPipe(
+      withCSRF,
+      handleForm({
+        name: "protected-form",
+        schema,
+        processSubmission,
+      }),
+    );
+
+    const mockResponse = {
+      locals: {},
+      setHeader: vi.fn(),
+      status: vi.fn().mockReturnThis(),
+      json: vi.fn(),
+    };
+
+    await pipeline({
+      request: {
+        method: "POST",
+        headers: {
+          cookie: `csrf_token=${token}`,
+          "x-csrf-token": token,
+        },
+        body: { name: "ValidUser" },
+      },
+      response: mockResponse,
+    });
+
+    assert({
+      given: "a POST request with valid CSRF token",
+      should: "call processSubmission with form data",
+      actual: processSubmission.mock.calls[0]?.[0],
+      expected: { name: "ValidUser" },
+    });
+
+    assert({
+      given: "a POST request with valid CSRF token",
+      should: "not return error status",
+      actual: mockResponse.status.mock.calls.length,
+      expected: 0,
+    });
+  });
+
+  test("mismatched CSRF token prevents side effects", async () => {
+    const processSubmission = vi.fn();
+    const schema = Type.Object(
+      { name: Type.String() },
+      { additionalProperties: false },
+    );
+
+    const pipeline = asyncPipe(
+      withCSRF,
+      handleForm({
+        name: "protected-form",
+        schema,
+        processSubmission,
+      }),
+    );
+
+    let statusCode = null;
+    const mockResponse = {
+      locals: {},
+      setHeader: vi.fn(),
+      status: vi.fn((code) => {
+        statusCode = code;
+        mockResponse.statusCode = code;
+        return mockResponse;
+      }),
+      json: vi.fn(),
+    };
+
+    // POST with mismatched CSRF tokens
+    await pipeline({
+      request: {
+        method: "POST",
+        headers: {
+          cookie: "csrf_token=cookie-token",
+          "x-csrf-token": "different-header-token",
+        },
+        body: { name: "Attacker" },
+      },
+      response: mockResponse,
+    });
+
+    assert({
+      given: "a POST request with mismatched CSRF tokens",
+      should: "return 403 status",
+      actual: statusCode,
+      expected: 403,
+    });
+
+    assert({
+      given: "a POST request with mismatched CSRF tokens",
+      should: "NOT call processSubmission",
+      actual: processSubmission.mock.calls.length,
+      expected: 0,
     });
   });
 });

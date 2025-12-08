@@ -63,6 +63,11 @@ const handleForm = ({
   const validator = TypeCompiler.Compile(schema);
 
   return async ({ request, response }) => {
+    // Don't process if a prior middleware already rejected the request
+    if (response.statusCode && response.statusCode >= 400) {
+      return { request, response };
+    }
+
     // Register PII fields with logger scrubber
     if (pii?.length && response.locals?.logger?.scrub) {
       response.locals.logger.scrub(pii);

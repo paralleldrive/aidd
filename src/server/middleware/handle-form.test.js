@@ -521,7 +521,43 @@ describe("handleForm", () => {
     });
   });
 
-  // Req 11: Strip _csrf from body before validation (for withCSRF compatibility)
+  // Req 11: Skip processing if prior middleware rejected request
+  test("skips processing if response already has error status", async () => {
+    const processSubmission = vi.fn();
+    const schema = Type.Object(
+      { name: Type.String() },
+      { additionalProperties: false },
+    );
+
+    const middleware = handleForm({
+      name: "after-csrf",
+      schema,
+      processSubmission,
+    });
+
+    const mockResponse = {
+      locals: {},
+      statusCode: 403, // Prior middleware (e.g., withCSRF) rejected
+      status: vi.fn().mockReturnThis(),
+      json: vi.fn(),
+    };
+
+    await middleware({
+      request: {
+        body: { name: "Attacker" },
+      },
+      response: mockResponse,
+    });
+
+    assert({
+      given: "a response with 403 status from prior middleware",
+      should: "not call processSubmission",
+      actual: processSubmission.mock.calls.length,
+      expected: 0,
+    });
+  });
+
+  // Req 12: Strip _csrf from body before validation (for withCSRF compatibility)
   test("strips _csrf field from body before validation", async () => {
     const processSubmission = vi.fn().mockResolvedValue({});
     const schema = Type.Object(
