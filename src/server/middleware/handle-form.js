@@ -4,6 +4,11 @@
 
 import { TypeCompiler } from "@sinclair/typebox/compiler";
 
+const log = (response, data) => {
+  const logger = response.locals?.log || console.log;
+  logger(data);
+};
+
 const formatErrors = (errors) => {
   return [...errors].map((err) => {
     const path = err.path.slice(1) || "root";
@@ -33,6 +38,11 @@ const handleForm =
 
     // Check honeypot field if configured
     if (honeypotField && body[honeypotField]) {
+      log(response, {
+        message: "Form honeypot triggered",
+        form: name,
+        requestId: response.locals?.requestId,
+      });
       response.status(400);
       response.json({
         errors: ["Validation failed"],
@@ -45,10 +55,15 @@ const handleForm =
     const valid = validator.Check(body);
 
     if (!valid) {
-      response.status(400);
-      response.json({
-        errors: formatErrors(validator.Errors(body)),
+      const errors = formatErrors(validator.Errors(body));
+      log(response, {
+        message: "Form validation failed",
+        form: name,
+        requestId: response.locals?.requestId,
+        errorCount: errors.length,
       });
+      response.status(400);
+      response.json({ errors });
       return { request, response };
     }
 

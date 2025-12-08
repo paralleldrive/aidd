@@ -278,6 +278,7 @@ describe("withCSRF", () => {
     await withCSRF({
       request: {
         method: "POST",
+        url: "/api/submit",
         headers: {
           cookie: "csrf_token=secret-cookie-token",
           "x-csrf-token": "secret-header-token",
@@ -309,6 +310,72 @@ describe("withCSRF", () => {
       actual:
         !JSON.stringify(logCall)?.includes("secret-cookie-token") &&
         !JSON.stringify(logCall)?.includes("secret-header-token"),
+      expected: true,
+    });
+
+    assert({
+      given: "a CSRF rejection",
+      should: "include attack investigation details",
+      actual:
+        logCall?.method === "POST" &&
+        logCall?.url === "/api/submit" &&
+        logCall?.hasCookie === true &&
+        logCall?.hasHeader === true,
+      expected: true,
+    });
+  });
+
+  test("uses response.locals.log when available", async () => {
+    const customLog = vi.fn();
+
+    const mockResponse = {
+      locals: { requestId: "req-custom", log: customLog },
+      setHeader: vi.fn(),
+      status: vi.fn().mockReturnThis(),
+      json: vi.fn(),
+    };
+
+    await withCSRF({
+      request: {
+        method: "POST",
+        headers: {},
+      },
+      response: mockResponse,
+    });
+
+    assert({
+      given: "response.locals.log is available",
+      should: "use custom logger instead of console.log",
+      actual: customLog.mock.calls.length,
+      expected: 1,
+    });
+
+    assert({
+      given: "response.locals.log is available",
+      should: "pass log data to custom logger",
+      actual: customLog.mock.calls[0]?.[0]?.message,
+      expected: "CSRF validation failed",
+    });
+  });
+
+  test("sets Path=/ on CSRF cookie", async () => {
+    let cookieValue = "";
+    const mockResponse = {
+      locals: {},
+      setHeader: vi.fn((name, value) => {
+        if (name === "Set-Cookie") cookieValue = value;
+      }),
+    };
+
+    await withCSRF({
+      request: { method: "GET", headers: {} },
+      response: mockResponse,
+    });
+
+    assert({
+      given: "setting CSRF cookie",
+      should: "include Path=/ for all routes",
+      actual: cookieValue.includes("Path=/"),
       expected: true,
     });
   });

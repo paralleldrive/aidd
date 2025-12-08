@@ -12,4 +12,4 @@ export {
 export { withServerError } from "./with-server-error.js";
 export { createWithAuth, createWithOptionalAuth } from "./with-auth.js";
 export { handleForm } from "./handle-form.js";
-export { withCSRF } from "./with-csrf.js";
+export { createWithCSRF, withCSRF } from "./with-csrf.js";
