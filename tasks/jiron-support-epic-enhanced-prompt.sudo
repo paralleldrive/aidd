@@ -1,0 +1,64 @@
+# Enhanced Prompt - Jiron Support
+
+## Goal
+Add Jiron hypermedia support to aidd for token-efficient AI agent interactions.
+
+## Context
+Jiron {
+  base: Siren semantics + Jade syntax
+  output: valid HTML (browser-renderable, machine-parseable)
+  advantages: hypermedia affordances, code-on-demand, self-documenting APIs
+}
+
+Siren {
+  type: "application/vnd.siren+json"
+  structure: { class, properties, entities, links, actions, title }
+  entities: URI-addressable resources with state + transitions
+  subEntities: embedded links | embedded representations (require rel)
+  links: navigational (rel, href, class, title, type)
+  actions: behaviors (name, href, method, class, fields)
+}
+
+## Deliverables
+
+JironServer {
+  purpose: AI agent builds Jiron APIs from functional requirements
+  input: task requirements (Given/should format)
+  output: Jiron-compliant hypermedia endpoints
+  rule: create "ai/rules/jiron-server.mdc"
+  command: create "ai/commands/jiron-api.md"
+}
+
+JironClient {
+  purpose: dynamically build web components from Jiron endpoints
+  input: Jiron API endpoint URL
+  output: web components supporting Siren semantics
+  features:
+    - entity rendering (properties, subentities)
+    - link traversal (rel-based navigation)
+    - action forms (HTTP method support)
+    - URI-based entity IDs (enables sidelining vs embedding)
+  rule: create "ai/rules/jiron-client.mdc"
+  command: create "ai/commands/jiron-component.md"
+}
+
+DualRenderViews {
+  purpose: SEO + agent-friendly page rendering
+  browser: standard HTML
+  agent: token-efficient Jiron at "path/page.jiron"
+  discovery: <link rel="alternate" type="application/jiron" href="...">
+  hint: HTML comment instructing agents to fetch .jiron variant
+  rule: create "ai/rules/dual-render.mdc"
+  command: create "ai/commands/dual-view.md"
+}
+
+## Constraints
+- Follow existing aidd patterns (see ai/rules/, ai/commands/)
+- TDD for any implementation code
+- Requirements use "Given X, should Y" format
+- Verify against: jiron spec, siren spec, existing codebase conventions
+
+## References
+- https://github.com/ericelliott/jiron
+- https://github.com/kevinswiber/siren
+- https://github.com/ericelliott/siren-resource (deprecated, pattern reference only)
