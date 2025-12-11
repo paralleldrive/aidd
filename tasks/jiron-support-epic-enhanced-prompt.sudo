@@ -1,13 +1,28 @@
 # Enhanced Prompt - Jiron Support
 
 ## Goal
-Add Jiron hypermedia support to aidd for token-efficient AI agent interactions.
+Enable self-describing APIs that agents browse with ONE generic capability - replacing explicit tool definitions (MCP).
+
+## Paradigm Shift
+MCP {
+  model: predefined tools per API
+  requires: tool manifests, schemas, per-API implementations
+  scales: poorly (N tools for N APIs)
+}
+
+Jiron {
+  model: self-describing APIs via hypermedia
+  requires: ONE browse capability
+  scales: infinitely (1 capability for N APIs)
+  analogy: browsers don't need tools.json for websites
+}
 
 ## Context
 Jiron {
   base: Siren semantics + Jade syntax
   output: valid HTML (browser-renderable, machine-parseable)
   advantages: hypermedia affordances, code-on-demand, self-documenting APIs
+  key: actions embedded in responses, not predefined in manifests
 }
 
 Siren {
@@ -50,6 +65,13 @@ DualRenderViews {
   hint: HTML comment instructing agents to fetch .jiron variant
   rule: create "ai/rules/dual-render.mdc"
   command: create "ai/commands/dual-view.md"
+}
+
+JironAgent {
+  purpose: guide AI agents in browsing Jiron APIs
+  model: fetch root → discover links/actions → navigate → execute → repeat
+  requires: no predefined tool knowledge
+  rule: create "ai/rules/jiron-agent.mdc"
 }
 
 ## Constraints

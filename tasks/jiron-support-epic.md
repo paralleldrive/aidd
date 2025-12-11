@@ -1,11 +1,11 @@
 # Jiron Support Epic
 
 **Status**: 📋 PLANNED
-**Goal**: Add Jiron hypermedia support for token-efficient AI agent interactions
+**Goal**: Enable self-describing APIs that agents browse with one generic capability - replacing explicit tool definitions
 
 ## Overview
 
-AI agents waste significant tokens parsing verbose HTML when they only need structural data. Jiron solves this by providing a hypermedia format that combines Siren semantics with HTML output - machine-parseable through semantic CSS classes while remaining browser-renderable. This epic adds rules and commands enabling agents to build Jiron APIs from requirements and generate client components that consume them, plus a dual-render pattern serving optimized .jiron views alongside standard HTML.
+Current agent patterns require predefined tool manifests (MCP) for every API interaction. Jiron inverts this: APIs describe themselves through hypermedia, embedding available actions and navigation in every response. Agents need ONE capability - fetch and parse Jiron - to interact with ANY Jiron-enabled API. No per-API tool definitions, no upfront schemas, no MCP server implementations. The API itself tells agents what's possible. This epic adds rules and commands for building self-describing Jiron APIs, client components that consume them, and dual-render patterns serving token-optimized views alongside standard HTML.
 
 Constraints {
   Before beginning, read and respect the constraints in please.mdc.
@@ -22,6 +22,9 @@ Create `ai/rules/jiron-server.mdc` to guide agents in designing Jiron-compliant 
 
 **Requirements**:
 - Given functional requirements in Given/should format, should produce a Jiron API design with entities, properties, actions, and links
+- Given a root endpoint (`/`), should expose all entry points for agent discovery - no separate manifest needed
+- Given any response, should embed all available actions for current state (self-describing, not predefined)
+- Given a state transition (action execution), should return updated resource with new available actions
 - Given an entity design, should specify semantic CSS classes for machine parsing (`.entity`, `.property`, `.action`, `.link`)
 - Given related resources, should default to sidelining (link references) over embedding for token efficiency
 - Given an action requirement, should specify HTTP method, href, and required fields
@@ -90,6 +93,21 @@ Create `ai/commands/dual-view.md` to generate dual-render route handlers.
 - Given .jiron extension request, should serve token-optimized Jiron format
 - Given content negotiation, should respect Accept headers for format selection
 - Given implementation, should follow TDD with tests written first
+
+---
+
+## Agent Navigation Rule
+
+Create `ai/rules/jiron-agent.mdc` to guide AI agents in browsing Jiron APIs.
+
+**Requirements**:
+- Given a Jiron API root URL, should fetch and parse to discover available entry points
+- Given a Jiron response, should extract entities, links, and actions using semantic CSS classes
+- Given navigation needs, should follow links by rel attribute rather than hardcoding URLs
+- Given a task requiring state change, should find and submit the appropriate embedded action
+- Given an action response, should parse the returned resource for updated state and new available actions
+- Given sidelined entities (links), should fetch on-demand only when entity data is needed
+- Given unknown API structure, should explore via root → links → subresources (no predefined tool knowledge required)
 
 ---
 

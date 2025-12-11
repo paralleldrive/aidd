@@ -34,17 +34,33 @@
 
 **Inferred Answer**: Both, progressively. The rule should guide agents to first design the API structure (entities, actions, links), then generate implementation code following TDD. Consistent with existing aidd patterns like form-csrf.md.
 
+### Q9: How does Jiron compare to MCP for agent API interactions?
+
+**Inferred Answer**: They represent fundamentally different paradigms:
+
+| MCP | Jiron |
+|-----|-------|
+| Tools predefined in manifests | Actions discovered in responses |
+| Agent needs tool definitions per API | Agent needs ONE browse capability for all APIs |
+| Server implements MCP protocol | Server serves semantic HTML |
+| Schema declared upfront | Fields embedded in action forms |
+| Static capabilities | Dynamic capabilities per state |
+
+Jiron could replace MCP for web API interactions. Instead of defining 50 tools, expose one Jiron root endpoint. The agent fetches, parses, discovers what's available, executes actions, and the response tells them what's next. This is how browsers work - no manifest of "all things you can do on a website."
+
+Key insight: MCP = explicit tool definitions. Jiron = self-describing APIs. For browsable web resources, Jiron eliminates the need for per-API tool implementations.
+
 ---
 
 ## Panel Answers
 
-### Top Insight #1: Embrace HTML as the Universal Format
+### Top Insight #1: One Capability to Browse Any API
 
-Jiron's key innovation is recognizing HTML as the hypermedia format that already works everywhere. Rather than inventing new parsers, Jiron uses semantic CSS classes to make HTML machine-readable. The aidd implementation should fully embrace this - .jiron files are HTML, agents parse them with standard DOM APIs, and browsers render them without special handling. This dramatically simplifies implementation.
+Jiron replaces explicit tool definitions (MCP) with self-describing APIs. Agents need ONE generic browse capability to interact with ANY Jiron API. No per-API tool manifests, no upfront schemas. The API itself tells agents what's possible at each state. This is how browsers work - and it scales infinitely better than predefined tool sets. For web API interactions, Jiron could eliminate the need for MCP entirely.
 
-### Top Insight #2: Sidelining is the Token Efficiency Win
+### Top Insight #2: Sidelining + Self-Describing Actions
 
-The real token savings for AI agents comes from sidelining vs embedding. When an agent fetches an order, they get the order properties plus *links* to customer and items, not the full embedded objects. Agents traverse links only when needed. The implementation must make sidelining the default pattern and provide clear affordances for link traversal.
+Token efficiency comes from two patterns working together: (1) sidelining - link references instead of embedded data, fetch on-demand; (2) self-describing actions - no separate tool schemas, fields embedded in action forms. Combined, these make Jiron both architecturally superior AND more token-efficient than MCP+JSON patterns.
 
 ---
 

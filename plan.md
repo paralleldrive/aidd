@@ -20,5 +20,5 @@
 
 **Status**: 📋 PLANNED
 **File**: [`tasks/jiron-support-epic.md`](./tasks/jiron-support-epic.md)
-**Goal**: Add Jiron hypermedia support for token-efficient AI agent interactions
-**Tasks**: 6 tasks (jiron-server rule, jiron-api command, jiron-client rule, jiron-component command, dual-render rule, dual-view command)
+**Goal**: Enable self-describing APIs that agents browse with one generic capability - replacing explicit tool definitions
+**Tasks**: 7 tasks (jiron-server rule, jiron-api command, jiron-client rule, jiron-component command, dual-render rule, dual-view command, jiron-agent rule)

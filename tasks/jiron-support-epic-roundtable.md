@@ -23,9 +23,9 @@
 ### Aisha Okonkwo - AI Agent Systems Engineer
 *Built agent orchestration systems at two major AI labs*
 
-**Viewpoint**: The token efficiency argument is the real win here. Current agent patterns waste 80%+ of tokens on boilerplate HTML. A well-structured .jiron view could reduce a typical page from 50k tokens to 2k. But the discovery mechanism is critical - agents need reliable, fast ways to find the .jiron endpoint. I'd prioritize the HTML comment approach over rel="alternate" because agents often don't parse full HTML headers.
+**Viewpoint**: Token efficiency matters, but we're underselling the real paradigm shift. Current agent patterns (MCP) require explicit tool definitions per API - that doesn't scale. Jiron inverts this: APIs describe themselves. An agent needs ONE capability - fetch and parse Jiron - to interact with ANY Jiron API. No tool manifests, no upfront schemas, no per-API MCP implementations. This is how browsers work. You don't need a "tools.json" for amazon.com - you just browse, and each page tells you what actions are available. For AI agents interacting with web APIs, Jiron could replace MCP entirely.
 
-**Critique of others**: Marcus's component architecture is good for browsers, but remember agents won't use those components. They'll parse the HTML directly. The semantic structure must be self-evident without relying on component behavior.
+**Critique of others**: Marcus's component architecture is good for browsers, but remember agents won't use those components. They'll parse the HTML directly. The semantic structure must be self-evident without relying on component behavior. Helena's right about avoiding magic, but we need to emphasize that the "one capability" model is the architectural win, not just token savings.
 
 ---
 
@@ -55,27 +55,27 @@
 - The implementation should produce *documentation and patterns*, not magic generators
 - Client components: small, composable, semantic (`<jiron-entity>`, `<jiron-link>`, `<jiron-action>`)
 - Server rules: guide agents through hypermedia design decisions, generate TDD specs
-- Token efficiency: structure .jiron for minimal parsing overhead
+- The "one capability" model is the architectural win - agents browse rather than call predefined tools
 
 ### Round 10: Final Selection
 
-**Top Insight #1**: HTML is already the universal hypermedia format - Jiron's innovation is making it machine-readable through semantic classes while remaining browser-renderable. Don't fight HTML, embrace it. The .jiron files should be valid HTML that works in browsers AND is easy for agents to parse.
+**Top Insight #1**: One capability to rule them all. Jiron replaces explicit tool definitions (MCP) with self-describing APIs. Agents need ONE generic browse capability to interact with ANY Jiron API. No per-API tool manifests, no upfront schemas. The API itself tells agents what's possible at each state. This is how browsers work - and it scales infinitely better than predefined tool sets.
 
-**Top Insight #2**: Sidelining (link references) vs embedding (inline data) is where token efficiency lives. Default to sidelining; let agents traverse links on-demand. This single pattern could reduce agent token consumption by an order of magnitude on complex pages.
+**Top Insight #2**: Sidelining (link references) vs embedding (inline data) is where token efficiency lives. Default to sidelining; let agents traverse links on-demand. Combined with self-describing actions, this makes Jiron both architecturally superior AND more token-efficient than MCP+JSON patterns.
 
 ---
 
 ## Panel Recommendations
 
-### Recommendation 1: HTML as Universal Format
-Jiron's key innovation is recognizing HTML as the hypermedia format that already works everywhere. Rather than inventing new parsers, Jiron uses semantic CSS classes to make HTML machine-readable. The aidd implementation should fully embrace this - .jiron files are HTML, agents parse them with standard DOM APIs, and browsers render them without special handling. This dramatically simplifies implementation.
+### Recommendation 1: One Capability to Browse Any API
+Jiron replaces explicit tool definitions (MCP) with self-describing APIs. Agents need ONE generic browse capability to interact with ANY Jiron API. No per-API tool manifests, no upfront schemas. The API itself tells agents what's possible at each state. This is how browsers work - and it scales infinitely better than predefined tool sets. For web API interactions, Jiron could eliminate the need for MCP entirely.
 
-*Consensus: Helena, Marcus, Aisha, David - unanimous*
+*Consensus: Aisha (primary), Helena, Marcus, David - unanimous*
 
-### Recommendation 2: Sidelining as Default Pattern
-The real token savings for AI agents comes from sidelining vs embedding. When an agent fetches an order, they get the order properties plus *links* to customer and items, not the full embedded objects. Agents traverse links only when needed. The implementation must make sidelining the default pattern and provide clear affordances for link traversal.
+### Recommendation 2: Sidelining + Self-Describing Actions
+Token efficiency comes from two patterns working together: (1) sidelining - link references instead of embedded data, fetch on-demand; (2) self-describing actions - no separate tool schemas, fields embedded in action forms. Combined, these make Jiron both architecturally superior AND more token-efficient than MCP+JSON patterns.
 
-*Consensus: Aisha (primary), David (strong support), Helena, Marcus - unanimous*
+*Consensus: Aisha, David (primary), Helena, Marcus - unanimous*
 
 ---
 
