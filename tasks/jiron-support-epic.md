@@ -12,6 +12,8 @@ Constraints {
   Remember to use the TDD process when implementing code.
   Follow existing ai/rules and ai/commands patterns.
   Requirements use "Given X, should Y" format.
+  Use AIDD server framework (createRoute + asyncPipe), NOT Express.
+  Streaming MUST use Web Streams API (ReadableStream) for portability.
 }
 
 ---
@@ -37,10 +39,12 @@ Create `ai/rules/jiron-server.mdc` to guide agents in designing Jiron-compliant 
 Create `ai/commands/jiron-api.md` to generate Jiron endpoint implementations.
 
 **Requirements**:
-- Given a Jiron API design, should generate Express route handlers following existing middleware patterns
+- Given a Jiron API design, should generate route handlers using AIDD's `createRoute` + `asyncPipe` composition pattern
 - Given entity properties, should render HTML with semantic class structure
 - Given actions, should generate form elements with method and href attributes
 - Given links, should render anchor elements with rel and href attributes
+- Given chat/AI responses, should stream using Web Streams API (ReadableStream) for immediate partial results
+- Given streaming response, should use standard TransformStream/TextEncoderStream for portability across Node.js, Deno, and edge runtimes
 - Given implementation, should follow TDD with tests written first
 
 ---
@@ -89,9 +93,25 @@ Create `ai/rules/dual-render.mdc` for SEO-friendly HTML with agent-optimized .ji
 Create `ai/commands/dual-view.md` to generate dual-render route handlers.
 
 **Requirements**:
-- Given a page design, should generate route handler serving HTML by default
+- Given a page design, should generate route handler using AIDD's `createRoute` pattern serving HTML by default
 - Given .jiron extension request, should serve token-optimized Jiron format
 - Given content negotiation, should respect Accept headers for format selection
+- Given AI-generated content, should stream Jiron fragments using ReadableStream for progressive rendering
+- Given implementation, should follow TDD with tests written first
+
+---
+
+## Streaming Middleware
+
+Create `src/server/middleware/with-stream.js` for portable streaming responses.
+
+**Requirements**:
+- Given a generator function, should create a ReadableStream that yields chunks as they become available
+- Given streaming response, should set appropriate headers (`Content-Type`, `Transfer-Encoding: chunked`)
+- Given Jiron streaming, should support `text/html` content type with chunked entity/action delivery
+- Given error during stream, should gracefully close stream and log error with requestId
+- Given middleware composition, should integrate with existing `createRoute` + `asyncPipe` pattern
+- Given portability needs, should use only Web Streams API (no Node.js-specific streams) for compatibility across Vercel, Netlify, AWS Lambda, Deno Deploy
 - Given implementation, should follow TDD with tests written first
 
 ---

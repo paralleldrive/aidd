@@ -74,8 +74,34 @@ JironAgent {
   rule: create "ai/rules/jiron-agent.mdc"
 }
 
+StreamingMiddleware {
+  purpose: portable streaming responses for AI/chat
+  file: "src/server/middleware/with-stream.js"
+  pattern: generator → ReadableStream → chunked HTTP
+  portability: Web Streams API only (no Node.js streams)
+}
+
+## Server Framework
+AIDD {
+  pattern: createRoute + asyncPipe (functional composition)
+  NOT: Express
+  middleware: ({ request, response }) => Promise<{ request, response }>
+  data: attach to response.locals
+}
+
+## Streaming
+WebStreamsAPI {
+  why: portability (no Vercel vendor lock-in)
+  primitives: ReadableStream, TransformStream, TextEncoderStream
+  pattern: generator → ReadableStream → chunked response
+  works: Node.js, Deno, Vercel, Netlify, AWS Lambda, Deno Deploy
+  avoid: Node.js-specific streams (fs.ReadStream, etc.)
+}
+
 ## Constraints
-- Follow existing aidd patterns (see ai/rules/, ai/commands/)
+- Follow existing aidd patterns (see ai/rules/, ai/commands/, src/server/)
+- Use createRoute + asyncPipe, NOT Express
+- Streaming via Web Streams API only (no vendor lock-in)
 - TDD for any implementation code
 - Requirements use "Given X, should Y" format
 - Verify against: jiron spec, siren spec, existing codebase conventions

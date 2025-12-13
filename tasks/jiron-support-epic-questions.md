@@ -77,3 +77,27 @@ How should .jiron endpoints handle auth? Should they mirror the HTML endpoint's 
 ### U3: Caching strategy for dual-render views?
 
 Should .html and .jiron variants share cache keys? Different TTLs? Need to consider CDN behavior and agent polling patterns.
+
+---
+
+## Resolved (from refinement)
+
+### R1: What server framework should Jiron use?
+
+**Answer**: AIDD's custom functional composition framework using `createRoute` + `asyncPipe`, NOT Express. Middleware signature: `({ request, response }) => Promise<{ request, response }>`. Data passed via `response.locals`.
+
+### R2: How should streaming work without Vercel vendor lock-in?
+
+**Answer**: Use Web Streams API exclusively (ReadableStream, TransformStream, TextEncoderStream). This is the portable standard that works across:
+- Node.js 18+
+- Deno
+- Vercel Edge Functions
+- Netlify Edge
+- AWS Lambda (with response streaming)
+- Cloudflare Workers
+
+Avoid Node.js-specific streams (fs.ReadStream, etc.) which don't work in edge runtimes. Pattern: generator function → ReadableStream → chunked HTTP response.
+
+Sources:
+- [How to stream data over HTTP using NextJS](https://dev.to/bsorrentino/how-to-stream-data-over-http-using-nextjs-1kmb)
+- [MDN ReadableStream](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream)

@@ -21,4 +21,4 @@
 **Status**: 📋 PLANNED
 **File**: [`tasks/jiron-support-epic.md`](./tasks/jiron-support-epic.md)
 **Goal**: Enable self-describing APIs that agents browse with one generic capability - replacing explicit tool definitions
-**Tasks**: 7 tasks (jiron-server rule, jiron-api command, jiron-client rule, jiron-component command, dual-render rule, dual-view command, jiron-agent rule)
+**Tasks**: 8 tasks (jiron-server rule, jiron-api command, jiron-client rule, jiron-component command, dual-render rule, dual-view command, streaming middleware, jiron-agent rule)
