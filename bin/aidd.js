@@ -2,11 +2,13 @@
 
 import { Command } from "commander";
 import { executeClone } from "../lib/cli-core.js";
+import { generateAllIndexes } from "../lib/index-generator.js";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 import process from "process";
 import { errorCauses } from "error-causes";
+import chalk from "chalk";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,6 +52,10 @@ const createCli = () => {
     .option(
       "-c, --cursor",
       "create .cursor symlink for Cursor editor integration",
+    )
+    .option(
+      "-i, --index",
+      "generate index.md files from frontmatter in ai/ subfolders",
     )
     .addHelpText(
       "before",
@@ -114,58 +120,86 @@ AI Driven Development. If you're interested, reach out:
 https://ericelliottjs.com/support
 `,
     )
-    .action(async (targetDirectory, { force, dryRun, verbose, cursor }) => {
-      const result = await executeClone({
-        targetDirectory,
-        force,
-        dryRun,
-        verbose,
-        cursor,
-      });
+    .action(
+      async (targetDirectory, { force, dryRun, verbose, cursor, index }) => {
+        // Handle --index option separately
+        if (index) {
+          const targetPath = path.resolve(process.cwd(), targetDirectory);
+          console.log(chalk.blue("Generating index.md files..."));
 
-      if (!result.success) {
-        // Create a proper error with cause for handleErrors
-        const error = new Error(result.error.message, {
-          cause: result.error.cause || {
-            code: result.error.code || "UNEXPECTED_ERROR",
-          },
+          const result = await generateAllIndexes(targetPath);
+
+          if (result.success) {
+            console.log(chalk.green(`✅ ${result.message}`));
+            if (verbose) {
+              result.indexes.forEach((idx) => {
+                console.log(chalk.gray(`  - ${idx.path}`));
+              });
+            }
+            process.exit(0);
+          } else {
+            console.error(chalk.red(`❌ ${result.error}`));
+            process.exit(1);
+          }
+          return;
+        }
+
+        const result = await executeClone({
+          targetDirectory,
+          force,
+          dryRun,
+          verbose,
+          cursor,
         });
 
-        // Use handleErrors instead of manual switching
-        try {
-          handleCliErrors({
-            ValidationError: ({ message }) => {
-              console.error(`❌ Validation Error: ${message}`);
-              console.error("💡 Try using --force to overwrite existing files");
+        if (!result.success) {
+          // Create a proper error with cause for handleErrors
+          const error = new Error(result.error.message, {
+            cause: result.error.cause || {
+              code: result.error.code || "UNEXPECTED_ERROR",
             },
-            FileSystemError: ({ message, cause }) => {
-              console.error(`❌ File System Error: ${message}`);
-              console.error(
-                "💡 Check file permissions and available disk space",
-              );
-              if (verbose && cause) {
-                console.error("🔍 Caused by:", cause.message || cause);
-              }
-            },
-            CloneError: ({ message, cause }) => {
-              console.error(`❌ Clone Error: ${message}`);
-              console.error("💡 Check source directory and target permissions");
-              if (verbose && cause) {
-                console.error("🔍 Caused by:", cause.message || cause);
-              }
-            },
-          })(error);
-        } catch {
-          // Fallback for unexpected errors
-          console.error(`❌ Unexpected Error: ${result.error.message}`);
-          if (verbose && result.error.cause) {
-            console.error("🔍 Caused by:", result.error.cause);
+          });
+
+          // Use handleErrors instead of manual switching
+          try {
+            handleCliErrors({
+              ValidationError: ({ message }) => {
+                console.error(`❌ Validation Error: ${message}`);
+                console.error(
+                  "💡 Try using --force to overwrite existing files",
+                );
+              },
+              FileSystemError: ({ message, cause }) => {
+                console.error(`❌ File System Error: ${message}`);
+                console.error(
+                  "💡 Check file permissions and available disk space",
+                );
+                if (verbose && cause) {
+                  console.error("🔍 Caused by:", cause.message || cause);
+                }
+              },
+              CloneError: ({ message, cause }) => {
+                console.error(`❌ Clone Error: ${message}`);
+                console.error(
+                  "💡 Check source directory and target permissions",
+                );
+                if (verbose && cause) {
+                  console.error("🔍 Caused by:", cause.message || cause);
+                }
+              },
+            })(error);
+          } catch {
+            // Fallback for unexpected errors
+            console.error(`❌ Unexpected Error: ${result.error.message}`);
+            if (verbose && result.error.cause) {
+              console.error("🔍 Caused by:", result.error.cause);
+            }
           }
         }
-      }
 
-      process.exit(result.success ? 0 : 1);
-    });
+        process.exit(result.success ? 0 : 1);
+      },
+    );
 };
 
 // Execute CLI

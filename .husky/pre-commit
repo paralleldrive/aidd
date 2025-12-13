@@ -1,1 +1,7 @@
+# Generate index.md files for ai/ folders
+node bin/aidd.js --index
+
+# Stage any updated index.md files
+git add ai/**/index.md 2>/dev/null || true
+
 npm run test:unit
