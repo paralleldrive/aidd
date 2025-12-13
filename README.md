@@ -105,7 +105,11 @@ npx aidd my-project
    npx aidd my-project
    ```
 
-3. **Explore the structure**:
+3. **Create a Vision Document** (important!):
+
+   Create a `vision.md` file in your project root. This document serves as the source of truth for AI agents. See [Vision Document](#-vision-document) for details.
+
+4. **Explore the structure**:
 
    ```bash
    cd my-project
@@ -113,7 +117,7 @@ npx aidd my-project
    cat ai/rules/please.mdc   # Read the main orchestrator
    ```
 
-4. **Start using AI workflows**:
+5. **Start using AI workflows**:
    - Reference `ai/rules/` in AI prompts for better context
    - Use `ai/commands/` as workflow templates
    - Customize rules for your specific project needs
@@ -352,6 +356,7 @@ aidd [target-directory] [options]
 | `-d, --dry-run`    | Show what would be copied without copying                 |
 | `-v, --verbose`    | Provide detailed output                                   |
 | `-c, --cursor`     | Create `.cursor` symlink for Cursor editor integration    |
+| `-i, --index`      | Generate `index.md` files from frontmatter in `ai/` subfolders |
 | `-h, --help`       | Display help information                                  |
 | `--version`        | Show version number                                       |
 
@@ -369,6 +374,10 @@ npx aidd --force --verbose # Overwrite with details
 # Cursor editor integration
 npx aidd --cursor          # Create .cursor symlink
 npx aidd my-project --cursor --verbose
+
+# Generate index files
+npx aidd --index           # Regenerate ai/ index.md files
+npx aidd --index --verbose # Show all generated files
 
 # Multiple projects
 npx aidd frontend-app
@@ -418,6 +427,70 @@ This system is designed to work with AI coding assistants:
 - **Claude** - Advanced reasoning and code review
 
 The rules provide context and structure for more effective AI interactions.
+
+## 📋 Vision Document
+
+The **vision document** (`vision.md`) is a critical component of AIDD that serves as the source of truth for AI agents working on your project.
+
+### Why You Need a Vision Document
+
+AI agents are powerful but need context to make good decisions. Without a clear vision:
+- Agents may make architectural choices that conflict with your goals
+- Features might be implemented in ways that don't align with your product direction
+- Different agents working on the same project may take inconsistent approaches
+
+### Creating Your Vision Document
+
+Create a `vision.md` file in your project root with the following sections:
+
+```markdown
+# Project Vision
+
+## Overview
+Brief description of what this project does and who it's for.
+
+## Goals
+- Primary goal 1
+- Primary goal 2
+- ...
+
+## Non-Goals (Out of Scope)
+Things this project explicitly will NOT do.
+
+## Key Constraints
+- Technical constraints (e.g., must use specific frameworks)
+- Business constraints (e.g., must be GDPR compliant)
+- Performance requirements
+
+## Architectural Decisions
+Major technical decisions and their rationale.
+
+## User Experience Principles
+How the product should feel to users.
+
+## Success Criteria
+How we measure if the project is successful.
+```
+
+### How Agents Use the Vision Document
+
+The AIDD system instructs agents to:
+
+1. **Read the vision first** - Before creating or running any task, agents read `vision.md` to understand project context
+2. **Check for conflicts** - When given a task, agents compare it against the vision to identify potential conflicts
+3. **Ask for clarification** - If a task conflicts with the vision, agents will stop and ask you how to resolve the conflict rather than proceeding blindly
+
+This ensures that all AI-generated code and decisions align with your project's goals.
+
+### AGENTS.md File
+
+When you run the AIDD installer, it automatically creates (or updates) an `AGENTS.md` file in your project root. This file contains directives that help AI agents:
+
+- Navigate the `ai/` directory structure efficiently
+- Use `index.md` files to understand folder contents without reading every file
+- Practice progressive discovery (only reading folders relevant to the current task)
+- Respect the vision document as the source of truth
+- Handle conflicts appropriately
 
 ## 🔧 Cursor Editor Setup
 
