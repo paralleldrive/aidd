@@ -32,16 +32,16 @@ alwaysApply: false
 
 ## Patterns to Flag as CRITICAL
 
-| Pattern | Issue | Fix |
-|---------|-------|-----|
-| `localStorage.setItem('token', ...)` | Token in localStorage (XSS vulnerable) | Use httpOnly Secure SameSite cookies |
-| `sessionStorage.setItem('token', ...)` | Token in sessionStorage (XSS vulnerable) | Use httpOnly Secure SameSite cookies |
-| `algorithm: 'none'` | Signature bypass vulnerability | Use RS256 or ES256 |
-| `verify: false` | Signature verification disabled | Always verify signatures |
-| `jwt.decode(...)` without verify | No signature verification | Use jwt.verify() instead |
-| `ignoreExpiration: true` | Token expiration bypassed | Always check expiration |
-| `expiresIn: '30d'` or longer | Long-lived access tokens | Use short-lived tokens + refresh rotation |
-| `algorithms: ['HS256']` shared across services | Weak key distribution | Use asymmetric algorithms |
+```
+(localStorage.setItem('*token*', ...)) => CRITICAL: Token in localStorage is XSS vulnerable. Use httpOnly Secure SameSite cookies.
+(sessionStorage.setItem('*token*', ...)) => CRITICAL: Token in sessionStorage is XSS vulnerable. Use httpOnly Secure SameSite cookies.
+(algorithm: 'none') => CRITICAL: Signature bypass vulnerability. Use RS256 or ES256.
+(verify: false) => CRITICAL: Signature verification disabled. Always verify signatures.
+(jwt.decode(...) without jwt.verify) => CRITICAL: No signature verification. Use jwt.verify() instead.
+(ignoreExpiration: true) => CRITICAL: Token expiration bypassed. Always check expiration.
+(expiresIn: '*d' where days >= 1) => WARNING: Long-lived access tokens. Use short-lived tokens + refresh rotation.
+(algorithms: ['HS256'] shared across services) => WARNING: Weak key distribution. Use asymmetric algorithms.
+```
 
 ## Review Checklist
 
