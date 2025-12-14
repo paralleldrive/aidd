@@ -1193,7 +1193,7 @@ Found a bug or want to contribute?
 3. Add tests
 4. Submit a pull request
 
-See the main [AIDD repository](https://github.com/paralleldrive/sudolang.ai) for details.
+See the main [AIDD repository](https://github.com/paralleldrive/aidd) for details.
 
 ---
 

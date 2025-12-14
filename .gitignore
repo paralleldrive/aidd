@@ -140,3 +140,7 @@ vite.config.ts.timestamp-*
 
 # AI agent tools
 .agent-tools/
+
+# Core dump files
+core
+core.*

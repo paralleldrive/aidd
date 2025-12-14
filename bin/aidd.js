@@ -35,9 +35,7 @@ const createCli = () => {
 
   return program
     .name("aidd")
-    .description(
-      "AI Driven Development - Install SudoLang AI agent orchestration system",
-    )
+    .description("AI Driven Development - Install the AIDD Framework")
     .version(packageJson.version)
     .argument(
       "[target-directory]",
@@ -54,7 +52,7 @@ const createCli = () => {
     .addHelpText(
       "before",
       `
-SudoLang AIDD
+AIDD Framework
 The standard framework for AI Driven Development.
 
 Includes:
@@ -104,14 +102,9 @@ Install without Cursor integration:
     .addHelpText(
       "after",
       `
-About the Author
+Need help building your app?
 
-The SudoLang AIDD library was created by Eric Elliott, author of the book,
-"The Art of Effortless Programming: Unleashing the Power of AI Driven Development"
-(https://leanpub.com/effortless-programming). Eric offers 1:1 mentorship,
-consulting, and strategic advisor services for people looking to learn
-AI Driven Development. If you're interested, reach out:
-https://ericelliottjs.com/support
+https://paralleldrive.com
 `,
     )
     .action(async (targetDirectory, { force, dryRun, verbose, cursor }) => {
