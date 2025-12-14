@@ -1,4 +1,4 @@
-# SudoLang.ai Project Plan
+# AIDD Framework Project Plan
 
 ## Current Epics
 

@@ -32,7 +32,7 @@
 ## July 6, 2025
 
 - 📝 - Mentorship landing flow PRD - AIDD methodology
-- 🚀 - SudoLang.ai project overview and README
+- 🚀 - AIDD Framework project overview and README
 - 🚀 - Redux/Autodux framework with SudoLang transpiler
 - 📝 - AI metaprograms and system orchestration
 - 🔧 - Initial .cursorrules for AI assistant behavior
