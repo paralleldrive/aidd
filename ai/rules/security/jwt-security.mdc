@@ -7,14 +7,14 @@ alwaysApply: false
 **AVOID JWT if you can.** Prefer opaque tokens with server-side sessions.
 
 Patterns {
-  (token in localStorage or sessionStorage) => Use httpOnly Secure SameSite cookies instead.
-  (JWT 'none' algorithm) => Signature bypass. Use RS256/ES256.
-  (JWT verification disabled) => Always verify signatures.
-  (jwt.decode without verify) => Use jwt.verify().
-  (JWT expiration ignored) => Always check expiration.
-  (access token lifetime >= 1 day) => Use short-lived tokens + refresh rotation.
-  (HS256 shared across services) => Use asymmetric algorithms.
-  (JWT detected) => Consider opaque tokens + server sessions.
+  (token in localStorage or sessionStorage) => Critical: XSS vulnerable. Use httpOnly Secure SameSite cookies.
+  (JWT 'none' algorithm) => Critical: Signature bypass. Use RS256/ES256.
+  (JWT verification disabled) => Critical: Always verify signatures.
+  (jwt.decode without verify) => Critical: Use jwt.verify().
+  (JWT expiration ignored) => Critical: Always check expiration.
+  (HS256 shared across services) => Critical: Use asymmetric algorithms.
+  (access token lifetime >= 1 day) => Warn: Use short-lived tokens + refresh rotation.
+  (JWT detected) => Warn: Consider opaque tokens + server sessions.
 }
 
 If JWT required {
