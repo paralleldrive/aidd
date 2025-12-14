@@ -1,0 +1,65 @@
+---
+description: JWT security review guidelines - flag insecure JWT patterns and recommend secure alternatives
+alwaysApply: false
+---
+# JWT Security Review
+
+**AVOID JWT if you can.** JWT has historically been riddled with implementation errors.
+
+## Preferred Secure Approaches
+
+### Token Storage
+- Use opaque access tokens with server-side sessions or token introspection
+- In browsers, store sessions in httpOnly Secure SameSite cookies
+- **NEVER** use localStorage or sessionStorage for tokens
+
+### Token Lifecycle
+- Keep access tokens short-lived (minutes, not days)
+- Use refresh token rotation
+- For public clients, prefer sender-constrained tokens (DPoP, mTLS) when feasible
+
+### Algorithm Security
+- Never use the 'none' algorithm
+- Prefer asymmetric algorithms (RS256, ES256) over symmetric (HS256)
+- Always verify JWT signatures - never disable verification
+- Never ignore token expiration
+
+### Additional Protections
+- Cookies alone don't stop XSS or CSRF
+- Enforce SameSite attribute on cookies
+- Add CSRF tokens where needed
+- Deploy a tight Content Security Policy (CSP)
+
+## Patterns to Flag as CRITICAL
+
+| Pattern | Issue | Fix |
+|---------|-------|-----|
+| `localStorage.setItem('token', ...)` | Token in localStorage (XSS vulnerable) | Use httpOnly Secure SameSite cookies |
+| `sessionStorage.setItem('token', ...)` | Token in sessionStorage (XSS vulnerable) | Use httpOnly Secure SameSite cookies |
+| `algorithm: 'none'` | Signature bypass vulnerability | Use RS256 or ES256 |
+| `verify: false` | Signature verification disabled | Always verify signatures |
+| `jwt.decode(...)` without verify | No signature verification | Use jwt.verify() instead |
+| `ignoreExpiration: true` | Token expiration bypassed | Always check expiration |
+| `expiresIn: '30d'` or longer | Long-lived access tokens | Use short-lived tokens + refresh rotation |
+| `algorithms: ['HS256']` shared across services | Weak key distribution | Use asymmetric algorithms |
+
+## Review Checklist
+
+When reviewing code that handles authentication:
+
+1. **Search for JWT libraries**: `jsonwebtoken`, `jwt-decode`, `jose`
+2. **Check token storage**: Look for localStorage/sessionStorage token access
+3. **Verify algorithm configuration**: Ensure strong algorithms, no 'none'
+4. **Check verification settings**: No disabled verification or expiration
+5. **Review token lifetime**: Access tokens should be short-lived
+6. **Inspect cookie settings**: Must have httpOnly, Secure, SameSite
+
+## Recommendations
+
+If JWT is required, ensure:
+- Asymmetric algorithms (RS256/ES256)
+- Short expiration (15 minutes or less for access tokens)
+- Proper signature verification
+- httpOnly Secure SameSite cookies for storage
+- CSRF protection if using cookies
+- Token refresh rotation for long sessions
