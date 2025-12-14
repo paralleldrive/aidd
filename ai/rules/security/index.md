@@ -8,7 +8,7 @@ This index provides an overview of the contents in this directory.
 
 **File:** `jwt-security.mdc`
 
-JWT security review guidelines - flag insecure JWT patterns and recommend secure alternatives
+JWT security review - flag insecure patterns
 
 ### Constraint: Timing Safe Compare
 
