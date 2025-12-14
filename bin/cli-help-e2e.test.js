@@ -37,29 +37,28 @@ describe("CLI help command", () => {
     });
   });
 
-  test("help output includes About the Author section at end", async () => {
+  test("help output includes ParallelDrive CTA at end", async () => {
     const { stdout } = await execAsync(`node ${cliPath} --help`);
 
     assert({
       given: "CLI help command is run",
-      should: "include About the Author section",
+      should: "include ParallelDrive CTA",
       actual:
-        stdout.includes("About the Author") &&
-        stdout.includes("Eric Elliott") &&
-        stdout.includes("The Art of Effortless Programming"),
+        stdout.includes("Need help building your app?") &&
+        stdout.includes("paralleldrive.com"),
       expected: true,
     });
   });
 
-  test("About the Author appears after main help content", async () => {
+  test("ParallelDrive CTA appears after main help content", async () => {
     const { stdout } = await execAsync(`node ${cliPath} --help`);
-    const authorIndex = stdout.indexOf("About the Author");
+    const ctaIndex = stdout.indexOf("Need help building your app?");
     const optionsIndex = stdout.indexOf("Options:");
 
     assert({
       given: "CLI help command is run",
-      should: "show About the Author after the main help content",
-      actual: authorIndex > optionsIndex && authorIndex > 0,
+      should: "show ParallelDrive CTA after the main help content",
+      actual: ctaIndex > optionsIndex && ctaIndex > 0,
       expected: true,
     });
   });
@@ -78,15 +77,15 @@ describe("CLI help command", () => {
     });
   });
 
-  test("Quick Start appears before About the Author", async () => {
+  test("Quick Start appears before ParallelDrive CTA", async () => {
     const { stdout } = await execAsync(`node ${cliPath} --help`);
     const quickStartIndex = stdout.indexOf("Quick Start");
-    const authorIndex = stdout.indexOf("About the Author");
+    const ctaIndex = stdout.indexOf("Need help building your app?");
 
     assert({
       given: "CLI help command is run",
-      should: "show Quick Start before About the Author section",
-      actual: quickStartIndex > 0 && quickStartIndex < authorIndex,
+      should: "show Quick Start before ParallelDrive CTA",
+      actual: quickStartIndex > 0 && quickStartIndex < ctaIndex,
       expected: true,
     });
   });
@@ -171,14 +170,14 @@ describe("CLI help command", () => {
 });
 
 describe("CLI success message", () => {
-  test("success message excludes About the Author text", async () => {
+  test("success message excludes CTA text", async () => {
     // Test with dry-run and force to avoid file operation errors
     const { stdout } = await execAsync(`node ${cliPath} --dry-run --force`);
 
     assert({
       given: "CLI command completes successfully",
-      should: "not include About the Author in success message",
-      actual: stdout.includes("About the Author"),
+      should: "not include CTA in success message",
+      actual: stdout.includes("Need help building your app?"),
       expected: false,
     });
   });
