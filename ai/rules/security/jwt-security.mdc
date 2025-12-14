@@ -30,17 +30,17 @@ alwaysApply: false
 - Add CSRF tokens where needed
 - Deploy a tight Content Security Policy (CSP)
 
-## Patterns to Flag as CRITICAL
+## Patterns to Flag
 
 ```
-(localStorage.setItem('*token*', ...)) => CRITICAL: Token in localStorage is XSS vulnerable. Use httpOnly Secure SameSite cookies.
-(sessionStorage.setItem('*token*', ...)) => CRITICAL: Token in sessionStorage is XSS vulnerable. Use httpOnly Secure SameSite cookies.
-(algorithm: 'none') => CRITICAL: Signature bypass vulnerability. Use RS256 or ES256.
-(verify: false) => CRITICAL: Signature verification disabled. Always verify signatures.
-(jwt.decode(...) without jwt.verify) => CRITICAL: No signature verification. Use jwt.verify() instead.
-(ignoreExpiration: true) => CRITICAL: Token expiration bypassed. Always check expiration.
-(expiresIn: '*d' where days >= 1) => WARNING: Long-lived access tokens. Use short-lived tokens + refresh rotation.
-(algorithms: ['HS256'] shared across services) => WARNING: Weak key distribution. Use asymmetric algorithms.
+(token stored in localStorage or sessionStorage) => CRITICAL: XSS vulnerable. Use httpOnly Secure SameSite cookies.
+(JWT 'none' algorithm) => CRITICAL: Signature bypass vulnerability. Use RS256 or ES256.
+(JWT signature verification disabled) => CRITICAL: Always verify signatures.
+(jwt.decode without verification) => CRITICAL: Use jwt.verify() instead.
+(JWT expiration check disabled) => CRITICAL: Always check expiration.
+(access token lifetime >= 1 day) => WARNING: Use short-lived tokens + refresh rotation.
+(HS256 with shared secrets across services) => WARNING: Use asymmetric algorithms.
+(JWT detected) => WARNING: Consider opaque tokens with server-side sessions instead.
 ```
 
 ## Review Checklist
