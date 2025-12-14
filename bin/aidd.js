@@ -125,6 +125,17 @@ https://ericelliottjs.com/support
         // Handle --index option separately
         if (index) {
           const targetPath = path.resolve(process.cwd(), targetDirectory);
+
+          if (dryRun) {
+            console.log(
+              chalk.cyan(
+                "Dry run - would generate index.md files in ai/ subfolders",
+              ),
+            );
+            process.exit(0);
+            return;
+          }
+
           console.log(chalk.blue("Generating index.md files..."));
 
           const result = await generateAllIndexes(targetPath);

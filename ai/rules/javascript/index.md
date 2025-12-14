@@ -8,9 +8,7 @@ This index provides an overview of the contents in this directory.
 
 **File:** `error-causes.mdc`
 
-Use error-causes library for all error handling in JavaScript code
-
-**Applies to:** `**/*.js,**/*.jsx,**/*.ts,**/*.tsx`
+*No description available*
 
 ### JavaScript IO Guide
 
@@ -22,7 +20,5 @@ When you need to make network requests or invoke side-effects, use this guide fo
 
 **File:** `javascript.mdc`
 
-When writing JavaScript or TypeScript code, use this guide for JavaScript best practices and guidance
-
-**Applies to:** `**/*.js,**/*.jsx,**/*.ts,**/*.tsx`
+*No description available*
 

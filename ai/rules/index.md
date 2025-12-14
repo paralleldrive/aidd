@@ -80,9 +80,7 @@ when the user asks you to complete a task, use this guide for systematic task/ep
 
 **File:** `tdd.mdc`
 
-When implementing code changes, use this guide for systematic test-driven development with proper test isolation
-
-**Applies to:** `**/*.js,**/*.jsx,**/*.ts,**/*.tsx`
+*No description available*
 
 ### UI/UX Engineer
 

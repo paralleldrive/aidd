@@ -71,6 +71,7 @@
     "commander": "^11.1.0",
     "error-causes": "^3.0.2",
     "fs-extra": "^11.1.1",
+    "gray-matter": "^4.0.3",
     "js-sha3": "^0.9.3"
   },
   "peerDependencies": {
