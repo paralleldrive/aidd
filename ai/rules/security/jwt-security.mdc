@@ -33,14 +33,14 @@ alwaysApply: false
 ## Patterns to Flag
 
 ```
-(token stored in localStorage or sessionStorage) => CRITICAL: XSS vulnerable. Use httpOnly Secure SameSite cookies.
-(JWT 'none' algorithm) => CRITICAL: Signature bypass vulnerability. Use RS256 or ES256.
-(JWT signature verification disabled) => CRITICAL: Always verify signatures.
-(jwt.decode without verification) => CRITICAL: Use jwt.verify() instead.
-(JWT expiration check disabled) => CRITICAL: Always check expiration.
-(access token lifetime >= 1 day) => WARNING: Use short-lived tokens + refresh rotation.
-(HS256 with shared secrets across services) => WARNING: Use asymmetric algorithms.
-(JWT detected) => WARNING: Consider opaque tokens with server-side sessions instead.
+(token stored in localStorage or sessionStorage) => XSS vulnerable. Use httpOnly Secure SameSite cookies.
+(JWT 'none' algorithm) => Signature bypass vulnerability. Use RS256 or ES256.
+(JWT signature verification disabled) => Always verify signatures.
+(jwt.decode without verification) => Use jwt.verify() instead.
+(JWT expiration check disabled) => Always check expiration.
+(access token lifetime >= 1 day) => Use short-lived tokens + refresh rotation.
+(HS256 with shared secrets across services) => Use asymmetric algorithms.
+(JWT detected) => Consider opaque tokens with server-side sessions instead.
 ```
 
 ## Review Checklist
