@@ -18,6 +18,7 @@ Includes:
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [About AIDD Framework](#about-aidd-framework)
+  - [AIDD vs Spec-Kit](#aidd-vs-spec-kit)
 - [🚀 Quick Start with AIDD CLI](#-quick-start-with-aidd-cli)
   - [📋 Requirements](#-requirements)
   - [Detailed Installation Instructions](#detailed-installation-instructions)
@@ -51,6 +52,21 @@ Includes:
 AIDD Framework is a collection of reusable metaprograms, agent orchestration systems, and prompt modules that put high-quality software engineering processes on autopilot rails. It implements time-tested workflows including specification-driven development, systematic task planning with Test Driven Development (TDD), and automated code review with best practices enforcement.
 
 **SudoLang** is a pseudocode language for prompting large language models with clear structure, strong typing, and explicit control flow.
+
+### AIDD vs Spec-Kit
+
+> **[Spec-Kit](https://github.com/github/spec-kit)** helps AI plan what to build.
+> **AIDD** helps AI build, test, review, and maintain production quality software.
+
+Spec-Kit is GitHub's toolkit for Spec-Driven Development—excellent for turning ideas into structured specifications. AIDD picks up where Spec-Kit leaves off, providing the complete development lifecycle: TDD execution, automated code review, server framework, and production-ready utilities.
+
+**Key differences:**
+- **Spec-Kit** is general-purpose and tech-stack agnostic
+- **AIDD** is optimized for **NextJS/React** web platform apps (though not limited to them). If you're building on this stack, AIDD includes server middleware, auth integration, component patterns, and framework-specific best practices out of the box.
+
+**Use both together** for complex projects: Spec-Kit for initial specification, AIDD for implementation and maintenance.
+
+📖 **[Read the full comparison →](docs/aidd-vs-spec-kit.md)**
 
 **AI Workflow Commands** - Use these in your AI assistant chat (Cursor, ChatGPT, Claude, etc.):
 
