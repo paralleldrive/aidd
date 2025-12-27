@@ -56,5 +56,5 @@ Patterns {
 
   ## Lifetime
   (access token lifetime >= 1 day) => Critical: Max 15 min for stateless JWT.
-  (access token lifetime > 15 min) => Warn: Shorter is better. 15 min max recommended.
+  (access token lifetime > 15 min and < 1 day) => Warn: Shorter is better. 15 min max recommended.
 }
