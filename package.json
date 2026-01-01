@@ -1,6 +1,6 @@
 {
   "name": "aidd",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "The standard framework for AI Driven Development.",
   "type": "module",
   "sideEffects": false,
