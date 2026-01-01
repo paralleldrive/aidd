@@ -4,4 +4,10 @@ node bin/aidd.js --index "$(git rev-parse --show-toplevel)"
 # Stage any updated index.md files
 git add 'ai/**/index.md' 2>/dev/null || true
 
+# Generate ToC for README.md
+npm run toc
+
+# Stage updated README.md if ToC was regenerated
+git add README.md 2>/dev/null || true
+
 npm run test:unit
