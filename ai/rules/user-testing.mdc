@@ -40,8 +40,7 @@ AgentScript:template {
   """
   # Agent Test: ${journey.name}
 
-  **Environment**: Drive real browser (IDE, Chrome) like a human
-  - Discover UI by looking (no source code access), click/type/scroll, capture screenshots
+  **Environment**: Drive real browser, discover UI by looking (no source code access)
 
   **Persona behavior**:
   - Patience: ${persona.patience}/10
@@ -68,8 +67,7 @@ generateScripts(journey) => human + agent templates with persona-mapped behavior
 /run-test <script> - Execute agent script with screenshots
 
 Constraints {
-  Agents discover UI by looking (no source code/automation frameworks)
   Persona traits → behavior (patience → retries, techLevel → strategy)
-  Stochastic execution (varies between runs)
+  Stochastic execution
   Both scripts validate identical success criteria
 }

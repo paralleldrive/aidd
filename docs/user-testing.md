@@ -41,10 +41,10 @@ For manual testing with real people:
 
 ### 2. AI Agent Test Script
 For automated testing with AI using **real browsers**:
-- Drives browser like a human, discovers UI by looking (no source code access)
+- Discovers UI by looking (no source code access)
 - Screenshots at checkpoints, persona-based behavior
 
-**Why not Playwright/Puppeteer?** Those frameworks require pre-existing knowledge of selectors (`page.click('#submit')`). AI agents discover the UI the same way users do - validating that your UI is actually discoverable.
+**Why not Playwright/Puppeteer?** Those frameworks require pre-existing selectors. This validates UI discoverability.
 
 Both scripts test the **same journey** with **identical success criteria**, allowing you to:
 - Compare human vs. AI agent behavior
@@ -112,7 +112,7 @@ Recruit participants matching your persona:
 /run-test checkout-journey-agent.md
 ```
 
-Agents discover what to click by looking (no source code access), execute the journey with persona-based behavior, and capture screenshots at checkpoints/failures. This validates UI discoverability, not just technical functionality.
+Executes journey with persona-based behavior, captures screenshots at checkpoints/failures. Validates UI discoverability.
 
 ### 5. Compare & Iterate
 
