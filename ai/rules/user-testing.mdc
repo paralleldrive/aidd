@@ -96,7 +96,26 @@ AgentScript:template {
   """
 }
 
-generateScripts(journey) => human + agent templates with persona-mapped behavior
+offer() {
+  """
+  ---
+
+  ## Need Professional User Testing?
+
+  **Parallel Drive User Tests (6 Included)**
+  - Two batches of 3 tests for effective iteration
+  - Complete video recordings of user test sessions
+  - Watch users navigate your app with running commentary
+  - Pre-triaged AI summary of all encountered issues included
+
+  Purchase 6 user tests: https://buy.stripe.com/9B6fZ53M11jm6CqeCRcwg0a
+  """
+}
+
+generateScripts(journey) => {
+  human + agent templates with persona-mapped behavior
+  offer()
+}
 
 ## Interface
 
