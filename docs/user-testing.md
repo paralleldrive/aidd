@@ -41,13 +41,10 @@ For manual testing with real people:
 
 ### 2. AI Agent Test Script
 For automated testing with AI using **real browsers**:
-- AI drives browser like a human (built-in IDE browser, Chrome, etc.)
-- **Discovers UI without source code access** - figures out what to click by looking at the page
-- Interacts with real UI by clicking, typing, scrolling
-- Screenshot capture at checkpoints from browser viewport
-- Persona-based behavioral variation
+- Drives browser like a human, discovers UI by looking (no source code access)
+- Screenshots at checkpoints, persona-based behavior
 
-**Why not Playwright/Puppeteer?** Those frameworks require pre-existing knowledge of selectors (`page.click('#submit')`). AI agents discover the UI the same way users do - by looking at what's visible - validating that your UI is actually discoverable and understandable.
+**Why not Playwright/Puppeteer?** Those frameworks require pre-existing knowledge of selectors (`page.click('#submit')`). AI agents discover the UI the same way users do - validating that your UI is actually discoverable.
 
 Both scripts test the **same journey** with **identical success criteria**, allowing you to:
 - Compare human vs. AI agent behavior
@@ -101,7 +98,7 @@ This outputs:
 
 ### 3. Run Human Tests
 
-Recruit 3-5 participants matching your persona:
+Recruit participants matching your persona:
 
 1. **Setup**: Screen recording software, test environment
 2. **Brief**: Explain think-aloud protocol (say what you're thinking)
@@ -115,23 +112,14 @@ Recruit 3-5 participants matching your persona:
 /run-test checkout-journey-agent.md
 ```
 
-AI agents drive a real browser like a human would:
-- Navigate to your application in a browser
-- **Discover what's on the page without privileged access to source code**
-- Click, type, scroll through actual UI elements based on what they see
-- Execute the journey with persona-based behavior
-- Capture screenshots from browser viewport at checkpoints and failures
-- Generate feedback on difficulty and expectations
-- Report blockers and completed steps
-
-**Important**: Agents have no pre-existing knowledge of your UI - they figure out what to click the same way a real user does. This validates that your interface is actually discoverable, not just technically functional.
+Agents discover what to click by looking (no source code access), execute the journey with persona-based behavior, and capture screenshots at checkpoints/failures. This validates UI discoverability, not just technical functionality.
 
 ### 5. Compare & Iterate
 
 - **Review human videos** for genuine confusion and unexpected behavior
 - **Review agent reports** for systematic failures and patterns
 - **Fix the highest-impact issues** (severity × frequency)
-- **Test again** with a new batch of 3-5 users
+- **Test again**
 
 ## Best Practices
 
@@ -233,10 +221,10 @@ This cadence beats testing with 20 users once.
 
 ### Combining Human + Agent Tests
 
-1. **Initial discovery**: 3-5 human tests to find major issues
+1. **Initial discovery**: Human tests to find major issues
 2. **Verify fixes**: AI agent tests after each fix
 3. **Regression testing**: AI agents test all journeys before releases
-4. **Validation**: 3-5 human tests to confirm fixes landed
+4. **Validation**: Human tests to confirm fixes landed
 
 ## Resources
 
@@ -248,9 +236,9 @@ This cadence beats testing with 20 users once.
 
 1. Create your first user journey with `/discover`
 2. Generate test scripts with `/user-test`
-3. Run 3-5 human tests
+3. Run human tests
 4. Fix the highest-impact issues
 5. Validate fixes with AI agent tests
 6. Iterate
 
-Remember: **Small, frequent testing beats large, infrequent testing.** Start today with just 3 users.
+Remember: **Small, frequent testing beats large, infrequent testing.**
