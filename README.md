@@ -59,9 +59,28 @@ AIDD Framework is a collection of reusable metaprograms, agent orchestration sys
 /task - plan a task epic to implement a user story from the discovery
 /execute - task epics with TDD
 /review - the results
+/user-test - generate human and AI agent test scripts from user journeys
 /log - log the changes to the activity log
 /commit - commit the changes to the repository
 ```
+
+## 🧪 User Testing
+
+**Validate features with real users and AI agents.** AIDD generates dual test scripts from user journeys:
+
+- **Human scripts** - Think-aloud protocol with video recording for manual testing
+- **AI agent scripts** - Executable tests with screenshots and persona-based behavior
+
+Research from the [Nielsen Norman Group](https://www.nngroup.com/articles/why-you-only-need-to-test-with-5-users/) shows that testing with just 3-5 users reveals 65-85% of usability problems. Iterate quickly by testing small, fixing issues, and testing again.
+
+**Quick start**:
+```bash
+/discover              # Create user journey
+/user-test journey.yaml  # Generate test scripts
+/run-test agent-script   # Execute AI agent test
+```
+
+📖 **[Read the complete User Testing Guide →](docs/user-testing.md)**
 
 ## 🚀 Quick Start with AIDD CLI
 

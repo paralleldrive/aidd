@@ -40,6 +40,12 @@ AgentScript:template {
   """
   # Agent Test: ${journey.name}
 
+  **Environment**: Real browser automation (Playwright, Puppeteer, or Selenium)
+  - Launch actual browser (headless or headed)
+  - Navigate to real application URL
+  - Interact with actual DOM elements
+  - Capture real screenshots
+
   **Persona behavior**:
   - Patience: ${persona.patience}/10
   - Retry: ${persona.techLevel == "expert" ? "immediate" : "exponential backoff"}
@@ -47,9 +53,9 @@ AgentScript:template {
 
   ## Execution
   For each step:
-  1. Attempt ${step.action}
-  2. Validate ${step.success}
-  3. Screenshot if checkpoint or failure
+  1. Interact with real UI: ${step.action}
+  2. Validate rendered result: ${step.success}
+  3. Screenshot browser viewport if checkpoint or failure
   4. Record feedback: difficulty, expectations vs reality, duration
   5. Retry with backoff if failed and patient
 
@@ -65,8 +71,9 @@ generateScripts(journey) => human + agent templates with persona-mapped behavior
 /run-test <script> - Execute agent script with screenshots
 
 Constraints {
+  AI agents must use browser automation to interact with real UI (not mocked/simulated)
   Agent behavior reflects persona traits (patience → retries, techLevel → strategy)
   Execution varies between runs (stochastic, not deterministic)
-  Capture failures with screenshots and context
-  Both scripts validate identical success criteria
+  Capture screenshots from real browser viewport
+  Both scripts validate identical success criteria against real rendered UI
 }

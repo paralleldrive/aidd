@@ -84,6 +84,7 @@ structure, strong typing, and explicit control flow.
 - /task - planning
 - /execute - task epics with TDD
 - /review - the results
+- /user-test - generate human and AI agent test scripts from user journeys
 - /log - activity logging
 - /commit - commit changes
 
