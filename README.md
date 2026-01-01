@@ -2,18 +2,18 @@
 
 [![AIDD Framework](https://img.shields.io/badge/✨_AIDD_Framework-black)](https://github.com/paralleldrive/aidd)[![Parallel Drive](https://img.shields.io/badge/🖤_Parallel_Drive-000000?style=flat)](https://paralleldrive.com)
 
-
 **The standard framework for AI Driven Development**
 
 Includes:
+
 - **AIDD CLI** – project bootstrap and automation
 - **Agent Runtime** – workflows from product discovery to commit and release
 - **SudoLang Prompt Language** – typed pseudocode for AI orchestration
 - **Server Framework** – composable backend for Node and Next.js
 - **Utilities & Component Library** – common patterns and reusable recipes to accelerate your app development
 
-
 ## Table of Contents
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
@@ -65,9 +65,9 @@ AIDD Framework is a collection of reusable metaprograms, agent orchestration sys
 /task - plan a task epic to implement a user story from the discovery
 /execute - task epics with TDD
 /review - the results
-/user-test - generate human and AI agent test scripts from user journeys
 /log - log the changes to the activity log
 /commit - commit the changes to the repository
+/user-test - generate user testing scripts for post-deploy validation
 ```
 
 ## 🚀 Quick Start with AIDD CLI
@@ -141,7 +141,7 @@ This gives you immediate access to:
 For features or bug fixes spanning more than a few lines:
 
 1. **Create a branch**: `git checkout -b your-branch-name`
-2. **Discover what to build with `/discover`**: Set up your project profile and discover key user journeys to create a user story map
+2. **Discover what to build with `/discover`**: Set up your project profile and discover key user journeys to create a user story map (saved to `plan/story-map/`)
 3. **Plan execution with `/task`**: Create a structured epic with clear requirements
 4. **Review with `/review`**: Eliminate duplication, simplify without losing requirements
 5. **Execute with `/execute`**: Implement using TDD, one requirement at a time
@@ -151,7 +151,7 @@ Note: We use this process to build the `aidd` framework. See [CONTRIBUTING.md](C
 
 ## 🧪 User Testing
 
-**Validate features with real users and AI agents.** AIDD generates dual test scripts from user journeys:
+**Validate features with real users and AI agents.** AIDD generates dual testing scripts from user journeys:
 
 - **Human scripts** - Think-aloud protocol with video recording for manual testing
 - **AI agent scripts** - Executable tests with screenshots and persona-based behavior
@@ -159,9 +159,10 @@ Note: We use this process to build the `aidd` framework. See [CONTRIBUTING.md](C
 Research from the [Nielsen Norman Group](https://www.nngroup.com/articles/why-you-only-need-to-test-with-5-users/) shows that testing with just 3-5 users reveals 65-85% of usability problems. Iterate quickly by testing small, fixing issues, and testing again.
 
 **Quick start**:
+
 ```bash
-/discover              # Create user journey
-/user-test journey.yaml  # Generate test scripts
+/discover              # Create user journey (saved to plan/story-map/)
+/user-test journey.yaml  # Generate testing scripts (saved to plan/)
 /run-test agent-script   # Execute AI agent test
 ```
 
@@ -201,18 +202,25 @@ Coming soon:
 A lightweight alternative to Express, built for function composition and type-safe development.
 
 **Why AIDD Server?**
+
 - **Function composition** - Clean asyncPipe patterns instead of middleware chains
 - **Type-safe** - Complete TypeScript definitions included
 - **Secure by default** - Sanitized logging, explicit CORS, fail-fast configuration
 - **Production-ready** - Comprehensive test coverage, battle-tested patterns
 
 **Quick Example:**
+
 ```javascript
-import { createRoute, withRequestId, createWithConfig, loadConfigFromEnv } from 'aidd/server';
+import {
+  createRoute,
+  withRequestId,
+  createWithConfig,
+  loadConfigFromEnv,
+} from "aidd/server";
 
 // Load API keys from environment with fail-fast validation
 const withConfig = createWithConfig(() =>
-  loadConfigFromEnv(['OPENAI_API_KEY', 'DATABASE_URL'])
+  loadConfigFromEnv(["OPENAI_API_KEY", "DATABASE_URL"])
 );
 
 export default createRoute(
@@ -220,17 +228,18 @@ export default createRoute(
   withConfig,
   async ({ request, response }) => {
     // Throws immediately if OPENAI_API_KEY is missing
-    const apiKey = response.locals.config.get('OPENAI_API_KEY');
+    const apiKey = response.locals.config.get("OPENAI_API_KEY");
 
     response.status(200).json({
-      message: 'Config loaded securely',
-      requestId: response.locals.requestId
+      message: "Config loaded securely",
+      requestId: response.locals.requestId,
     });
   }
 );
 ```
 
 **Core Features:**
+
 - `createRoute` - Compose middleware with automatic error handling
 - `createWithConfig` - Fail-fast configuration with `config.get()`
 - `withRequestId` - CUID2 request tracking for logging
@@ -243,14 +252,16 @@ export default createRoute(
 AIDD Server includes optional auth middleware that wraps [better-auth](https://www.better-auth.com/) for session validation.
 
 **1. Install better-auth:**
+
 ```bash
 npm install better-auth
 ```
 
 **2. Configure better-auth** (see [better-auth docs](https://www.better-auth.com/docs)):
+
 ```javascript
 // lib/auth.server.js
-import { betterAuth } from 'better-auth';
+import { betterAuth } from "better-auth";
 
 export const auth = betterAuth({
   database: yourDatabaseAdapter,
@@ -259,59 +270,56 @@ export const auth = betterAuth({
 ```
 
 **3. Create auth API route** (framework-specific):
+
 ```javascript
 // Next.js: app/api/auth/[...all]/route.js
-import { toNextJsHandler } from 'better-auth/next-js';
-import { auth } from '@/lib/auth.server';
+import { toNextJsHandler } from "better-auth/next-js";
+import { auth } from "@/lib/auth.server";
 
 export const { GET, POST } = toNextJsHandler(auth);
 ```
 
 **4. Use AIDD auth middleware in protected routes:**
+
 ```javascript
-import { createRoute, withRequestId, createWithAuth } from 'aidd/server';
-import { auth } from '@/lib/auth.server';
+import { createRoute, withRequestId, createWithAuth } from "aidd/server";
+import { auth } from "@/lib/auth.server";
 
 const withAuth = createWithAuth({ auth });
 
 // Protected route - returns 401 if not authenticated
-export default createRoute(
-  withRequestId,
-  withAuth,
-  async ({ response }) => {
-    const { user } = response.locals.auth;
-    response.json({ email: user.email });
-  }
-);
+export default createRoute(withRequestId, withAuth, async ({ response }) => {
+  const { user } = response.locals.auth;
+  response.json({ email: user.email });
+});
 ```
 
 **Optional auth** for public routes that benefit from user context:
+
 ```javascript
-import { createWithOptionalAuth } from 'aidd/server';
+import { createWithOptionalAuth } from "aidd/server";
 
 const withOptionalAuth = createWithOptionalAuth({ auth });
 
 // Public route - user attached if logged in, null otherwise
-export default createRoute(
-  withOptionalAuth,
-  async ({ response }) => {
-    const user = response.locals.auth?.user;
-    response.json({
-      greeting: user ? `Hello, ${user.name}` : 'Hello, guest'
-    });
-  }
-);
+export default createRoute(withOptionalAuth, async ({ response }) => {
+  const user = response.locals.auth?.user;
+  response.json({
+    greeting: user ? `Hello, ${user.name}` : "Hello, guest",
+  });
+});
 ```
 
 **Passkey authentication** (passwordless):
+
 ```bash
 npm install @better-auth/passkey
 ```
 
 ```javascript
 // lib/auth.server.js
-import { betterAuth } from 'better-auth';
-import { passkey } from '@better-auth/passkey';
+import { betterAuth } from "better-auth";
+import { passkey } from "@better-auth/passkey";
 
 export const auth = betterAuth({
   database: yourDatabaseAdapter,
@@ -321,38 +329,32 @@ export const auth = betterAuth({
 
 ```javascript
 // API route: Register passkey (requires authentication)
-import { createRoute, createWithAuth } from 'aidd/server';
-import { auth } from '@/lib/auth.server';
+import { createRoute, createWithAuth } from "aidd/server";
+import { auth } from "@/lib/auth.server";
 
 const withAuth = createWithAuth({ auth });
 
-export default createRoute(
-  withAuth,
-  async ({ request, response }) => {
-    const { user } = response.locals.auth;
-    
-    // User is authenticated, register their passkey
-    const result = await auth.api.addPasskey({
-      body: { name: `${user.email}'s passkey` },
-      headers: request.headers,
-    });
-    
-    response.json(result);
-  }
-);
+export default createRoute(withAuth, async ({ request, response }) => {
+  const { user } = response.locals.auth;
+
+  // User is authenticated, register their passkey
+  const result = await auth.api.addPasskey({
+    body: { name: `${user.email}'s passkey` },
+    headers: request.headers,
+  });
+
+  response.json(result);
+});
 ```
 
 ```javascript
 // API route: List user's passkeys
-export default createRoute(
-  withAuth,
-  async ({ request, response }) => {
-    const passkeys = await auth.api.listPasskeys({
-      headers: request.headers,
-    });
-    response.json({ passkeys });
-  }
-);
+export default createRoute(withAuth, async ({ request, response }) => {
+  const passkeys = await auth.api.listPasskeys({
+    headers: request.headers,
+  });
+  response.json({ passkeys });
+});
 ```
 
 📖 **[See complete Server Framework documentation →](docs/server/README.md)**
@@ -374,16 +376,16 @@ aidd [target-directory] [options]
 
 ### Command Options
 
-| Option             | Description                                               |
-| ------------------ | --------------------------------------------------------- |
-| `target-directory` | Directory to create `ai/` folder in (defaults to current) |
-| `-f, --force`      | Overwrite existing `ai/` folder                           |
-| `-d, --dry-run`    | Show what would be copied without copying                 |
-| `-v, --verbose`    | Provide detailed output                                   |
-| `-c, --cursor`     | Create `.cursor` symlink for Cursor editor integration    |
+| Option             | Description                                                    |
+| ------------------ | -------------------------------------------------------------- |
+| `target-directory` | Directory to create `ai/` folder in (defaults to current)      |
+| `-f, --force`      | Overwrite existing `ai/` folder                                |
+| `-d, --dry-run`    | Show what would be copied without copying                      |
+| `-v, --verbose`    | Provide detailed output                                        |
+| `-c, --cursor`     | Create `.cursor` symlink for Cursor editor integration         |
 | `-i, --index`      | Generate `index.md` files from frontmatter in `ai/` subfolders |
-| `-h, --help`       | Display help information                                  |
-| `--version`        | Show version number                                       |
+| `-h, --help`       | Display help information                                       |
+| `--version`        | Show version number                                            |
 
 ### Examples
 
@@ -431,6 +433,10 @@ your-project/
 │   │   ├── ui.mdc
 │   │   └── ...
 │   └── ...
+├── plan/                     # Product discovery artifacts
+│   ├── story-map/            # User journeys & personas (YAML)
+│   ├── *-human-test.md       # Human test scripts
+│   └── *-agent-test.md       # AI agent test scripts
 └── your-code/
 ```
 
@@ -440,6 +446,8 @@ your-project/
 - **Development Rules** (`ai/rules/javascript/`, `ai/rules/tdd.mdc`) - Best practices and patterns
 - **Workflow Commands** (`ai/commands/`) - Structured AI interaction templates
 - **Product Management** (`ai/rules/productmanager.mdc`) - User stories and journey mapping
+- **Product Discovery Artifacts** (`plan/story-map/`) - User journeys, personas, and story maps (YAML format)
+- **User Testing Scripts** (`plan/`) - Human and AI agent test scripts generated from journeys
 - **UI/UX Guidelines** (`ai/rules/ui.mdc`) - Design and user experience standards
 
 ## 🎯 AI Integration
@@ -460,6 +468,7 @@ The **vision document** (`vision.md`) is a critical component of AIDD that serve
 ### Why You Need a Vision Document
 
 AI agents are powerful but need context to make good decisions. Without a clear vision:
+
 - Agents may make architectural choices that conflict with your goals
 - Features might be implemented in ways that don't align with your product direction
 - Different agents working on the same project may take inconsistent approaches
@@ -472,28 +481,35 @@ Create a `vision.md` file in your project root with the following sections:
 # Project Vision
 
 ## Overview
+
 Brief description of what this project does and who it's for.
 
 ## Goals
+
 - Primary goal 1
 - Primary goal 2
 - ...
 
 ## Non-Goals (Out of Scope)
+
 Things this project explicitly will NOT do.
 
 ## Key Constraints
+
 - Technical constraints (e.g., must use specific frameworks)
 - Business constraints (e.g., must be GDPR compliant)
 - Performance requirements
 
 ## Architectural Decisions
+
 Major technical decisions and their rationale.
 
 ## User Experience Principles
+
 How the product should feel to users.
 
 ## Success Criteria
+
 How we measure if the project is successful.
 ```
 
