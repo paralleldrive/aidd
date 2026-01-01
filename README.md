@@ -22,6 +22,7 @@ Includes:
   - [📋 Requirements](#-requirements)
   - [Detailed Installation Instructions](#detailed-installation-instructions)
 - [Development Workflow](#development-workflow)
+- [🧪 User Testing](#-user-testing)
 - [Why SudoLang?](#why-sudolang)
 - [What's Included](#whats-included)
 - [🚀 AIDD Server Framework](#-aidd-server-framework)
@@ -33,6 +34,11 @@ Includes:
 - [📁 AI System Structure](#-ai-system-structure)
   - [Key Components](#key-components)
 - [🎯 AI Integration](#-ai-integration)
+- [📋 Vision Document](#-vision-document)
+  - [Why You Need a Vision Document](#why-you-need-a-vision-document)
+  - [Creating Your Vision Document](#creating-your-vision-document)
+  - [How Agents Use the Vision Document](#how-agents-use-the-vision-document)
+  - [AGENTS.md File](#agentsmd-file)
 - [🔧 Cursor Editor Setup](#-cursor-editor-setup)
   - [Automatic Setup (Recommended)](#automatic-setup-recommended)
   - [When to Use `--cursor`](#when-to-use---cursor)
@@ -63,24 +69,6 @@ AIDD Framework is a collection of reusable metaprograms, agent orchestration sys
 /log - log the changes to the activity log
 /commit - commit the changes to the repository
 ```
-
-## 🧪 User Testing
-
-**Validate features with real users and AI agents.** AIDD generates dual test scripts from user journeys:
-
-- **Human scripts** - Think-aloud protocol with video recording for manual testing
-- **AI agent scripts** - Executable tests with screenshots and persona-based behavior
-
-Research from the [Nielsen Norman Group](https://www.nngroup.com/articles/why-you-only-need-to-test-with-5-users/) shows that testing with just 3-5 users reveals 65-85% of usability problems. Iterate quickly by testing small, fixing issues, and testing again.
-
-**Quick start**:
-```bash
-/discover              # Create user journey
-/user-test journey.yaml  # Generate test scripts
-/run-test agent-script   # Execute AI agent test
-```
-
-📖 **[Read the complete User Testing Guide →](docs/user-testing.md)**
 
 ## 🚀 Quick Start with AIDD CLI
 
@@ -160,6 +148,24 @@ For features or bug fixes spanning more than a few lines:
 6. **Push and PR**: `git push origin your-branch-name` then open a Pull Request
 
 Note: We use this process to build the `aidd` framework. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+## 🧪 User Testing
+
+**Validate features with real users and AI agents.** AIDD generates dual test scripts from user journeys:
+
+- **Human scripts** - Think-aloud protocol with video recording for manual testing
+- **AI agent scripts** - Executable tests with screenshots and persona-based behavior
+
+Research from the [Nielsen Norman Group](https://www.nngroup.com/articles/why-you-only-need-to-test-with-5-users/) shows that testing with just 3-5 users reveals 65-85% of usability problems. Iterate quickly by testing small, fixing issues, and testing again.
+
+**Quick start**:
+```bash
+/discover              # Create user journey
+/user-test journey.yaml  # Generate test scripts
+/run-test agent-script   # Execute AI agent test
+```
+
+📖 **[Read the complete User Testing Guide →](docs/user-testing.md)**
 
 ## Why SudoLang?
 
