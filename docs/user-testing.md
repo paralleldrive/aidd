@@ -44,7 +44,7 @@ For automated testing with AI using **real browsers**:
 - Discovers UI by looking (no source code access)
 - Screenshots at checkpoints, persona-based behavior
 
-**Why not Playwright/Puppeteer?** Those frameworks require pre-existing selectors. This validates UI discoverability.
+**Why not Playwright/Puppeteer?** Those frameworks require pre-existing selectors. This validates real UI discoverability.
 
 Both scripts test the **same journey** with **identical success criteria**, allowing you to:
 - Compare human vs. AI agent behavior
