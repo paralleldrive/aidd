@@ -42,6 +42,7 @@ AgentScript:template {
 
   **Environment**: Drive a real browser like a human would
   - Use built-in browser (IDE browser, Chrome, etc.)
+  - Discover UI without source code access (look at page to figure out what to click)
   - Navigate and interact with actual UI as a user would
   - Click, type, scroll through real DOM elements
   - Capture screenshots from browser viewport
@@ -71,9 +72,11 @@ generateScripts(journey) => human + agent templates with persona-mapped behavior
 /run-test <script> - Execute agent script with screenshots
 
 Constraints {
-  AI agents drive a real browser like a human (not automation frameworks or mocks)
+  AI agents drive real browser like humans (no source code access, discover UI by looking)
+  NOT automation frameworks (Playwright/Puppeteer require pre-knowledge of selectors)
   Agent behavior reflects persona traits (patience → retries, techLevel → strategy)
   Execution varies between runs (stochastic, not deterministic)
   Capture screenshots from real browser viewport
   Both scripts validate identical success criteria against real rendered UI
+  Agents validate UI discoverability, not just technical functionality
 }
