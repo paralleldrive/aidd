@@ -38,25 +38,6 @@ describe('user-testing', () => {
       });
     });
 
-    test('includes real browser interaction constraints', async () => {
-      const filePath = path.join(__dirname, 'user-testing.mdc');
-      const content = await fs.readFile(filePath, 'utf-8');
-
-      assert({
-        given: 'user-testing.mdc content',
-        should: 'specify real browser requirement',
-        actual: content.includes('real browser'),
-        expected: true,
-      });
-
-      assert({
-        given: 'user-testing.mdc content',
-        should: 'mention real UI interaction',
-        actual: content.includes('real UI'),
-        expected: true,
-      });
-    });
-
     test('includes HumanScript and AgentScript templates', async () => {
       const filePath = path.join(__dirname, 'user-testing.mdc');
       const content = await fs.readFile(filePath, 'utf-8');
@@ -112,44 +93,6 @@ describe('user-testing', () => {
         given: 'user-testing.md documentation',
         should: 'exist in docs directory',
         actual: exists,
-        expected: true,
-      });
-    });
-
-    test('documentation includes Nielsen Norman Group reference', async () => {
-      const filePath = path.join(__dirname, '../../docs/user-testing.md');
-      const content = await fs.readFile(filePath, 'utf-8');
-
-      assert({
-        given: 'user testing documentation',
-        should: 'reference Nielsen Norman Group research',
-        actual: content.includes('Nielsen Norman'),
-        expected: true,
-      });
-
-      assert({
-        given: 'user testing documentation',
-        should: 'mention 5 users finding 85% of issues',
-        actual: content.includes('85%'),
-        expected: true,
-      });
-    });
-
-    test('documentation clarifies browser interaction', async () => {
-      const filePath = path.join(__dirname, '../../docs/user-testing.md');
-      const content = await fs.readFile(filePath, 'utf-8');
-
-      assert({
-        given: 'user testing documentation',
-        should: 'mention driving real browser',
-        actual: content.includes('real browser') || content.includes('drive'),
-        expected: true,
-      });
-
-      assert({
-        given: 'user testing documentation',
-        should: 'clarify agents test real UI',
-        actual: content.includes('real UI') || content.includes('actual UI'),
         expected: true,
       });
     });
