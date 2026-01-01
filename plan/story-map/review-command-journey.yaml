@@ -1,0 +1,100 @@
+# User Journey: Code Review Command
+# Following interfaces from ai/rules/productmanager.mdc
+
+id: cljkp8y9k0001abc123def456
+name: Code Review Command Usage
+description: Complete workflow for conducting a code review using the /review command in the AIDD framework
+createdAt: 1735689600000 # 2026-01-01
+updatedAt: 1735689600000 # 2026-01-01
+
+personas:
+  - id: cljkp8y9k0002abc123def789
+    name: Alex Chen
+    description: Senior Software Engineer conducting code reviews
+    createdAt: 1735689600000
+    updatedAt: 1735689600000
+
+steps:
+  - id: cljkp8y9k0003abc123def012
+    name: Prepare for Review
+    description: Set up environment to review recent changes
+    createdAt: 1735689600000
+    updatedAt: 1735689600000
+    userStories: []
+
+  - id: cljkp8y9k0004abc123def345
+    name: Initiate Code Review
+    description: Start a comprehensive code review using the AI assistant
+    createdAt: 1735689600000
+    updatedAt: 1735689600000
+    userStories: []
+
+  - id: cljkp8y9k0005abc123def678
+    name: AI Analyzes Project Context
+    description: Ensure AI reads relevant project rules, standards, and guidelines
+    createdAt: 1735689600000
+    updatedAt: 1735689600000
+    userStories: []
+
+  - id: cljkp8y9k0006abc123def901
+    name: Review Code Structure
+    description: Get feedback on code organization and architecture
+    createdAt: 1735689600000
+    updatedAt: 1735689600000
+    userStories: []
+
+  - id: cljkp8y9k0007abc123def234
+    name: Check Coding Standards
+    description: Validate adherence to project coding standards
+    createdAt: 1735689600000
+    updatedAt: 1735689600000
+    userStories: []
+
+  - id: cljkp8y9k0008abc123def567
+    name: Evaluate Test Coverage
+    description: Assess test quality and completeness
+    createdAt: 1735689600000
+    updatedAt: 1735689600000
+    userStories: []
+
+  - id: cljkp8y9k0009abc123def890
+    name: Security Vulnerability Scan
+    description: Identify security issues before they reach production
+    createdAt: 1735689600000
+    updatedAt: 1735689600000
+    userStories: []
+
+  - id: cljkp8y9k0010abc123def123
+    name: Review UI/UX Implementation
+    description: Ensure UI changes meet accessibility and design standards (if applicable)
+    createdAt: 1735689600000
+    updatedAt: 1735689600000
+    userStories: []
+
+  - id: cljkp8y9k0011abc123def456
+    name: Check for Dead Code and Redundancies
+    description: Identify cleanup opportunities
+    createdAt: 1735689600000
+    updatedAt: 1735689600000
+    userStories: []
+
+  - id: cljkp8y9k0012abc123def789
+    name: Validate Documentation
+    description: Ensure code is properly documented
+    createdAt: 1735689600000
+    updatedAt: 1735689600000
+    userStories: []
+
+  - id: cljkp8y9k0013abc123def012
+    name: Receive Actionable Feedback
+    description: Get prioritized, specific improvement recommendations
+    createdAt: 1735689600000
+    updatedAt: 1735689600000
+    userStories: []
+
+  - id: cljkp8y9k0014abc123def345
+    name: Address Review Findings
+    description: Use feedback to improve code before merging
+    createdAt: 1735689600000
+    updatedAt: 1735689600000
+    userStories: []

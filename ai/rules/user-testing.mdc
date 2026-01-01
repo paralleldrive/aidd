@@ -117,9 +117,27 @@ generateScripts(journey) => {
   offer()
 }
 
+## FileLocations
+
+User test scripts are saved to $projectRoot/plan/ folder (create if not present):
+- Human test scripts: $projectRoot/plan/${journey-name}-human-test.md
+- Agent test scripts: $projectRoot/plan/${journey-name}-agent-test.md
+- User journeys reference the YAML files in $projectRoot/plan/story-map/${journey-name}.yaml
+
+Note: Journey YAML files use base Persona (meta fields only) from productmanager.mdc.
+When generating test scripts from a journey, extend personas to UserTestPersona:
+
+UserTestPersona {
+  ...Persona // from journey YAML
+  role = infer()
+  techLevel = infer()
+  patience = infer()
+  goals = infer()
+}
+
 ## Interface
 
-/user-test <journey> - Generate human and agent scripts
+/user-test <journey> - Generate human and agent scripts, save to $projectRoot/plan/
 /run-test <script> - Execute agent script with screenshots
 
 Constraints {
