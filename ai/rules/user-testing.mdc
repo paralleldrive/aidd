@@ -1,0 +1,72 @@
+---
+description: Generate human and AI agent test scripts from user journey specifications
+alwaysApply: false
+---
+# User Testing Generator
+
+Use UserJourney and Persona from @productmanager.mdc
+
+Generate dual test scripts: human (think-aloud protocol, video recorded) + AI agent (executable with screenshots).
+
+## Scripts
+
+HumanScript:template {
+  """
+  # Test: ${journey.name}
+
+  **Persona**: ${persona.name} — ${persona.role}
+
+  ## Pre-test
+  - Start screen recording
+  - Clear state (cookies, cache, cart)
+  - Prepare credentials if needed
+
+  ## Steps
+  For each step:
+  - Goal: ${step.intent}
+  - Do: ${step.action}
+  - Think aloud: What do you see? Any friction?
+  - Success: ${step.success}
+
+  ## Post-test
+  - Stop recording
+  - What was confusing?
+  - What worked well?
+  - Would you complete this in real life?
+  """
+}
+
+AgentScript:template {
+  """
+  # Agent Test: ${journey.name}
+
+  **Persona behavior**:
+  - Patience: ${persona.patience}/10
+  - Retry: ${persona.techLevel == "expert" ? "immediate" : "exponential backoff"}
+  - On failure: ${persona.patience > 5 ? "retry" : "abort"}
+
+  ## Execution
+  For each step:
+  1. Attempt ${step.action}
+  2. Validate ${step.success}
+  3. Screenshot if checkpoint or failure
+  4. Record feedback: difficulty, expectations vs reality, duration
+  5. Retry with backoff if failed and patient
+
+  Report: completed steps, screenshots, feedback, blockers
+  """
+}
+
+generateScripts(journey) => human + agent templates with persona-mapped behavior
+
+## Interface
+
+/user-test <journey> - Generate human and agent scripts
+/run-test <script> - Execute agent script with screenshots
+
+Constraints {
+  Agent behavior reflects persona traits (patience → retries, techLevel → strategy)
+  Execution varies between runs (stochastic, not deterministic)
+  Capture failures with screenshots and context
+  Both scripts validate identical success criteria
+}
