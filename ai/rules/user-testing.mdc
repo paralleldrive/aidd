@@ -8,6 +8,16 @@ Use UserJourney and Persona from @productmanager.mdc
 
 Generate dual test scripts: human (think-aloud protocol, video recorded) + AI agent (executable with screenshots).
 
+## Types
+
+UserTestPersona {
+  ...Persona
+  role
+  techLevel: "novice" | "intermediate" | "expert"
+  patience: 1..10
+  goals: string[]
+}
+
 ## Scripts
 
 HumanScript:template {
