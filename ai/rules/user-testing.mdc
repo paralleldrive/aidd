@@ -69,14 +69,30 @@ AgentScript:template {
   - On failure: ${persona.patience > 5 ? "retry" : "abort"}
 
   ## Execution
-  For each step:
+  For each step, narrate your thoughts like a human tester:
   1. Interact with real UI: ${step.action}
-  2. Validate rendered result: ${step.success}
-  3. Screenshot browser viewport if checkpoint or failure
-  4. Record feedback: difficulty, expectations vs reality, duration
-  5. Retry with backoff if failed and patient
+  2. Express confusion, expectations, what you see
+  3. Validate rendered result: ${step.success}
+  4. Screenshot browser viewport if checkpoint or failure
+  5. Record: difficulty (easy/moderate/difficult), duration, what was unclear
+  6. Retry with backoff if failed and patient
 
-  Report: completed steps, screenshots, feedback, blockers
+  ## Output Format
+  ```markdown
+  # Test Report: ${journey.name}
+
+  **Completed**: X of Y steps
+
+  ## Step: [step name]
+  - **Status**: ✓ Success / ✗ Failed
+  - **Duration**: Xs
+  - **Difficulty**: easy/moderate/difficult
+  - **Thoughts**: [What I saw, expected, any confusion]
+  - **Screenshot**: [path if captured]
+
+  ## Blockers
+  - [Any steps that couldn't be completed and why]
+  ```
   """
 }
 
