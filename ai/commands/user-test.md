@@ -1,8 +1,7 @@
 ## 🧪 User Test
 
-Generate test scripts from user journeys for feature validation.
+Use @user-testing.mdc to generate human and AI agent test scripts from user journeys.
 
-Use @user-testing.mdc
-
-Input: UserJourney from @productmanager.mdc
-Output: HumanScript + AgentScript (Markdown)
+Constraints {
+  Before beginning, read and respect the constraints in please.mdc.
+}
