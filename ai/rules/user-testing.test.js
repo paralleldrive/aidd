@@ -38,14 +38,14 @@ describe('user-testing', () => {
       });
     });
 
-    test('includes browser automation constraints', async () => {
+    test('includes real browser interaction constraints', async () => {
       const filePath = path.join(__dirname, 'user-testing.mdc');
       const content = await fs.readFile(filePath, 'utf-8');
 
       assert({
         given: 'user-testing.mdc content',
-        should: 'specify browser automation requirement',
-        actual: content.includes('browser automation'),
+        should: 'specify real browser requirement',
+        actual: content.includes('real browser'),
         expected: true,
       });
 
@@ -135,14 +135,14 @@ describe('user-testing', () => {
       });
     });
 
-    test('documentation clarifies browser automation', async () => {
+    test('documentation clarifies browser interaction', async () => {
       const filePath = path.join(__dirname, '../../docs/user-testing.md');
       const content = await fs.readFile(filePath, 'utf-8');
 
       assert({
         given: 'user testing documentation',
-        should: 'mention browser automation tools',
-        actual: content.includes('Playwright') || content.includes('Puppeteer'),
+        should: 'mention driving real browser',
+        actual: content.includes('real browser') || content.includes('drive'),
         expected: true,
       });
 

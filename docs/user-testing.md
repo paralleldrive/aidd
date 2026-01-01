@@ -40,9 +40,9 @@ For manual testing with real people:
 - Open-ended observation of natural behavior
 
 ### 2. AI Agent Test Script
-For automated testing with AI using **real browser automation**:
-- AI drives actual browser (Playwright, Puppeteer, Selenium)
-- Interacts with real UI, not mocks or simulations
+For automated testing with AI using **real browsers**:
+- AI drives browser like a human (built-in IDE browser, Chrome, etc.)
+- Interacts with real UI by clicking, typing, scrolling
 - Screenshot capture at checkpoints from browser viewport
 - Persona-based behavioral variation
 
@@ -112,15 +112,15 @@ Recruit 3-5 participants matching your persona:
 /run-test checkout-journey-agent.md
 ```
 
-AI agents will use browser automation (Playwright/Puppeteer/Selenium) to:
-- Launch a real browser and navigate to your application
-- Interact with actual DOM elements as a user would
+AI agents drive a real browser like a human would:
+- Navigate to your application in a browser
+- Click, type, scroll through actual UI elements
 - Execute the journey with persona-based behavior
-- Capture screenshots from real browser viewport at checkpoints and failures
+- Capture screenshots from browser viewport at checkpoints and failures
 - Generate feedback on difficulty and expectations
 - Report blockers and completed steps
 
-**Important**: Agents test the real UI, not mocked components. This validates the actual user experience.
+**Important**: Agents interact with the real rendered UI, not mocked components or automation frameworks.
 
 ### 5. Compare & Iterate
 

@@ -40,11 +40,11 @@ AgentScript:template {
   """
   # Agent Test: ${journey.name}
 
-  **Environment**: Real browser automation (Playwright, Puppeteer, or Selenium)
-  - Launch actual browser (headless or headed)
-  - Navigate to real application URL
-  - Interact with actual DOM elements
-  - Capture real screenshots
+  **Environment**: Drive a real browser like a human would
+  - Use built-in browser (IDE browser, Chrome, etc.)
+  - Navigate and interact with actual UI as a user would
+  - Click, type, scroll through real DOM elements
+  - Capture screenshots from browser viewport
 
   **Persona behavior**:
   - Patience: ${persona.patience}/10
@@ -71,7 +71,7 @@ generateScripts(journey) => human + agent templates with persona-mapped behavior
 /run-test <script> - Execute agent script with screenshots
 
 Constraints {
-  AI agents must use browser automation to interact with real UI (not mocked/simulated)
+  AI agents drive a real browser like a human (not automation frameworks or mocks)
   Agent behavior reflects persona traits (patience → retries, techLevel → strategy)
   Execution varies between runs (stochastic, not deterministic)
   Capture screenshots from real browser viewport
