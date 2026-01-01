@@ -86,6 +86,34 @@ describe("user-testing", () => {
     });
   });
 
+  describe("run-test.md command", () => {
+    test("command file exists", async () => {
+      const filePath = path.join(__dirname, "../commands/run-test.md");
+      const exists = await fs.pathExists(filePath);
+
+      assert({
+        given: "run-test.md command file",
+        should: "exist in ai/commands directory",
+        actual: exists,
+        expected: true,
+      });
+    });
+
+    test("references user-testing.mdc", async () => {
+      const filePath = path.join(__dirname, "../commands/run-test.md");
+      const content = await fs.readFile(filePath, "utf-8");
+
+      assert({
+        given: "run-test.md content",
+        should: "reference user-testing.mdc",
+        actual:
+          content.includes("@user-testing.mdc") ||
+          content.includes("user-testing.mdc"),
+        expected: true,
+      });
+    });
+  });
+
   describe("documentation", () => {
     test("user testing guide exists", async () => {
       const filePath = path.join(__dirname, "../../docs/user-testing.md");
