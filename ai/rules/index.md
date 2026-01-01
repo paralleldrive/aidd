@@ -88,3 +88,9 @@ when the user asks you to complete a task, use this guide for systematic task/ep
 
 When building user interfaces and user experiences, use this guide for beautiful and friendly UI/UX design
 
+### User Testing Generator
+
+**File:** `user-testing.mdc`
+
+Generate human and AI agent test scripts from user journey specifications
+
