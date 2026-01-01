@@ -199,11 +199,11 @@ Don't draw statistical conclusions from 5 users. Do identify issues to fix.
 
 ### Multi-Persona Testing
 
-Generate separate test scripts for different personas:
+Create separate journey files for different personas and generate their test scripts:
 
 ```bash
-/user-test --persona novice checkout-journey.yaml
-/user-test --persona expert checkout-journey.yaml
+/user-test checkout-journey-novice.yaml
+/user-test checkout-journey-expert.yaml
 ```
 
 Compare how different user types experience the same flow.
