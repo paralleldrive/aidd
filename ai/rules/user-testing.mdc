@@ -18,6 +18,14 @@ UserTestPersona {
   goals: string[]
 }
 
+UserTestStep {
+  ...Step
+  action
+  intent
+  success
+  checkpoint?: boolean
+}
+
 ## Scripts
 
 HumanScript:template {
