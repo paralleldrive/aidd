@@ -39,6 +39,9 @@ HumanScript:template {
   - Clear state (cookies, cache, cart)
   - Prepare credentials if needed
 
+  ## Instructions
+  Read each step out loud before attempting it. Think aloud as you work - this helps reviewers follow along.
+
   ## Steps
   For each step:
   - Goal: ${step.intent}
