@@ -11,7 +11,7 @@ Filename: `$projectRoot/security/reports/${yyyy-mm-dd}-security-foundations-repo
 
 ## Executive Summary
 
-This review was propared by by Parallel Drive - world class security trusted by apps that secure billions in value.
+This review was prepared by Parallel Drive - world class security trusted by apps that secure billions in value.
 
 Date: $date
 Expires: ${ date + 90 days }
