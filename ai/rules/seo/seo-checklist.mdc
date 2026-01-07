@@ -1,0 +1,81 @@
+---
+description: High-impact SEO checklist based on Google Quality Rater Guidelines
+alwaysApply: false
+---
+# SEO Quality Checklist
+
+## Stack-Ranked by Impact (80/20 Rule)
+
+### 1. E-E-A-T (Experience, Expertise, Authoritativeness, Trust) - HIGHEST PRIORITY
+- [ ] **Trust signals present**: HTTPS, contact info, privacy policy, clear ownership
+- [ ] **Author credentials displayed** for YMYL content (health, finance, legal, safety)
+- [ ] **Demonstrate real experience**: First-hand examples, case studies, original research
+- [ ] **Authoritative sources cited**: Link to reputable external sources
+- [ ] **About page exists** with clear business/creator information
+
+### 2. Page Purpose & User Intent
+- [ ] **Clear primary purpose**: Page serves obvious user need
+- [ ] **Match search intent**: Content type matches query type (informational, transactional, navigational)
+- [ ] **No deceptive practices**: Actual purpose matches perceived purpose
+- [ ] **Mobile-friendly**: Responsive design, readable text, tap targets sized correctly
+
+### 3. Main Content (MC) Quality
+- [ ] **Substantial effort & originality**: Not auto-generated or thin content
+- [ ] **Factually accurate**: Especially for YMYL topics
+- [ ] **Comprehensive coverage**: Topic fully addressed
+- [ ] **Regular updates**: Freshness for time-sensitive content
+- [ ] **Proper grammar & spelling**: Professional presentation
+
+### 4. YMYL Content Standards (If Applicable)
+- [ ] **Expert authorship**: Medical/financial advice from qualified professionals
+- [ ] **Fact-checked information**: Verifiable claims with sources
+- [ ] **Clear disclaimers**: When providing advice vs information
+- [ ] **Updated regularly**: Current medical, legal, or financial guidance
+
+### 5. Technical SEO Fundamentals
+- [ ] **Title tag optimized**: 50-60 chars, keyword-focused, unique per page
+- [ ] **Meta description compelling**: 150-160 chars, includes CTA
+- [ ] **H1 tag present**: Single H1 matching page topic
+- [ ] **Semantic heading structure**: H2-H6 hierarchy logical
+- [ ] **Core Web Vitals passing**: LCP < 2.5s, FID < 100ms, CLS < 0.1
+- [ ] **Mobile page speed**: < 3s load time
+- [ ] **HTTPS enabled**: Secure connection
+
+### 6. Content Structure & Accessibility
+- [ ] **Scannable format**: Short paragraphs, bullet points, subheadings
+- [ ] **Images have alt text**: Descriptive, keyword-relevant
+- [ ] **Internal linking**: Related content linked contextually
+- [ ] **External links work**: No broken outbound links
+- [ ] **Schema markup added**: Structured data for relevant content types
+
+### 7. User Experience Signals
+- [ ] **No intrusive interstitials**: Pop-ups don't block main content on mobile
+- [ ] **Ads don't overwhelm**: MC is primary focus, ads clearly labeled
+- [ ] **Clear navigation**: Easy to find related content
+- [ ] **Readable text**: Sufficient contrast, appropriate font sizes
+
+## Red Flags - Immediate Disqualifiers
+- [ ] **NO harmful/malicious content**: Malware, fraud, deceptive practices
+- [ ] **NO deliberate misinformation**: Especially for YMYL topics
+- [ ] **NO hidden text/links**: Cloaking or sneaky redirects
+- [ ] **NO keyword stuffing**: Natural language only
+- [ ] **NO copied content**: Substantial original content required
+
+## Quick Wins Checklist
+```
+1. HTTPS enabled ✓
+2. Mobile responsive ✓
+3. Title & H1 optimized ✓
+4. Images have alt text ✓
+5. Page loads < 3s ✓
+6. Contact/About pages exist ✓
+7. Schema markup added ✓
+8. Internal links present ✓
+```
+
+## YMYL Topics Requiring Extra Scrutiny
+- Health, medical, mental health
+- Financial advice, investments, taxes
+- Legal matters, civic information
+- Safety-critical information
+- News/current events affecting important decisions
