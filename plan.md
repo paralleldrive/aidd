@@ -6,8 +6,8 @@
 
 **Status**: 📋 PLANNED
 **File**: [`tasks/seo-analyzer-skill-epic.md`](./tasks/seo-analyzer-skill-epic.md)
-**Goal**: Create Agent Skill with CLI tool for automated SEO analysis and actionable improvement recommendations
-**Tasks**: 8 tasks (skill definition, automated checks, LLM analysis, YAML output, markdown reports, epic extraction, CLI interface, TDD tests)
+**Goal**: Create automated SEO checker and agent command for comprehensive analysis with actionable recommendations
+**Tasks**: 5 tasks (automated checker module, YAML output, AIDD CLI integration, agent command, TDD tests)
 
 ### 📋 Context7 Installation Epic
 
