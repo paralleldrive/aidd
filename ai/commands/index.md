@@ -52,6 +52,12 @@ This index provides an overview of the contents in this directory.
 
 *No description available*
 
+### 🏗️ Scaffold
+
+**File:** `scaffold.md`
+
+*No description available*
+
 ### task
 
 **File:** `task.md`

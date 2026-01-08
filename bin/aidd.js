@@ -106,9 +106,9 @@ Install without Cursor integration:
 
   npx aidd my-project
 
-Scaffold a new Next.js + shadcn app (requires Claude Code CLI):
+Scaffold a new Next.js app with tests and AIDD:
 
-  npx aidd create-next-shadcn
+  npx aidd create-next-shadcn [project-name]
 `,
     )
     .addHelpText(
@@ -213,23 +213,18 @@ https://paralleldrive.com
 
   // Add create-next-shadcn command
   program
-    .command("create-next-shadcn")
+    .command("create-next-shadcn [project-name]")
     .description(
-      "Scaffold a new Next.js app with AIDD, shadcn, and baseline tests using Claude Code",
+      "Scaffold a new Next.js app with AIDD, tests, and baseline setup",
     )
-    .action(async () => {
-      console.log(
-        chalk.blue("🚀 Creating Next.js + shadcn app with Claude Code...\n"),
-      );
-
-      const result = await executeCreateNextShadcn();
+    .action(async (projectName = "my-app") => {
+      const result = await executeCreateNextShadcn(projectName);
 
       if (!result.success) {
-        console.error(chalk.red(`❌ ${result.error}`));
+        console.error(chalk.red(`\n❌ ${result.error}`));
         process.exit(1);
       }
 
-      console.log(chalk.green("\n✅ Project scaffolding complete!"));
       process.exit(0);
     });
 

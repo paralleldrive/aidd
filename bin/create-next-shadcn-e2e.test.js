@@ -31,22 +31,20 @@ describe("CLI create-next-shadcn command", () => {
       given: "create-next-shadcn help is requested",
       should: "show command description",
       actual:
-        stdout.includes("create-next-shadcn") &&
-        stdout.includes("Next.js") &&
-        stdout.includes("shadcn"),
+        stdout.includes("create-next-shadcn") && stdout.includes("Next.js"),
       expected: true,
     });
   });
 
-  test("create-next-shadcn mentions Claude Code requirement", async () => {
+  test("create-next-shadcn accepts project name argument", async () => {
     const { stdout } = await execAsync(
       `node ${cliPath} create-next-shadcn --help`,
     );
 
     assert({
       given: "create-next-shadcn help is requested",
-      should: "mention Claude Code requirement",
-      actual: stdout.includes("Claude Code") || stdout.includes("Claude"),
+      should: "show project-name argument",
+      actual: stdout.includes("[project-name]"),
       expected: true,
     });
   });
