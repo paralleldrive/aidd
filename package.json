@@ -36,6 +36,14 @@
     "./vibe-auth": {
       "types": "./lib/vibe-auth.d.ts",
       "default": "./lib/vibe-auth.js"
+    },
+    "./vibe-files": {
+      "types": "./lib/vibe-files.d.ts",
+      "default": "./lib/vibe-files.js"
+    },
+    "./vibe-prompt": {
+      "types": "./lib/vibe-prompt.d.ts",
+      "default": "./lib/vibe-prompt.js"
     }
   },
   "files": [
