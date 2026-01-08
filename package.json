@@ -44,6 +44,18 @@
     "./vibe-prompt": {
       "types": "./lib/vibe-prompt.d.ts",
       "default": "./lib/vibe-prompt.js"
+    },
+    "./jiron-discovery": {
+      "types": "./lib/jiron-discovery.d.ts",
+      "default": "./lib/jiron-discovery.js"
+    },
+    "./vibe-generate": {
+      "types": "./lib/vibe-generate.d.ts",
+      "default": "./lib/vibe-generate.js"
+    },
+    "./vibe-publish": {
+      "types": "./lib/vibe-publish.d.ts",
+      "default": "./lib/vibe-publish.js"
     }
   },
   "files": [
