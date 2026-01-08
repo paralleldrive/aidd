@@ -28,6 +28,14 @@
     "./server": {
       "types": "./src/server/index.d.ts",
       "default": "./src/server/index.js"
+    },
+    "./vibe-utils": {
+      "types": "./lib/vibe-utils.d.ts",
+      "default": "./lib/vibe-utils.js"
+    },
+    "./vibe-auth": {
+      "types": "./lib/vibe-auth.d.ts",
+      "default": "./lib/vibe-auth.js"
     }
   },
   "files": [
