@@ -3,6 +3,7 @@
 import { Command } from "commander";
 import { executeClone } from "../lib/cli-core.js";
 import { generateAllIndexes } from "../lib/index-generator.js";
+import { executeCreateNextShadcn } from "../lib/create-next-shadcn.js";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
@@ -35,7 +36,7 @@ const [, handleCliErrors] = errorCauses({
 const createCli = () => {
   const program = new Command();
 
-  return program
+  program
     .name("aidd")
     .description("AI Driven Development - Install the AIDD Framework")
     .version(packageJson.version)
@@ -104,6 +105,10 @@ To install for Cursor:
 Install without Cursor integration:
 
   npx aidd my-project
+
+Scaffold a new Next.js app with tests and AIDD:
+
+  npx aidd create-next-shadcn [project-name]
 `,
     )
     .addHelpText(
@@ -205,6 +210,25 @@ https://paralleldrive.com
         process.exit(result.success ? 0 : 1);
       },
     );
+
+  // Add create-next-shadcn command
+  program
+    .command("create-next-shadcn [project-name]")
+    .description(
+      "Scaffold a new Next.js app with AIDD, tests, and baseline setup",
+    )
+    .action(async (projectName = "my-app") => {
+      const result = await executeCreateNextShadcn(projectName);
+
+      if (!result.success) {
+        console.error(chalk.red(`\n❌ ${result.error}`));
+        process.exit(1);
+      }
+
+      process.exit(0);
+    });
+
+  return program;
 };
 
 // Execute CLI
