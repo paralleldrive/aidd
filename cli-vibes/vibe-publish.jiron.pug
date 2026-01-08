@@ -1,0 +1,148 @@
+head(profile='https://vibecodr.space/profiles/vibe-publish')
+  title Vibecodr - Publish Vibe
+body.vibecodr.vibePublish
+  h1 Publish a vibe to Vibecodr
+
+  ul.links
+    li.link
+      a(rel='self', href='https://api.vibecodr.space/agent/vibe', headers='Accept:application/vnd.jiron+pug')
+    li.link
+      a(rel='alternate', href='https://api.vibecodr.space/jiron/vibe', headers='Accept:application/vnd.jiron+pug')
+    li.link
+      a(rel='documentation', href='https://vibecodr.space/docs/cli-integration')
+
+  ul.properties
+    li.property
+      label API Base
+        span https://api.vibecodr.space
+    li.property
+      label Canonical player URL
+        span https://vibecodr.space/player/{postId}
+    li.property
+      label Auth header (after exchange)
+        span Authorization: Bearer {token}
+    li.property
+      label Manifest ownership
+        span Server-owned (CLI tokens cannot PATCH /capsules/:id/manifest)
+
+  section.oauth
+    h2 OAuth Configuration (PKCE)
+    ul.properties
+      li.property
+        label Issuer
+          span https://clerk.vibecodr.space
+      li.property
+        label OIDC Discovery
+          span https://clerk.vibecodr.space/.well-known/openid-configuration
+      li.property
+        label Client ID
+          span g3NwTqUg7nRzHeHo
+      li.property
+        label Redirect URI
+          span http://localhost:3000/oauth_callback
+      li.property
+        label Scopes
+          span openid profile email
+      li.property
+        label Code Challenge Method
+          span S256
+
+  ul.actions
+    li.action.oauth-authorize
+      form(action='navigate', href='https://clerk.vibecodr.space/oauth/authorize', type='browser')
+        fieldset
+          legend Step 1: OAuth Authorization (opens browser)
+          label client_id
+            input(name='client_id', value='g3NwTqUg7nRzHeHo', readonly)
+          label redirect_uri
+            input(name='redirect_uri', value='http://localhost:3000/oauth_callback', readonly)
+          label response_type
+            input(name='response_type', value='code', readonly)
+          label scope
+            input(name='scope', value='openid profile email', readonly)
+          label code_challenge
+            input(name='code_challenge', placeholder='sha256_base64url(code_verifier)')
+          label code_challenge_method
+            input(name='code_challenge_method', value='S256', readonly)
+          label state
+            input(name='state', placeholder='random_state')
+    li.action.oauth-token
+      form(action='create', href='https://clerk.vibecodr.space/oauth/token', type='application/x-www-form-urlencoded', headers='Content-Type:application/x-www-form-urlencoded')
+        fieldset
+          legend Step 2: Exchange auth code for Clerk token (POST)
+          label grant_type
+            input(name='grant_type', value='authorization_code', readonly)
+          label client_id
+            input(name='client_id', value='g3NwTqUg7nRzHeHo', readonly)
+          label redirect_uri
+            input(name='redirect_uri', value='http://localhost:3000/oauth_callback', readonly)
+          label code
+            input(name='code', placeholder='{authorization_code}')
+          label code_verifier
+            input(name='code_verifier', placeholder='{code_verifier}')
+    li.action.oauth-refresh
+      form(action='create', href='https://clerk.vibecodr.space/oauth/token', type='application/x-www-form-urlencoded', headers='Content-Type:application/x-www-form-urlencoded')
+        fieldset
+          legend Refresh Clerk token (when expired)
+          label grant_type
+            input(name='grant_type', value='refresh_token', readonly)
+          label client_id
+            input(name='client_id', value='g3NwTqUg7nRzHeHo', readonly)
+          label refresh_token
+            input(name='refresh_token', placeholder='{clerk_refresh_token}')
+    li.action
+      form(action='create', href='https://api.vibecodr.space/auth/cli/exchange', type='application/json', headers='Accept:application/json')
+        fieldset
+          legend Step 3: Exchange Clerk token for Vibecodr CLI token
+          label access_token
+            input(name='access_token', placeholder='{clerk_access_token}')
+    li.action
+      form(action='create', href='https://api.vibecodr.space/capsules/empty', type='application/json', headers='Accept:application/json')
+        fieldset
+          legend Step 4: Create empty capsule (draft)
+          label title (required)
+            input(name='title', value='My vibe')
+          label entry (optional)
+            input(name='entry', value='index.tsx')
+          label runner (optional)
+            input(name='runner', value='client-static')
+    li.action
+      form(action='put', href='https://api.vibecodr.space/capsules/{capsuleId}/files/{path}', type='application/octet-stream', headers='Accept:application/json')
+        fieldset
+          legend Step 5: Upload file bytes (repeat per file)
+    li.action
+      form(action='create', href='https://api.vibecodr.space/capsules/{capsuleId}/publish', type='application/json', headers='Accept:application/json')
+        fieldset
+          legend Step 6: Publish (returns postId)
+          label visibility
+            input(name='visibility', value='public')
+          label note
+            span public|unlisted|private (defaults to public)
+
+  section.drafts
+    h2 Draft Management
+    p Save work-in-progress vibes and resume later
+    ul.actions
+      li.action.drafts-list
+        form(action='read', href='https://api.vibecodr.space/me/drafts', type='application/json', headers='Accept:application/json')
+          fieldset
+            legend List all drafts
+            label note
+              span Returns array of {draftId, fileCount, totalSize, lastModified, files}
+      li.action.drafts-get
+        form(action='read', href='https://api.vibecodr.space/drafts/{draftId}', type='application/json', headers='Accept:application/json')
+          fieldset
+            legend Get draft details
+            label draftId
+              input(name='draftId', placeholder='{draftId}')
+      li.action.drafts-delete
+        form(action='delete', href='https://api.vibecodr.space/drafts/{draftId}', type='application/json', headers='Accept:application/json')
+          fieldset
+            legend Delete a draft
+            label draftId
+              input(name='draftId', placeholder='{draftId}')
+      li.action.drafts-save
+        fieldset
+          legend Save to draft (workflow)
+          label note
+            span To save: POST /capsules/empty → PUT files → (skip publish). Draft persists as capsuleId.
