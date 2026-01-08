@@ -56,6 +56,10 @@
     "./vibe-publish": {
       "types": "./lib/vibe-publish.d.ts",
       "default": "./lib/vibe-publish.js"
+    },
+    "./vibe-core": {
+      "types": "./lib/vibe-core.d.ts",
+      "default": "./lib/vibe-core.js"
     }
   },
   "files": [
