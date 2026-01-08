@@ -49,7 +49,10 @@ async function fetchJson(url, init) {
 function openBrowser(url) {
   const platform = process.platform;
   if (platform === "win32") {
-    spawn("cmd.exe", ["/c", "start", '""', url], { stdio: "ignore", detached: true }).unref();
+    spawn("cmd.exe", ["/c", "start", '""', url], {
+      stdio: "ignore",
+      detached: true,
+    }).unref();
     return;
   }
   if (platform === "darwin") {
@@ -92,7 +95,12 @@ function writeConfig(filePath, data) {
   fs.writeFileSync(filePath, text, { encoding: "utf8", mode: 0o600 });
 }
 
-async function waitForOauthCode({ redirectPort, redirectPath, expectedState, timeoutMs }) {
+async function waitForOauthCode({
+  redirectPort,
+  redirectPath,
+  expectedState,
+  timeoutMs,
+}) {
   return new Promise((resolve, reject) => {
     const server = http.createServer((req, res) => {
       try {
@@ -109,7 +117,9 @@ async function waitForOauthCode({ redirectPort, redirectPath, expectedState, tim
 
         if (error) {
           res.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
-          res.end(`OAuth error: ${error}${errorDescription ? `\n${errorDescription}` : ""}`);
+          res.end(
+            `OAuth error: ${error}${errorDescription ? `\n${errorDescription}` : ""}`,
+          );
           reject(new Error(`OAuth error: ${error}`));
           return;
         }
@@ -128,7 +138,9 @@ async function waitForOauthCode({ redirectPort, redirectPath, expectedState, tim
         }
 
         res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-        res.end("<!doctype html><html><body><h1>Vibecodr CLI authenticated</h1><p>You can close this window.</p></body></html>");
+        res.end(
+          "<!doctype html><html><body><h1>Vibecodr CLI authenticated</h1><p>You can close this window.</p></body></html>",
+        );
         resolve({ code });
       } catch (err) {
         reject(err);
@@ -257,16 +269,43 @@ async function main() {
   }
 
   const command = positionals[0] || "login";
-  const configPath = values["config-path"] || process.env.VIBECODR_CLI_CONFIG_PATH || defaultConfigPath();
-  const issuer = normalizeOrigin(values.issuer || process.env.VIBECODR_CLERK_ISSUER || "https://clerk.vibecodr.space");
-  const apiBase = values["api-base"] || process.env.VIBECODR_API_BASE || "https://api.vibecodr.space";
+  const configPath =
+    values["config-path"] ||
+    process.env.VIBECODR_CLI_CONFIG_PATH ||
+    defaultConfigPath();
+  const issuer = normalizeOrigin(
+    values.issuer ||
+      process.env.VIBECODR_CLERK_ISSUER ||
+      "https://clerk.vibecodr.space",
+  );
+  const apiBase =
+    values["api-base"] ||
+    process.env.VIBECODR_API_BASE ||
+    "https://api.vibecodr.space";
   const clientId =
-    values["client-id"] || process.env.VIBECODR_CLERK_OAUTH_CLIENT_ID || DEFAULT_CLERK_OAUTH_CLIENT_ID;
-  const redirectPort = parseInt(values["redirect-port"] || process.env.VIBECODR_OAUTH_REDIRECT_PORT || "3000", 10);
-  const redirectPath = values["redirect-path"] || process.env.VIBECODR_OAUTH_REDIRECT_PATH || "/oauth_callback";
-  const scopes = values.scopes || process.env.VIBECODR_OAUTH_SCOPES || "openid profile email";
+    values["client-id"] ||
+    process.env.VIBECODR_CLERK_OAUTH_CLIENT_ID ||
+    DEFAULT_CLERK_OAUTH_CLIENT_ID;
+  const redirectPort = parseInt(
+    values["redirect-port"] ||
+      process.env.VIBECODR_OAUTH_REDIRECT_PORT ||
+      "3000",
+    10,
+  );
+  const redirectPath =
+    values["redirect-path"] ||
+    process.env.VIBECODR_OAUTH_REDIRECT_PATH ||
+    "/oauth_callback";
+  const scopes =
+    values.scopes ||
+    process.env.VIBECODR_OAUTH_SCOPES ||
+    "openid profile email";
 
-  if (!Number.isFinite(redirectPort) || redirectPort <= 0 || redirectPort > 65535) {
+  if (
+    !Number.isFinite(redirectPort) ||
+    redirectPort <= 0 ||
+    redirectPort > 65535
+  ) {
     throw new Error("Invalid --redirect-port");
   }
 
@@ -275,7 +314,9 @@ async function main() {
   const authorizationEndpoint = oidc.authorization_endpoint;
   const tokenEndpoint = oidc.token_endpoint;
   if (!authorizationEndpoint || !tokenEndpoint) {
-    throw new Error("Issuer is missing OAuth endpoints in openid-configuration");
+    throw new Error(
+      "Issuer is missing OAuth endpoints in openid-configuration",
+    );
   }
 
   if (command === "refresh") {
@@ -292,10 +333,17 @@ async function main() {
 
     const nowSec = Math.floor(Date.now() / 1000);
     const clerkAccessToken = refreshed.access_token;
-    const clerkRefreshToken = refreshed.refresh_token || existing.clerk.refresh_token;
-    const clerkExpiresAt = typeof refreshed.expires_in === "number" ? nowSec + refreshed.expires_in : undefined;
+    const clerkRefreshToken =
+      refreshed.refresh_token || existing.clerk.refresh_token;
+    const clerkExpiresAt =
+      typeof refreshed.expires_in === "number"
+        ? nowSec + refreshed.expires_in
+        : undefined;
 
-    const vibecodr = await exchangeForVibecodrToken({ apiBase, clerkAccessToken });
+    const vibecodr = await exchangeForVibecodrToken({
+      apiBase,
+      clerkAccessToken,
+    });
 
     const updated = {
       ...existing,
@@ -333,7 +381,9 @@ async function main() {
       process.stdout.write(JSON.stringify(receipt) + "\n");
       return;
     }
-    process.stdout.write(`Refreshed Vibecodr CLI token for ${vibecodr.user_id}\n`);
+    process.stdout.write(
+      `Refreshed Vibecodr CLI token for ${vibecodr.user_id}\n`,
+    );
     process.stdout.write(`Wrote credentials to ${configPath}\n`);
     return;
   }
@@ -381,12 +431,18 @@ async function main() {
   const nowSec = Math.floor(Date.now() / 1000);
   const clerkAccessToken = tokenResponse.access_token;
   const clerkRefreshToken = tokenResponse.refresh_token;
-  const clerkExpiresAt = typeof tokenResponse.expires_in === "number" ? nowSec + tokenResponse.expires_in : undefined;
+  const clerkExpiresAt =
+    typeof tokenResponse.expires_in === "number"
+      ? nowSec + tokenResponse.expires_in
+      : undefined;
   if (!clerkAccessToken) {
     throw new Error("Token endpoint did not return access_token");
   }
 
-  const vibecodr = await exchangeForVibecodrToken({ apiBase, clerkAccessToken });
+  const vibecodr = await exchangeForVibecodrToken({
+    apiBase,
+    clerkAccessToken,
+  });
 
   const data = {
     issuer,

@@ -60,7 +60,9 @@ function base64Url(buffer) {
 }
 
 function createFakeExpiredCliGrant({ iss, aud }) {
-  const header = base64Url(Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })));
+  const header = base64Url(
+    Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })),
+  );
   const now = Math.floor(Date.now() / 1000);
   const payload = base64Url(
     Buffer.from(
@@ -73,8 +75,8 @@ function createFakeExpiredCliGrant({ iss, aud }) {
         exp: now - 300,
         jti: crypto.randomUUID(),
         kind: "vibecodr_cli",
-      })
-    )
+      }),
+    ),
   );
   // Signature is intentionally garbage; the API should still reject this token.
   return `${header}.${payload}.x`;
@@ -95,8 +97,14 @@ async function createEmptyCapsule({ apiBase, token, title, entry, runner }) {
       ...(runner ? { runner } : {}),
     }),
   });
-  assert(res.status === 200, `Expected 200 from /capsules/empty, got ${res.status}`);
-  assert(json && json.success === true && typeof json.capsuleId === "string", "Unexpected /capsules/empty response");
+  assert(
+    res.status === 200,
+    `Expected 200 from /capsules/empty, got ${res.status}`,
+  );
+  assert(
+    json && json.success === true && typeof json.capsuleId === "string",
+    "Unexpected /capsules/empty response",
+  );
   return json.capsuleId;
 }
 
@@ -136,7 +144,10 @@ async function compileDraft({ apiBase, token, capsuleId }) {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
   });
-  assert(res.status === 200, `Expected 200 from /compile-draft, got ${res.status}`);
+  assert(
+    res.status === 200,
+    `Expected 200 from /compile-draft, got ${res.status}`,
+  );
   return json;
 }
 
@@ -213,14 +224,19 @@ async function main() {
   }
 
   const configPath =
-    values["config-path"] || process.env.VIBECODR_CLI_CONFIG_PATH || defaultConfigPath();
+    values["config-path"] ||
+    process.env.VIBECODR_CLI_CONFIG_PATH ||
+    defaultConfigPath();
   const config = readConfig(configPath);
   const apiBase =
     values["api-base"] ||
     process.env.VIBECODR_API_BASE ||
     config?.api_base ||
     "https://api.vibecodr.space";
-  const timeoutMs = parseInt(values["timeout-ms"] || process.env.VIBECODR_E2E_TIMEOUT_MS || "30000", 10);
+  const timeoutMs = parseInt(
+    values["timeout-ms"] || process.env.VIBECODR_E2E_TIMEOUT_MS || "30000",
+    10,
+  );
   const visibility = values.visibility || "public";
 
   const results = [];
@@ -234,14 +250,30 @@ async function main() {
       headers: { Accept: "application/vnd.jiron+pug" },
     });
     assert(res.status === 200, `Expected 200 from ${url}, got ${res.status}`);
-    assert(text.includes("/auth/cli/exchange"), "Jiron doc missing /auth/cli/exchange");
-    assert(text.includes("/capsules/empty"), "Jiron doc missing /capsules/empty");
-    assert(text.includes("/capsules/{capsuleId}/files/{path}"), "Jiron doc missing file upload template");
-    assert(text.includes("/capsules/{capsuleId}/publish"), "Jiron doc missing publish endpoint");
+    assert(
+      text.includes("/auth/cli/exchange"),
+      "Jiron doc missing /auth/cli/exchange",
+    );
+    assert(
+      text.includes("/capsules/empty"),
+      "Jiron doc missing /capsules/empty",
+    );
+    assert(
+      text.includes("/capsules/{capsuleId}/files/{path}"),
+      "Jiron doc missing file upload template",
+    );
+    assert(
+      text.includes("/capsules/{capsuleId}/publish"),
+      "Jiron doc missing publish endpoint",
+    );
     assert(text.includes("openid"), "Jiron doc missing OAuth scopes");
     record("jiron.discovery", true);
   } catch (err) {
-    record("jiron.discovery", false, err instanceof Error ? err.message : String(err));
+    record(
+      "jiron.discovery",
+      false,
+      err instanceof Error ? err.message : String(err),
+    );
   }
 
   // 2) Auth failures (no token)
@@ -249,13 +281,20 @@ async function main() {
     const url = `${normalizeOrigin(apiBase)}/capsules/empty`;
     const { res } = await fetchJson(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       body: "{}",
     });
     assert(res.status === 401, `Expected 401 without token, got ${res.status}`);
     record("auth.missingToken", true);
   } catch (err) {
-    record("auth.missingToken", false, err instanceof Error ? err.message : String(err));
+    record(
+      "auth.missingToken",
+      false,
+      err instanceof Error ? err.message : String(err),
+    );
   }
 
   // 3) Auth failures (invalid token)
@@ -270,16 +309,26 @@ async function main() {
       },
       body: "{}",
     });
-    assert(res.status === 401, `Expected 401 with invalid token, got ${res.status}`);
+    assert(
+      res.status === 401,
+      `Expected 401 with invalid token, got ${res.status}`,
+    );
     record("auth.invalidToken", true);
   } catch (err) {
-    record("auth.invalidToken", false, err instanceof Error ? err.message : String(err));
+    record(
+      "auth.invalidToken",
+      false,
+      err instanceof Error ? err.message : String(err),
+    );
   }
 
   // 4) Auth failures (expired-like CLI token)
   try {
     const url = `${normalizeOrigin(apiBase)}/capsules/empty`;
-    const fakeExpired = createFakeExpiredCliGrant({ iss: normalizeOrigin(apiBase), aud: "vibecodr:cli" });
+    const fakeExpired = createFakeExpiredCliGrant({
+      iss: normalizeOrigin(apiBase),
+      aud: "vibecodr:cli",
+    });
     const { res } = await fetchJson(url, {
       method: "POST",
       headers: {
@@ -289,24 +338,47 @@ async function main() {
       },
       body: "{}",
     });
-    assert(res.status === 401, `Expected 401 with expired token, got ${res.status}`);
+    assert(
+      res.status === 401,
+      `Expected 401 with expired token, got ${res.status}`,
+    );
     record("auth.expiredToken", true);
   } catch (err) {
-    record("auth.expiredToken", false, err instanceof Error ? err.message : String(err));
+    record(
+      "auth.expiredToken",
+      false,
+      err instanceof Error ? err.message : String(err),
+    );
   }
 
   record(
     "auth.exchangeAllowlist",
     true,
-    "not directly verifiable here (requires a valid token from a different OAuth client_id)"
+    "not directly verifiable here (requires a valid token from a different OAuth client_id)",
   );
 
   const vibecodrToken = config?.vibecodr?.access_token;
   if (!vibecodrToken) {
-    record("pipeline.missingTitle", true, `skipped (no vibecodr token in ${configPath})`);
-    record("pipeline.invalidRunner", true, `skipped (no vibecodr token in ${configPath})`);
-    record("pipeline.manifestPatchDenied", true, `skipped (no vibecodr token in ${configPath})`);
-    record("pipeline.publishSuccess", true, `skipped (no vibecodr token in ${configPath})`);
+    record(
+      "pipeline.missingTitle",
+      true,
+      `skipped (no vibecodr token in ${configPath})`,
+    );
+    record(
+      "pipeline.invalidRunner",
+      true,
+      `skipped (no vibecodr token in ${configPath})`,
+    );
+    record(
+      "pipeline.manifestPatchDenied",
+      true,
+      `skipped (no vibecodr token in ${configPath})`,
+    );
+    record(
+      "pipeline.publishSuccess",
+      true,
+      `skipped (no vibecodr token in ${configPath})`,
+    );
   } else {
     // 6) Payload failure: missing title rejected on capsule creation
     try {
@@ -320,10 +392,17 @@ async function main() {
         },
         body: JSON.stringify({ entry: "index.html" }),
       });
-      assert(res.status === 400, `Expected 400 for missing title, got ${res.status}`);
+      assert(
+        res.status === 400,
+        `Expected 400 for missing title, got ${res.status}`,
+      );
       record("pipeline.missingTitle", true, json);
     } catch (err) {
-      record("pipeline.missingTitle", false, err instanceof Error ? err.message : String(err));
+      record(
+        "pipeline.missingTitle",
+        false,
+        err instanceof Error ? err.message : String(err),
+      );
     }
 
     // 7) Payload failure: invalid runner rejected on capsule creation
@@ -342,10 +421,17 @@ async function main() {
           entry: "index.ts",
         }),
       });
-      assert(res.status === 400, `Expected 400 for invalid runner, got ${res.status}`);
+      assert(
+        res.status === 400,
+        `Expected 400 for invalid runner, got ${res.status}`,
+      );
       record("pipeline.invalidRunner", true, json);
     } catch (err) {
-      record("pipeline.invalidRunner", false, err instanceof Error ? err.message : String(err));
+      record(
+        "pipeline.invalidRunner",
+        false,
+        err instanceof Error ? err.message : String(err),
+      );
     }
 
     // 8) Security: CLI token cannot PATCH /capsules/:id/manifest
@@ -361,29 +447,46 @@ async function main() {
         apiBase,
         token: vibecodrToken,
         capsuleId,
-        manifest: { version: "1.0", runner: "client-static", entry: "index.html" },
+        manifest: {
+          version: "1.0",
+          runner: "client-static",
+          entry: "index.html",
+        },
       });
-      assert(status === 401, `Expected 401 for PATCH /manifest with CLI token, got ${status}`);
+      assert(
+        status === 401,
+        `Expected 401 for PATCH /manifest with CLI token, got ${status}`,
+      );
       record("pipeline.manifestPatchDenied", true);
     } catch (err) {
-      record("pipeline.manifestPatchDenied", false, err instanceof Error ? err.message : String(err));
+      record(
+        "pipeline.manifestPatchDenied",
+        false,
+        err instanceof Error ? err.message : String(err),
+      );
     }
 
     // 9) Successful publish (optional; creates a post)
     if (values.publish) {
       try {
-        let playerBase = values["player-base"] || process.env.VIBECODR_PLAYER_BASE;
+        let playerBase =
+          values["player-base"] || process.env.VIBECODR_PLAYER_BASE;
         if (!playerBase) {
           const jironUrl = `${normalizeOrigin(apiBase)}/agent/vibe`;
           const { res, text } = await fetchText(jironUrl, {
             method: "GET",
             headers: { Accept: "application/vnd.jiron+pug" },
           });
-          assert(res.status === 200, `Expected 200 fetching ${jironUrl}, got ${res.status}`);
+          assert(
+            res.status === 200,
+            `Expected 200 fetching ${jironUrl}, got ${res.status}`,
+          );
           const line = text
             .split("\n")
             .map((l) => l.trim())
-            .find((l) => l.startsWith("span ") && l.includes("/player/{postId}"));
+            .find(
+              (l) => l.startsWith("span ") && l.includes("/player/{postId}"),
+            );
           assert(line, "Could not infer player URL template from Jiron doc");
           const template = line.slice("span ".length).trim();
           playerBase = template.split("/player/")[0];
@@ -401,32 +504,64 @@ async function main() {
           token: vibecodrToken,
           capsuleId,
           filePath: "index.html",
-          bytes: Buffer.from(`<html><body>cli-e2e publish ${Date.now()}</body></html>`),
+          bytes: Buffer.from(
+            `<html><body>cli-e2e publish ${Date.now()}</body></html>`,
+          ),
         });
-        const pub = await publish({ apiBase, token: vibecodrToken, capsuleId, visibility });
-        assert(pub.status === 200, `Expected 200 from publish, got ${pub.status}`);
-        assert(pub.json && typeof pub.json.postId === "string", "Publish response missing postId");
+        const pub = await publish({
+          apiBase,
+          token: vibecodrToken,
+          capsuleId,
+          visibility,
+        });
+        assert(
+          pub.status === 200,
+          `Expected 200 from publish, got ${pub.status}`,
+        );
+        assert(
+          pub.json && typeof pub.json.postId === "string",
+          "Publish response missing postId",
+        );
 
         const url = `${normalizeOrigin(playerBase)}/player/${pub.json.postId}`;
         await waitForUrlOk(url, { timeoutMs });
-        record("pipeline.publishSuccess", true, { postId: pub.json.postId, capsuleId, url });
+        record("pipeline.publishSuccess", true, {
+          postId: pub.json.postId,
+          capsuleId,
+          url,
+        });
       } catch (err) {
-        record("pipeline.publishSuccess", false, err instanceof Error ? err.message : String(err));
+        record(
+          "pipeline.publishSuccess",
+          false,
+          err instanceof Error ? err.message : String(err),
+        );
       }
     } else {
-      record("pipeline.publishSuccess", true, "skipped (pass --publish to run)");
+      record(
+        "pipeline.publishSuccess",
+        true,
+        "skipped (pass --publish to run)",
+      );
     }
   }
 
   const failed = results.filter((r) => !r.ok);
-  const summary = { ok: failed.length === 0, api_base: apiBase, config_path: configPath, results };
+  const summary = {
+    ok: failed.length === 0,
+    api_base: apiBase,
+    config_path: configPath,
+    results,
+  };
 
   if (values.json) {
     process.stdout.write(JSON.stringify(summary) + "\n");
   } else {
     for (const r of results) {
       const status = r.ok ? "OK" : "FAIL";
-      process.stdout.write(`${status} ${r.name}${r.detail ? ` - ${typeof r.detail === "string" ? r.detail : ""}` : ""}\n`);
+      process.stdout.write(
+        `${status} ${r.name}${r.detail ? ` - ${typeof r.detail === "string" ? r.detail : ""}` : ""}\n`,
+      );
     }
   }
 

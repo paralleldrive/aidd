@@ -28,6 +28,38 @@
     "./server": {
       "types": "./src/server/index.d.ts",
       "default": "./src/server/index.js"
+    },
+    "./vibe-core": {
+      "types": "./lib/vibe-core.d.ts",
+      "default": "./lib/vibe-core.js"
+    },
+    "./vibe-auth": {
+      "types": "./lib/vibe-auth.d.ts",
+      "default": "./lib/vibe-auth.js"
+    },
+    "./vibe-files": {
+      "types": "./lib/vibe-files.d.ts",
+      "default": "./lib/vibe-files.js"
+    },
+    "./vibe-generate": {
+      "types": "./lib/vibe-generate.d.ts",
+      "default": "./lib/vibe-generate.js"
+    },
+    "./vibe-prompt": {
+      "types": "./lib/vibe-prompt.d.ts",
+      "default": "./lib/vibe-prompt.js"
+    },
+    "./vibe-publish": {
+      "types": "./lib/vibe-publish.d.ts",
+      "default": "./lib/vibe-publish.js"
+    },
+    "./vibe-utils": {
+      "types": "./lib/vibe-utils.d.ts",
+      "default": "./lib/vibe-utils.js"
+    },
+    "./jiron-discovery": {
+      "types": "./lib/jiron-discovery.d.ts",
+      "default": "./lib/jiron-discovery.js"
     }
   },
   "files": [
@@ -84,6 +116,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@rollup/rollup-win32-x64-msvc": "^4.55.1",
     "@vitest/coverage-v8": "^3.2.4",
     "doctoc": "^2.2.1",
     "eslint": "^9",

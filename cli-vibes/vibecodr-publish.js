@@ -93,7 +93,10 @@ function isLikelyClerkTokenProblem(err) {
   if (body && typeof body === "object") {
     // VibeError format: { error: "...", hint: "..." }
     const hint = body.hint || body.message || "";
-    if (typeof hint === "string" && hint.toLowerCase().includes("expiring soon")) {
+    if (
+      typeof hint === "string" &&
+      hint.toLowerCase().includes("expiring soon")
+    ) {
       return true;
     }
     // Check errorCode for auth-related errors
@@ -295,10 +298,14 @@ async function main() {
   }
 
   const configPath =
-    values["config-path"] || process.env.VIBECODR_CLI_CONFIG_PATH || defaultConfigPath();
+    values["config-path"] ||
+    process.env.VIBECODR_CLI_CONFIG_PATH ||
+    defaultConfigPath();
   const config = readConfig(configPath);
   if (!config) {
-    throw new Error(`Missing CLI config at ${configPath}; run vibecodr-auth.js login first`);
+    throw new Error(
+      `Missing CLI config at ${configPath}; run vibecodr-auth.js login first`,
+    );
   }
 
   const apiBase =
@@ -307,7 +314,9 @@ async function main() {
     config?.api_base ||
     "https://api.vibecodr.space";
   const playerBase =
-    values["player-base"] || process.env.VIBECODR_PLAYER_BASE || "https://vibecodr.space";
+    values["player-base"] ||
+    process.env.VIBECODR_PLAYER_BASE ||
+    "https://vibecodr.space";
 
   let vibecodrToken = config?.vibecodr?.access_token;
   let vibecodrExpiresAt = config?.vibecodr?.expires_at;
@@ -319,18 +328,24 @@ async function main() {
 
   async function ensureVibecodrToken({ minValidSeconds }) {
     const now = Math.floor(Date.now() / 1000);
-    if (typeof vibecodrExpiresAt === "number" && vibecodrExpiresAt - now >= minValidSeconds) {
+    if (
+      typeof vibecodrExpiresAt === "number" &&
+      vibecodrExpiresAt - now >= minValidSeconds
+    ) {
       return vibecodrToken;
     }
 
     if (!clerkAccessToken) {
       throw new Error(
-        `Missing clerk.access_token in ${configPath}; run vibecodr-auth.js login first`
+        `Missing clerk.access_token in ${configPath}; run vibecodr-auth.js login first`,
       );
     }
 
     const tryExchange = async () => {
-      const vibecodr = await exchangeForVibecodrToken({ apiBase, clerkAccessToken });
+      const vibecodr = await exchangeForVibecodrToken({
+        apiBase,
+        clerkAccessToken,
+      });
       if (
         !vibecodr ||
         typeof vibecodr.access_token !== "string" ||
@@ -355,7 +370,9 @@ async function main() {
       const now2 = Math.floor(Date.now() / 1000);
       // Check if Clerk token is expiring by time OR if the error indicates auth issues
       const clerkExpiringSoon =
-        typeof clerkExpiresAt === "number" ? clerkExpiresAt - now2 < minValidSeconds : false;
+        typeof clerkExpiresAt === "number"
+          ? clerkExpiresAt - now2 < minValidSeconds
+          : false;
       const errorSuggestsRefresh = isLikelyClerkTokenProblem(err);
 
       // Only attempt refresh if we have a refresh token AND either timing or error suggests it's needed
@@ -367,7 +384,7 @@ async function main() {
       }
       if (!clerkIssuer || !clerkClientId) {
         throw new Error(
-          `Clerk access token refresh is not configured; run vibecodr-auth.js login again (${configPath})`
+          `Clerk access token refresh is not configured; run vibecodr-auth.js login again (${configPath})`,
         );
       }
 
@@ -386,7 +403,9 @@ async function main() {
       clerkAccessToken = clerkNewAccessToken;
       clerkRefreshToken = refreshed.refresh_token || clerkRefreshToken;
       clerkExpiresAt =
-        typeof refreshed.expires_in === "number" ? now2 + refreshed.expires_in : clerkExpiresAt;
+        typeof refreshed.expires_in === "number"
+          ? now2 + refreshed.expires_in
+          : clerkExpiresAt;
 
       config.clerk = {
         ...(config.clerk || {}),
@@ -411,7 +430,9 @@ async function main() {
     } catch (err) {
       // If it looks like an auth problem and we might be able to fix it with a refresh
       if (err && (err.status === 401 || isLikelyClerkTokenProblem(err))) {
-        process.stderr.write("Auth error detected, attempting token refresh...\n");
+        process.stderr.write(
+          "Auth error detected, attempting token refresh...\n",
+        );
         // Force token refresh by setting expiry to now
         vibecodrExpiresAt = 0;
         vibecodrToken = await ensureVibecodrToken({ minValidSeconds: 120 });
@@ -424,7 +445,7 @@ async function main() {
 
   if (!vibecodrToken) {
     throw new Error(
-      `Missing vibecodr.access_token in ${configPath}; run vibecodr-auth.js login first`
+      `Missing vibecodr.access_token in ${configPath}; run vibecodr-auth.js login first`,
     );
   }
   await ensureVibecodrToken({ minValidSeconds: 120 });
@@ -495,7 +516,9 @@ async function main() {
   });
   const postId = published?.postId;
   if (typeof postId !== "string" || !postId) {
-    throw new Error("Unexpected /capsules/:id/publish response shape (missing postId)");
+    throw new Error(
+      "Unexpected /capsules/:id/publish response shape (missing postId)",
+    );
   }
 
   const url = `${normalizeOrigin(playerBase)}/player/${postId}`;
