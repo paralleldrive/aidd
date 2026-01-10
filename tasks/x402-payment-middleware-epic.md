@@ -13,14 +13,29 @@ AI agents and automated systems need to access paid APIs without human intervent
 
 Factory function that creates middleware requiring payment before granting access to protected resources.
 
+```js
+createWithPayment({
+  recipient = process.env.X402_RECIPIENT,
+  facilitatorUrl = process.env.X402_FACILITATOR,
+  paymentNetwork = process.env.X402_PAYMENT_NETWORK,
+  amount,
+  currency = 'USDC',
+  description,
+})
+```
+
 **Requirements**:
 - Given a request without valid payment proof, should respond with HTTP 402 and PaymentRequired header containing amount, currency, recipient, and supported networks
 - Given a request with valid payment proof in X-PAYMENT header, should verify payment via configured facilitator
 - Given successful payment verification, should attach payment receipt to `response.locals.payment` and allow request to proceed
 - Given failed payment verification, should respond with HTTP 402 and appropriate error details
-- Given configuration options, should require `recipient` (wallet address), `amount` (price in smallest unit), and `currency` (e.g., 'USDC')
-- Given optional `network` configuration, should default to Base network for lowest fees
-- Given optional `facilitator` configuration, should default to Coinbase x402 facilitator
+- Given named parameters, should accept `{ recipient, facilitatorUrl, paymentNetwork, amount, currency, description }`
+- Given `recipient` parameter not provided, should fall back to `process.env.X402_RECIPIENT` via default parameter syntax
+- Given `facilitatorUrl` parameter not provided, should fall back to `process.env.X402_FACILITATOR` via default parameter syntax
+- Given `paymentNetwork` parameter not provided, should fall back to `process.env.X402_PAYMENT_NETWORK` via default parameter syntax
+- Given `paymentNetwork` not configured anywhere, should default to Base network for lowest fees
+- Given `amount` parameter, should require explicit value (price in smallest unit) with no env fallback
+- Given `currency` parameter not provided, should default to 'USDC'
 - Given response.locals.payment, should include `payer`, `amount`, `currency`, `network`, `transactionHash`, and `timestamp`
 
 ---
@@ -69,9 +84,9 @@ Enable testing payment middleware without real blockchain transactions.
 Integrate with existing withConfig middleware for payment settings.
 
 **Requirements**:
-- Given environment variables, should support `PAYMENT_RECIPIENT`, `PAYMENT_FACILITATOR_URL` configuration
-- Given missing required payment config, should fail fast with descriptive ConfigurationError
-- Given optional `PAYMENT_NETWORK` env var, should override default network selection
+- Given environment variables, should support `X402_RECIPIENT`, `X402_FACILITATOR`, `X402_PAYMENT_NETWORK` configuration
+- Given `recipient` not provided as parameter and `X402_RECIPIENT` not set, should throw descriptive ConfigurationError at middleware creation time
+- Given `facilitatorUrl` not provided as parameter and `X402_FACILITATOR` not set, should throw descriptive ConfigurationError at middleware creation time
 - Given production environment, should validate recipient address format before accepting requests
 
 ---
