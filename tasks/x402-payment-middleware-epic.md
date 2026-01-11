@@ -77,6 +77,9 @@ Enable testing payment middleware without real blockchain transactions.
 - Given mock facilitator, should simulate success, insufficient funds, expired payment, and network errors
 - Given test setup, should provide `createPaymentProof` helper to generate valid test proofs
 - Given createServer test utility, should extend to support payment header injection
+- Given Playwright e2e tests, should verify full payment flow from 402 response through successful payment to resource access
+- Given Playwright e2e tests, should verify client receives correct `PAYMENT-REQUIRED` header format on unpaid requests
+- Given Playwright e2e tests, should verify client can parse payment requirements and submit valid `PAYMENT-SIGNATURE`
 
 ---
 
