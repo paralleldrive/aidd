@@ -27,6 +27,7 @@ createWithPayment({
 **Requirements**:
 - Given a request without valid payment proof, should respond with HTTP 402 and `PAYMENT-REQUIRED` header containing base64-encoded payment requirements
 - Given a request with valid payment proof in `PAYMENT-SIGNATURE` header, should verify payment via configured facilitator
+- Given successful payment verification, should set `PAYMENT-RESPONSE` header with base64-encoded settlement response containing `transactionHash`, `network`, and `settledAt`
 - Given successful payment verification, should attach payment receipt to `response.locals.payment` and allow request to proceed
 - Given failed payment verification, should respond with HTTP 402 and appropriate error details
 - Given named parameters, should accept `{ recipient, facilitatorUrl, paymentNetwork, amount, currency, description }`
@@ -64,7 +65,6 @@ Standardized payment required response following x402 protocol specification.
 - Given payment requirements, should include `description` field for human-readable payment context
 - Given payment requirements, should include `resource` field identifying the requested endpoint
 - Given multiple supported networks, should list all in order of preference (lowest fees first)
-- Given successful payment, should include `PAYMENT-RESPONSE` header with base64-encoded settlement response
 
 ---
 
