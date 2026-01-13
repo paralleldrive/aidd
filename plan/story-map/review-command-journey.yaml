@@ -1,5 +1,5 @@
 # User Journey: Code Review Command
-# Following interfaces from ai/rules/productmanager.mdc
+# Following interfaces from ai/skills/aidd/references/product-manager.md
 
 id: cljkp8y9k0001abc123def456
 name: Code Review Command Usage
