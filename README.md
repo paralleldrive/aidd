@@ -4,6 +4,12 @@
 
 **The standard framework for AI Driven Development**
 
+AI agents like Claude Code ship features fast. aidd Framework keeps them working, secure, and maintainable.
+
+AI agents generate code that runs but fails at scale. [GitClear tracked 211 million lines from 2020 to 2024](https://leaddev.com/software-quality/how-ai-generated-code-accelerates-technical-debt) and found 8x more code duplication as AI adoption increased. [Google's DORA report](https://www.sonarsource.com/blog/the-inevitable-rise-of-poor-code-quality-in-ai-accelerated-codebases/) shows AI adoption correlates with 9% higher bug rates and degraded stability. Agents skip tests, couple modules, duplicate logic, and miss vulnerabilities.
+
+AIDD provides the architecture, test workflows, and specification system that turn AI speed into sustainable velocity. Ship secure, production-ready, maintainable software.
+
 Includes:
 
 - **AIDD CLI** – project bootstrap and automation
