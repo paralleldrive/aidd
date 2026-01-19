@@ -41,7 +41,7 @@ Stop A: Stop here. Report what was installed, what was configured, and the exact
    - Follow the current recommended Next.js App Router setup.
    - Document the exact commands you ran and any config changes.
 
-2. Create a /task epic (see ai/commands/task) for the work below.
+2. Create a /task epic (see ai/skills/aidd/task.md) for the work below.
 
 3. Build a simple design system story that includes:
    - Standard button components (variants, sizes, disabled, loading)
@@ -56,9 +56,9 @@ Stop A: Stop here. Report what was installed, what was configured, and the exact
    - Desktop: primary action button
 
 5. Use TDD for any custom components you create.
-   - Follow ai/rules/tdd.mdc carefully.
+   - Follow ai/skills/aidd/references/tdd.md carefully.
 
-6. Follow JavaScript best practices in ai/rules/javascript.
+6. Follow JavaScript best practices in ai/skills/aidd/references/javascript.md.
 
 7. Apply the style prompt below for visual look and feel guidance.
 
@@ -75,7 +75,7 @@ Prompt me for guidance on the visual look and feel of my application before you 
 
 After I respond, continue with the task epic, then present it to me for feedback.
 
-Stop B: Stop here and wait for approval, then /execute the task following the instructions in the ai/rules folder carefully.
+Stop B: Stop here and wait for approval, then /execute the task following the instructions in the ai/skills/aidd/references folder carefully.
 
 Once that work is complete, please /review all the code you have written so far:
 

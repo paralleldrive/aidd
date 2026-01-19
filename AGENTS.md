@@ -1,16 +1,30 @@
 # AI Agent Guidelines
 
-This project uses AI-assisted development with structured guidance in the `ai/` directory.
+This project uses AI-assisted development with the AIDD Skills Protocol.
 
-## Directory Structure
+## Skills Location
 
-Agents should examine the `ai/*` directory listings to understand the available commands, rules, and workflows.
+All AI guidance is located in `ai/skills/aidd/`:
 
-## Index Files
+- `SKILL.md` - Main skill definition with commands and orchestration
+- `references/` - Domain guidance files (TDD, code review, JS best practices, etc.)
 
-Each folder in the `ai/` directory contains an `index.md` file that describes the purpose and contents of that folder. Agents can read these index files to learn the function of files in each folder without needing to read every file.
+## Commands
 
-**Important:** The `ai/**/index.md` files are auto-generated from frontmatter. Do not create or edit these files manually—they will be overwritten by the pre-commit hook.
+Commands are defined as skills in `ai/skills/aidd/` and invoked via slash commands:
+
+| Command | Description |
+|---------|-------------|
+| `/help` | List available commands |
+| `/log` | Log completed epics to activity-log.md |
+| `/commit` | Commit using conventional format |
+| `/plan` | Review plan.md and suggest next steps |
+| `/discover` | Product discovery for user journeys |
+| `/task` | Create and plan a task epic |
+| `/execute` | Execute a task epic |
+| `/review` | Conduct code review |
+| `/user-test` | Generate test scripts from user journeys |
+| `/run-test` | Execute AI agent test script |
 
 ## Progressive Discovery
 

@@ -205,8 +205,8 @@ This provides stronger guarantees than trusting a single source like the Web Cry
 
 The AIDD `/review` command automatically checks for these security issues. Rules are located in:
 
-- `ai/rules/security/jwt-security.mdc` - JWT patterns
-- `ai/rules/security/timing-safe-compare.mdc` - Secret comparison
+- `ai/skills/aidd/references/jwt-security.md` - JWT patterns
+- `ai/skills/aidd/references/timing-safe-compare.md` - Secret comparison
 
 To run a security-focused review:
 

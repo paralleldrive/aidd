@@ -39,6 +39,7 @@ Includes:
   - [Examples](#examples)
 - [📁 AI System Structure](#-ai-system-structure)
   - [Key Components](#key-components)
+  - [Skills Protocol](#skills-protocol)
 - [🎯 AI Integration](#-ai-integration)
 - [📋 Vision Document](#-vision-document)
   - [Why You Need a Vision Document](#why-you-need-a-vision-document)
@@ -74,6 +75,8 @@ AIDD Framework is a collection of reusable metaprograms, agent orchestration sys
 /log - log the changes to the activity log
 /commit - commit the changes to the repository
 /user-test - generate user testing scripts for post-deploy validation
+/run-test - execute AI agent test script in real browser
+/help - list all available commands
 ```
 
 ## 🚀 Quick Start with AIDD CLI
@@ -126,19 +129,19 @@ npx aidd my-project
 
    ```bash
    cd my-project
-   ls ai/                    # See available components
-   cat ai/rules/please.mdc   # Read the main orchestrator
+   ls ai/                           # See available components
+   cat ai/skills/aidd/SKILL.md      # Read the main skill definition
    ```
 
 5. **Start using AI workflows**:
-   - Reference `ai/rules/` in AI prompts for better context
-   - Use `ai/commands/` as workflow templates
-   - Customize rules for your specific project needs
+   - Reference `ai/skills/aidd/references/` in AI prompts for better context
+   - Use `ai/skills/aidd/` as workflow templates
+   - Customize skills for your specific project needs
 
 This gives you immediate access to:
 
-- 🤖 **Agent orchestration rules** (`ai/rules/`)
-- ⚙️ **AI workflow commands** (`ai/commands/`)
+- 🤖 **Skills Protocol** (`ai/skills/aidd/`)
+- ⚙️ **AI workflow commands** (`ai/skills/aidd/`)
 - 📋 **Development best practices** (JavaScript, TDD, UI/UX)
 - 🎯 **Product management tools** (user stories, journey mapping)
 
@@ -424,20 +427,26 @@ After running the CLI, you'll have a complete `ai/` folder:
 ```
 your-project/
 ├── ai/
-│   ├── commands/              # Workflow commands
-│   │   ├── help.md           # List available commands
-│   │   ├── plan.md           # Project planning
-│   │   ├── review.md         # Code reviews
-│   │   ├── task.md           # Task management
+│   ├── commands/              # Legacy command references (deprecated)
 │   │   └── ...
-│   ├── rules/                # Agent orchestration rules
-│   │   ├── agent-orchestrator.mdc
-│   │   ├── javascript/       # JS/TS best practices
-│   │   ├── frameworks/       # Redux, TDD patterns
-│   │   ├── productmanager.mdc
-│   │   ├── tdd.mdc
-│   │   ├── ui.mdc
-│   │   └── ...
+│   ├── skills/               # Skills Protocol (primary)
+│   │   └── aidd/
+│   │       ├── SKILL.md      # Main skill orchestrator
+│   │       ├── help.md       # /help skill
+│   │       ├── log.md        # /log skill
+│   │       ├── commit.md     # /commit skill
+│   │       ├── plan.md       # /plan skill
+│   │       ├── discover.md   # /discover skill
+│   │       ├── task.md       # /task skill
+│   │       ├── execute.md    # /execute skill
+│   │       ├── review.md     # /review skill
+│   │       ├── user-test.md  # /user-test skill
+│   │       ├── run-test.md   # /run-test skill
+│   │       └── references/   # Domain guidance files
+│   │           ├── javascript.md
+│   │           ├── tdd.md
+│   │           ├── ui.md
+│   │           └── ...
 │   └── ...
 ├── plan/                     # Product discovery artifacts
 │   ├── story-map/            # User journeys & personas (YAML)
@@ -448,13 +457,22 @@ your-project/
 
 ### Key Components
 
-- **Agent Orchestrator** (`ai/rules/agent-orchestrator.mdc`) - Coordinates multiple AI agents
-- **Development Rules** (`ai/rules/javascript/`, `ai/rules/tdd.mdc`) - Best practices and patterns
-- **Workflow Commands** (`ai/commands/`) - Structured AI interaction templates
-- **Product Management** (`ai/rules/productmanager.mdc`) - User stories and journey mapping
+- **AIDD Skill Orchestrator** (`ai/skills/aidd/SKILL.md`) - Main skill definition that orchestrates all commands
+- **Individual Skill Commands** (`ai/skills/aidd/*.md`) - Skill files for each command (e.g., `commit.md`, `task.md`)
+- **Development References** (`ai/skills/aidd/references/`) - Best practices (JavaScript, TDD, UI/UX)
+- **Product Management** (`ai/skills/aidd/references/product-manager.md`) - User stories and journey mapping
 - **Product Discovery Artifacts** (`plan/story-map/`) - User journeys, personas, and story maps (YAML format)
 - **User Testing Scripts** (`plan/`) - Human and AI agent test scripts generated from journeys
-- **UI/UX Guidelines** (`ai/rules/ui.mdc`) - Design and user experience standards
+- **UI/UX Guidelines** (`ai/skills/aidd/references/ui.md`) - Design and user experience standards
+
+### Skills Protocol
+
+All AIDD commands use the Claude Code Skills Protocol. Each skill has:
+- A `name` field matching the invocation pattern (e.g., `commit`, `task`)
+- A `description` field with trigger keywords for automatic activation
+- References to implementation files in `references/`
+
+See [docs/commands_to_skills.md](docs/commands_to_skills.md) for the complete parity table.
 
 ## 🎯 AI Integration
 
@@ -577,21 +595,21 @@ npx aidd my-project
 
 **For Cursor users with existing rules:**
 
-Reference the rules in your prompts or add to `.cursor/rules`:
+Reference the skills in your prompts or add to `.cursor/rules`:
 
 ```
-See ai/rules/javascript/javascript.mdc for JavaScript best practices
-See ai/rules/tdd.mdc for test-driven development
-See ai/rules/productmanager.mdc for product management
+See ai/skills/aidd/references/javascript.md for JavaScript best practices
+See ai/skills/aidd/references/tdd.md for test-driven development
+See ai/skills/aidd/references/product-manager.md for product management
 ```
 
 **For other editors (VS Code, Vim, etc.):**
 
-Reference rules directly in your AI assistant prompts:
+Reference skills directly in your AI assistant prompts:
 
 ```
-Please follow the guidelines in ai/rules/javascript/javascript.mdc
-Use the workflow from ai/commands/task.md
+Please follow the guidelines in ai/skills/aidd/references/javascript.md
+Use the workflow from ai/skills/aidd/task.md
 ```
 
 ### Troubleshooting
@@ -603,8 +621,8 @@ Use the workflow from ai/commands/task.md
 ls ai/
 
 # Verify key files exist
-ls ai/rules/please.mdc
-ls ai/commands/
+ls ai/skills/aidd/SKILL.md
+ls ai/skills/aidd/
 ```
 
 **Common Issues**

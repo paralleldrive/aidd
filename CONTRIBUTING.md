@@ -10,7 +10,7 @@ See the [Development Workflow](README.md#development-workflow) section in the RE
 
 ### JavaScript/TypeScript
 
-- Follow the guidelines in `ai/rules/javascript/javascript.mdc`
+- Follow the guidelines in `ai/skills/aidd/references/javascript.md`
 - Use functional programming patterns
 - Keep functions small, pure, and composable
 - Use `const`, avoid mutation
@@ -34,7 +34,7 @@ See the [Development Workflow](README.md#development-workflow) section in the RE
 
 ### Commit Messages
 
-Follow conventional commit format (see `ai/commands/commit.md`):
+Follow conventional commit format (see `ai/skills/aidd/commit.md`):
 
 ```
 type(scope): description
@@ -52,7 +52,7 @@ Types: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `perf`, `ci`, `build`
 
 1. Ensure all tests pass (`npm test`)
 2. Update documentation if needed
-3. Follow the code review guidelines in `ai/rules/review.mdc`
+3. Follow the code review guidelines in `ai/skills/aidd/references/code-review.md`
 4. Address review feedback promptly
 5. Squash commits if requested
 6. Wait for approval from maintainers
@@ -60,10 +60,9 @@ Types: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `perf`, `ci`, `build`
 ## Questions or Issues?
 
 - Check existing [issues](https://github.com/paralleldrive/aidd/issues)
-- Review the AI rules in `ai/rules/` for guidance
+- Review the AI skills in `ai/skills/aidd/references/` for guidance
 - Ask questions in your PR or open a discussion
 
 ## License
 
 By contributing, you agree that your contributions will be licensed under the MIT License.
-

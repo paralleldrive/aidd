@@ -1,10 +1,10 @@
-# ai
+# skills
 
 This index provides an overview of the contents in this directory.
 
 ## Subdirectories
 
-### 📁 skills/
+### 📁 aidd/
 
-See [`skills/index.md`](./skills/index.md) for contents.
+See [`aidd/index.md`](./aidd/index.md) for contents.
 
