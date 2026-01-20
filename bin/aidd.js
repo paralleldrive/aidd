@@ -3,6 +3,7 @@
 import { Command } from "commander";
 import { executeClone } from "../lib/cli-core.js";
 import { generateAllIndexes } from "../lib/index-generator.js";
+import { generateSkillsFiles } from "../lib/skills-extractor.js";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
@@ -54,6 +55,10 @@ const createCli = () => {
     .option(
       "-i, --index",
       "generate index.md files from frontmatter in ai/ subfolders",
+    )
+    .option(
+      "-s, --skills",
+      "extract commands from skills/ and generate command files",
     )
     .addHelpText(
       "before",
@@ -115,7 +120,45 @@ https://paralleldrive.com
 `,
     )
     .action(
-      async (targetDirectory, { force, dryRun, verbose, cursor, index }) => {
+      async (
+        targetDirectory,
+        { force, dryRun, verbose, cursor, index, skills },
+      ) => {
+        // Handle --skills option separately
+        if (skills) {
+          const targetPath = path.resolve(process.cwd(), targetDirectory);
+
+          if (dryRun) {
+            console.log(
+              chalk.cyan(
+                "Dry run - would extract commands from skills/ and generate files",
+              ),
+            );
+            process.exit(0);
+            return;
+          }
+
+          console.log(chalk.blue("Extracting commands from skills..."));
+
+          const result = await generateSkillsFiles(targetPath);
+
+          if (result.success) {
+            console.log(chalk.green(`✅ ${result.message}`));
+            if (verbose) {
+              result.files.forEach((file) => {
+                console.log(chalk.gray(`  - ${file}`));
+              });
+            }
+            process.exit(0);
+          } else {
+            console.error(
+              chalk.red(`❌ ${result.error?.message || result.error}`),
+            );
+            process.exit(1);
+          }
+          return;
+        }
+
         // Handle --index option separately
         if (index) {
           const targetPath = path.resolve(process.cwd(), targetDirectory);

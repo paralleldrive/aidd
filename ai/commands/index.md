@@ -1,66 +1,50 @@
-# commands
+# AIDD Commands
 
-This index provides an overview of the contents in this directory.
+Primary workflow entry points. Each command activates its corresponding skill.
 
-## Files
+For complete command reference including sub-commands, see [skills/index.md](../../skills/index.md).
 
-### Commit
+## Commands
 
-**File:** `commit.md`
+### /commit
 
-*No description available*
+create a conventional commit for staged changes
 
-### discover
+**Skill:** [aidd-commit](../../skills/aidd-commit/SKILL.md)
 
-**File:** `discover.md`
+### /discover
 
-*No description available*
+Enter interactive product discovery planning mode
 
-### execute
+**Skill:** [aidd-discover](../../skills/aidd-discover/SKILL.md)
 
-**File:** `execute.md`
+### /execute
 
-*No description available*
+implement code using TDD (red-green-refactor cycle)
 
-### help
+**Skill:** [aidd-execute](../../skills/aidd-execute/SKILL.md)
 
-**File:** `help.md`
+### /log
 
-*No description available*
+log completed epics to activity-log.md
 
-### log
+**Skill:** [aidd-log](../../skills/aidd-log/SKILL.md)
 
-**File:** `log.md`
+### /review
 
-*No description available*
+conduct a thorough code review focusing on code quality, best practices, and adherence to project standards
 
-### plan
+**Skill:** [aidd-review](../../skills/aidd-review/SKILL.md)
 
-**File:** `plan.md`
+### /task
 
-*No description available*
+create a task/epic
 
-### 🔬 Code Review
+**Skill:** [aidd-task](../../skills/aidd-task/SKILL.md)
 
-**File:** `review.md`
+### /user-test
 
-*No description available*
+Generate human and agent scripts, save to $projectRoot/plan/
 
-### run-test
-
-**File:** `run-test.md`
-
-*No description available*
-
-### task
-
-**File:** `task.md`
-
-*No description available*
-
-### user-test
-
-**File:** `user-test.md`
-
-*No description available*
+**Skill:** [aidd-user-test](../../skills/aidd-user-test/SKILL.md)
 

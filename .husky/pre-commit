@@ -1,3 +1,10 @@
+# Extract commands from skills/ and generate command files
+node bin/aidd.js --skills "$(git rev-parse --show-toplevel)"
+
+# Stage generated skills and command files
+git add 'skills/index.md' 2>/dev/null || true
+git add 'ai/commands/*.md' 2>/dev/null || true
+
 # Generate index.md files for ai/ folders
 node bin/aidd.js --index "$(git rev-parse --show-toplevel)"
 
