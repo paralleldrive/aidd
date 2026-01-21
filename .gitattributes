@@ -1,0 +1,11 @@
+# SQLite database files
+*.db binary
+*.db diff=sqlite3
+
+# Ensure consistent line endings
+*.js text eol=lf
+*.mdc text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
