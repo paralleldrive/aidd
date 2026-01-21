@@ -4,7 +4,7 @@
  * Creates the complete database schema for aidd indexing system
  */
 
-import { Database } from 'bun:sqlite';
+import { Database } from "bun:sqlite";
 
 /**
  * Creates the complete database schema
@@ -12,7 +12,7 @@ import { Database } from 'bun:sqlite';
  */
 export function createSchema(db) {
   // Enable foreign keys
-  db.exec('PRAGMA foreign_keys = ON');
+  db.exec("PRAGMA foreign_keys = ON");
 
   // Schema version tracking
   db.exec(`
@@ -248,9 +248,13 @@ export function createSchema(db) {
   const version = 1;
   const now = Date.now();
 
-  const existing = db.prepare('SELECT version FROM schema_version WHERE version = ?').get(version);
+  const existing = db
+    .prepare("SELECT version FROM schema_version WHERE version = ?")
+    .get(version);
   if (!existing) {
-    db.prepare('INSERT INTO schema_version (version, applied_at) VALUES (?, ?)').run(version, now);
+    db.prepare(
+      "INSERT INTO schema_version (version, applied_at) VALUES (?, ?)",
+    ).run(version, now);
   }
 
   return { version, tablesCreated: true };
@@ -260,7 +264,7 @@ export function createSchema(db) {
  * Main execution when run as script
  */
 if (import.meta.main) {
-  const dbPath = process.argv[2] || '.aidd/index.db';
+  const dbPath = process.argv[2] || ".aidd/index.db";
 
   console.log(`Creating schema in ${dbPath}...`);
 
@@ -270,11 +274,15 @@ if (import.meta.main) {
   console.log(`✓ Schema created successfully (version ${result.version})`);
 
   // Show table count
-  const tables = db.prepare(`
+  const tables = db
+    .prepare(
+      `
     SELECT COUNT(*) as count
     FROM sqlite_master
     WHERE type='table' AND name NOT LIKE 'sqlite_%'
-  `).get();
+  `,
+    )
+    .get();
 
   console.log(`✓ Created ${tables.count} tables`);
 
