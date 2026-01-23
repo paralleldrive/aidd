@@ -1,4 +1,5 @@
-## 📝 Log
+# /log
 
-Use log.mdc to collect salient changes, and log them to the activity-log.md.
-Before beginning, read and respect the constraints in please.mdc.
+log completed epics to activity-log.md
+
+Use the log skill to log completed epics to activity-log.md.

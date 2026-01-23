@@ -71,44 +71,43 @@ describe("user-testing", () => {
       });
     });
 
-    test("references user-testing.mdc", async () => {
+    test("references user-test skill", async () => {
       const filePath = path.join(__dirname, "../commands/user-test.md");
       const content = await fs.readFile(filePath, "utf-8");
 
       assert({
         given: "user-test.md content",
-        should: "reference user-testing.mdc",
-        actual:
-          content.includes("@user-testing.mdc") ||
-          content.includes("user-testing.mdc"),
+        should: "reference user-test skill",
+        actual: content.includes("user-test skill"),
         expected: true,
       });
     });
   });
 
-  describe("run-test.md command", () => {
-    test("command file exists", async () => {
-      const filePath = path.join(__dirname, "../commands/run-test.md");
-      const exists = await fs.pathExists(filePath);
+  describe("/run-test sub-command", () => {
+    test("is documented in aidd-user-test skill", async () => {
+      const filePath = path.join(
+        __dirname,
+        "../../skills/aidd-user-test/SKILL.md",
+      );
+      const content = await fs.readFile(filePath, "utf-8");
 
       assert({
-        given: "run-test.md command file",
-        should: "exist in ai/commands directory",
-        actual: exists,
+        given: "aidd-user-test skill content",
+        should: "include /run-test sub-command in Commands block",
+        actual: content.includes("/run-test"),
         expected: true,
       });
     });
 
-    test("references user-testing.mdc", async () => {
-      const filePath = path.join(__dirname, "../commands/run-test.md");
+    test("is listed in skills index", async () => {
+      const filePath = path.join(__dirname, "../../skills/index.md");
       const content = await fs.readFile(filePath, "utf-8");
 
       assert({
-        given: "run-test.md content",
-        should: "reference user-testing.mdc",
-        actual:
-          content.includes("@user-testing.mdc") ||
-          content.includes("user-testing.mdc"),
+        given: "skills/index.md content",
+        should: "include /run-test command reference",
+        actual: content.includes("/run-test"),
         expected: true,
       });
     });

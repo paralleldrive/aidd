@@ -1,8 +1,5 @@
-## ⚙️ Execute Task/Epic
+# /execute
 
-Use the task creator to execute a task epic.
+implement code using TDD (red-green-refactor cycle)
 
-Constraints {
-Before beginning, read and respect the constraints in please.mdc.
-Remember to use the TDD process if asked to implement code.
-}
+Use the execute skill to implement code using tdd (red-green-refactor cycle).

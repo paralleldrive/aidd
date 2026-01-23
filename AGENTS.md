@@ -41,3 +41,54 @@ If any conflicts are detected between a requested task and the vision document, 
 3. Ask the user to clarify how to resolve the conflict before proceeding
 
 Never proceed with a task that contradicts the vision without explicit user approval.
+
+## Agent Skills
+
+AIDD includes reusable skills in the `skills/` directory following the [agentskills.io](https://agentskills.io) specification. These skills work with any compatible agent (Claude Code, Cursor, etc.).
+
+### Available Skills
+
+| Skill | Purpose |
+|-------|---------|
+| `aidd-discover` | Product discovery, user journeys, personas |
+| `aidd-task` | Plan and break down epics into tasks |
+| `aidd-execute` | Implement using TDD |
+| `aidd-review` | Code review with security focus |
+| `aidd-log` | Document changes to activity-log.md |
+| `aidd-commit` | Conventional commit formatting |
+| `aidd-user-test` | Generate human and AI test scripts |
+
+### Setup for Claude Code
+
+Claude Code doesn't natively support `AGENTS.md`. To enable AIDD:
+
+```bash
+# Copy or symlink AGENTS.md to CLAUDE.md
+cp AGENTS.md CLAUDE.md
+# or: ln -s AGENTS.md CLAUDE.md
+
+# Symlink skills directory
+mkdir -p .claude
+ln -s ../skills .claude/skills
+```
+
+### Setup for Cursor
+
+```bash
+# Symlink skills directory (Cursor also discovers .claude/skills)
+mkdir -p .cursor
+ln -s ../skills .cursor/skills
+```
+
+### Manual Invocation
+
+Primary commands invoke their corresponding skill:
+- `/task` - Plan a new epic
+- `/execute` - Implement with TDD
+- `/review` - Code review
+- `/discover` - Product discovery
+- `/commit` - Conventional commits
+- `/log` - Activity logging
+- `/user-test` - Generate test scripts
+
+For the complete command reference including sub-commands, see `skills/index.md`.

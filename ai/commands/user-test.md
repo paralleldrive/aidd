@@ -1,7 +1,5 @@
-## 🧪 User Test
+# /user-test
 
-Use @user-testing.mdc to generate human and AI agent test scripts from user journeys.
+Generate human and agent scripts, save to $projectRoot/plan/
 
-Constraints {
-Before beginning, read and respect the constraints in please.mdc.
-}
+Use the user-test skill to generate human and agent scripts, save to $projectroot/plan/.
