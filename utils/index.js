@@ -3,5 +3,5 @@
  */
 
 export { asyncPipe } from "./async-pipe.js";
-export { pipe } from "./pipe.js";
 export { compose } from "./compose.js";
+export { pipe } from "./pipe.js";

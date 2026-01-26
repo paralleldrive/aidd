@@ -3,11 +3,11 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    fileParallelism: true,
     coverage: {
+      exclude: ["node_modules/**", "tests/**", "*.config.*"],
       provider: "v8",
       reporter: ["text", "json", "html"],
-      exclude: ["node_modules/**", "tests/**", "*.config.*"],
     },
+    fileParallelism: true,
   },
 });

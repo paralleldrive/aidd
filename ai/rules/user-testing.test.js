@@ -1,8 +1,9 @@
-import { assert } from "riteway/vitest";
-import { describe, test } from "vitest";
-import fs from "fs-extra";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs-extra";
+import { assert } from "riteway/vitest";
+import { describe, test } from "vitest";
+
 import { parseFrontmatter } from "../../lib/index-generator.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -14,27 +15,27 @@ describe("user-testing", () => {
       const exists = await fs.pathExists(filePath);
 
       assert({
-        given: "user-testing.mdc file",
-        should: "exist in ai/rules directory",
         actual: exists,
         expected: true,
+        given: "user-testing.mdc file",
+        should: "exist in ai/rules directory",
       });
 
       const content = await fs.readFile(filePath, "utf-8");
       const frontmatter = parseFrontmatter(content);
 
       assert({
-        given: "user-testing.mdc frontmatter",
-        should: "have description field",
         actual: typeof frontmatter?.description,
         expected: "string",
+        given: "user-testing.mdc frontmatter",
+        should: "have description field",
       });
 
       assert({
-        given: "user-testing.mdc frontmatter",
-        should: "have alwaysApply set to false",
         actual: frontmatter?.alwaysApply,
         expected: false,
+        given: "user-testing.mdc frontmatter",
+        should: "have alwaysApply set to false",
       });
     });
 
@@ -43,17 +44,17 @@ describe("user-testing", () => {
       const content = await fs.readFile(filePath, "utf-8");
 
       assert({
-        given: "user-testing.mdc content",
-        should: "include HumanScript template",
         actual: content.includes("HumanScript:template"),
         expected: true,
+        given: "user-testing.mdc content",
+        should: "include HumanScript template",
       });
 
       assert({
-        given: "user-testing.mdc content",
-        should: "include AgentScript template",
         actual: content.includes("AgentScript:template"),
         expected: true,
+        given: "user-testing.mdc content",
+        should: "include AgentScript template",
       });
     });
   });
@@ -64,10 +65,10 @@ describe("user-testing", () => {
       const exists = await fs.pathExists(filePath);
 
       assert({
-        given: "user-test.md command file",
-        should: "exist in ai/commands directory",
         actual: exists,
         expected: true,
+        given: "user-test.md command file",
+        should: "exist in ai/commands directory",
       });
     });
 
@@ -76,12 +77,12 @@ describe("user-testing", () => {
       const content = await fs.readFile(filePath, "utf-8");
 
       assert({
-        given: "user-test.md content",
-        should: "reference user-testing.mdc",
         actual:
           content.includes("@user-testing.mdc") ||
           content.includes("user-testing.mdc"),
         expected: true,
+        given: "user-test.md content",
+        should: "reference user-testing.mdc",
       });
     });
   });
@@ -92,10 +93,10 @@ describe("user-testing", () => {
       const exists = await fs.pathExists(filePath);
 
       assert({
-        given: "run-test.md command file",
-        should: "exist in ai/commands directory",
         actual: exists,
         expected: true,
+        given: "run-test.md command file",
+        should: "exist in ai/commands directory",
       });
     });
 
@@ -104,12 +105,12 @@ describe("user-testing", () => {
       const content = await fs.readFile(filePath, "utf-8");
 
       assert({
-        given: "run-test.md content",
-        should: "reference user-testing.mdc",
         actual:
           content.includes("@user-testing.mdc") ||
           content.includes("user-testing.mdc"),
         expected: true,
+        given: "run-test.md content",
+        should: "reference user-testing.mdc",
       });
     });
   });
@@ -120,10 +121,10 @@ describe("user-testing", () => {
       const exists = await fs.pathExists(filePath);
 
       assert({
-        given: "user-testing.md documentation",
-        should: "exist in docs directory",
         actual: exists,
         expected: true,
+        given: "user-testing.md documentation",
+        should: "exist in docs directory",
       });
     });
   });
@@ -134,17 +135,17 @@ describe("user-testing", () => {
       const content = await fs.readFile(filePath, "utf-8");
 
       assert({
-        given: "README.md content",
-        should: "include /user-test in command list",
         actual: content.includes("/user-test"),
         expected: true,
+        given: "README.md content",
+        should: "include /user-test in command list",
       });
 
       assert({
-        given: "README.md content",
-        should: "link to user testing documentation",
         actual: content.includes("docs/user-testing.md"),
         expected: true,
+        given: "README.md content",
+        should: "link to user testing documentation",
       });
     });
   });
