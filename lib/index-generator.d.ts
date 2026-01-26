@@ -57,7 +57,10 @@ export function getSubdirectories(dirPath: string): Promise<string[]>;
  * @param dirPath - Directory containing the file
  * @param filename - Name of the file
  */
-export function generateFileEntry(dirPath: string, filename: string): Promise<string>;
+export function generateFileEntry(
+  dirPath: string,
+  filename: string,
+): Promise<string>;
 
 /**
  * Generate markdown entry for a subdirectory
@@ -85,7 +88,7 @@ export function writeIndex(dirPath: string): Promise<IndexWriteResult>;
  */
 export function generateIndexRecursive(
   dirPath: string,
-  results?: IndexWriteResult[]
+  results?: IndexWriteResult[],
 ): Promise<IndexWriteResult[]>;
 
 /**
@@ -100,4 +103,6 @@ export function generateIndexRecursive(
  *   console.log(`Generated ${result.indexes.length} files`);
  * }
  */
-export function generateAllIndexes(targetBase: string): Promise<GenerateAllResult>;
+export function generateAllIndexes(
+  targetBase: string,
+): Promise<GenerateAllResult>;

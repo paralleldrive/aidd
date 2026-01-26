@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 
-import { Command } from "commander";
-import { executeClone } from "../lib/cli-core.js";
-import { generateAllIndexes } from "../lib/index-generator.js";
 import { readFileSync } from "fs";
-import { fileURLToPath } from "url";
 import path from "path";
 import process from "process";
-import { errorCauses } from "error-causes";
+import { fileURLToPath } from "url";
 import chalk from "chalk";
+import { Command } from "commander";
+import { errorCauses } from "error-causes";
+
+import { executeClone } from "../lib/cli-core.js";
+import { generateAllIndexes } from "../lib/index-generator.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,17 +19,17 @@ const packageJson = JSON.parse(
 
 // Use the same error causes as the CLI library
 const [, handleCliErrors] = errorCauses({
-  ValidationError: {
-    code: "VALIDATION_ERROR",
-    message: "Input validation failed",
+  CloneError: {
+    code: "CLONE_ERROR",
+    message: "AI folder cloning failed",
   },
   FileSystemError: {
     code: "FILESYSTEM_ERROR",
     message: "File system operation failed",
   },
-  CloneError: {
-    code: "CLONE_ERROR",
-    message: "AI folder cloning failed",
+  ValidationError: {
+    code: "VALIDATION_ERROR",
+    message: "Input validation failed",
   },
 });
 
@@ -150,11 +151,11 @@ https://paralleldrive.com
         }
 
         const result = await executeClone({
-          targetDirectory,
-          force,
-          dryRun,
-          verbose,
           cursor,
+          dryRun,
+          force,
+          targetDirectory,
+          verbose,
         });
 
         if (!result.success) {
@@ -168,11 +169,14 @@ https://paralleldrive.com
           // Use handleErrors instead of manual switching
           try {
             handleCliErrors({
-              ValidationError: ({ message }) => {
-                console.error(`❌ Validation Error: ${message}`);
+              CloneError: ({ message, cause }) => {
+                console.error(`❌ Clone Error: ${message}`);
                 console.error(
-                  "💡 Try using --force to overwrite existing files",
+                  "💡 Check source directory and target permissions",
                 );
+                if (verbose && cause) {
+                  console.error("🔍 Caused by:", cause.message || cause);
+                }
               },
               FileSystemError: ({ message, cause }) => {
                 console.error(`❌ File System Error: ${message}`);
@@ -183,14 +187,11 @@ https://paralleldrive.com
                   console.error("🔍 Caused by:", cause.message || cause);
                 }
               },
-              CloneError: ({ message, cause }) => {
-                console.error(`❌ Clone Error: ${message}`);
+              ValidationError: ({ message }) => {
+                console.error(`❌ Validation Error: ${message}`);
                 console.error(
-                  "💡 Check source directory and target permissions",
+                  "💡 Try using --force to overwrite existing files",
                 );
-                if (verbose && cause) {
-                  console.error("🔍 Caused by:", cause.message || cause);
-                }
               },
             })(error);
           } catch {
