@@ -67,7 +67,10 @@ export interface ErrorResponse {
 export type Middleware = (context: ServerContext) => Promise<ServerContext>;
 
 // Route handler type
-export type RouteHandler = (request: Request, response: Response) => Promise<void>;
+export type RouteHandler = (
+  request: Request,
+  response: Response,
+) => Promise<void>;
 
 /**
  * Creates a route handler that composes middleware using asyncPipe
@@ -91,7 +94,11 @@ export function createRoute(...middleware: Middleware[]): RouteHandler;
  * const functionalMiddleware = convertMiddleware(expressMiddleware);
  */
 export function convertMiddleware(
-  middleware: (req: Request, res: Response, next: () => void) => void | Promise<void>
+  middleware: (
+    req: Request,
+    res: Response,
+    next: () => void,
+  ) => void | Promise<void>,
 ): Middleware;
 
 /**
@@ -110,7 +117,7 @@ export function createServer(options?: {
 
 // CORS middleware
 export interface CorsOptions {
-  allowedOrigins: string | string[];  // Required for security
+  allowedOrigins: string | string[]; // Required for security
   allowedHeaders?: string[];
   allowedMethods?: string[];
 }
@@ -151,7 +158,9 @@ export type ConfigLoader = () => Promise<Record<string, any>>;
  * config.get('API_KEY'); // => 'abc123'
  * config.get('MISSING'); // => throws ErrorWithCause
  */
-export function createConfigObject(configData: Record<string, any>): ConfigObject;
+export function createConfigObject(
+  configData: Record<string, any>,
+): ConfigObject;
 
 /**
  * Loads configuration from environment variables
@@ -160,7 +169,9 @@ export function createConfigObject(configData: Record<string, any>): ConfigObjec
  * const config = await loadConfigFromEnv(['DATABASE_URL', 'API_KEY', 'PORT']);
  * // => { DATABASE_URL: 'postgres://...', API_KEY: 'abc123', PORT: '3000' }
  */
-export function loadConfigFromEnv(keys?: string[]): Promise<Record<string, string | undefined>>;
+export function loadConfigFromEnv(
+  keys?: string[],
+): Promise<Record<string, string | undefined>>;
 
 /**
  * Creates config injection middleware with custom loader
@@ -193,7 +204,9 @@ export const withServerError: Middleware;
 // Auth middleware types
 export interface BetterAuthInstance {
   api: {
-    getSession(options: { headers: Record<string, any> }): Promise<{ session: Session; user: User } | null>;
+    getSession(options: {
+      headers: Record<string, any>;
+    }): Promise<{ session: Session; user: User } | null>;
   };
   [key: string]: any;
 }
@@ -246,7 +259,9 @@ export function createWithAuth(options: WithAuthOptions): Middleware;
  *   });
  * });
  */
-export function createWithOptionalAuth(options: WithOptionalAuthOptions): Middleware;
+export function createWithOptionalAuth(
+  options: WithOptionalAuthOptions,
+): Middleware;
 
 // Form handling middleware
 import type { TObject } from "@sinclair/typebox";
@@ -287,7 +302,9 @@ export interface HandleFormOptions<T extends TObject = TObject> {
  *   honeypotField: 'website',
  * });
  */
-export function handleForm<T extends TObject>(options: HandleFormOptions<T>): Middleware;
+export function handleForm<T extends TObject>(
+  options: HandleFormOptions<T>,
+): Middleware;
 
 // CSRF middleware
 export interface CSRFOptions {

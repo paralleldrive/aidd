@@ -144,3 +144,4 @@ vite.config.ts.timestamp-*
 # Core dump files
 core
 core.*
+.claude/

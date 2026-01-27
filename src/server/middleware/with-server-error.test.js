@@ -1,7 +1,8 @@
-import { describe, test } from "vitest";
 import { assert } from "riteway/vitest";
-import { withServerError } from "./with-server-error.js";
+import { describe, test } from "vitest";
+
 import { createServer } from "../test-utils.js";
+import { withServerError } from "./with-server-error.js";
 
 describe("withServerError", () => {
   test("attaches serverError function to response.locals", async () => {
