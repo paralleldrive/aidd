@@ -18,7 +18,11 @@
     "typecheck": "tsc --noEmit && echo 'Type check complete.'",
     "check-status": "[ -n \"$(git status --porcelain)\" ] && { echo '❌ Uncommitted changes'; exit 1; } || echo '✅ Git status is clean.'",
     "prepare": "husky",
-    "toc": "doctoc README.md"
+    "toc": "doctoc README.md",
+    "aidd:index": "node ai/tools/cli/index-cli.js --full --deps --stats",
+    "aidd:index:incremental": "node ai/tools/cli/index-cli.js --deps --stats",
+    "aidd:query": "node ai/tools/cli/query-cli.js",
+    "aidd:find-related": "node ai/tools/cli/find-related-cli.js"
   },
   "exports": {
     "./utils": {
@@ -28,6 +32,10 @@
     "./server": {
       "types": "./src/server/index.d.ts",
       "default": "./src/server/index.js"
+    },
+    "./tools": {
+      "types": "./ai/tools/index.d.ts",
+      "default": "./ai/tools/index.js"
     }
   },
   "files": [
@@ -67,6 +75,7 @@
   "dependencies": {
     "@paralleldrive/cuid2": "^3.1.0",
     "@sinclair/typebox": "^0.34.41",
+    "better-sqlite3": "^11.8.1",
     "chalk": "^4.1.2",
     "commander": "^11.1.0",
     "error-causes": "^3.0.2",
@@ -83,6 +92,7 @@
     }
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
     "@eslint/eslintrc": "^3",
     "@vitest/coverage-v8": "^3.2.4",
     "doctoc": "^2.2.1",

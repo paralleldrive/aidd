@@ -141,6 +141,15 @@ vite.config.ts.timestamp-*
 # AI agent tools
 .agent-tools/
 
+# AIDD local database
+.aidd/
+
+# RLM task files (local only)
+tasks/rlm/
+
 # Core dump files
 core
 core.*
+
+# Claude Code local settings (contains user-specific permissions)
+.claude/settings.local.json

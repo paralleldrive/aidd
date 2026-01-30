@@ -1,0 +1,5 @@
+# SQLite database files - treat as binary but enable SQL diff
+*.db binary diff=sqlite3
+
+# Keep .aidd database in git
+.aidd/index.db binary diff=sqlite3
