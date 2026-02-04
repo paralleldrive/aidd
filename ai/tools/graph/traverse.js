@@ -130,13 +130,13 @@ const findRelated = (
   }
 
   // Deduplicate by file path, keeping the shortest depth
-  const byFile = new Map();
-  for (const result of results) {
-    const existing = byFile.get(result.file);
+  const byFile = results.reduce((acc, result) => {
+    const existing = acc.get(result.file);
     if (!existing || result.depth < existing.depth) {
-      byFile.set(result.file, result);
+      acc.set(result.file, result);
     }
-  }
+    return acc;
+  }, new Map());
 
   return [...byFile.values()].sort((a, b) => {
     if (a.depth !== b.depth) return a.depth - b.depth;

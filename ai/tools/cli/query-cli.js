@@ -29,29 +29,23 @@ export const formatResults = (results, options) => {
     return chalk.yellow("No results found.");
   }
 
-  const lines = [];
-  lines.push(chalk.blue(`Found ${results.length} result(s):\n`));
-
-  for (const result of results) {
-    lines.push(chalk.white(`  ${result.path}`));
-    lines.push(chalk.gray(`    Type: ${result.type}`));
-
-    if (result.relevanceScore !== undefined) {
-      lines.push(chalk.gray(`    Score: ${result.relevanceScore.toFixed(3)}`));
-    }
-
-    if (result.frontmatter?.description) {
-      lines.push(chalk.gray(`    ${result.frontmatter.description}`));
-    }
-
-    if (result.snippet && options.snippets) {
-      lines.push(
-        chalk.gray(`    ...${result.snippet.trim().slice(0, 100)}...`),
-      );
-    }
-
-    lines.push("");
-  }
+  const lines = [
+    chalk.blue(`Found ${results.length} result(s):\n`),
+    ...results.flatMap((result) => [
+      chalk.white(`  ${result.path}`),
+      chalk.gray(`    Type: ${result.type}`),
+      ...(result.relevanceScore !== undefined
+        ? [chalk.gray(`    Score: ${result.relevanceScore.toFixed(3)}`)]
+        : []),
+      ...(result.frontmatter?.description
+        ? [chalk.gray(`    ${result.frontmatter.description}`)]
+        : []),
+      ...(result.snippet && options.snippets
+        ? [chalk.gray(`    ...${result.snippet.trim().slice(0, 100)}...`)]
+        : []),
+      "",
+    ]),
+  ];
 
   return lines.join("\n");
 };

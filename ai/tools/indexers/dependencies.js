@@ -37,85 +37,54 @@ const getLineNumber = (content, index) => {
 };
 
 /**
+ * Create a dependency extractor for a given pattern and import type.
+ *
+ * @param {RegExp} pattern - Regex pattern with a capturing group for the path
+ * @param {string} importType - Type label for extracted dependencies
+ * @param {number} [pathGroup=1] - Which capture group contains the path
+ * @returns {(content: string, filePath: string) => Array}
+ */
+const createExtractor =
+  (pattern, importType, pathGroup = 1) =>
+  (content, filePath) =>
+    [...content.matchAll(pattern)]
+      .filter((match) => isLocalImport(match[pathGroup]))
+      .map((match) => ({
+        rawPath: match[pathGroup],
+        resolvedPath: resolveImportPath(match[pathGroup], filePath),
+        importType,
+        lineNumber: getLineNumber(content, match.index),
+        importText: match[0],
+      }));
+
+// Dependency extraction patterns.
+// Using regex here (vs dependency-cruiser) because:
+// 1. We need to extract markdown links which dependency-cruiser doesn't support
+// 2. These patterns cover our use case (local imports/references for AI context)
+// 3. Keeps the module self-contained without heavy dependencies
+const extractors = [
+  // ES module static imports: import x from 'y', import { x } from 'y', import * as x from 'y'
+  createExtractor(
+    /import\s+(?:[\w*{}\s,]+\s+from\s+)?['"]([^'"]+)['"]/g,
+    "import",
+  ),
+  // CommonJS requires: require('x'), require("x")
+  createExtractor(/require\s*\(\s*['"]([^'"]+)['"]\s*\)/g, "require"),
+  // Dynamic imports: import('x'), import("x")
+  createExtractor(/import\s*\(\s*['"]([^'"]+)['"]\s*\)/g, "dynamic-import"),
+  // Markdown links: [text](./path.md)
+  createExtractor(/\[([^\]]*)\]\(([^)]+\.(?:md|mdc))\)/g, "reference", 2),
+];
+
+/**
  * Extract dependencies from file content using regex patterns.
  *
  * @param {string} content - File content
  * @param {string} filePath - Path to file (for resolving relative imports)
  * @returns {Array<{rawPath: string, resolvedPath: string, importType: string, lineNumber: number, importText: string}>}
  */
-const extractDependencies = (content, filePath) => {
-  const deps = [];
-
-  // ES module static imports: import x from 'y', import { x } from 'y', import * as x from 'y'
-  const esImportRegex = /import\s+(?:[\w*{}\s,]+\s+from\s+)?['"]([^'"]+)['"]/g;
-
-  // CommonJS requires: require('x'), require("x")
-  const requireRegex = /require\s*\(\s*['"]([^'"]+)['"]\s*\)/g;
-
-  // Dynamic imports: import('x'), import("x")
-  const dynamicImportRegex = /import\s*\(\s*['"]([^'"]+)['"]\s*\)/g;
-
-  // Markdown links: [text](./path.md)
-  const markdownLinkRegex = /\[([^\]]*)\]\(([^)]+\.(?:md|mdc))\)/g;
-
-  // Extract ES imports
-  for (const match of content.matchAll(esImportRegex)) {
-    const rawPath = match[1];
-    if (isLocalImport(rawPath)) {
-      deps.push({
-        rawPath,
-        resolvedPath: resolveImportPath(rawPath, filePath),
-        importType: "import",
-        lineNumber: getLineNumber(content, match.index),
-        importText: match[0],
-      });
-    }
-  }
-
-  // Extract requires
-  for (const match of content.matchAll(requireRegex)) {
-    const rawPath = match[1];
-    if (isLocalImport(rawPath)) {
-      deps.push({
-        rawPath,
-        resolvedPath: resolveImportPath(rawPath, filePath),
-        importType: "require",
-        lineNumber: getLineNumber(content, match.index),
-        importText: match[0],
-      });
-    }
-  }
-
-  // Extract dynamic imports
-  for (const match of content.matchAll(dynamicImportRegex)) {
-    const rawPath = match[1];
-    if (isLocalImport(rawPath)) {
-      deps.push({
-        rawPath,
-        resolvedPath: resolveImportPath(rawPath, filePath),
-        importType: "dynamic-import",
-        lineNumber: getLineNumber(content, match.index),
-        importText: match[0],
-      });
-    }
-  }
-
-  // Extract markdown links
-  for (const match of content.matchAll(markdownLinkRegex)) {
-    const rawPath = match[2];
-    if (isLocalImport(rawPath)) {
-      deps.push({
-        rawPath,
-        resolvedPath: resolveImportPath(rawPath, filePath),
-        importType: "reference",
-        lineNumber: getLineNumber(content, match.index),
-        importText: match[0],
-      });
-    }
-  }
-
-  return deps;
-};
+const extractDependencies = (content, filePath) =>
+  extractors.flatMap((extractor) => extractor(content, filePath));
 
 /**
  * Index dependencies for a single file.
@@ -136,26 +105,22 @@ const indexFileDependencies = async (db, filePath, rootDir) => {
     VALUES (?, ?, ?, ?, ?)
   `);
 
-  let indexed = 0;
-  for (const dep of deps) {
-    // Only insert if target file exists in documents table
-    const targetExists = db
-      .prepare("SELECT 1 FROM documents WHERE path = ?")
-      .get(dep.resolvedPath);
+  const checkExists = db.prepare("SELECT 1 FROM documents WHERE path = ?");
 
-    if (targetExists) {
-      insertStmt.run(
-        relativePath,
-        dep.resolvedPath,
-        dep.importType,
-        dep.lineNumber,
-        dep.importText,
-      );
-      indexed++;
-    }
-  }
+  // Filter to deps with existing targets, then insert
+  const validDeps = deps.filter((dep) => checkExists.get(dep.resolvedPath));
 
-  return indexed;
+  validDeps.forEach((dep) =>
+    insertStmt.run(
+      relativePath,
+      dep.resolvedPath,
+      dep.importType,
+      dep.lineNumber,
+      dep.importText,
+    ),
+  );
+
+  return validDeps.length;
 };
 
 /**
@@ -211,6 +176,12 @@ const indexAllDependencies = async (db, rootDir) => {
 
   let totalIndexed = 0;
 
+  const insertStmt = db.prepare(`
+    INSERT OR IGNORE INTO dependencies (from_file, to_file, import_type, line_number, import_text)
+    VALUES (?, ?, ?, ?, ?)
+  `);
+  const checkExists = db.prepare("SELECT 1 FROM documents WHERE path = ?");
+
   db.transaction(() => {
     for (const filePath of files) {
       try {
@@ -221,28 +192,22 @@ const indexAllDependencies = async (db, rootDir) => {
 
         const deps = extractDependencies(content, relativePath);
 
-        const insertStmt = db.prepare(`
-          INSERT OR IGNORE INTO dependencies (from_file, to_file, import_type, line_number, import_text)
-          VALUES (?, ?, ?, ?, ?)
-        `);
+        // Filter to deps with existing targets, then insert
+        const validDeps = deps.filter((dep) =>
+          checkExists.get(dep.resolvedPath),
+        );
 
-        for (const dep of deps) {
-          // Only insert if target file exists in documents table
-          const targetExists = db
-            .prepare("SELECT 1 FROM documents WHERE path = ?")
-            .get(dep.resolvedPath);
+        validDeps.forEach((dep) =>
+          insertStmt.run(
+            relativePath,
+            dep.resolvedPath,
+            dep.importType,
+            dep.lineNumber,
+            dep.importText,
+          ),
+        );
 
-          if (targetExists) {
-            insertStmt.run(
-              relativePath,
-              dep.resolvedPath,
-              dep.importType,
-              dep.lineNumber,
-              dep.importText,
-            );
-            totalIndexed++;
-          }
-        }
+        totalIndexed += validDeps.length;
       } catch (err) {
         errors.push(`${filePath}: ${err.message}`);
       }

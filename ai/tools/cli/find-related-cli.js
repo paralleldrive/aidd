@@ -42,32 +42,30 @@ export const formatRelated = (results, options) => {
     forward.length > 0 &&
     (options.direction === "both" || options.direction === "forward")
   ) {
-    lines.push(chalk.white("  Dependencies (imports):"));
-    for (const file of forward) {
-      const depthIndicator = "  ".repeat(file.depth);
-      lines.push(
+    lines.push(
+      chalk.white("  Dependencies (imports):"),
+      ...forward.map((file) =>
         chalk.gray(
-          `    ${depthIndicator}→ ${file.file} (depth: ${file.depth})`,
+          `    ${"  ".repeat(file.depth)}→ ${file.file} (depth: ${file.depth})`,
         ),
-      );
-    }
-    lines.push("");
+      ),
+      "",
+    );
   }
 
   if (
     reverse.length > 0 &&
     (options.direction === "both" || options.direction === "reverse")
   ) {
-    lines.push(chalk.white("  Dependents (imported by):"));
-    for (const file of reverse) {
-      const depthIndicator = "  ".repeat(file.depth);
-      lines.push(
+    lines.push(
+      chalk.white("  Dependents (imported by):"),
+      ...reverse.map((file) =>
         chalk.gray(
-          `    ${depthIndicator}← ${file.file} (depth: ${file.depth})`,
+          `    ${"  ".repeat(file.depth)}← ${file.file} (depth: ${file.depth})`,
         ),
-      );
-    }
-    lines.push("");
+      ),
+      "",
+    );
   }
 
   return lines.join("\n");

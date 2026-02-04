@@ -30,20 +30,20 @@ const aggregateResults = (
   const scored = new Map(); // path -> { doc, score }
 
   for (const [strategy, results] of Object.entries(resultsByStrategy)) {
-    const weight = weights[strategy] || 0.5;
+    const weight = weights[strategy] ?? 0.5;
 
-    results.forEach((doc, idx) => {
+    results.reduce((acc, doc, idx) => {
       // Position-based score (first result = highest)
       const positionScore = 1 / (idx + 1);
       const score = weight * positionScore;
 
-      if (scored.has(doc.path)) {
+      if (acc.has(doc.path)) {
         // Boost if found by multiple strategies
-        const existing = scored.get(doc.path);
+        const existing = acc.get(doc.path);
         existing.score += score;
         existing.matchedStrategies.push(strategy);
       } else {
-        scored.set(doc.path, {
+        acc.set(doc.path, {
           doc: {
             path: doc.path,
             type: doc.type,
@@ -54,7 +54,8 @@ const aggregateResults = (
           matchedStrategies: [strategy],
         });
       }
-    });
+      return acc;
+    }, scored);
   }
 
   return [...scored.values()]

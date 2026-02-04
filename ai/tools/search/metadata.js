@@ -71,21 +71,23 @@ const searchMetadata = (db, filters = {}, { limit = 20, offset = 0 } = {}) => {
     }
   }
 
-  let sql = "SELECT path, type, frontmatter, content FROM documents";
+  const sqlParts = ["SELECT path, type, frontmatter, content FROM documents"];
 
   if (conditions.length > 0) {
-    sql += " WHERE " + conditions.join(" AND ");
+    sqlParts.push("WHERE " + conditions.join(" AND "));
   }
 
-  sql += " ORDER BY path LIMIT ? OFFSET ?";
+  sqlParts.push("ORDER BY path LIMIT ? OFFSET ?");
   params.push(limit, offset);
+
+  const sql = sqlParts.join(" ");
 
   const rows = db.prepare(sql).all(...params);
 
   return rows.map((row) => ({
     path: row.path,
     type: row.type,
-    frontmatter: JSON.parse(row.frontmatter || "{}"),
+    frontmatter: JSON.parse(row.frontmatter ?? "{}"),
     content: row.content,
   }));
 };

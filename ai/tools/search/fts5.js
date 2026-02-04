@@ -24,8 +24,8 @@ const searchFts5 = (
   }
 
   // Build query with optional type filter
-  let sql = `
-    SELECT
+  const sqlParts = [
+    `SELECT
       d.path,
       d.type,
       d.frontmatter,
@@ -33,18 +33,20 @@ const searchFts5 = (
       bm25(fts_documents) as rank
     FROM fts_documents f
     JOIN documents d ON d.path = f.path
-    WHERE fts_documents MATCH ?
-  `;
+    WHERE fts_documents MATCH ?`,
+  ];
 
   const params = [query];
 
   if (type) {
-    sql += ` AND d.type = ?`;
+    sqlParts.push(`AND d.type = ?`);
     params.push(type);
   }
 
-  sql += ` ORDER BY rank LIMIT ? OFFSET ?`;
+  sqlParts.push(`ORDER BY rank LIMIT ? OFFSET ?`);
   params.push(limit, offset);
+
+  const sql = sqlParts.join(" ");
 
   try {
     const rows = db.prepare(sql).all(...params);
@@ -52,7 +54,7 @@ const searchFts5 = (
     return rows.map((row) => ({
       path: row.path,
       type: row.type,
-      frontmatter: JSON.parse(row.frontmatter || "{}"),
+      frontmatter: JSON.parse(row.frontmatter ?? "{}"),
       snippet: extractSnippet(row.content, query),
       rank: row.rank,
     }));
@@ -95,10 +97,10 @@ const extractSnippet = (content, query, contextChars = 100) => {
   const start = Math.max(0, idx - contextChars);
   const end = Math.min(content.length, idx + searchWord.length + contextChars);
 
-  let snippet = content.slice(start, end);
-
-  if (start > 0) snippet = "..." + snippet;
-  if (end < content.length) snippet = snippet + "...";
+  const snippet =
+    (start > 0 ? "..." : "") +
+    content.slice(start, end) +
+    (end < content.length ? "..." : "");
 
   return snippet;
 };
@@ -118,13 +120,11 @@ const highlightMatches = (text, query) => {
     .filter((w) => !["AND", "OR", "NOT", "NEAR"].includes(w.toUpperCase()))
     .filter((w) => w.length > 0);
 
-  let result = text;
-  for (const word of words) {
-    const regex = new RegExp(`(${escapeRegex(word)})`, "gi");
-    result = result.replace(regex, "**$1**");
-  }
-
-  return result;
+  return words.reduce(
+    (result, word) =>
+      result.replace(new RegExp(`(${escapeRegex(word)})`, "gi"), "**$1**"),
+    text,
+  );
 };
 
 /**
