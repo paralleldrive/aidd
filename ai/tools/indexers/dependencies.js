@@ -260,6 +260,7 @@ const indexAllDependencies = async (db, rootDir) => {
   const allDeps = [];
 
   // 1. Use dependency-cruiser for JS/TS dependencies
+  // Handles re-exports, barrel exports, and complex import patterns that regex cannot
   try {
     const cruiseResult = await cruise([rootDir], {
       doNotFollow: {

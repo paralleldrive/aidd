@@ -313,5 +313,164 @@ Also check [other](../docs/other.mdc).
         expected: 1,
       });
     });
+
+    test("handles re-exports (export from)", async () => {
+      const { db, tempDir } = await setupTestDatabaseWithDirectory();
+
+      // Re-export pattern: index.js re-exports from utils.js
+      await fs.writeFile(
+        path.join(tempDir, "index.js"),
+        `export { helper } from './utils.js';`,
+      );
+      await fs.writeFile(
+        path.join(tempDir, "utils.js"),
+        `export const helper = () => {};`,
+      );
+
+      db.prepare(
+        `INSERT INTO documents (path, type, frontmatter, content, hash) VALUES (?, ?, ?, ?, ?)`,
+      ).run("index.js", "other", "{}", "content", "hash1");
+      db.prepare(
+        `INSERT INTO documents (path, type, frontmatter, content, hash) VALUES (?, ?, ?, ?, ?)`,
+      ).run("utils.js", "other", "{}", "content", "hash2");
+
+      const stats = await indexAllDependencies(db, tempDir);
+
+      assert({
+        given: "file with re-export",
+        should: "detect the dependency",
+        actual: stats.indexed,
+        expected: 1,
+      });
+    });
+
+    test("handles export * from (barrel exports)", async () => {
+      const { db, tempDir } = await setupTestDatabaseWithDirectory();
+
+      // Barrel export pattern
+      await fs.writeFile(
+        path.join(tempDir, "index.js"),
+        `export * from './module.js';`,
+      );
+      await fs.writeFile(
+        path.join(tempDir, "module.js"),
+        `export const foo = 1; export const bar = 2;`,
+      );
+
+      db.prepare(
+        `INSERT INTO documents (path, type, frontmatter, content, hash) VALUES (?, ?, ?, ?, ?)`,
+      ).run("index.js", "other", "{}", "content", "hash1");
+      db.prepare(
+        `INSERT INTO documents (path, type, frontmatter, content, hash) VALUES (?, ?, ?, ?, ?)`,
+      ).run("module.js", "other", "{}", "content", "hash2");
+
+      const stats = await indexAllDependencies(db, tempDir);
+
+      assert({
+        given: "file with barrel export",
+        should: "detect the dependency",
+        actual: stats.indexed,
+        expected: 1,
+      });
+    });
+
+    test("handles TypeScript files with imports", async () => {
+      const { db, tempDir } = await setupTestDatabaseWithDirectory();
+
+      // TypeScript files with standard imports
+      await fs.writeFile(
+        path.join(tempDir, "consumer.ts"),
+        `import { helper } from './helper.ts';\nconsole.log(helper);`,
+      );
+      await fs.writeFile(
+        path.join(tempDir, "helper.ts"),
+        `export const helper = 'hi';`,
+      );
+
+      db.prepare(
+        `INSERT INTO documents (path, type, frontmatter, content, hash) VALUES (?, ?, ?, ?, ?)`,
+      ).run("consumer.ts", "other", "{}", "content", "hash1");
+      db.prepare(
+        `INSERT INTO documents (path, type, frontmatter, content, hash) VALUES (?, ?, ?, ?, ?)`,
+      ).run("helper.ts", "other", "{}", "content", "hash2");
+
+      const stats = await indexAllDependencies(db, tempDir);
+
+      assert({
+        given: "TypeScript files with imports",
+        should: "detect the dependency",
+        actual: stats.indexed,
+        expected: 1,
+      });
+    });
+
+    test("handles side-effect imports", async () => {
+      const { db, tempDir } = await setupTestDatabaseWithDirectory();
+
+      // Side-effect import (no bindings)
+      await fs.writeFile(
+        path.join(tempDir, "main.js"),
+        `import './setup.js';\nconsole.log('ready');`,
+      );
+      await fs.writeFile(
+        path.join(tempDir, "setup.js"),
+        `globalThis.configured = true;`,
+      );
+
+      db.prepare(
+        `INSERT INTO documents (path, type, frontmatter, content, hash) VALUES (?, ?, ?, ?, ?)`,
+      ).run("main.js", "other", "{}", "content", "hash1");
+      db.prepare(
+        `INSERT INTO documents (path, type, frontmatter, content, hash) VALUES (?, ?, ?, ?, ?)`,
+      ).run("setup.js", "other", "{}", "content", "hash2");
+
+      const stats = await indexAllDependencies(db, tempDir);
+
+      assert({
+        given: "file with side-effect import",
+        should: "detect the dependency",
+        actual: stats.indexed,
+        expected: 1,
+      });
+    });
+
+    test("handles mixed imports and re-exports in same file", async () => {
+      const { db, tempDir } = await setupTestDatabaseWithDirectory();
+
+      // Complex file with both imports and re-exports
+      await fs.writeFile(
+        path.join(tempDir, "index.js"),
+        `import { internal } from './internal.js';
+export { external } from './external.js';
+export default internal;`,
+      );
+      await fs.writeFile(
+        path.join(tempDir, "internal.js"),
+        `export const internal = 'internal';`,
+      );
+      await fs.writeFile(
+        path.join(tempDir, "external.js"),
+        `export const external = 'external';`,
+      );
+
+      db.prepare(
+        `INSERT INTO documents (path, type, frontmatter, content, hash) VALUES (?, ?, ?, ?, ?)`,
+      ).run("index.js", "other", "{}", "content", "hash1");
+      db.prepare(
+        `INSERT INTO documents (path, type, frontmatter, content, hash) VALUES (?, ?, ?, ?, ?)`,
+      ).run("internal.js", "other", "{}", "content", "hash2");
+      db.prepare(
+        `INSERT INTO documents (path, type, frontmatter, content, hash) VALUES (?, ?, ?, ?, ?)`,
+      ).run("external.js", "other", "{}", "content", "hash3");
+
+      const stats = await indexAllDependencies(db, tempDir);
+
+      assert({
+        given: "file with both imports and re-exports",
+        should: "detect both dependencies",
+        actual: stats.indexed,
+        expected: 2,
+      });
+    });
   });
 });
