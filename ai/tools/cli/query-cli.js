@@ -20,7 +20,7 @@ const DEFAULT_DB_PATH = ".aidd/index.db";
 /**
  * Format search results for console output.
  */
-const formatResults = (results, options) => {
+export const formatResults = (results, options) => {
   if (options.json) {
     return JSON.stringify(results, null, 2);
   }
@@ -108,4 +108,7 @@ program
     }
   });
 
-program.parse();
+// Only parse when run directly, not when imported for testing
+if (process.argv[1]?.endsWith("query-cli.js")) {
+  program.parse();
+}

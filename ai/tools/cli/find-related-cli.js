@@ -22,7 +22,7 @@ const DEFAULT_DB_PATH = ".aidd/index.db";
 /**
  * Format related files for console output.
  */
-const formatRelated = (results, options) => {
+export const formatRelated = (results, options) => {
   if (options.json) {
     return JSON.stringify(results, null, 2);
   }
@@ -123,4 +123,7 @@ program
     }
   });
 
-program.parse();
+// Only parse when run directly, not when imported for testing
+if (process.argv[1]?.endsWith("find-related-cli.js")) {
+  program.parse();
+}

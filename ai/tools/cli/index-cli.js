@@ -20,7 +20,7 @@ const DEFAULT_DB_PATH = ".aidd/index.db";
 /**
  * Ensure database directory exists and initialize schema.
  */
-const ensureDatabase = async (dbPath) => {
+export const ensureDatabase = async (dbPath) => {
   const dir = path.dirname(dbPath);
   await fs.ensureDir(dir);
 
@@ -32,7 +32,7 @@ const ensureDatabase = async (dbPath) => {
 /**
  * Format duration for display.
  */
-const formatDuration = (ms) => {
+export const formatDuration = (ms) => {
   if (ms < 1000) return `${ms}ms`;
   return `${(ms / 1000).toFixed(2)}s`;
 };
@@ -141,4 +141,7 @@ program
     }
   });
 
-program.parse();
+// Only parse when run directly, not when imported for testing
+if (process.argv[1]?.endsWith("index-cli.js")) {
+  program.parse();
+}
