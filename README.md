@@ -31,6 +31,7 @@ Includes:
 - [🧪 User Testing](#-user-testing)
 - [Why SudoLang?](#why-sudolang)
 - [What's Included](#whats-included)
+  - [Indexing & Search Tools](#indexing--search-tools)
 - [🚀 AIDD Server Framework](#-aidd-server-framework)
   - [Authentication Middleware](#authentication-middleware)
 - [🛠️ AIDD CLI Reference](#-aidd-cli-reference)
@@ -196,12 +197,25 @@ Modules include:
 - 🧪 Test generators
 - 🛠️ Development process automation scripts
 - 🚀 Optional composable server framework (lightweight Express alternative)
+- 🔍 SQLite-based indexing and search tools for codebase exploration
 
 Coming soon:
 
 - 🎨 UI sketch prompts
 - 📄 Documentation generators
 - 🔌 API design
+
+### Indexing & Search Tools
+
+Fast codebase exploration using SQLite FTS5:
+
+```bash
+npm run aidd:index              # Index your project
+npm run aidd:query "auth"       # Search for content
+npm run aidd:find-related file  # Find dependencies
+```
+
+📖 **[See Indexing & Search documentation →](ai/tools/README.md)**
 
 ## 🚀 AIDD Server Framework
 
