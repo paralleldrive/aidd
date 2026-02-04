@@ -4,6 +4,37 @@
 
 import type { Database } from "better-sqlite3";
 
+// Error types
+
+export interface ErrorType {
+  name: string;
+  code: string;
+  message: string;
+}
+
+export interface ToolsErrors {
+  ValidationError: ErrorType;
+}
+
+/**
+ * Error type definitions for tools module.
+ */
+export const toolsErrors: ToolsErrors;
+
+/**
+ * ValidationError type for input validation failures.
+ */
+export const ValidationError: ErrorType;
+
+/**
+ * Error handler for tools errors.
+ * @param handlers - Object mapping error names to handler functions
+ * @returns Error handler function
+ */
+export function handleToolsErrors<T>(
+  handlers: Record<string, (error: Error) => T>,
+): (error: Error) => T;
+
 // Database types
 
 /**

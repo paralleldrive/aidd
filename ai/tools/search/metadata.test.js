@@ -169,18 +169,39 @@ describe("search/metadata", () => {
     test("rejects SQL injection in filter keys", () => {
       const db = setupTestDatabase();
 
-      let errorThrown = false;
+      let error;
       try {
         searchMetadata(db, { "frontmatter.foo') OR 1=1; --": "evil" });
       } catch (err) {
-        errorThrown = err.message.includes("Invalid JSON path");
+        error = err;
       }
 
       assert({
         given: "filter key with SQL injection attempt",
-        should: "throw validation error",
-        actual: errorThrown,
+        should: "throw error with cause",
+        actual: error instanceof Error && error.cause !== undefined,
         expected: true,
+      });
+
+      assert({
+        given: "filter key with SQL injection attempt",
+        should: "have ValidationError cause name",
+        actual: error.cause.name,
+        expected: "ValidationError",
+      });
+
+      assert({
+        given: "filter key with SQL injection attempt",
+        should: "have VALIDATION_ERROR code",
+        actual: error.cause.code,
+        expected: "VALIDATION_ERROR",
+      });
+
+      assert({
+        given: "filter key with SQL injection attempt",
+        should: "include the invalid jsonPath in cause",
+        actual: error.cause.jsonPath,
+        expected: "foo') OR 1=1; --",
       });
     });
 
@@ -205,18 +226,39 @@ describe("search/metadata", () => {
     test("rejects SQL injection in field name", () => {
       const db = setupTestDatabase();
 
-      let errorThrown = false;
+      let error;
       try {
         getFieldValues(db, "foo') OR 1=1; --");
       } catch (err) {
-        errorThrown = err.message.includes("Invalid field name");
+        error = err;
       }
 
       assert({
         given: "field name with SQL injection attempt",
-        should: "throw validation error",
-        actual: errorThrown,
+        should: "throw error with cause",
+        actual: error instanceof Error && error.cause !== undefined,
         expected: true,
+      });
+
+      assert({
+        given: "field name with SQL injection attempt",
+        should: "have ValidationError cause name",
+        actual: error.cause.name,
+        expected: "ValidationError",
+      });
+
+      assert({
+        given: "field name with SQL injection attempt",
+        should: "have VALIDATION_ERROR code",
+        actual: error.cause.code,
+        expected: "VALIDATION_ERROR",
+      });
+
+      assert({
+        given: "field name with SQL injection attempt",
+        should: "include the invalid field in cause",
+        actual: error.cause.field,
+        expected: "foo') OR 1=1; --",
       });
     });
   });

@@ -4,6 +4,9 @@
  * Re-exports all public APIs for convenient access.
  */
 
+// Errors
+export { toolsErrors, handleToolsErrors, ValidationError } from "./errors.js";
+
 // Database
 export { createDatabase, closeDatabase } from "./db/connection.js";
 export {

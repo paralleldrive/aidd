@@ -8,7 +8,8 @@ import { ensureDatabase, formatDuration } from "./index-cli.js";
 import { closeDatabase } from "../db/connection.js";
 
 const createTempDir = async () => {
-  const tempDir = path.join(os.tmpdir(), `aidd-test-${Date.now()}`);
+  const uniqueId = `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+  const tempDir = path.join(os.tmpdir(), `aidd-test-${uniqueId}`);
   await fs.ensureDir(tempDir);
   return tempDir;
 };

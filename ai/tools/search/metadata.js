@@ -2,6 +2,9 @@
  * Metadata search for filtering documents by frontmatter fields.
  */
 
+import { createError } from "error-causes";
+import { ValidationError } from "../errors.js";
+
 /**
  * Validate JSON path to prevent SQL injection.
  * Only allows alphanumeric characters, underscores, and dots.
@@ -36,9 +39,11 @@ const searchMetadata = (db, filters = {}, { limit = 20, offset = 0 } = {}) => {
 
       // Validate jsonPath to prevent SQL injection
       if (!isValidJsonPath(jsonPath)) {
-        throw new Error(
-          `Invalid JSON path: ${jsonPath}. Only alphanumeric characters, underscores, and dots are allowed.`,
-        );
+        throw createError({
+          ...ValidationError,
+          message: `Invalid JSON path: ${jsonPath}. Only alphanumeric characters, underscores, and dots are allowed.`,
+          jsonPath,
+        });
       }
 
       if (typeof value === "object" && value !== null && "contains" in value) {
@@ -96,9 +101,11 @@ const searchMetadata = (db, filters = {}, { limit = 20, offset = 0 } = {}) => {
 const getFieldValues = (db, field) => {
   // Validate field to prevent SQL injection
   if (!isValidJsonPath(field)) {
-    throw new Error(
-      `Invalid field name: ${field}. Only alphanumeric characters, underscores, and dots are allowed.`,
-    );
+    throw createError({
+      ...ValidationError,
+      message: `Invalid field name: ${field}. Only alphanumeric characters, underscores, and dots are allowed.`,
+      field,
+    });
   }
 
   const sql = `
