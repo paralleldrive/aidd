@@ -63,10 +63,19 @@ createPlan() {
 }
 
 executePlan() {
+  Respect the user intent if they want to explicitly approve each step.
+
   1. Complete only the current task
   1. Validate - Verify the task meets its success criteria
   1. Report - Summarize what was accomplished
-  1. Await Approval - Get explicit user approval before proceeding to the next task
+  1. /review - check correctness before moving to next task
+
+  Every 3 completed tasks:                                                                                                     
+  1. Summarize progress — what was completed, what's next                                                                      
+  2. Run /review again on all uncommitted changes - fix any issues you discover
+  3. Run /commit
+  4. Re-read the epic requirements and any related $projectRoot/plan/* files to verify you're still on-process
+  5. Continue with the next batch of tasks
 }
 
 ## Task Plan Template Structure
