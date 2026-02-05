@@ -57,13 +57,13 @@ const rejectRequest = (
   { requestId, method, url, hasCookie, hasHeader, hasBody },
 ) => {
   log(response, {
-    message: "CSRF validation failed",
-    requestId,
-    method,
-    url,
+    hasBody,
     hasCookie,
     hasHeader,
-    hasBody,
+    message: "CSRF validation failed",
+    method,
+    requestId,
+    url,
   });
   response.status(403);
   response.json({
@@ -114,12 +114,12 @@ const createWithCSRF = ({ maxAge = DEFAULT_MAX_AGE } = {}) => {
       !tokensMatch(cookieToken, submittedToken)
     ) {
       rejectRequest(response, {
-        requestId: response.locals?.requestId,
-        method: request.method,
-        url: request.url,
+        hasBody: Boolean(bodyToken),
         hasCookie: Boolean(cookieToken),
         hasHeader: Boolean(headerToken),
-        hasBody: Boolean(bodyToken),
+        method: request.method,
+        requestId: response.locals?.requestId,
+        url: request.url,
       });
       return { request, response };
     }

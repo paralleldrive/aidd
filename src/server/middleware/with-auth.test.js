@@ -1,7 +1,8 @@
-import { describe, test, vi } from "vitest";
 import { assert } from "riteway/vitest";
-import { createWithAuth, createWithOptionalAuth } from "./with-auth.js";
+import { describe, test, vi } from "vitest";
+
 import { createServer } from "../test-utils.js";
+import { createWithAuth, createWithOptionalAuth } from "./with-auth.js";
 
 // Mock better-auth instance factory
 const createMockAuth = ({

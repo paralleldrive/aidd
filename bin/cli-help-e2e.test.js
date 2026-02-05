@@ -1,9 +1,9 @@
+import { exec } from "child_process";
+import path from "path";
+import { fileURLToPath } from "url";
+import { promisify } from "util";
 import { assert } from "riteway/vitest";
 import { describe, test } from "vitest";
-import { exec } from "child_process";
-import { promisify } from "util";
-import { fileURLToPath } from "url";
-import path from "path";
 
 const execAsync = promisify(exec);
 const __filename = fileURLToPath(import.meta.url);

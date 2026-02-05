@@ -1,9 +1,10 @@
-import { describe, test, vi } from "vitest";
-import { assert } from "riteway/vitest";
 import { Type } from "@sinclair/typebox";
-import { withCSRF } from "./with-csrf.js";
-import { handleForm } from "./handle-form.js";
+import { assert } from "riteway/vitest";
+import { describe, test, vi } from "vitest";
+
 import { asyncPipe } from "../../../utils/async-pipe.js";
+import { handleForm } from "./handle-form.js";
+import { withCSRF } from "./with-csrf.js";
 
 describe("withCSRF", () => {
   // Req 1: GET/HEAD/OPTIONS sets token cookie and response.locals.csrfToken

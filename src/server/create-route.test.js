@@ -1,6 +1,7 @@
-import { describe, test, beforeEach, vi } from "vitest";
 import { assert } from "riteway/vitest";
-import { createRoute, convertMiddleware } from "./create-route.js";
+import { describe, test, vi } from "vitest";
+
+import { convertMiddleware, createRoute } from "./create-route.js";
 
 describe("createRoute", () => {
   test("composes middleware in order", async () => {
