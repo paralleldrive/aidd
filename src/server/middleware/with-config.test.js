@@ -1,11 +1,12 @@
-import { describe, test, beforeEach, afterEach } from "vitest";
 import { assert } from "riteway/vitest";
+import { afterEach, beforeEach, describe, test } from "vitest";
+
+import { createServer } from "../test-utils.js";
 import {
+  createConfigObject,
   createWithConfig,
   loadConfigFromEnv,
-  createConfigObject,
 } from "./with-config.js";
-import { createServer } from "../test-utils.js";
 
 describe("createConfigObject", () => {
   test("returns config object with get() method", () => {

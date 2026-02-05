@@ -1,6 +1,7 @@
-import { describe, test, vi } from "vitest";
-import { assert } from "riteway/vitest";
 import { Type } from "@sinclair/typebox";
+import { assert } from "riteway/vitest";
+import { describe, test, vi } from "vitest";
+
 import { handleForm } from "./handle-form.js";
 
 describe("handleForm", () => {

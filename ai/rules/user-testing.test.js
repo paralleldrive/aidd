@@ -1,8 +1,9 @@
-import { assert } from "riteway/vitest";
-import { describe, test } from "vitest";
-import fs from "fs-extra";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs-extra";
+import { assert } from "riteway/vitest";
+import { describe, test } from "vitest";
+
 import { parseFrontmatter } from "../../lib/index-generator.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

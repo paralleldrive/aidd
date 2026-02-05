@@ -16,10 +16,10 @@ const createServer = ({ request = {}, response = {} } = {}) => {
   return {
     request,
     response: {
+      getHeader: (key) => headers[key],
       setHeader: (key, value) => {
         headers[key] = value;
       },
-      getHeader: (key) => headers[key],
       ...response,
     },
   };

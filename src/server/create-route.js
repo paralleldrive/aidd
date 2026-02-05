@@ -59,15 +59,15 @@ const createRoute =
       const requestId = response.locals?.requestId;
       const { url, method, headers } = request;
       console.log({
-        time: new Date().toISOString(),
         body: JSON.stringify(sanitizeBody(request.body)),
-        query: JSON.stringify(request.query),
-        method,
-        headers: JSON.stringify(sanitizeHeaders(headers)),
         error: true,
-        url,
+        headers: JSON.stringify(sanitizeHeaders(headers)),
         message: e.message,
+        method,
+        query: JSON.stringify(request.query),
         requestId,
+        time: new Date().toISOString(),
+        url,
       });
       response.status(500);
       response.json({

@@ -12,8 +12,8 @@ const appendServerError = (response) => {
   } = {}) => ({
     error: {
       message,
-      status,
       requestId,
+      status,
     },
   });
   return response;
