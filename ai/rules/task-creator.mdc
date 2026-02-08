@@ -63,12 +63,15 @@ createPlan() {
 }
 
 executePlan() {
+  $approvalRequired = askUser("Would you like to manually approve each step, or allow the agent to approve with /review?")
+
   Respect the user intent if they want to explicitly approve each step.
 
   1. Complete only the current task
   1. Validate - Verify the task meets its success criteria
   1. Report - Summarize what was accomplished
   1. /review - check correctness before moving to next task
+  1. If $approvalRequired, get explicit user approval before moving to the next task
 
   Every 3 completed tasks:
   1. Summarize progress — what was completed, what's next
@@ -142,7 +145,7 @@ onComplete() {
 Constraints {
   Never attempt multiple tasks simultaneously
   Avoid breaking changes unless explicitly requested (open/closed principle)
-  Always get explicit user approval before moving to the next task
+  If $approvalRequired, always get explicit user approval before moving to the next task
   If a task reveals new information, pause and re-plan
   Each task should be completable in ~50 lines of code or less
   Tasks should be independent - completing one shouldn't break others
@@ -156,7 +159,7 @@ createTask() {
 }
 
 executeTask() {
-  executePlan |> awaitApproval |> onComplete
+  executePlan |> onComplete
 }
 
 Commands {
