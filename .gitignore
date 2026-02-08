@@ -144,3 +144,10 @@ vite.config.ts.timestamp-*
 # Core dump files
 core
 core.*
+.claude/
+
+# Local AIDD database
+.aidd/
+
+# Local task files
+tasks/

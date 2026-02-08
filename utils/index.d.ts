@@ -15,9 +15,15 @@
  * const pipeline = asyncPipe(add1, multiply2);
  * await pipeline(5); // => 12
  */
-export function asyncPipe<T>(...fns: Array<(x: T) => T | Promise<T>>): (x: T) => Promise<T>;
-export function asyncPipe<T, U>(...fns: Array<(x: T | U) => U | Promise<U>>): (x: T) => Promise<U>;
-export function asyncPipe(...fns: Array<(x: any) => any>): (x: any) => Promise<any>;
+export function asyncPipe<T>(
+  ...fns: Array<(x: T) => T | Promise<T>>
+): (x: T) => Promise<T>;
+export function asyncPipe<T, U>(
+  ...fns: Array<(x: T | U) => U | Promise<U>>
+): (x: T) => Promise<U>;
+export function asyncPipe(
+  ...fns: Array<(x: any) => any>
+): (x: any) => Promise<any>;
 
 /**
  * Composes functions from left to right, passing the result of each function
@@ -52,4 +58,3 @@ export function pipe(...fns: Array<(x: any) => any>): (x: any) => any;
 export function compose<T>(...fns: Array<(x: T) => T>): (x: T) => T;
 export function compose<T, U>(...fns: Array<(x: T | U) => U>): (x: T) => U;
 export function compose(...fns: Array<(x: any) => any>): (x: any) => any;
-

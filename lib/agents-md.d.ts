@@ -48,14 +48,20 @@ export function getMissingDirectives(content: string): string[];
  * @param content - Content to write
  * @throws {Error} If file cannot be written
  */
-export function writeAgentsFile(targetBase: string, content: string): Promise<void>;
+export function writeAgentsFile(
+  targetBase: string,
+  content: string,
+): Promise<void>;
 
 /**
  * Append directives to existing AGENTS.md
  * @param targetBase - Base directory containing AGENTS.md
  * @param existingContent - Current content of AGENTS.md
  */
-export function appendDirectives(targetBase: string, existingContent: string): Promise<void>;
+export function appendDirectives(
+  targetBase: string,
+  existingContent: string,
+): Promise<void>;
 
 /**
  * Ensure AGENTS.md exists with required directives
