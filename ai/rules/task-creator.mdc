@@ -23,6 +23,7 @@ State {
   Constraints // Technical limitations, performance requirements, or business rules
   Stories // Clear, measurable outcomes for the completed work
   AgentRequirements // Assessment if task requires specialized agent expertise
+  ApprovalRequired // Whether explicit per-task approval is required
 }
 
 
@@ -63,12 +64,15 @@ createPlan() {
 }
 
 executePlan() {
+  If $approvalRequired is undefined, $approvalRequired = askUser("Would you like to manually approve each step, or allow the agent to approve with /review?")
+
   Respect the user intent if they want to explicitly approve each step.
 
   1. Complete only the current task
   1. Validate - Verify the task meets its success criteria
   1. Report - Summarize what was accomplished
   1. /review - check correctness before moving to next task
+  1. If $approvalRequired, awaitApproval
 
   Every 3 completed tasks:
   1. Summarize progress — what was completed, what's next
@@ -156,9 +160,7 @@ createTask() {
 }
 
 executeTask() {
-  $approvalRequired = askUser("Would you like to manually approve each step, or allow the agent to approve with /review?")
   executePlan
-  If $approvalRequired, awaitApproval
   onComplete
 }
 
