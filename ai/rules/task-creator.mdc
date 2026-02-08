@@ -159,7 +159,9 @@ createTask() {
 }
 
 executeTask() {
-  executePlan |> onComplete
+  executePlan
+  If $approvalRequired, awaitApproval
+  onComplete
 }
 
 Commands {
