@@ -128,17 +128,17 @@ npx aidd my-project
    ```bash
    cd my-project
    ls ai/                    # See available components
-   cat ai/rules/please.mdc   # Read the main orchestrator
+   cat ai/skills/aidd-please/SKILL.md   # Read the main orchestrator
    ```
 
 5. **Start using AI workflows**:
-   - Reference `ai/rules/` in AI prompts for better context
+   - Reference `ai/skills/` in AI prompts for better context
    - Use `ai/commands/` as workflow templates
-   - Customize rules for your specific project needs
+   - Customize skills for your specific project needs
 
 This gives you immediate access to:
 
-- 🤖 **Agent orchestration rules** (`ai/rules/`)
+- 🤖 **Agent orchestration skills** (`ai/skills/`)
 - ⚙️ **AI workflow commands** (`ai/commands/`)
 - 📋 **Development best practices** (JavaScript, TDD, UI/UX)
 - 🎯 **Product management tools** (user stories, journey mapping)
@@ -436,13 +436,12 @@ your-project/
 │   │   ├── review.md         # Code reviews
 │   │   ├── task.md           # Task management
 │   │   └── ...
-│   ├── rules/                # Agent orchestration rules
-│   │   ├── agent-orchestrator.mdc
-│   │   ├── javascript/       # JS/TS best practices
-│   │   ├── frameworks/       # Redux, TDD patterns
-│   │   ├── productmanager.mdc
-│   │   ├── tdd.mdc
-│   │   ├── ui.mdc
+│   ├── skills/               # Agent orchestration skills
+│   │   ├── aidd-please/      # Main agent orchestrator
+│   │   ├── aidd-javascript/  # JS/TS best practices
+│   │   ├── aidd-tdd/         # Test-driven development
+│   │   ├── aidd-review/      # Code review guidelines
+│   │   ├── aidd-ui/          # UI/UX design guidelines
 │   │   └── ...
 │   └── ...
 ├── plan/                     # Product discovery artifacts
@@ -454,13 +453,13 @@ your-project/
 
 ### Key Components
 
-- **Agent Orchestrator** (`ai/rules/agent-orchestrator.mdc`) - Coordinates multiple AI agents
-- **Development Rules** (`ai/rules/javascript/`, `ai/rules/tdd.mdc`) - Best practices and patterns
+- **Agent Orchestrator** (`ai/skills/aidd-agent-orchestrator/SKILL.md`) - Coordinates multiple AI agents
+- **Development Skills** (`ai/skills/aidd-javascript/`, `ai/skills/aidd-tdd/`) - Best practices and patterns
 - **Workflow Commands** (`ai/commands/`) - Structured AI interaction templates
-- **Product Management** (`ai/rules/productmanager.mdc`) - User stories and journey mapping
+- **Product Management** (`ai/skills/aidd-product-manager/SKILL.md`) - User stories and journey mapping
 - **Product Discovery Artifacts** (`plan/story-map/`) - User journeys, personas, and story maps (YAML format)
 - **User Testing Scripts** (`plan/`) - Human and AI agent test scripts generated from journeys
-- **UI/UX Guidelines** (`ai/rules/ui.mdc`) - Design and user experience standards
+- **UI/UX Guidelines** (`ai/skills/aidd-ui/SKILL.md`) - Design and user experience standards
 
 ## 🎯 AI Integration
 
@@ -589,20 +588,20 @@ npx aidd my-project
 
 **For Cursor users with existing rules:**
 
-Reference the rules in your prompts or add to `.cursor/rules`:
+Reference the skills in your prompts or add to `.cursor/skills`:
 
 ```
-See ai/rules/javascript/javascript.mdc for JavaScript best practices
-See ai/rules/tdd.mdc for test-driven development
-See ai/rules/productmanager.mdc for product management
+See ai/skills/aidd-javascript/SKILL.md for JavaScript best practices
+See ai/skills/aidd-tdd/SKILL.md for test-driven development
+See ai/skills/aidd-product-manager/SKILL.md for product management
 ```
 
 **For other editors (VS Code, Vim, etc.):**
 
-Reference rules directly in your AI assistant prompts:
+Reference skills directly in your AI assistant prompts:
 
 ```
-Please follow the guidelines in ai/rules/javascript/javascript.mdc
+Please follow the guidelines in ai/skills/aidd-javascript/SKILL.md
 Use the workflow from ai/commands/task.md
 ```
 
@@ -615,7 +614,7 @@ Use the workflow from ai/commands/task.md
 ls ai/
 
 # Verify key files exist
-ls ai/rules/please.mdc
+ls ai/skills/aidd-please/SKILL.md
 ls ai/commands/
 ```
 
