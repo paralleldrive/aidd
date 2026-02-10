@@ -29,7 +29,7 @@
 ### Step 3: AI Analyzes Project Context (CHECKPOINT)
 
 1. **Interact with real UI**: Observe AI responses in chat panel
-2. **Express thoughts**: "Watching the AI's messages. I expect to see it mention reading project files like please.mdc, review.mdc, security guidelines. This shows it's following the process."
+2. **Express thoughts**: "Watching the AI's messages. I expect to see it mention reading project skills like please, review, security guidelines. This shows it's following the process."
 3. **Validate**: AI shows it's reading project constraints and coding standards
 4. **Screenshot**: CHECKPOINT - Capture chat showing context loading
 5. **Record**: difficulty, duration, clarity of AI's progress messages

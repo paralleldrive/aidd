@@ -33,7 +33,7 @@ Read each step out loud before attempting it. Think aloud as you work - this hel
 ### Step 3 (Checkpoint)
 
 - **Goal**: Ensure AI reads relevant project rules, standards, and guidelines
-- **Do**: Observe AI reading please.mdc, review.mdc, and relevant stack/language guidelines
+- **Do**: Observe AI reading please skill, review skill, and relevant stack/language guidelines
 - **Think aloud**: Can you tell what the AI is doing? Is there enough feedback?
 - **Success**: AI displays messages indicating it's reading project constraints and coding standards
 

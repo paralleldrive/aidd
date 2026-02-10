@@ -78,16 +78,14 @@ describe("user-testing", () => {
       });
     });
 
-    test("references user-testing.mdc", async () => {
+    test("references user-testing skill", async () => {
       const filePath = path.join(__dirname, "../commands/user-test.md");
       const content = await fs.readFile(filePath, "utf-8");
 
       assert({
         given: "user-test.md content",
-        should: "reference user-testing.mdc",
-        actual:
-          content.includes("@user-testing.mdc") ||
-          content.includes("user-testing.mdc"),
+        should: "reference user-testing skill",
+        actual: content.includes("aidd-user-testing"),
         expected: true,
       });
     });
@@ -106,16 +104,14 @@ describe("user-testing", () => {
       });
     });
 
-    test("references user-testing.mdc", async () => {
+    test("references user-testing skill", async () => {
       const filePath = path.join(__dirname, "../commands/run-test.md");
       const content = await fs.readFile(filePath, "utf-8");
 
       assert({
         given: "run-test.md content",
-        should: "reference user-testing.mdc",
-        actual:
-          content.includes("@user-testing.mdc") ||
-          content.includes("user-testing.mdc"),
+        should: "reference user-testing skill",
+        actual: content.includes("aidd-user-testing"),
         expected: true,
       });
     });
