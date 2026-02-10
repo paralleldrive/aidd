@@ -109,6 +109,12 @@
         }
       },
       "includes": ["package.json"]
+    },
+    {
+      "formatter": {
+        "enabled": false
+      },
+      "includes": ["**/*.md"]
     }
   ],
   "vcs": {

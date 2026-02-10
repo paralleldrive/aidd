@@ -9,14 +9,17 @@ import { parseFrontmatter } from "../../lib/index-generator.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe("user-testing", () => {
-  describe("user-testing.mdc", () => {
+  describe("aidd-user-testing skill", () => {
     test("file exists with valid frontmatter", async () => {
-      const filePath = path.join(__dirname, "user-testing.mdc");
+      const filePath = path.join(
+        __dirname,
+        "../skills/aidd-user-testing/SKILL.md",
+      );
       const exists = await fs.pathExists(filePath);
 
       assert({
-        given: "user-testing.mdc file",
-        should: "exist in ai/rules directory",
+        given: "aidd-user-testing SKILL.md file",
+        should: "exist in ai/skills directory",
         actual: exists,
         expected: true,
       });
@@ -25,33 +28,36 @@ describe("user-testing", () => {
       const frontmatter = parseFrontmatter(content);
 
       assert({
-        given: "user-testing.mdc frontmatter",
+        given: "aidd-user-testing frontmatter",
         should: "have description field",
         actual: typeof frontmatter?.description,
         expected: "string",
       });
 
       assert({
-        given: "user-testing.mdc frontmatter",
-        should: "have alwaysApply set to false",
-        actual: frontmatter?.alwaysApply,
-        expected: false,
+        given: "aidd-user-testing frontmatter",
+        should: "have name field matching directory",
+        actual: frontmatter?.name,
+        expected: "aidd-user-testing",
       });
     });
 
     test("includes HumanScript and AgentScript templates", async () => {
-      const filePath = path.join(__dirname, "user-testing.mdc");
+      const filePath = path.join(
+        __dirname,
+        "../skills/aidd-user-testing/SKILL.md",
+      );
       const content = await fs.readFile(filePath, "utf-8");
 
       assert({
-        given: "user-testing.mdc content",
+        given: "aidd-user-testing content",
         should: "include HumanScript template",
         actual: content.includes("HumanScript:template"),
         expected: true,
       });
 
       assert({
-        given: "user-testing.mdc content",
+        given: "aidd-user-testing content",
         should: "include AgentScript template",
         actual: content.includes("AgentScript:template"),
         expected: true,
