@@ -1,0 +1,408 @@
+id: journey_memory_command
+name: Memory Command User Journey
+description: User journey for teaching AI agents project-specific patterns and preferences through the /memory command
+createdAt: 1739318400000
+updatedAt: 1739318400000
+
+personas:
+  - persona_solo_developer
+  - persona_team_lead
+  - persona_ai_power_user
+  - persona_framework_migrator
+  - persona_debugging_dev
+
+painPoints:
+  - id: pain_repeated_mistakes
+    name: Agents Repeat Corrected Mistakes
+    description: AI agents make the same mistakes repeatedly across different sessions, forcing users to correct them every time
+    impact: 8
+    frequency: 7
+    priority: 56
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+
+  - id: pain_lost_context
+    name: Lost Context Between Sessions
+    description: Agent context and learnings don't persist between sessions, requiring re-explanation of project specifics
+    impact: 9
+    frequency: 8
+    priority: 72
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+
+  - id: pain_inconsistent_agents
+    name: Inconsistent Agent Behavior Across Team
+    description: Different team members' agents produce inconsistent code because they don't share learned patterns
+    impact: 6
+    frequency: 5
+    priority: 30
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+
+  - id: pain_tech_stack_confusion
+    name: Agents Suggest Wrong Tech Stack
+    description: Agents suggest deprecated technologies or patterns from training data instead of project's actual stack
+    impact: 7
+    frequency: 6
+    priority: 42
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+
+  - id: pain_tool_misuse
+    name: Agents Use Wrong Tools
+    description: Agents use suboptimal tools (e.g., sed instead of Edit tool) despite corrections
+    impact: 5
+    frequency: 8
+    priority: 40
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+
+  - id: pain_no_organization
+    name: No Way to Organize Agent Guidance
+    description: Lack of structured way to organize and categorize agent guidance makes it hard to manage
+    impact: 6
+    frequency: 4
+    priority: 24
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+
+  - id: pain_conflict_resolution
+    name: Contradictory Guidance Unclear
+    description: When new guidance conflicts with old, unclear how to resolve or update
+    impact: 5
+    frequency: 3
+    priority: 15
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+
+steps:
+  - id: step_save_memory
+    name: Save Memory
+    description: User encounters agent mistake or wants to provide guidance, and saves it as a memory
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+    userStories:
+      - id: story_quick_save
+        name: Quick Memory Save
+        description: As a solo developer, I want to quickly save a correction when an agent makes a mistake, so that the agent won't repeat it in future sessions
+        painPoint: pain_repeated_mistakes
+        priority: 56
+        createdAt: 1739318400000
+        updatedAt: 1739318400000
+        status:
+          state: backlog
+          comment: Core feature for MVP
+        functionalRequirements:
+          - id: req_save_with_suggestion
+            description: Given user provides memory text, should analyze content and suggest appropriate topic
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_user_override_topic
+            description: Given agent suggests topic, should allow user to confirm or specify different topic
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_save_to_file
+            description: Given confirmed topic, should save memory to aidd-project/context/${topic}.mdc with proper frontmatter
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_timestamp_entry
+            description: Given new memory entry, should include timestamp for tracking when it was added
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+        mockups: []
+
+      - id: story_topic_specific_save
+        name: Save to Specific Topic
+        description: As an AI power user, I want to save memories directly to a specific topic without suggestions, so that I can quickly organize my guidance
+        painPoint: pain_no_organization
+        priority: 24
+        createdAt: 1739318400000
+        updatedAt: 1739318400000
+        status:
+          state: backlog
+          comment: Enhancement for power users
+        functionalRequirements:
+          - id: req_direct_topic_save
+            description: Given user specifies topic in command, should save directly without suggestion step
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_create_new_topic
+            description: Given non-existent topic specified, should create new topic file with appropriate frontmatter
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+        mockups: []
+
+      - id: story_tech_stack_memory
+        name: Remember Tech Stack Choices
+        description: As a framework migrator, I want to tell agents which technologies we use, so that they stop suggesting deprecated or wrong frameworks
+        painPoint: pain_tech_stack_confusion
+        priority: 42
+        createdAt: 1739318400000
+        updatedAt: 1739318400000
+        status:
+          state: backlog
+          comment: Important for migration scenarios
+        functionalRequirements:
+          - id: req_classify_tech_stack
+            description: Given memory mentions frameworks or technologies, should suggest tech-stack topic
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_always_apply_tech
+            description: Given tech-stack topic, should set alwaysApply true in frontmatter
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+        mockups: []
+
+  - id: step_discover_memories
+    name: Discover & Query Memories
+    description: User wants to see what memories exist or search for specific guidance
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+    userStories:
+      - id: story_list_memories
+        name: List All Memories
+        description: As a team lead, I want to see all memory topics and their contents, so that I can understand what guidance is active
+        painPoint: pain_no_organization
+        priority: 24
+        createdAt: 1739318400000
+        updatedAt: 1739318400000
+        status:
+          state: backlog
+          comment: Essential for discovery
+        functionalRequirements:
+          - id: req_scan_context_dir
+            description: Given list command, should scan aidd-project/context/ directory for .mdc files
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_show_summary
+            description: Given memory files found, should display topic name, description, application mode, and entry count
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_total_count
+            description: Given all files scanned, should show total memory count across all topics
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+        mockups: []
+
+      - id: story_view_memory
+        name: View Specific Memory Topic
+        description: As a solo developer, I want to view the full contents of a memory topic, so that I can review what guidance exists
+        painPoint: pain_no_organization
+        priority: 24
+        createdAt: 1739318400000
+        updatedAt: 1739318400000
+        status:
+          state: backlog
+          comment: Needed for review workflow
+        functionalRequirements:
+          - id: req_read_topic_file
+            description: Given topic name, should read and display full contents of aidd-project/context/${topic}.mdc
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_suggest_similar
+            description: Given topic not found, should suggest similar topics if available
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+        mockups: []
+
+      - id: story_search_memories
+        name: Search Across Memories
+        description: As an AI power user, I want to search for specific keywords across all memories, so that I can find relevant guidance quickly
+        painPoint: pain_no_organization
+        priority: 24
+        createdAt: 1739318400000
+        updatedAt: 1739318400000
+        status:
+          state: backlog
+          comment: Nice to have for power users
+        functionalRequirements:
+          - id: req_search_all_files
+            description: Given search query, should search across all .mdc files in context directory
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_show_matches
+            description: Given matches found, should display topic name and matching excerpt with context
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_highlight_terms
+            description: Given search results, should highlight matching query terms
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+        mockups: []
+
+      - id: story_natural_query
+        name: Natural Language Memory Queries
+        description: As a solo developer, I want to ask agents what I told them about a topic, so that I can verify memories exist
+        painPoint: pain_lost_context
+        priority: 72
+        createdAt: 1739318400000
+        updatedAt: 1739318400000
+        status:
+          state: backlog
+          comment: High priority - improves UX significantly
+        functionalRequirements:
+          - id: req_interpret_natural
+            description: Given natural language query like "what did I tell you about X", should interpret as search/query operation
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_summarize_findings
+            description: Given query results, should summarize relevant memories in conversational format
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+        mockups: []
+
+  - id: step_update_memory
+    name: Update & Refine Memories
+    description: User wants to modify existing memories or resolve conflicts
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+    userStories:
+      - id: story_refine_memory
+        name: Refine Existing Memory
+        description: As a debugging developer, I want to update a memory when I learn more details, so that guidance stays accurate
+        painPoint: pain_conflict_resolution
+        priority: 15
+        createdAt: 1739318400000
+        updatedAt: 1739318400000
+        status:
+          state: backlog
+          comment: Important for iterative improvement
+        functionalRequirements:
+          - id: req_detect_similar
+            description: Given new memory, should detect similar existing memories
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_offer_options
+            description: Given conflict detected, should offer to update, append, or create new entry
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_preserve_history
+            description: Given update chosen, should update timestamp and preserve original if valuable
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+        mockups: []
+
+      - id: story_forget_memory
+        name: Remove Outdated Memory
+        description: As a framework migrator, I want to remove memories that are no longer relevant, so that agents don't follow outdated guidance
+        painPoint: pain_conflict_resolution
+        priority: 15
+        createdAt: 1739318400000
+        updatedAt: 1739318400000
+        status:
+          state: backlog
+          comment: Needed for maintenance
+        functionalRequirements:
+          - id: req_search_to_remove
+            description: Given forget query, should search for matching memory entries
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_confirm_removal
+            description: Given match found, should show what will be removed and confirm with user
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_cleanup_empty
+            description: Given entry removed and file empty, should ask if entire topic file should be deleted
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+        mockups: []
+
+  - id: step_migrate_existing
+    name: Migrate Existing Tech Stack
+    description: User wants to migrate existing tech stack documentation to new memory system
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+    userStories:
+      - id: story_migrate_stack
+        name: Migrate Tech Stack File
+        description: As a team lead, I want to migrate our existing stack.mdc to the new memory format, so that all guidance is in one place
+        painPoint: pain_tech_stack_confusion
+        priority: 42
+        createdAt: 1739318400000
+        updatedAt: 1739318400000
+        status:
+          state: backlog
+          comment: One-time migration feature
+        functionalRequirements:
+          - id: req_read_stack_mdc
+            description: Given migrate command, should read ai/rules/stack.mdc
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_parse_sections
+            description: Given stack.mdc content, should parse into logical sections with timestamps
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_create_tech_stack
+            description: Given parsed content, should create aidd-project/context/tech-stack.mdc with proper structure
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_preserve_original
+            description: Given migration complete, should keep original ai/rules/stack.mdc for backward compatibility
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+        mockups: []
+
+  - id: step_agent_application
+    name: Agent Applies Memories
+    description: AI agents automatically apply memories based on context and frontmatter settings
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+    userStories:
+      - id: story_always_apply
+        name: Critical Memories Always Available
+        description: As a team lead, I want critical guidance to always be available to agents, so that they never violate core standards
+        painPoint: pain_inconsistent_agents
+        priority: 30
+        createdAt: 1739318400000
+        updatedAt: 1739318400000
+        status:
+          state: backlog
+          comment: Core agent integration
+        functionalRequirements:
+          - id: req_check_always_apply
+            description: Given alwaysApply true in frontmatter, should include memory in all agent contexts
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+        mockups: []
+
+      - id: story_file_pattern_attach
+        name: Auto-Attach by File Pattern
+        description: As a solo developer, I want file-specific memories to apply automatically when working with those files, so that guidance is contextual
+        painPoint: pain_tool_misuse
+        priority: 40
+        createdAt: 1739318400000
+        updatedAt: 1739318400000
+        status:
+          state: backlog
+          comment: Important for contextual guidance
+        functionalRequirements:
+          - id: req_match_globs
+            description: Given file in context, should check if it matches any memory glob patterns
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_attach_matching
+            description: Given glob match, should include that memory in agent context
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+        mockups: []
+
+      - id: story_on_demand_query
+        name: On-Demand Memory Queries
+        description: As an AI agent, I want to query memories when I'm uncertain about an approach, so that I can follow user preferences
+        painPoint: pain_lost_context
+        priority: 72
+        createdAt: 1739318400000
+        updatedAt: 1739318400000
+        status:
+          state: backlog
+          comment: Advanced agent capability
+        functionalRequirements:
+          - id: req_agent_query
+            description: Given agent uncertainty, should query relevant memory topics based on context
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+          - id: req_apply_guidance
+            description: Given memory found, should apply guidance to current decision
+            createdAt: 1739318400000
+            updatedAt: 1739318400000
+        mockups: []

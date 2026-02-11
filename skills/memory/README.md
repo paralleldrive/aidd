@@ -2,6 +2,8 @@
 
 Teach AI agents project-specific patterns, anti-patterns, and best practices that persist across sessions.
 
+> **📋 Formal Specification**: See [plan/story-map/memory-command-journey.yaml](../../plan/story-map/memory-command-journey.yaml) for complete user journey, personas, pain points, user stories, and functional requirements.
+
 ## Quick Start
 
 ```bash

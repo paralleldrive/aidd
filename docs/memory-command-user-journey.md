@@ -1,8 +1,12 @@
 # /memory Command User Journey
 
+> **Formal Specification**: See [plan/story-map/memory-command-journey.yaml](../plan/story-map/memory-command-journey.yaml) for the complete structured user journey with personas, pain points, user stories, and functional requirements.
+
 ## Overview
 
 The `/memory` command enables users to teach AI agents project-specific patterns, anti-patterns, and best practices over time. When agents make repeated mistakes or users want to share guidance, they can create persistent memories that intelligently apply to future work.
+
+This document provides narrative examples and scenarios. For the formal product specification following the AIDD productmanager.mdc format, see the YAML files in `plan/story-map/`.
 
 ## Key Concepts
 

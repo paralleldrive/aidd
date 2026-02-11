@@ -1,0 +1,94 @@
+personas:
+  - id: persona_solo_developer
+    name: Solo Developer
+    description: Individual developer working on personal or small projects who wants AI agents to learn their preferences and avoid repeated mistakes
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+    goals:
+      - Stop agents from repeating corrected mistakes
+      - Build up a knowledge base of project preferences
+      - Reduce time spent re-explaining the same things
+    painPoints:
+      - Agents make the same mistakes across sessions
+      - Lost context between different AI tools
+      - No persistent way to teach agents project-specific patterns
+    behaviors:
+      - Quickly corrects agent mistakes in chat
+      - Prefers minimal overhead and simple workflows
+      - Works across multiple AI tools and platforms
+
+  - id: persona_team_lead
+    name: Engineering Team Lead
+    description: Team lead responsible for maintaining code quality and consistency across team members and AI agents
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+    goals:
+      - Ensure AI agents follow team standards consistently
+      - Share best practices with entire team
+      - Reduce code review burden from agent-generated code
+    painPoints:
+      - Different agents produce inconsistent code
+      - Team members' agents don't share learned patterns
+      - Hard to enforce standards across AI-generated code
+    behaviors:
+      - Documents architecture decisions
+      - Reviews and approves code from both humans and agents
+      - Maintains project documentation and standards
+      - Commits shared configurations to git
+
+  - id: persona_ai_power_user
+    name: AI Power User
+    description: Experienced developer who extensively uses AI agents and wants fine-grained control over agent behavior
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+    goals:
+      - Build comprehensive guidance library
+      - Optimize agent performance for specific tasks
+      - Create reusable memory patterns across projects
+    painPoints:
+      - Limited ways to customize agent behavior
+      - Can't share learnings between projects easily
+      - Need better organization of agent guidance
+    behaviors:
+      - Experiments with different prompting strategies
+      - Documents patterns and anti-patterns
+      - Maintains detailed project specifications
+      - Contributes to agent improvement
+
+  - id: persona_framework_migrator
+    name: Framework Migrator
+    description: Developer migrating a codebase to new technologies who needs agents to remember stack choices
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+    goals:
+      - Ensure agents use new tech stack consistently
+      - Prevent agents from suggesting deprecated approaches
+      - Maintain consistency during transition period
+    painPoints:
+      - Agents suggest old patterns from training data
+      - Hard to communicate "we don't use X anymore"
+      - Need to repeatedly correct tech stack choices
+    behaviors:
+      - Actively replacing old patterns with new ones
+      - Documents migration decisions
+      - Maintains tech stack documentation
+      - Needs clear way to mark deprecated approaches
+
+  - id: persona_debugging_dev
+    name: Debugging Developer
+    description: Developer who has identified specific anti-patterns or bugs and wants agents to avoid them
+    createdAt: 1739318400000
+    updatedAt: 1739318400000
+    goals:
+      - Prevent agents from introducing known bugs
+      - Document lessons learned from debugging
+      - Share debugging insights with future work
+    painPoints:
+      - Agents reintroduce bugs that were already fixed
+      - Can't easily communicate "never do X"
+      - Debugging knowledge gets lost between sessions
+    behaviors:
+      - Documents root causes when debugging
+      - Creates tests to prevent regressions
+      - Wants to teach agents from mistakes
+      - Values clear anti-pattern documentation
