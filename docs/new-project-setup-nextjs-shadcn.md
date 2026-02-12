@@ -56,9 +56,9 @@ Stop A: Stop here. Report what was installed, what was configured, and the exact
    - Desktop: primary action button
 
 5. Use TDD for any custom components you create.
-   - Follow ai/rules/tdd.mdc carefully.
+   - Follow ai/skills/aidd-tdd/SKILL.md carefully.
 
-6. Follow JavaScript best practices in ai/rules/javascript.
+6. Follow JavaScript best practices in ai/skills/aidd-javascript/SKILL.md.
 
 7. Apply the style prompt below for visual look and feel guidance.
 
@@ -75,7 +75,7 @@ Prompt me for guidance on the visual look and feel of my application before you 
 
 After I respond, continue with the task epic, then present it to me for feedback.
 
-Stop B: Stop here and wait for approval, then /execute the task following the instructions in the ai/rules folder carefully.
+Stop B: Stop here and wait for approval, then /execute the task following the instructions in the ai/skills folder carefully.
 
 Once that work is complete, please /review all the code you have written so far:
 
