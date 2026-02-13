@@ -91,7 +91,13 @@ createSkill(userRequest) {
 }
 
 gatherRequirements(userRequest) {
-  ask clarifying questions about purpose, inputs, outputs, and constraints
+  ask clarifying questions about:
+    - purpose: what problem does this skill solve?
+    - inputs and outputs: what does the skill consume and produce?
+    - constraints: any technical limitations or requirements?
+    - alwaysApply: should this skill be preloaded into agent context on every session?
+      hint: recommend "yes" only if the skill applies to nearly every task (e.g., coding standards, security checks)
+      hint: recommend "no" for task-specific skills that activate on demand (e.g., pdf-processing, deploy-app)
 }
 
 discoverRelatedSkills(skillTopic) {
