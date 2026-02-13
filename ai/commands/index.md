@@ -10,6 +10,12 @@ This index provides an overview of the contents in this directory.
 
 *No description available*
 
+### create-skill
+
+**File:** `create-skill.md`
+
+*No description available*
+
 ### discover
 
 **File:** `discover.md`

@@ -1,0 +1,115 @@
+---
+description: Create a new agent skill using the AgentSkills.io specification and SudoLang syntax
+alwaysApply: false
+---
+# Create Skill
+
+Create agent skills following the AgentSkills.io specification. Skills use **verb form** naming (e.g., `format-code`, `create-skill`). Agents use **noun form** (e.g., `code-formatter`, `skill-creator`).
+
+## Skill Structure
+
+SkillTemplate {
+  frontmatter: YAML metadata block
+  body: Markdown + SudoLang content
+}
+
+Frontmatter {
+  description: String // brief, under 100 tokens
+  alwaysApply: false
+}
+
+## Syntax Reference
+
+Read `ai/rules/sudolang/sudolang-syntax.mdc` for SudoLang conventions. Use markdown and natural language primarily. Employ SudoLang syntax for interfaces and function composition where token efficiency matters. Favor symbolic code (JavaScript) over AI inference for deterministic operations.
+
+## Process
+
+createSkill(userRequest) {
+  1. Gather Requirements - ask clarifying questions about the skill's purpose, inputs, outputs, and constraints
+  2. Name the skill using verb form (e.g., `format-code`, `generate-report`)
+  3. Draft the skill .mdc file following SkillTemplate
+  4. Validate the skill against size constraints
+  5. Write the skill to `$projectRoot/ai/skills/${skillName}.mdc`
+  6. Report size metrics to the user
+}
+
+## Size Constraints
+
+SizeThresholds {
+  frontmatter: < 100 tokens
+  body: < 160 lines, < 5000 tokens (ideal)
+}
+
+validateSize(skillContent) {
+  metrics = {
+    frontmatterTokens: estimateTokens(frontmatter)
+    bodyLines: countLines(body)
+    bodyTokens: estimateTokens(body)
+  }
+
+  warnings = []
+  if (metrics.frontmatterTokens >= 100) warnings.push("Frontmatter exceeds 100 token limit")
+  if (metrics.bodyLines >= 160) warnings.push("Body exceeds 160 line guideline")
+  if (metrics.bodyTokens >= 5000) warnings.push("Body exceeds 5000 token guideline")
+
+  report metrics and warnings to user
+}
+
+// Rough token estimate: ~4 characters per token for English text
+estimateTokens(text) {
+  "~${Math.ceil(text.length / 4)} tokens"
+}
+
+## Skill Authoring Guidelines
+
+Constraints {
+  Start with a clear one-line purpose statement
+  Use markdown headings for major sections
+  Use SudoLang interfaces for structured data definitions
+  Use SudoLang functions for process flows and composition
+  Use SudoLang constraints blocks for rules and limitations
+  Keep the skill focused on a single responsibility
+  Prefer natural language for instructions; SudoLang for structure
+  Include a Commands section if the skill has user-invocable actions
+  Always validate size after drafting
+}
+
+## Example Skill Structure
+
+```
+---
+description: Brief description of what the skill does
+alwaysApply: false
+---
+# Skill Name
+
+One-line purpose statement.
+
+## Interfaces
+
+DataModel {
+  field1: Type
+  field2: Type
+}
+
+## Process
+
+mainFunction(input) {
+  1. Step one
+  2. Step two
+  3. Step three
+}
+
+Constraints {
+  Constraint one
+  Constraint two
+}
+
+Commands {
+  /command-name - description
+}
+```
+
+Commands {
+  /create-skill - create a new agent skill
+}
