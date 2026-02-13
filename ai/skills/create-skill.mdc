@@ -149,18 +149,41 @@ console.log("Size metrics:", metrics);
 console.log(warnings.length ? "Warnings: " + warnings.join(", ") : "All size checks passed");
 ```
 
-## Skill Authoring Guidelines
+## Spec Compliance Constraints
+
+These constraints prevent common mistakes when generating skills. Every generated skill MUST pass all of these checks:
 
 Constraints {
-  Start with a clear purpose statement in the description field
-  Use markdown headings for major sections in the body
-  Include step-by-step instructions, examples, and edge cases
+  // Structure: skills are DIRECTORIES, not standalone files
+  NEVER create a standalone .mdc or .md file as a skill - always create a directory with SKILL.md inside
+  The output MUST be `$projectRoot/aidd-custom/${skillName}/SKILL.md` - not a flat file
+  The file MUST be named exactly `SKILL.md` (uppercase) - not skill.md, not ${name}.mdc
+
+  // Frontmatter: use AgentSkills.io fields, NOT aidd .mdc fields
+  Frontmatter MUST include `name` and `description` as required fields
+  NEVER use `alwaysApply`, `globs`, or other non-spec frontmatter fields in generated skills
+  The `name` field MUST be lowercase alphanumeric + hyphens only (a-z, 0-9, -)
+  The `name` field MUST match the parent directory name exactly
+  The `name` field MUST NOT start or end with a hyphen
+  The `name` field MUST NOT contain consecutive hyphens (--)
+  The `name` field MUST be 1-64 characters
+  The `description` field MUST be 1-1024 characters and describe both what the skill does AND when to use it
+
+  // Size: respect progressive disclosure thresholds
+  Frontmatter metadata MUST stay under ~100 tokens
+  SKILL.md body SHOULD stay under 160 lines and MUST stay under 500 lines
+  SKILL.md body SHOULD stay under 5000 tokens
+  If content exceeds limits, split into references/ directory files
+
+  // Content quality
+  The body MUST use plain Markdown - not SudoLang (SudoLang is for .mdc rules, not SKILL.md files)
+  Include recommended sections: when to use, step-by-step instructions, examples, edge cases
   Keep the skill focused on a single responsibility
-  Use SudoLang for interfaces and function composition where token efficiency matters
-  Prefer natural language for instructions
-  Move detailed reference material to references/ directory
-  Keep SKILL.md body under 160 lines ideally, 500 lines max
-  Always validate after drafting
+
+  // Validation: always validate before reporting success
+  ALWAYS run the symbolic JavaScript validator after creating the skill
+  ALWAYS run `skills-ref validate` if available
+  ALWAYS report size metrics and any warnings to the user
 }
 
 ## Example SKILL.md
