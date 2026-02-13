@@ -2,6 +2,12 @@
 
 This index provides an overview of the contents in this directory.
 
+## Subdirectories
+
+### 📁 scripts/
+
+See [`scripts/index.md`](./scripts/index.md) for contents.
+
 ## Files
 
 ### Create Skill
