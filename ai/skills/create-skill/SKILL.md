@@ -28,9 +28,20 @@ Frontmatter {
   description: SkillDescription  // required
   license                  // optional
   compatibility: string(1-500)  // optional, environment requirements
-  metadata {}              // optional, arbitrary key-value pairs
+  metadata {}              // optional, arbitrary key-value pairs (see AIDD Extensions below)
   allowed-tools            // optional, space-delimited tool list (experimental)
 }
+
+### AIDD Extensions via `metadata`
+
+The AgentSkills.io spec has no `alwaysApply` equivalent. By default, skills use progressive disclosure: only `name` and `description` are loaded at startup; the full SKILL.md body loads only on activation. The spec's `metadata` field is the designated extension point for custom properties.
+
+AIDD uses `metadata.alwaysApply` to mark skills whose full instructions should be preloaded into agent context on project init, before any user request. Use sparingly - every always-applied skill consumes context budget.
+
+```yaml
+metadata:
+  alwaysApply: "true"  # AIDD extension: preload full SKILL.md on project init
+```
 
 Skill {
   ${skillName}/
@@ -49,6 +60,7 @@ SizeMetrics {
 SkillPlan {
   name: SkillName
   purpose: SkillDescription
+  alwaysApply: boolean     // should this skill preload on project init?
   relatedSkills[]          // existing skills found in discovery
   bestPractices[]          // findings from web research
   proposedSections[]       // planned SKILL.md structure
@@ -110,7 +122,8 @@ presentPlan(plan: SkillPlan) {
 
 draftSkillMd(plan: SkillPlan) {
   write Frontmatter with name + description (required), optional fields as needed
-  write body with recommended sections: when to use, step-by-step instructions, examples, edge cases
+  if (plan.alwaysApply) add `metadata.alwaysApply: "true"`
+  write body with required documentation sections (see Documentation Requirements below)
 }
 
 writeSkill(skillMd) {
@@ -164,6 +177,20 @@ console.log("Size metrics:", metrics);
 console.log(warnings.length ? "Warnings: " + warnings.join(", ") : "All size checks passed");
 ```
 
+## Documentation Requirements
+
+Every generated skill MUST include these documentation sections in the SKILL.md body:
+
+RequiredSections {
+  "# Title"                  // skill name as heading
+  "## When to use"           // clear activation criteria - when should an agent use this skill?
+  "## Steps" | "## Process"  // step-by-step instructions for executing the skill
+  "## Examples"              // concrete input/output examples demonstrating usage
+  "## Edge cases"            // known limitations, error handling, boundary conditions
+}
+
+The `description` field in frontmatter is the skill's elevator pitch - it must be good enough for an agent to decide whether to activate the skill based on description alone (progressive disclosure). Write it as if it were the only thing an agent reads before deciding.
+
 ## Spec Compliance Constraints
 
 Every generated skill MUST pass all of these checks:
@@ -174,9 +201,10 @@ Constraints {
   The output MUST be `$projectRoot/aidd-custom/${skillName}/SKILL.md`
   The file MUST be named exactly `SKILL.md` (uppercase)
 
-  // Frontmatter: use AgentSkills.io fields, NOT aidd .mdc fields
+  // Frontmatter: use AgentSkills.io spec fields only
   Frontmatter MUST include `name` and `description` as required fields
-  NEVER use `alwaysApply`, `globs`, or other non-spec frontmatter fields
+  NEVER use `alwaysApply`, `globs`, or other non-spec keys as top-level frontmatter fields
+  Use `metadata` for AIDD extensions (e.g., `metadata.alwaysApply: "true"`)
   The `name` field MUST satisfy the SkillName type constraints
   The `description` field MUST satisfy the SkillDescription type constraints
 
@@ -185,6 +213,11 @@ Constraints {
   SKILL.md body SHOULD stay under 160 lines and MUST stay under 500 lines
   SKILL.md body SHOULD stay under 5000 tokens
   If content exceeds limits, split into references/ directory files
+
+  // Documentation: every skill must be well-documented
+  SKILL.md body MUST include all RequiredSections
+  The description field MUST be specific enough for agent activation decisions
+  Include concrete examples - not just abstract instructions
 
   // Validation: always validate before reporting success
   ALWAYS run the symbolic JavaScript validator after creating the skill
@@ -197,10 +230,11 @@ Constraints {
 ```markdown
 ---
 name: format-code
-description: Format source code files according to project style guides. Use when code needs formatting, linting fixes, or style consistency checks.
+description: Format source code files according to project style guides and conventions. Use when code needs formatting, linting fixes, style consistency checks, or when a user mentions "format", "lint", or "prettier".
 metadata:
   author: my-org
   version: "1.0"
+  alwaysApply: "true"
 ---
 
 # Format Code
@@ -209,19 +243,28 @@ Format source code according to project conventions and style guides.
 
 ## When to use
 
-Use this skill when code needs formatting, style fixes, or consistency checks.
+Use this skill when:
+- Code needs formatting or linting fixes
+- A new file is created and needs style consistency
+- The user asks for style or formatting help
 
 ## Steps
 
-1. Detect the project's formatter configuration
+1. Detect the project's formatter configuration (prettier, biome, eslint, etc.)
 2. Identify files that need formatting
 3. Apply formatting rules
 4. Report changes made
+
+## Examples
+
+Given a project with `.prettierrc`, run: `npx prettier --write "src/**/*.ts"`
+Given a project with `biome.json`, run: `npx @biomejs/biome format --write`
 
 ## Edge cases
 
 - If no formatter config exists, ask the user which style to use
 - For mixed-language projects, apply per-language formatters
+- If formatter conflicts with linter, prioritize linter configuration
 ```
 
 Commands {
