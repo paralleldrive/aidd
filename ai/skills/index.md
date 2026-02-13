@@ -8,5 +8,5 @@ This index provides an overview of the contents in this directory.
 
 **File:** `create-skill.mdc`
 
-Create a new agent skill using the AgentSkills.io specification and SudoLang syntax
+Create a new agent skill following the AgentSkills.io specification
 

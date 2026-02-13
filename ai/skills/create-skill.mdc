@@ -1,26 +1,55 @@
 ---
-description: Create a new agent skill using the AgentSkills.io specification and SudoLang syntax
+description: Create a new agent skill following the AgentSkills.io specification
 alwaysApply: false
 ---
 # Create Skill
 
-Create agent skills following the AgentSkills.io specification. Skills use **verb form** naming (e.g., `format-code`, `create-skill`). Agents use **noun form** (e.g., `code-formatter`, `skill-creator`).
+Create agent skills following the [AgentSkills.io](https://agentskills.io/specification) specification. Skills use **verb form** naming (e.g., `format-code`, `create-skill`). Agents use **noun form** (e.g., `code-formatter`, `skill-creator`).
 
-## Skill Structure
+## AgentSkills.io Skill Structure
 
-SkillTemplate {
-  frontmatter: YAML metadata block
-  body: Markdown + SudoLang content
+A skill is a directory containing a `SKILL.md` file with optional supporting directories:
+
+```
+skill-name/
+├── SKILL.md          # Required: YAML frontmatter + markdown instructions
+├── scripts/          # Optional: executable code agents can run
+├── references/       # Optional: additional documentation loaded on demand
+└── assets/           # Optional: templates, images, data files
+```
+
+### Frontmatter Schema
+
+```yaml
+---
+name: skill-name          # Required: 1-64 chars, lowercase + hyphens, must match directory name
+description: ...          # Required: 1-1024 chars, what it does and when to use it
+license: Apache-2.0       # Optional
+compatibility: ...        # Optional: 1-500 chars, environment requirements
+metadata:                 # Optional: arbitrary key-value pairs
+  author: org-name
+  version: "1.0"
+allowed-tools: Bash Read  # Optional: space-delimited pre-approved tools (experimental)
+---
+```
+
+NameValidation {
+  length: 1-64 characters
+  charset: lowercase alphanumeric + hyphens (a-z, 0-9, -)
+  no leading or trailing hyphens
+  no consecutive hyphens (--)
+  must match parent directory name
 }
 
-Frontmatter {
-  description: String // brief, under 100 tokens
-  alwaysApply: false
-}
+### Progressive Disclosure
+
+Metadata (~100 tokens) => loaded at startup for all skills
+Instructions (< 5000 tokens) => loaded when skill is activated
+Resources (as needed) => loaded only when required
 
 ## Syntax Reference
 
-Read `ai/rules/sudolang/sudolang-syntax.mdc` for SudoLang conventions. Use markdown and natural language primarily. Employ SudoLang syntax for interfaces and function composition where token efficiency matters. Favor symbolic code (JavaScript) over AI inference for deterministic operations.
+Read `ai/rules/sudolang/sudolang-syntax.mdc` for SudoLang conventions. Use markdown and natural language primarily. Employ SudoLang for interfaces and function composition where token efficiency matters. Favor symbolic code (JavaScript) over AI inference for deterministic operations.
 
 ## Process
 
@@ -28,13 +57,13 @@ createSkill(userRequest) {
   1. Gather Requirements - ask clarifying questions about the skill's purpose, inputs, outputs, and constraints
   2. Discover Related Skills - scan `ai/` and `aidd-custom/` for existing skills that overlap or could be leveraged
   3. Research Best Practices - use web search to find best practices for the skill topic
-  4. Name the skill using verb form (e.g., `format-code`, `generate-report`)
+  4. Name the skill using verb form and NameValidation rules
   5. Plan - draft a skill plan incorporating research and related skill analysis
   6. Present Plan - show the plan to the user and ask if any changes are required before proceeding
-  7. Draft the skill .mdc file following SkillTemplate
-  8. Validate the skill with `skills-ref validate`
-  9. Write the skill to `$projectRoot/ai/skills/${skillName}.mdc`
-  10. Report size metrics to the user
+  7. Draft the SKILL.md following the AgentSkills.io spec
+  8. Write the skill to `$projectRoot/aidd-custom/${skillName}/SKILL.md`
+  9. Validate with `skills-ref validate` and the symbolic size checker
+  10. Report size metrics and validation results to the user
 }
 
 ## Discover Related Skills
@@ -42,7 +71,7 @@ createSkill(userRequest) {
 discoverRelatedSkills(skillTopic) {
   searchPaths = ["$projectRoot/ai/", "$projectRoot/aidd-custom/"]
   for each (path in searchPaths) {
-    scan for .mdc and .md files
+    scan for SKILL.md, .mdc, and .md files
     read frontmatter descriptions
     identify skills with overlapping purpose or complementary functionality
   }
@@ -67,7 +96,8 @@ presentPlan(skillPlan) {
     - Skill name and purpose
     - Related skills discovered and how they will be leveraged
     - Best practices found via research
-    - Proposed structure and sections
+    - Proposed SKILL.md structure and sections
+    - Whether scripts/, references/, or assets/ directories are needed
     - Any size concerns
   ask the user if any changes are required before proceeding
   await explicit user approval
@@ -75,17 +105,28 @@ presentPlan(skillPlan) {
 
 ## Validation
 
-After creating the skill file, run the symbolic validator:
+After creating the skill, run validation and report size metrics:
 
 ```javascript
-// Run: skills-ref validate ./path-to-skill.mdc
-// Then compute and report size metrics:
+// 1. Run: skills-ref validate ./path-to-skill-directory
+// 2. Then compute and report size metrics:
 
 const fs = require("fs");
-const content = fs.readFileSync(skillPath, "utf-8");
-const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
+const path = require("path");
+const skillMd = fs.readFileSync(path.join(skillDir, "SKILL.md"), "utf-8");
+const fmMatch = skillMd.match(/^---\n([\s\S]*?)\n---/);
 const frontmatter = fmMatch ? fmMatch[1] : "";
-const body = fmMatch ? content.slice(fmMatch[0].length).trim() : content;
+const body = fmMatch ? skillMd.slice(fmMatch[0].length).trim() : skillMd;
+
+// Validate name field
+const nameMatch = frontmatter.match(/^name:\s*(.+)$/m);
+const name = nameMatch ? nameMatch[1].trim() : "";
+const nameErrors = [];
+if (name.length < 1 || name.length > 64) nameErrors.push("Name must be 1-64 characters");
+if (/[^a-z0-9-]/.test(name)) nameErrors.push("Name must be lowercase alphanumeric + hyphens only");
+if (/^-|-$/.test(name)) nameErrors.push("Name must not start or end with hyphen");
+if (/--/.test(name)) nameErrors.push("Name must not contain consecutive hyphens");
+if (name !== path.basename(skillDir)) nameErrors.push("Name must match directory name");
 
 const metrics = {
   frontmatterTokens: Math.ceil(frontmatter.length / 4),
@@ -95,72 +136,65 @@ const metrics = {
 
 const warnings = [];
 if (metrics.frontmatterTokens >= 100)
-  warnings.push("⚠️ Frontmatter exceeds 100 token limit");
+  warnings.push("Frontmatter exceeds 100 token guideline");
 if (metrics.bodyLines >= 160)
-  warnings.push("⚠️ Body exceeds 160 line guideline");
+  warnings.push("Body exceeds 160 line guideline");
+if (metrics.bodyLines >= 500)
+  warnings.push("Body exceeds 500 line spec limit - split into reference files");
 if (metrics.bodyTokens >= 5000)
-  warnings.push("⚠️ Body exceeds 5000 token guideline");
+  warnings.push("Body exceeds 5000 token spec guideline");
 
+console.log("Name validation:", nameErrors.length ? nameErrors : "PASS");
 console.log("Size metrics:", metrics);
-if (warnings.length) console.log("Warnings:", warnings);
-else console.log("✅ All size checks passed");
+console.log(warnings.length ? "Warnings: " + warnings.join(", ") : "All size checks passed");
 ```
-
-SizeThresholds {
-  frontmatter: < 100 tokens
-  body: < 160 lines, < 5000 tokens (ideal)
-}
 
 ## Skill Authoring Guidelines
 
 Constraints {
-  Start with a clear one-line purpose statement
-  Use markdown headings for major sections
-  Use SudoLang interfaces for structured data definitions
-  Use SudoLang functions for process flows and composition
-  Use SudoLang constraints blocks for rules and limitations
+  Start with a clear purpose statement in the description field
+  Use markdown headings for major sections in the body
+  Include step-by-step instructions, examples, and edge cases
   Keep the skill focused on a single responsibility
-  Prefer natural language for instructions; SudoLang for structure
-  Include a Commands section if the skill has user-invocable actions
-  Always validate size after drafting
+  Use SudoLang for interfaces and function composition where token efficiency matters
+  Prefer natural language for instructions
+  Move detailed reference material to references/ directory
+  Keep SKILL.md body under 160 lines ideally, 500 lines max
+  Always validate after drafting
 }
 
-## Example Skill Structure
+## Example SKILL.md
 
-```
+```markdown
 ---
-description: Brief description of what the skill does
-alwaysApply: false
+name: format-code
+description: Format source code files according to project style guides. Use when code needs formatting, linting fixes, or style consistency checks.
+metadata:
+  author: my-org
+  version: "1.0"
 ---
-# Skill Name
 
-One-line purpose statement.
+# Format Code
 
-## Interfaces
+Format source code according to project conventions and style guides.
 
-DataModel {
-  field1: Type
-  field2: Type
-}
+## When to use
 
-## Process
+Use this skill when code needs formatting, style fixes, or consistency checks.
 
-mainFunction(input) {
-  1. Step one
-  2. Step two
-  3. Step three
-}
+## Steps
 
-Constraints {
-  Constraint one
-  Constraint two
-}
+1. Detect the project's formatter configuration
+2. Identify files that need formatting
+3. Apply formatting rules
+4. Report changes made
 
-Commands {
-  /command-name - description
-}
+## Edge cases
+
+- If no formatter config exists, ask the user which style to use
+- For mixed-language projects, apply per-language formatters
 ```
 
 Commands {
-  /create-skill - create a new agent skill
+  /create-skill - create a new agent skill following the AgentSkills.io specification
 }
