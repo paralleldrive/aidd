@@ -43,9 +43,9 @@ const createWithAuth = ({
 } = {}) => {
   if (!auth) {
     throw createError({
-      name: "ValidationError",
-      message: "auth is required. Pass your better-auth instance.",
       code: "MISSING_AUTH_INSTANCE",
+      message: "auth is required. Pass your better-auth instance.",
+      name: "ValidationError",
     });
   }
 
@@ -60,8 +60,8 @@ const createWithAuth = ({
     }
 
     response.locals.auth = {
-      user: result.user,
       session: result.session,
+      user: result.user,
     };
 
     return { request, response };
@@ -90,9 +90,9 @@ const createWithAuth = ({
 const createWithOptionalAuth = ({ auth } = {}) => {
   if (!auth) {
     throw createError({
-      name: "ValidationError",
-      message: "auth is required. Pass your better-auth instance.",
       code: "MISSING_AUTH_INSTANCE",
+      message: "auth is required. Pass your better-auth instance.",
+      name: "ValidationError",
     });
   }
 
@@ -107,8 +107,8 @@ const createWithOptionalAuth = ({ auth } = {}) => {
     }
 
     response.locals.auth = {
-      user: result.user,
       session: result.session,
+      user: result.user,
     };
 
     return { request, response };

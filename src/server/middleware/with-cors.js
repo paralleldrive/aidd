@@ -49,12 +49,12 @@ const createWithCors = ({
   // Security: Require explicit origin configuration
   if (!allowedOrigins) {
     throw createError({
-      name: "ConfigurationError",
+      code: "MISSING_ALLOWED_ORIGINS",
       message:
         "CORS configuration error: allowedOrigins is required. " +
         'Specify allowed origins array, a single origin string, or "*" for public APIs. ' +
         "For same-origin only, omit CORS middleware from your route.",
-      code: "MISSING_ALLOWED_ORIGINS",
+      name: "ConfigurationError",
     });
   }
 

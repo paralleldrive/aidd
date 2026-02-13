@@ -33,8 +33,8 @@ const createConfigObject = (configData) => ({
   get(key) {
     if (!(key in configData)) {
       throw createError({
-        name: "ConfigurationError",
         message: `Required configuration key "${key}" is not defined.`,
+        name: "ConfigurationError",
         requestedKey: key,
       });
     }

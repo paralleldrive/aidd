@@ -2,11 +2,9 @@
 
 import { execSync } from "child_process";
 import process from "process";
-import { errorCauses, createError } from "error-causes";
+import { createError, errorCauses } from "error-causes";
 
 // Configuration objects (camelCase per javascript.mdc)
-const semverTypes = ["major", "minor", "patch"];
-
 const bumpAliases = {
   breaking: "major",
   feature: "minor",
@@ -26,10 +24,6 @@ const config = {
 
 // Error causes definition using error-causes library
 const [releaseErrors, handleReleaseErrors] = errorCauses({
-  ValidationError: {
-    code: "VALIDATION_ERROR",
-    message: "Input validation failed",
-  },
   GitError: {
     code: "GIT_ERROR",
     message: "Git operation failed",
@@ -37,6 +31,10 @@ const [releaseErrors, handleReleaseErrors] = errorCauses({
   ReleaseItError: {
     code: "RELEASE_IT_ERROR",
     message: "release-it command failed",
+  },
+  ValidationError: {
+    code: "VALIDATION_ERROR",
+    message: "Input validation failed",
   },
 });
 
@@ -67,8 +65,8 @@ const getCurrentBranch = () => {
   } catch (originalError) {
     throw createError({
       ...GitError,
-      message: "Failed to get current git branch",
       cause: originalError,
+      message: "Failed to get current git branch",
     });
   }
 };
@@ -88,38 +86,38 @@ const runReleaseIt = (semverType) => {
   try {
     console.log(`🚀 Starting release with release-it (${semverType})...`);
     execSync(`npx release-it ${semverType} --ci`, {
-      stdio: "inherit",
       env: { ...process.env },
+      stdio: "inherit",
     });
     console.log("🎉 Release completed successfully!");
   } catch (originalError) {
     throw createError({
       ...ReleaseItError,
-      message: "release-it command failed",
       cause: originalError,
+      message: "release-it command failed",
     });
   }
 };
 
 // Use error-causes handleErrors pattern
 const handleError = handleReleaseErrors({
-  ValidationError: ({ name, code, message, cause }) => {
-    console.error(`❌ Validation failed: ${message}`);
-    console.error("💡 Fix the issue and try again.");
-    if (cause) console.error(`🔍 Root cause: ${cause.message || cause}`);
-    process.exit(1);
-  },
-  GitError: ({ name, code, message, cause }) => {
+  GitError: ({ message, cause }) => {
     console.error(`❌ Git command failed: ${message}`);
     console.error("💡 Check your git configuration and network connection.");
     if (cause?.command) console.error(`📝 Failed command: ${cause.command}`);
     if (cause?.message) console.error(`🔍 Root cause: ${cause.message}`);
     process.exit(1);
   },
-  ReleaseItError: ({ name, code, message, cause }) => {
+  ReleaseItError: ({ message, cause }) => {
     console.error(`❌ release-it failed: ${message}`);
     console.error("💡 Check the release-it output above for details.");
     if (cause?.message) console.error(`🔍 Root cause: ${cause.message}`);
+    process.exit(1);
+  },
+  ValidationError: ({ message, cause }) => {
+    console.error(`❌ Validation failed: ${message}`);
+    console.error("💡 Fix the issue and try again.");
+    if (cause) console.error(`🔍 Root cause: ${cause.message || cause}`);
     process.exit(1);
   },
 });

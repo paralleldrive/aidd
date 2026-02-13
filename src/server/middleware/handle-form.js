@@ -79,8 +79,8 @@ const handleForm = ({
     // Check honeypot field if configured
     if (honeypotField && body[honeypotField]) {
       log(response, {
-        message: "Form honeypot triggered",
         form: name,
+        message: "Form honeypot triggered",
         requestId: response.locals?.requestId,
       });
       response.status(400);
@@ -96,10 +96,10 @@ const handleForm = ({
     if (!valid) {
       const errors = formatErrors(validator.Errors(body));
       log(response, {
-        message: "Form validation failed",
-        form: name,
-        requestId: response.locals?.requestId,
         errorCount: errors.length,
+        form: name,
+        message: "Form validation failed",
+        requestId: response.locals?.requestId,
       });
       response.status(400);
       response.json({ errors });

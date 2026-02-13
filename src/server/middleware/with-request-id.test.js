@@ -1,8 +1,9 @@
-import { describe, test } from "vitest";
-import { assert } from "riteway/vitest";
 import { isCuid } from "@paralleldrive/cuid2";
-import { withRequestId } from "./with-request-id.js";
+import { assert } from "riteway/vitest";
+import { describe, test } from "vitest";
+
 import { createServer } from "../test-utils.js";
+import { withRequestId } from "./with-request-id.js";
 
 describe("withRequestId", () => {
   test("attaches requestId to response.locals", async () => {

@@ -1,25 +1,25 @@
 {
   "git": {
     "commitMessage": "chore(release): v${version}",
-    "tagName": "v${version}",
+    "requireBranch": ["main", "master"],
     "requireCleanWorkingDir": false,
-    "requireBranch": ["main", "master"]
+    "tagName": "v${version}"
   },
   "github": {
-    "release": true,
-    "releaseName": "v${version}",
     "autoGenerate": {
       "template": "compact"
-    }
-  },
-  "npm": {
-    "publish": true
+    },
+    "release": true,
+    "releaseName": "v${version}"
   },
   "hooks": {
-    "before:init": ["npm test"],
     "after:release": [
       "node lib/update-latest-tag-hook.js ${version}",
       "echo 🎉 Successfully released ${name} v${version}"
-    ]
+    ],
+    "before:init": ["npm test"]
+  },
+  "npm": {
+    "publish": true
   }
 }

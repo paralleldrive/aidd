@@ -1,7 +1,8 @@
-import { describe, test, vi } from "vitest";
 import { assert } from "riteway/vitest";
-import { createWithCors } from "./with-cors.js";
+import { describe, test, vi } from "vitest";
+
 import { createServer } from "../test-utils.js";
+import { createWithCors } from "./with-cors.js";
 
 describe("createWithCors", () => {
   test("requires allowedOrigins parameter", async () => {
