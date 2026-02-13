@@ -26,38 +26,89 @@ Read `ai/rules/sudolang/sudolang-syntax.mdc` for SudoLang conventions. Use markd
 
 createSkill(userRequest) {
   1. Gather Requirements - ask clarifying questions about the skill's purpose, inputs, outputs, and constraints
-  2. Name the skill using verb form (e.g., `format-code`, `generate-report`)
-  3. Draft the skill .mdc file following SkillTemplate
-  4. Validate the skill against size constraints
-  5. Write the skill to `$projectRoot/ai/skills/${skillName}.mdc`
-  6. Report size metrics to the user
+  2. Discover Related Skills - scan `ai/` and `aidd-custom/` for existing skills that overlap or could be leveraged
+  3. Research Best Practices - use web search to find best practices for the skill topic
+  4. Name the skill using verb form (e.g., `format-code`, `generate-report`)
+  5. Plan - draft a skill plan incorporating research and related skill analysis
+  6. Present Plan - show the plan to the user and ask if any changes are required before proceeding
+  7. Draft the skill .mdc file following SkillTemplate
+  8. Validate the skill with `skills-ref validate`
+  9. Write the skill to `$projectRoot/ai/skills/${skillName}.mdc`
+  10. Report size metrics to the user
 }
 
-## Size Constraints
+## Discover Related Skills
+
+discoverRelatedSkills(skillTopic) {
+  searchPaths = ["$projectRoot/ai/", "$projectRoot/aidd-custom/"]
+  for each (path in searchPaths) {
+    scan for .mdc and .md files
+    read frontmatter descriptions
+    identify skills with overlapping purpose or complementary functionality
+  }
+  report:
+    - Related skills found and their purpose
+    - How existing skills can be leveraged or composed with the new skill
+    - Potential overlap to avoid duplication
+}
+
+## Research Best Practices
+
+researchTopic(skillTopic) {
+  use web search to find best practices, patterns, and conventions for $skillTopic
+  summarize key findings relevant to skill authoring
+  incorporate findings into the skill plan
+}
+
+## Plan Presentation
+
+presentPlan(skillPlan) {
+  show the user:
+    - Skill name and purpose
+    - Related skills discovered and how they will be leveraged
+    - Best practices found via research
+    - Proposed structure and sections
+    - Any size concerns
+  ask the user if any changes are required before proceeding
+  await explicit user approval
+}
+
+## Validation
+
+After creating the skill file, run the symbolic validator:
+
+```javascript
+// Run: skills-ref validate ./path-to-skill.mdc
+// Then compute and report size metrics:
+
+const fs = require("fs");
+const content = fs.readFileSync(skillPath, "utf-8");
+const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
+const frontmatter = fmMatch ? fmMatch[1] : "";
+const body = fmMatch ? content.slice(fmMatch[0].length).trim() : content;
+
+const metrics = {
+  frontmatterTokens: Math.ceil(frontmatter.length / 4),
+  bodyLines: body.split("\n").length,
+  bodyTokens: Math.ceil(body.length / 4),
+};
+
+const warnings = [];
+if (metrics.frontmatterTokens >= 100)
+  warnings.push("⚠️ Frontmatter exceeds 100 token limit");
+if (metrics.bodyLines >= 160)
+  warnings.push("⚠️ Body exceeds 160 line guideline");
+if (metrics.bodyTokens >= 5000)
+  warnings.push("⚠️ Body exceeds 5000 token guideline");
+
+console.log("Size metrics:", metrics);
+if (warnings.length) console.log("Warnings:", warnings);
+else console.log("✅ All size checks passed");
+```
 
 SizeThresholds {
   frontmatter: < 100 tokens
   body: < 160 lines, < 5000 tokens (ideal)
-}
-
-validateSize(skillContent) {
-  metrics = {
-    frontmatterTokens: estimateTokens(frontmatter)
-    bodyLines: countLines(body)
-    bodyTokens: estimateTokens(body)
-  }
-
-  warnings = []
-  if (metrics.frontmatterTokens >= 100) warnings.push("Frontmatter exceeds 100 token limit")
-  if (metrics.bodyLines >= 160) warnings.push("Body exceeds 160 line guideline")
-  if (metrics.bodyTokens >= 5000) warnings.push("Body exceeds 5000 token guideline")
-
-  report metrics and warnings to user
-}
-
-// Rough token estimate: ~4 characters per token for English text
-estimateTokens(text) {
-  "~${Math.ceil(text.length / 4)} tokens"
 }
 
 ## Skill Authoring Guidelines
