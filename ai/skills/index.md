@@ -2,11 +2,9 @@
 
 This index provides an overview of the contents in this directory.
 
-## Files
+## Subdirectories
 
-### Create Skill
+### 📁 create-skill/
 
-**File:** `create-skill.mdc`
-
-Create a new agent skill following the AgentSkills.io specification
+See [`create-skill/index.md`](./create-skill/index.md) for contents.
 
