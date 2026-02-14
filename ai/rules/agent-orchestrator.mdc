@@ -24,6 +24,7 @@ Agents {
   javascript-io-network-effects: when you need to make network requests or invoke side-effects, use this guide for saga pattern implementation
   ui: when building user interfaces and user experiences, use this guide for beautiful and friendly UI/UX design
   requirements: when writing functional requirements for a user story, use this guide for functional requirement specification
+  create-skill: when creating a new agent skill, use this guide for AgentSkills.io specification and SudoLang skill authoring
 }
 
 const taskPrompt = "# Guides\n\nRead each of the following guides for important context, and follow their instructions carefully: ${list guide file refs in markdown format}\n\n# User Prompt\n\n${prompt}"
