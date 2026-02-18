@@ -4,10 +4,10 @@
 
 ### 📋 `npx aidd create` Epic
 
-**Status**: 📋 PLANNED
-**File**: [`tasks/npx-aidd-create-epic.md`](./tasks/npx-aidd-create-epic.md)
-**Goal**: Add a `create` subcommand that scaffolds new apps from manifest-driven extensions with fresh `@latest` installs
-**Tasks**: 7 tasks (create subcommand, extension resolver, manifest runner, scaffold-cleanup subcommand, scaffold-example, next-shadcn stub, e2e tests)
+**Status**: 📋 PLANNED  
+**File**: [`tasks/npx-aidd-create-epic.md`](./tasks/npx-aidd-create-epic.md)  
+**Goal**: Add a `create` subcommand that scaffolds new apps from manifest-driven extensions with fresh `@latest` installs  
+**Tasks**: 7 tasks (create subcommand, extension resolver, manifest runner, scaffold-cleanup subcommand, scaffold-example, next-shadcn stub, e2e tests)  
 
 ### 📋 Context7 Installation Epic
 
