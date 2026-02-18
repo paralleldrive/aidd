@@ -11,6 +11,7 @@ import fs from "fs-extra";
 import { executeClone, handleCliErrors } from "../lib/cli-core.js";
 import { generateAllIndexes } from "../lib/index-generator.js";
 import { scaffoldCleanup } from "../lib/scaffold-cleanup.js";
+import { handleScaffoldErrors } from "../lib/scaffold-errors.js";
 import { resolveExtension } from "../lib/scaffold-resolver.js";
 import { runManifest } from "../lib/scaffold-runner.js";
 
@@ -237,7 +238,35 @@ https://paralleldrive.com
         );
         process.exit(0);
       } catch (err) {
-        console.error(chalk.red(`\n❌ Scaffold failed: ${err.message}`));
+        try {
+          handleScaffoldErrors({
+            ScaffoldCancelledError: ({ message }) => {
+              console.log(chalk.yellow(`\nℹ️  ${message}`));
+            },
+            ScaffoldNetworkError: ({ message, cause }) => {
+              console.error(chalk.red(`\n❌ Network Error: ${message}`));
+              console.error(
+                chalk.yellow("💡 Check your internet connection and try again"),
+              );
+              if (cause?.cause) {
+                console.error(
+                  chalk.gray(`   Caused by: ${cause.cause.message}`),
+                );
+              }
+            },
+            ScaffoldStepError: ({ message }) => {
+              console.error(chalk.red(`\n❌ Step failed: ${message}`));
+              console.error(
+                chalk.yellow(
+                  "💡 Check the scaffold manifest steps and try again",
+                ),
+              );
+            },
+          })(err);
+        } catch {
+          // Fallback for truly unexpected errors (no recognized cause.name)
+          console.error(chalk.red(`\n❌ Scaffold failed: ${err.message}`));
+        }
         process.exit(1);
       }
     });
