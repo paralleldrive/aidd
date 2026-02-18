@@ -197,16 +197,13 @@ https://paralleldrive.com
 
   // create subcommand
   program
-    .command("create [type-or-folder] [folder]")
+    .command("create <folder> [type]")
     .description(
       "Scaffold a new app using a manifest-driven extension (default: next-shadcn)",
     )
     .option("--agent <name>", "agent CLI to use for prompt steps", "claude")
-    .action(async (typeOrFolder, folder, { agent }) => {
-      // If only one positional arg given, treat it as the folder (use default type)
-      const type = folder ? typeOrFolder : undefined;
-      const folderArg = folder || typeOrFolder;
-      const folderPath = path.resolve(process.cwd(), folderArg);
+    .action(async (folder, type, { agent }) => {
+      const folderPath = path.resolve(process.cwd(), folder);
 
       try {
         console.log(
@@ -232,7 +229,7 @@ https://paralleldrive.com
         console.log(
           chalk.yellow(
             "\n💡 Tip: Run `npx aidd scaffold-cleanup " +
-              folderArg +
+              folder +
               "` to remove the downloaded extension files.",
           ),
         );
