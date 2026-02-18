@@ -11,10 +11,10 @@ Today there's no way to bootstrap a new project from the AIDD ecosystem — devs
 
 ## Add `create` subcommand
 
-New Commander subcommand `create <type> <folder>` added to `bin/aidd.js`.
+New Commander subcommand `create [type] <folder>` added to `bin/aidd.js`.
 
 **Requirements**:
-- Given `npx aidd create <type> <folder>`, should create a new directory `<folder>` in cwd
+- Given `npx aidd create [type] <folder>`, should create a new directory `<folder>` in cwd
 - Given `<type>` matching a scaffold name, should resolve to `ai/scaffolds/<type>` in the package
 - Given `<type>` as an HTTP/HTTPS URI, should treat it as a remote extension source
 - Given no `<type>` and no `AIDD_CUSTOM_EXTENSION_URI`, should use the bundled `ai/scaffolds/next-shadcn` extension
