@@ -18,7 +18,7 @@ New Commander subcommand `create <type> <folder>` added to `bin/aidd.js`.
 - Given `<type>` matching a scaffold name, should resolve to `ai/scaffolds/<type>` in the package
 - Given `<type>` as an HTTP/HTTPS URI, should treat it as a remote extension source
 - Given no `<type>` and no `AIDD_CUSTOM_EXTENSION_URI`, should use the bundled `ai/scaffolds/next-shadcn` extension
-- Given `AIDD_CUSTOM_EXTENSION_URI` env var is set and no `<type>` arg, should use the env URI
+- Given `AIDD_CUSTOM_EXTENSION_URI` env var is set and no `<type>` arg, should use the env URI (supports `http://`, `https://`, and `file://` schemes)
 - Given `--agent <name>` flag, should use that agent CLI for `prompt` steps (default: `claude`)
 - Given scaffold completes successfully, should suggest `npx aidd scaffold-cleanup` to remove downloaded extension files
 
@@ -30,10 +30,11 @@ Resolve extension source and fetch `README.md`, `SCAFFOLD-MANIFEST.yml`, and `bi
 
 **Requirements**:
 - Given a named scaffold type, should read files directly from `ai/scaffolds/<type>` in the package
-- Given an HTTP/HTTPS URI, should fetch `<uri>/README.md`, `<uri>/SCAFFOLD-MANIFEST.yml`, and `<uri>/bin/extension.js` into `<folder>/.aidd/<type>/`
+- Given an HTTP/HTTPS URI, should fetch `<uri>/README.md`, `<uri>/SCAFFOLD-MANIFEST.yml`, and `<uri>/bin/extension.js` into `<folder>/.aidd/<folder>/`
+- Given a `file://` URI, should read extension files from the local path it points to without copying them
 - Given any extension, should display README contents to the user before proceeding
 - Given a remote HTTP/HTTPS URI, should warn the user they are about to execute remote code and prompt for confirmation before downloading or running anything
-- Given fetched extension files, should leave them in place at `<folder>/.aidd/<type>/` after scaffolding completes
+- Given fetched extension files, should leave them in place at `<folder>/.aidd/<folder>/` after scaffolding completes
 
 ---
 
@@ -87,6 +88,6 @@ End-to-end tests using `scaffold-example` as the test fixture.
 
 **Requirements**:
 - Given `aidd create scaffold-example test-project`, should create `test-project/` with expected packages installed
-- Given `AIDD_CUSTOM_EXTENSION_URI` set to a local file path, should use it over the default extension
+- Given `AIDD_CUSTOM_EXTENSION_URI` set to a `file://` URI, should use it over the default extension
 - Given `aidd scaffold-cleanup test-project`, should remove `test-project/.aidd/`
 - Given `--agent claude` flag, should pass the agent name through to `prompt` step invocations
