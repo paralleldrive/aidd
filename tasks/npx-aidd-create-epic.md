@@ -30,11 +30,11 @@ Resolve extension source and fetch `README.md`, `SCAFFOLD-MANIFEST.yml`, and `bi
 
 **Requirements**:
 - Given a named scaffold type, should read files directly from `ai/scaffolds/<type>` in the package
-- Given an HTTP/HTTPS URI, should fetch `<uri>/README.md`, `<uri>/SCAFFOLD-MANIFEST.yml`, and `<uri>/bin/extension.js` into `<folder>/.aidd/<folder>/`
+- Given an HTTP/HTTPS URI, should fetch `<uri>/README.md`, `<uri>/SCAFFOLD-MANIFEST.yml`, and `<uri>/bin/extension.js` into `<folder>/.aidd/scaffold/`
 - Given a `file://` URI, should read extension files from the local path it points to without copying them
 - Given any extension, should display README contents to the user before proceeding
 - Given a remote HTTP/HTTPS URI, should warn the user they are about to execute remote code and prompt for confirmation before downloading or running anything
-- Given fetched extension files, should leave them in place at `<folder>/.aidd/<folder>/` after scaffolding completes
+- Given fetched extension files, should leave them in place at `<folder>/.aidd/scaffold/` after scaffolding completes
 
 ---
 
