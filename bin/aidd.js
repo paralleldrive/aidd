@@ -6,9 +6,13 @@ import process from "process";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
 import { Command } from "commander";
+import fs from "fs-extra";
 
 import { executeClone, handleCliErrors } from "../lib/cli-core.js";
 import { generateAllIndexes } from "../lib/index-generator.js";
+import { scaffoldCleanup } from "../lib/scaffold-cleanup.js";
+import { resolveExtension } from "../lib/scaffold-resolver.js";
+import { runManifest } from "../lib/scaffold-runner.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,7 +23,7 @@ const packageJson = JSON.parse(
 const createCli = () => {
   const program = new Command();
 
-  return program
+  program
     .name("aidd")
     .description("AI Driven Development - Install the AIDD Framework")
     .version(packageJson.version)
@@ -189,6 +193,82 @@ https://paralleldrive.com
         process.exit(result.success ? 0 : 1);
       },
     );
+
+  // create subcommand
+  program
+    .command("create [type-or-folder] [folder]")
+    .description(
+      "Scaffold a new app using a manifest-driven extension (default: next-shadcn)",
+    )
+    .option("--agent <name>", "agent CLI to use for prompt steps", "claude")
+    .action(async (typeOrFolder, folder, { agent }) => {
+      // If only one positional arg given, treat it as the folder (use default type)
+      const type = folder ? typeOrFolder : undefined;
+      const folderArg = folder || typeOrFolder;
+      const folderPath = path.resolve(process.cwd(), folderArg);
+
+      try {
+        console.log(
+          chalk.blue(`\nScaffolding new project in ${folderPath}...`),
+        );
+
+        await fs.ensureDir(folderPath);
+
+        const paths = await resolveExtension({
+          folder: folderPath,
+          packageRoot: __dirname,
+          type,
+        });
+
+        await runManifest({
+          agent,
+          extensionJsPath: paths.extensionJsPath,
+          folder: folderPath,
+          manifestPath: paths.manifestPath,
+        });
+
+        console.log(chalk.green("\n✅ Scaffold complete!"));
+        console.log(
+          chalk.yellow(
+            "\n💡 Tip: Run `npx aidd scaffold-cleanup " +
+              folderArg +
+              "` to remove the downloaded extension files.",
+          ),
+        );
+        process.exit(0);
+      } catch (err) {
+        console.error(chalk.red(`\n❌ Scaffold failed: ${err.message}`));
+        process.exit(1);
+      }
+    });
+
+  // scaffold-cleanup subcommand
+  program
+    .command("scaffold-cleanup [folder]")
+    .description(
+      "Remove the .aidd/ working directory created during scaffolding",
+    )
+    .action(async (folder) => {
+      const folderPath = folder
+        ? path.resolve(process.cwd(), folder)
+        : process.cwd();
+
+      try {
+        const result = await scaffoldCleanup({ folder: folderPath });
+
+        if (result.action === "removed") {
+          console.log(chalk.green(`✅ ${result.message}`));
+        } else {
+          console.log(chalk.yellow(`ℹ️  ${result.message}`));
+        }
+        process.exit(0);
+      } catch (err) {
+        console.error(chalk.red(`❌ Cleanup failed: ${err.message}`));
+        process.exit(1);
+      }
+    });
+
+  return program;
 };
 
 // Execute CLI
