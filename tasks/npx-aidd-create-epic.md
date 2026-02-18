@@ -1,6 +1,6 @@
 # `npx aidd create` Epic
 
-**Status**: 📋 PLANNED
+**Status**: ✅ DONE
 **Goal**: Add a `create` subcommand to `aidd` that scaffolds new apps from manifest-driven extensions with fresh `@latest` installs.
 
 ## Overview
