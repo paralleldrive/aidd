@@ -149,5 +149,3 @@ core.*
 # Local AIDD database
 .aidd/
 
-# Local task files
-tasks/
