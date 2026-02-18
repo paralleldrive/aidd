@@ -30,7 +30,7 @@ Resolve extension source and fetch `README.md`, `SCAFFOLD-MANIFEST.yml`, and `bi
 
 **Requirements**:
 - Given a named scaffold type, should read files directly from `ai/scaffolds/<type>` in the package
-- Given an HTTP/HTTPS URI, should fetch `<uri>/README.md`, `<uri>/SCAFFOLD-MANIFEST.yml`, and `<uri>/bin/extension.js` into `<folder>/.aidd/scaffold/`
+- Given an HTTP/HTTPS URI pointing to a GitHub repository, should download the latest GitHub release tarball (rather than git clone) and extract it to `<folder>/.aidd/scaffold/` — this gives versioned, reproducible scaffolds without fetching the full git history
 - Given a `file://` URI, should read extension files from the local path it points to without copying them
 - Given any extension, should display README contents to the user before proceeding
 - Given a remote HTTP/HTTPS URI, should warn the user they are about to execute remote code and prompt for confirmation before downloading or running anything
@@ -47,6 +47,30 @@ Parse and execute manifest steps sequentially in the target directory.
 - Given a `prompt` step, should invoke the selected agent CLI (default: `claude`) with that prompt string in `<folder>`
 - Given any step fails, should report the error and halt execution
 - Given a `bin/extension.js` is present, should execute it via Node.js in `<folder>` after all manifest steps complete
+
+### Manifest validation
+
+`parseManifest` must validate the manifest structure before returning steps so that malformed manifests fail fast with a clear error rather than silently producing wrong output.
+
+**Requirements**:
+- Given `steps` is present but is not an array (e.g. a string or plain object), should throw `ScaffoldValidationError` with a message that includes `"steps"` and the actual type received
+- Given a step item is not a plain object (e.g. a bare string, `null`, or nested array), should throw `ScaffoldValidationError` identifying the offending step number
+- Given a step item has no recognized keys (`run` or `prompt`), should throw `ScaffoldValidationError` identifying the offending step number and the keys that were found
+- Given `steps` is absent or `null`, should return an empty array (backward-compatible default)
+
+---
+
+## Add `verify-scaffold` subcommand
+
+New Commander subcommand `verify-scaffold [type]` that validates a scaffold conforms to all structural requirements before it is run.
+
+**Requirements**:
+- Given a valid named scaffold, should print `✅ Scaffold is valid` and exit 0
+- Given a named scaffold whose manifest is missing, should print a descriptive error and exit 1
+- Given a scaffold whose `steps` is not an array, should print a validation error and exit 1
+- Given a scaffold with a step that has no recognized keys, should print a validation error and exit 1
+- Given a scaffold with an empty steps array, should report that the scaffold would do nothing and exit 1
+- Given a `file://` URI or HTTP/HTTPS URI, should resolve and validate the same as named scaffolds
 
 ---
 
@@ -67,8 +91,19 @@ Minimal fast-running scaffold at `ai/scaffolds/scaffold-example` used as the e2e
 
 **Requirements**:
 - Given the scaffold runs, should initialize a new npm project in `<folder>`
-- Given the scaffold runs, should install `riteway`, `vitest`, `@playwright/test`, `error-causes`, and `cuid2` at `@latest`
+- Given the scaffold runs, should install `riteway`, `vitest`, `@playwright/test`, `error-causes`, `cuid2`, and `release-it` at `@latest`
+- Given the scaffold runs, should configure `scripts.test` as `vitest run`
+- Given the scaffold runs, should configure `scripts.release` as `release-it` so the generated project can publish GitHub releases
 - Given the scaffold runs, should leave a working project where `npm test` can be invoked
+
+### Scaffold author release workflow
+
+Each scaffold lives in its own repository and is distributed as a **GitHub release** (versioned tarball), not via raw git clone.
+
+**Requirements**:
+- Each scaffold directory should include a `package.json` with a `release` script (`release-it`) so scaffold authors can cut a tagged GitHub release with one command
+- The `files` array in the scaffold's `package.json` controls which files are included when publishing to **npm** — it does NOT affect GitHub release assets (those are controlled by the release workflow and what is committed to the repository)
+- Scaffold consumers reference a released scaffold by its GitHub release tarball URL; the aidd resolver downloads and extracts the tarball instead of cloning the repo
 
 ---
 

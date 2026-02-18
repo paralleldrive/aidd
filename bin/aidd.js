@@ -14,6 +14,7 @@ import { scaffoldCleanup } from "../lib/scaffold-cleanup.js";
 import { handleScaffoldErrors } from "../lib/scaffold-errors.js";
 import { resolveExtension } from "../lib/scaffold-resolver.js";
 import { runManifest } from "../lib/scaffold-runner.js";
+import { verifyScaffold } from "../lib/scaffold-verifier.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -259,10 +260,71 @@ https://paralleldrive.com
                 ),
               );
             },
+            ScaffoldValidationError: ({ message }) => {
+              console.error(chalk.red(`\n❌ Invalid scaffold: ${message}`));
+              console.error(
+                chalk.yellow(
+                  "💡 Run `npx aidd verify-scaffold` to diagnose the manifest",
+                ),
+              );
+            },
           })(err);
         } catch {
           // Fallback for truly unexpected errors (no recognized cause.name)
           console.error(chalk.red(`\n❌ Scaffold failed: ${err.message}`));
+        }
+        process.exit(1);
+      }
+    });
+
+  // verify-scaffold subcommand
+  program
+    .command("verify-scaffold [type]")
+    .description(
+      "Validate a scaffold manifest before running it (named, file://, or HTTP/HTTPS)",
+    )
+    .action(async (type) => {
+      try {
+        const paths = await resolveExtension({
+          folder: process.cwd(),
+          // Suppress README output — we only want validation feedback.
+          log: () => {},
+          packageRoot: __dirname,
+          type,
+        });
+
+        const result = await verifyScaffold({
+          manifestPath: paths.manifestPath,
+        });
+
+        if (result.valid) {
+          console.log(chalk.green("✅ Scaffold is valid"));
+          process.exit(0);
+        } else {
+          console.error(chalk.red("❌ Scaffold validation failed:"));
+          for (const err of result.errors) {
+            console.error(chalk.red(`   • ${err}`));
+          }
+          process.exit(1);
+        }
+      } catch (err) {
+        try {
+          handleScaffoldErrors({
+            ScaffoldCancelledError: ({ message }) => {
+              console.log(chalk.yellow(`\nℹ️  ${message}`));
+            },
+            ScaffoldNetworkError: ({ message }) => {
+              console.error(chalk.red(`\n❌ Network Error: ${message}`));
+            },
+            ScaffoldStepError: ({ message }) => {
+              console.error(chalk.red(`\n❌ Step failed: ${message}`));
+            },
+            ScaffoldValidationError: ({ message }) => {
+              console.error(chalk.red(`\n❌ Invalid scaffold: ${message}`));
+            },
+          })(err);
+        } catch {
+          console.error(chalk.red(`\n❌ Verification failed: ${err.message}`));
         }
         process.exit(1);
       }
