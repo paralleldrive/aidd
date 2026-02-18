@@ -43,7 +43,7 @@ Parse and execute manifest steps sequentially in the target directory.
 
 **Requirements**:
 - Given a `run` step, should execute it as a shell command in `<folder>`
-- Given a `prompt` step, should invoke the Claude Code CLI with that prompt string in `<folder>`
+- Given a `prompt` step, should invoke the selected agent CLI (default: `claude`) with that prompt string in `<folder>`
 - Given any step fails, should report the error and halt execution
 - Given a `bin/extension.js` is present, should execute it via Node.js in `<folder>` after all manifest steps complete
 
