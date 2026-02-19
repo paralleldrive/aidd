@@ -91,7 +91,7 @@ Minimal fast-running scaffold at `ai/scaffolds/scaffold-example` used as the e2e
 
 **Requirements**:
 - Given the scaffold runs, should initialize a new npm project in `<folder>`
-- Given the scaffold runs, should install `riteway`, `vitest`, `@playwright/test`, `error-causes`, `cuid2`, and `release-it` at `@latest`
+- Given the scaffold runs, should install `riteway`, `vitest`, `@playwright/test`, `error-causes`, `@paralleldrive/cuid2`, and `release-it` at `@latest`
 - Given the scaffold runs, should configure `scripts.test` as `vitest run`
 - Given the scaffold runs, should configure `scripts.release` as `release-it` so the generated project can publish GitHub releases
 - Given the scaffold runs, should leave a working project where `npm test` can be invoked
