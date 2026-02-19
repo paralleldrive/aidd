@@ -6,15 +6,13 @@ import process from "process";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
 import { Command } from "commander";
-import fs from "fs-extra";
 
 import { executeClone, handleCliErrors } from "../lib/cli-core.js";
 import { generateAllIndexes } from "../lib/index-generator.js";
 import { scaffoldCleanup } from "../lib/scaffold-cleanup.js";
+import { resolveCreateArgs, runCreate } from "../lib/scaffold-create.js";
 import { handleScaffoldErrors } from "../lib/scaffold-errors.js";
-import { resolveExtension } from "../lib/scaffold-resolver.js";
-import { runManifest } from "../lib/scaffold-runner.js";
-import { verifyScaffold } from "../lib/scaffold-verifier.js";
+import { runVerifyScaffold } from "../lib/scaffold-verify-cmd.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -232,45 +230,28 @@ Examples:
     )
     .option("--agent <name>", "agent CLI to use for prompt steps", "claude")
     .action(async (typeOrFolder, folder, { agent }) => {
-      // Require at least one positional argument (the folder).
-      if (!typeOrFolder) {
+      const args = resolveCreateArgs(typeOrFolder, folder);
+      if (!args) {
         console.error("error: missing required argument 'folder'");
         process.exit(1);
         return;
       }
 
-      // One arg → it's the folder; type comes from env var or default.
-      // Two args → first is the scaffold type/URI, second is the folder.
-      const type = folder !== undefined ? typeOrFolder : undefined;
-      const resolvedFolder = folder !== undefined ? folder : typeOrFolder;
-      const folderPath = path.resolve(process.cwd(), resolvedFolder);
+      const { type, folderPath } = args;
+      console.log(chalk.blue(`\nScaffolding new project in ${folderPath}...`));
 
       try {
-        console.log(
-          chalk.blue(`\nScaffolding new project in ${folderPath}...`),
-        );
-
-        await fs.ensureDir(folderPath);
-
-        const paths = await resolveExtension({
+        const result = await runCreate({
+          agent,
           folder: folderPath,
           packageRoot: __dirname,
           type,
         });
 
-        await runManifest({
-          agent,
-          extensionJsPath: paths.extensionJsPath,
-          folder: folderPath,
-          manifestPath: paths.manifestPath,
-        });
-
         console.log(chalk.green("\n✅ Scaffold complete!"));
         console.log(
           chalk.yellow(
-            "\n💡 Tip: Run `npx aidd scaffold-cleanup " +
-              folderPath +
-              "` to remove the downloaded extension files.",
+            `\n💡 Tip: Run \`${result.cleanupTip}\` to remove the downloaded extension files.`,
           ),
         );
         process.exit(0);
@@ -309,7 +290,6 @@ Examples:
             },
           })(err);
         } catch {
-          // Fallback for truly unexpected errors (no recognized cause.name)
           console.error(chalk.red(`\n❌ Scaffold failed: ${err.message}`));
         }
         process.exit(1);
@@ -324,16 +304,9 @@ Examples:
     )
     .action(async (type) => {
       try {
-        const paths = await resolveExtension({
-          folder: process.cwd(),
-          // Suppress README output — we only want validation feedback.
-          log: () => {},
+        const result = await runVerifyScaffold({
           packageRoot: __dirname,
           type,
-        });
-
-        const result = await verifyScaffold({
-          manifestPath: paths.manifestPath,
         });
 
         if (result.valid) {

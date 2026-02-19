@@ -2,13 +2,6 @@
 
 ## Current Epics
 
-### 🚧 `npx aidd create` Remediation Epic
-
-**Status**: 🚧 IN PROGRESS
-**File**: [`tasks/aidd-create-remediation-epic.md`](./tasks/aidd-create-remediation-epic.md)
-**Goal**: Fix correctness, safety, and maintainability gaps found in the post-implementation review of the `create` subcommand
-**Tasks**: 10 tasks (pre-commit hook, cleanup tip path, ambiguous step, manifest existence, AGENTS.md e2e instruction, CLAUDE.md on install, js-yaml direct dep, scaffold authoring docs, git-clone clarification, factor out handlers)
-
 ### 📋 `npx aidd create` Epic
 
 **Status**: 📋 PLANNED  
