@@ -269,7 +269,7 @@ Examples:
         console.log(
           chalk.yellow(
             "\n💡 Tip: Run `npx aidd scaffold-cleanup " +
-              resolvedFolder +
+              folderPath +
               "` to remove the downloaded extension files.",
           ),
         );
