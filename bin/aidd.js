@@ -197,14 +197,35 @@ https://paralleldrive.com
     );
 
   // create subcommand
+  //
+  // Argument parsing rationale:
+  //   create scaffold-example my-project  → typeOrFolder="scaffold-example", folder="my-project"
+  //   create my-project                   → typeOrFolder="my-project",       folder=undefined
+  //   create                              → typeOrFolder=undefined  → manual error
+  //
+  // Commander cannot parse `[type] <folder>` correctly when type is omitted and
+  // only the folder is given — it would assign the single value to `type` and
+  // report folder as missing. Using two optional args and validating manually
+  // handles all three cases cleanly.
   program
-    .command("create [type] <folder>")
+    .command("create [typeOrFolder] [folder]")
     .description(
       "Scaffold a new app using a manifest-driven extension (default: next-shadcn)",
     )
     .option("--agent <name>", "agent CLI to use for prompt steps", "claude")
-    .action(async (type, folder, { agent }) => {
-      const folderPath = path.resolve(process.cwd(), folder);
+    .action(async (typeOrFolder, folder, { agent }) => {
+      // Require at least one positional argument (the folder).
+      if (!typeOrFolder) {
+        console.error("error: missing required argument 'folder'");
+        process.exit(1);
+        return;
+      }
+
+      // One arg → it's the folder; type comes from env var or default.
+      // Two args → first is the scaffold type/URI, second is the folder.
+      const type = folder !== undefined ? typeOrFolder : undefined;
+      const resolvedFolder = folder !== undefined ? folder : typeOrFolder;
+      const folderPath = path.resolve(process.cwd(), resolvedFolder);
 
       try {
         console.log(
@@ -230,7 +251,7 @@ https://paralleldrive.com
         console.log(
           chalk.yellow(
             "\n💡 Tip: Run `npx aidd scaffold-cleanup " +
-              folder +
+              resolvedFolder +
               "` to remove the downloaded extension files.",
           ),
         );
