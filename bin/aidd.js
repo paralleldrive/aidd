@@ -198,12 +198,12 @@ https://paralleldrive.com
 
   // create subcommand
   program
-    .command("create <folder> [type]")
+    .command("create [type] <folder>")
     .description(
       "Scaffold a new app using a manifest-driven extension (default: next-shadcn)",
     )
     .option("--agent <name>", "agent CLI to use for prompt steps", "claude")
-    .action(async (folder, type, { agent }) => {
+    .action(async (type, folder, { agent }) => {
       const folderPath = path.resolve(process.cwd(), folder);
 
       try {
