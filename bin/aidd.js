@@ -212,6 +212,24 @@ https://paralleldrive.com
     .description(
       "Scaffold a new app using a manifest-driven extension (default: next-shadcn)",
     )
+    // Override the auto-generated usage so help shows the intended calling
+    // convention rather than the internal [typeOrFolder] [folder] names.
+    .usage("[options] [type] <folder>")
+    .addHelpText(
+      "after",
+      `
+Arguments:
+  <folder>  (required) directory to create the new project in
+  [type]    scaffold name, file:// URI, or https:// URL
+            defaults to AIDD_CUSTOM_EXTENSION_URI env var, then "next-shadcn"
+
+Examples:
+  $ npx aidd create my-project
+  $ npx aidd create scaffold-example my-project
+  $ npx aidd create https://github.com/org/scaffold my-project
+  $ npx aidd create file:///path/to/scaffold my-project
+`,
+    )
     .option("--agent <name>", "agent CLI to use for prompt steps", "claude")
     .action(async (typeOrFolder, folder, { agent }) => {
       // Require at least one positional argument (the folder).
