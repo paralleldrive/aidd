@@ -92,10 +92,10 @@ AIDD_CUSTOM_EXTENSION_URI=file:///path/to/my-scaffold npx aidd create my-project
 
 ### Remote scaffold (GitHub release)
 
-Tag a release in your scaffold repository. Users reference the release tarball URL directly:
+Tag a release in your scaffold repository. Users pass the bare GitHub repo URL — `npx aidd create` automatically resolves it to the latest release tarball via the GitHub API:
 
 ```sh
-npx aidd create https://github.com/your-org/my-scaffold/archive/refs/tags/v1.0.0.tar.gz my-project
+npx aidd create https://github.com/your-org/my-scaffold my-project
 ```
 
 `npx aidd create` downloads the release tarball and extracts it to `<project>/.aidd/scaffold/` before running the manifest. After scaffolding, run `npx aidd scaffold-cleanup <project>` to remove the temporary files.
