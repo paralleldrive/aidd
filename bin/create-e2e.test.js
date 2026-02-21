@@ -159,7 +159,7 @@ describe("aidd create scaffold-example", () => {
   });
 });
 
-describe("aidd create with AIDD_CUSTOM_EXTENSION_URI env var", () => {
+describe("aidd create with AIDD_CUSTOM_CREATE_URI env var", () => {
   const envCtx = { tempDir: null, projectDir: null };
 
   beforeAll(async () => {
@@ -175,7 +175,7 @@ describe("aidd create with AIDD_CUSTOM_EXTENSION_URI env var", () => {
 
     await execAsync(`node ${cliPath} create env-project`, {
       cwd: envCtx.tempDir,
-      env: { ...process.env, AIDD_CUSTOM_EXTENSION_URI: uri },
+      env: { ...process.env, AIDD_CUSTOM_CREATE_URI: uri },
       timeout: 180_000,
     });
   }, 180_000);
@@ -184,12 +184,12 @@ describe("aidd create with AIDD_CUSTOM_EXTENSION_URI env var", () => {
     await fs.remove(envCtx.tempDir);
   });
 
-  test("uses file:// URI from AIDD_CUSTOM_EXTENSION_URI over default", async () => {
+  test("uses file:// URI from AIDD_CUSTOM_CREATE_URI over default", async () => {
     const pkgPath = path.join(envCtx.projectDir, "package.json");
     const exists = await fs.pathExists(pkgPath);
 
     assert({
-      given: "AIDD_CUSTOM_EXTENSION_URI set to a file:// URI",
+      given: "AIDD_CUSTOM_CREATE_URI set to a file:// URI",
       should: "use that URI as the extension source and scaffold the project",
       actual: exists,
       expected: true,

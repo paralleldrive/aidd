@@ -87,7 +87,7 @@ npx aidd create file:///path/to/my-scaffold my-project
 Or set the environment variable:
 
 ```sh
-AIDD_CUSTOM_EXTENSION_URI=file:///path/to/my-scaffold npx aidd create my-project
+AIDD_CUSTOM_CREATE_URI=file:///path/to/my-scaffold npx aidd create my-project
 ```
 
 ### Remote scaffold (GitHub release)

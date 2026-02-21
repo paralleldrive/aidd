@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import chalk from "chalk";
 import { Command } from "commander";
 
+import { writeConfig } from "../lib/aidd-config.js";
 import { executeClone, handleCliErrors } from "../lib/cli-core.js";
 import { generateAllIndexes } from "../lib/index-generator.js";
 import { scaffoldCleanup } from "../lib/scaffold-cleanup.js";
@@ -211,7 +212,7 @@ https://paralleldrive.com
 Arguments:
   <folder>  (required) directory to create the new project in
   [type]    scaffold name, file:// URI, or https:// URL
-            defaults to AIDD_CUSTOM_EXTENSION_URI env var, then "next-shadcn"
+            defaults to AIDD_CUSTOM_CREATE_URI env var, then "next-shadcn"
 
 Examples:
   $ npx aidd create my-project
@@ -360,6 +361,46 @@ Examples:
         process.exit(0);
       } catch (err) {
         console.error(chalk.red(`❌ Cleanup failed: ${err.message}`));
+        process.exit(1);
+      }
+    });
+
+  // set subcommand — persist project-level config to .aidd-config.json
+  program
+    .command("set <key> <value>")
+    .description(
+      "Persist a project-level configuration value to .aidd-config.json",
+    )
+    .addHelpText(
+      "after",
+      `
+Valid keys:
+  create-uri  Default scaffold URI used by \`npx aidd create\`
+              (overridden at runtime by the AIDD_CUSTOM_CREATE_URI env var)
+
+Examples:
+  $ npx aidd set create-uri https://github.com/org/scaffold
+  $ npx aidd set create-uri file:///path/to/my-scaffold
+`,
+    )
+    .action(async (key, value) => {
+      const VALID_KEYS = ["create-uri"];
+      if (!VALID_KEYS.includes(key)) {
+        console.error(
+          chalk.red(
+            `❌ Unknown setting: "${key}". Valid settings: ${VALID_KEYS.join(", ")}`,
+          ),
+        );
+        process.exit(1);
+        return;
+      }
+
+      try {
+        await writeConfig({ updates: { [key]: value } });
+        console.log(chalk.green(`✅ ${key} set to: ${value}`));
+        process.exit(0);
+      } catch (err) {
+        console.error(chalk.red(`❌ Failed to write config: ${err.message}`));
         process.exit(1);
       }
     });
