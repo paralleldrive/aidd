@@ -254,6 +254,7 @@ Examples:
           handleScaffoldErrors({
             ScaffoldCancelledError: ({ message }) => {
               console.log(chalk.yellow(`\nℹ️  ${message}`));
+              process.exit(0); // graceful cancellation — not an error
             },
             ScaffoldNetworkError: ({ message, cause }) => {
               console.error(chalk.red(`\n❌ Network Error: ${message}`));
@@ -318,6 +319,7 @@ Examples:
           handleScaffoldErrors({
             ScaffoldCancelledError: ({ message }) => {
               console.log(chalk.yellow(`\nℹ️  ${message}`));
+              process.exit(0); // graceful cancellation — not an error
             },
             ScaffoldNetworkError: ({ message }) => {
               console.error(chalk.red(`\n❌ Network Error: ${message}`));

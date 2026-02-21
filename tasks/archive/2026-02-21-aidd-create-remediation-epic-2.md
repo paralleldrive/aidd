@@ -1,6 +1,6 @@
 # `npx aidd create` Remediation Epic 2
 
-**Status**: 🚧 IN PROGRESS
+**Status**: ✅ COMPLETED (2026-02-21)
 **Goal**: Fix the remaining safety, correctness, and UX gaps found in the second post-implementation review of the `create` subcommand.
 
 ## Overview
