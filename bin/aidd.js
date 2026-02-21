@@ -146,14 +146,6 @@ https://paralleldrive.com
         });
 
         if (!result.success) {
-          // Create a proper error with cause for handleErrors
-          const error = new Error(result.error.message, {
-            cause: result.error.cause || {
-              code: result.error.code || "UNEXPECTED_ERROR",
-            },
-          });
-
-          // Use handleErrors instead of manual switching
           try {
             handleCliErrors({
               CloneError: ({ message, cause }) => {
@@ -180,11 +172,11 @@ https://paralleldrive.com
                   "💡 Try using --force to overwrite existing files",
                 );
               },
-            })(error);
+            })(result.error);
           } catch {
-            // Fallback for unexpected errors
-            console.error(`❌ Unexpected Error: ${result.error.message}`);
-            if (verbose && result.error.cause) {
+            // Fallback for unexpected errors (e.g. an error without a cause code)
+            console.error(`❌ Unexpected Error: ${result.error?.message}`);
+            if (verbose && result.error?.cause) {
               console.error("🔍 Caused by:", result.error.cause);
             }
           }
