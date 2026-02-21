@@ -149,12 +149,12 @@ describe("aidd create scaffold-example", () => {
     });
   });
 
-  test("suggests scaffold-cleanup after successful scaffold", () => {
+  test("does not suggest scaffold-cleanup for named (local) scaffolds", () => {
     assert({
-      given: "scaffold completes successfully",
-      should: "suggest running npx aidd scaffold-cleanup",
+      given: "scaffold-example (named scaffold) completes successfully",
+      should: "not suggest scaffold-cleanup because no tarball was downloaded",
       actual: scaffoldExampleCtx.stdout.includes("scaffold-cleanup"),
-      expected: true,
+      expected: false,
     });
   });
 });
