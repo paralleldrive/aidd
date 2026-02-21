@@ -38,6 +38,9 @@ Includes:
   - [Command Options](#command-options)
   - [Examples](#examples)
   - [`npx aidd create` — Scaffold a new project](#npx-aidd-create--scaffold-a-new-project)
+- [⚙️ Customizing aidd Framework for your Project](#-customizing-aidd-framework-for-your-project)
+  - [`aidd-custom/config.yml`](#aidd-customconfigyml)
+  - [`aidd-custom/AGENTS.md`](#aidd-customagentsmd)
 - [📁 AI System Structure](#-ai-system-structure)
   - [Key Components](#key-components)
 - [🎯 AI Integration](#-ai-integration)
@@ -430,6 +433,53 @@ npx aidd create file:///path/to/scaffold my-project     # local scaffold directo
 ```
 
 For full documentation on authoring your own scaffolds, see [ai/scaffolds/SCAFFOLD-AUTHORING.md](./ai/scaffolds/SCAFFOLD-AUTHORING.md).
+
+You can also set a default scaffold URI globally so you don't need to pass it on every invocation:
+
+```bash
+npx aidd set create-uri https://github.com/org/scaffold
+npx aidd set create-uri file:///path/to/my-scaffold
+```
+
+This saves the URI to `~/.aidd/config.yml` and applies it automatically on every `npx aidd create` run. The `AIDD_CUSTOM_CREATE_URI` environment variable always takes precedence if set.
+
+## ⚙️ Customizing aidd Framework for your Project
+
+After installing the aidd system, create an `aidd-custom/` directory at your project root to extend or override the defaults without touching the built-in `ai/` files. Changes in `aidd-custom/` supersede the project root in case of any conflict.
+
+```
+your-project/
+├── ai/                        # built-in aidd framework files (don't edit)
+├── aidd-custom/               # your project-specific customizations
+│   ├── config.yml             # project-level aidd settings
+│   └── AGENTS.md              # project-specific agent instructions
+└── ...
+```
+
+### `aidd-custom/config.yml`
+
+Store project-level aidd settings as YAML (token-friendly for AI context injection):
+
+```yaml
+# aidd-custom/config.yml
+stack: next-shadcn
+team: my-org
+```
+
+### `aidd-custom/AGENTS.md`
+
+Project-specific instructions for AI agents. Write rules, constraints, and context that apply only to your project. AI agents are instructed to read `aidd-custom/AGENTS.md` after `AGENTS.md` — directives here override the defaults.
+
+```markdown
+# Project Agent Instructions
+
+## Stack
+We use Next.js 15 App Router with Tailwind CSS and shadcn/ui.
+
+## Conventions
+- All server actions live in `lib/actions/`
+- Use `createRoute` from `aidd/server` for API routes
+```
 
 ## 📁 AI System Structure
 

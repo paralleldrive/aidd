@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 import chalk from "chalk";
 import { Command } from "commander";
 
-import { writeConfig } from "../lib/aidd-config.js";
+import { readConfig, writeConfig } from "../lib/aidd-config.js";
 import { executeClone, handleCliErrors } from "../lib/cli-core.js";
 import { generateAllIndexes } from "../lib/index-generator.js";
 import { scaffoldCleanup } from "../lib/scaffold-cleanup.js";
@@ -365,18 +365,19 @@ Examples:
       }
     });
 
-  // set subcommand — persist project-level config to .aidd-config.json
+  // set subcommand — persist user-level config to ~/.aidd/config.yml
   program
     .command("set <key> <value>")
     .description(
-      "Persist a project-level configuration value to .aidd-config.json",
+      "Persist a user-level configuration value to ~/.aidd/config.yml",
     )
     .addHelpText(
       "after",
       `
 Valid keys:
-  create-uri  Default scaffold URI used by \`npx aidd create\`
-              (overridden at runtime by the AIDD_CUSTOM_CREATE_URI env var)
+  create-uri  Default scaffold URI used by \`npx aidd create\`.
+              Saved to ~/.aidd/config.yml and applied as AIDD_CUSTOM_CREATE_URI
+              on each CLI invocation (explicit env var always takes precedence).
 
 Examples:
   $ npx aidd set create-uri https://github.com/org/scaffold
@@ -397,7 +398,9 @@ Examples:
 
       try {
         await writeConfig({ updates: { [key]: value } });
-        console.log(chalk.green(`✅ ${key} set to: ${value}`));
+        console.log(
+          chalk.green(`✅ ${key} saved to ~/.aidd/config.yml: ${value}`),
+        );
         process.exit(0);
       } catch (err) {
         console.error(chalk.red(`❌ Failed to write config: ${err.message}`));
@@ -408,5 +411,12 @@ Examples:
   return program;
 };
 
-// Execute CLI
+// Apply ~/.aidd/config.yml to process.env before CLI parses.
+// This lets `npx aidd set create-uri <uri>` act as a persistent env var
+// without modifying shell profiles. An explicit env var always wins.
+const persistedConfig = await readConfig();
+if (persistedConfig["create-uri"] && !process.env.AIDD_CUSTOM_CREATE_URI) {
+  process.env.AIDD_CUSTOM_CREATE_URI = persistedConfig["create-uri"];
+}
+
 createCli().parse();
