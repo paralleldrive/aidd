@@ -249,11 +249,13 @@ Examples:
         });
 
         console.log(chalk.green("\n✅ Scaffold complete!"));
-        console.log(
-          chalk.yellow(
-            `\n💡 Tip: Run \`${result.cleanupTip}\` to remove the downloaded extension files.`,
-          ),
-        );
+        if (result.cleanupTip) {
+          console.log(
+            chalk.yellow(
+              `\n💡 Tip: Run \`${result.cleanupTip}\` to remove the downloaded extension files.`,
+            ),
+          );
+        }
         process.exit(0);
       } catch (err) {
         try {

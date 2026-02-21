@@ -2,6 +2,13 @@
 
 ## Current Epics
 
+### 🚧 `npx aidd create` Remediation Epic 2
+
+**Status**: 🚧 IN PROGRESS
+**File**: [`tasks/aidd-create-remediation-epic-2.md`](./tasks/aidd-create-remediation-epic-2.md)
+**Goal**: Fix remaining safety, correctness, and UX gaps from the second post-implementation review of the `create` subcommand
+**Tasks**: 11 tasks (E2E fixture, HTTPS enforcement, conditional cleanup tip, safe YAML schema, CLAUDE.md read error handling, ad-hoc error handling, path traversal, help example URL, readline handlers, stdin error handler, cancellation exit code)
+
 ### 📋 `npx aidd create` Epic
 
 **Status**: 📋 PLANNED  

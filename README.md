@@ -37,6 +37,7 @@ Includes:
   - [Installation & Usage](#installation--usage)
   - [Command Options](#command-options)
   - [Examples](#examples)
+  - [`npx aidd create` — Scaffold a new project](#npx-aidd-create--scaffold-a-new-project)
 - [📁 AI System Structure](#-ai-system-structure)
   - [Key Components](#key-components)
 - [🎯 AI Integration](#-ai-integration)
@@ -416,6 +417,19 @@ npx aidd --index --verbose # Show all generated files
 npx aidd frontend-app
 npx aidd backend-api
 ```
+
+### `npx aidd create` — Scaffold a new project
+
+Use the `create` subcommand to scaffold a new project from a manifest-driven scaffold extension:
+
+```bash
+npx aidd create my-project                              # built-in next-shadcn scaffold
+npx aidd create scaffold-example my-project             # named scaffold bundled in aidd
+npx aidd create https://github.com/org/repo my-project  # remote GitHub repo (latest release)
+npx aidd create file:///path/to/scaffold my-project     # local scaffold directory
+```
+
+For full documentation on authoring your own scaffolds, see [ai/scaffolds/SCAFFOLD-AUTHORING.md](./ai/scaffolds/SCAFFOLD-AUTHORING.md).
 
 ## 📁 AI System Structure
 
