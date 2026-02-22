@@ -138,6 +138,19 @@ Rename the environment variable everywhere it appears for consistency with the `
 
 ---
 
+## Fix `resolveNamed` path traversal check edge case
+
+The existing `!typeDir.startsWith(scaffoldsRoot + path.sep)` check incorrectly allows `type = ""` or `type = "."` to pass: `path.resolve(scaffoldsRoot, "")` returns `scaffoldsRoot` itself, which does not start with `scaffoldsRoot + sep` and was being rejected with a misleading "resolved outside" error. The fix uses `path.relative()` which cleanly separates the two failure modes.
+
+**Requirements**:
+- Given `type` containing path-traversal segments (e.g. `../../etc/passwd`), `resolveNamed` should throw `ScaffoldValidationError` (unchanged existing behavior)
+- Given `type = ""` (empty string), the `||` fallback chain treats it as falsy and uses the default scaffold — this is correct, not a bug
+- Given `type = "."`, `resolveNamed` should throw `ScaffoldValidationError`; the error message must not say "outside the scaffolds directory" (`.` resolves to the scaffolds root itself, not outside it)
+- Given a valid named type (e.g. `next-shadcn`), should resolve normally (unchanged existing behavior)
+- Implementation: use `path.relative(scaffoldsRoot, typeDir)` — throw if the relative path starts with `..`, is absolute, or is empty
+
+---
+
 ## Fix `verify-scaffold` HTTP/HTTPS scaffold download location and cleanup
 
 `verify-scaffold` downloaded remote scaffolds to `.aidd/scaffold/` in the current working directory and never cleaned them up — a silent filesystem side effect for a read-only validation command.
