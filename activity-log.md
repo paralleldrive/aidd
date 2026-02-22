@@ -1,3 +1,13 @@
+## February 18, 2026
+
+- 🚀 - `npx aidd create` - New `create [type|URI] <folder>` subcommand with manifest-driven scaffolding (run/prompt steps, --agent flag, remote code warning)
+- 🚀 - `npx aidd scaffold-cleanup` - New cleanup subcommand removes `.aidd/` working directory
+- 🔧 - Extension resolver - Supports named scaffolds, `file://`, `http://`, `https://` with confirmation prompt for remote code
+- 🔧 - SCAFFOLD-MANIFEST.yml runner - Executes run/prompt steps sequentially; prompt steps use array spawn to prevent shell injection
+- 📦 - `scaffold-example` scaffold - Minimal E2E fixture: `npm init`, vitest test script, installs riteway/vitest/playwright/error-causes/@paralleldrive/cuid2
+- 📦 - `next-shadcn` scaffold stub - Default named scaffold with placeholder manifest for future Next.js + shadcn/ui implementation
+- 🧪 - 44 new tests - Unit tests for resolver, runner, cleanup; E2E tests covering full scaffold lifecycle
+
 ## October 20, 2025
 
 - 📱 - Help command clarity - AI workflow commands context
