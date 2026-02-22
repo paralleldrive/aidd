@@ -441,7 +441,14 @@ npx aidd set create-uri https://github.com/org/scaffold
 npx aidd set create-uri file:///path/to/my-scaffold
 ```
 
-The value is saved to `~/.aidd/config.yml`. The lookup priority is:
+The value is saved to `~/.aidd/config.yml`. You can also hand-edit it directly:
+
+```yaml
+# ~/.aidd/config.yml
+create-uri: https://github.com/your-org/my-scaffold
+```
+
+The lookup priority is:
 
 ```
 CLI <type> arg  >  AIDD_CUSTOM_CREATE_URI env var  >  ~/.aidd/config.yml  >  default (next-shadcn)

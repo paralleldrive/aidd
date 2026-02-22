@@ -114,7 +114,7 @@ Running `npm run release` will:
 3. Push the tag to GitHub
 4. Create a GitHub release with auto-generated release notes
 
-Scaffold consumers can then reference your scaffold by its GitHub release tarball URL:
+Scaffold consumers reference your scaffold by its bare GitHub repo URL — `npx aidd create` automatically resolves it to the latest release tarball via the GitHub API:
 
 ```bash
 npx aidd create https://github.com/your-org/my-scaffold my-project

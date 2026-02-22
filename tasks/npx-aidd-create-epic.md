@@ -103,7 +103,7 @@ Each scaffold lives in its own repository and is distributed as a **GitHub relea
 **Requirements**:
 - Each scaffold directory should include a `package.json` with a `release` script (`release-it`) so scaffold authors can cut a tagged GitHub release with one command
 - The `files` array in the scaffold's `package.json` controls which files are included when publishing to **npm** — it does NOT affect GitHub release assets (those are controlled by the release workflow and what is committed to the repository)
-- Scaffold consumers reference a released scaffold by its GitHub release tarball URL; the aidd resolver downloads and extracts the tarball instead of cloning the repo
+- Scaffold consumers reference a released scaffold by its bare GitHub repo URL (`https://github.com/owner/repo`); the aidd resolver auto-resolves this to the latest release tarball via the GitHub API and downloads it instead of cloning the repo
 
 ---
 
