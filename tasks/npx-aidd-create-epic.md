@@ -138,6 +138,22 @@ Rename the environment variable everywhere it appears for consistency with the `
 
 ---
 
+## Fix `verify-scaffold` HTTP/HTTPS scaffold download location and cleanup
+
+`verify-scaffold` downloaded remote scaffolds to `.aidd/scaffold/` in the current working directory and never cleaned them up — a silent filesystem side effect for a read-only validation command.
+
+### Architectural decision
+
+Because the project directory may not yet exist at verification time, downloaded scaffold files belong in `~/.aidd/scaffold/` (the user-level aidd home directory), not in the project directory. Cleanup must happen unconditionally (in a `finally` block) whether verification succeeds or fails.
+
+**Requirements**:
+- Given an HTTP/HTTPS scaffold URI, `verify-scaffold` should download scaffold files to `~/.aidd/scaffold/` (not the current working directory)
+- Given successful verification, `verify-scaffold` should remove `~/.aidd/scaffold/` after the result is returned
+- Given a verification error or resolution error (cancelled, network failure, validation error), `verify-scaffold` should still remove `~/.aidd/scaffold/` before propagating the error
+- Given a named (`next-shadcn`) or `file://` scaffold, cleanup is a no-op (nothing was downloaded)
+
+---
+
 ## Add `set` subcommand and user-level config (`~/.aidd/config.yml`)
 
 ### Architectural decision
