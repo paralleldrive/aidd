@@ -7,7 +7,6 @@ import { fileURLToPath } from "url";
 import chalk from "chalk";
 import { Command } from "commander";
 
-import { readConfig, writeConfig } from "../lib/aidd-config.js";
 import { executeClone, handleCliErrors } from "../lib/cli-core.js";
 import { generateAllIndexes } from "../lib/index-generator.js";
 import { scaffoldCleanup } from "../lib/scaffold-cleanup.js";
@@ -365,58 +364,58 @@ Examples:
       }
     });
 
-  // set subcommand — persist user-level config to ~/.aidd/config.yml
+  // set subcommand — print the shell export statement for a known setting
   program
     .command("set <key> <value>")
     .description(
-      "Persist a user-level configuration value to ~/.aidd/config.yml",
+      "Print the shell export statement for a configuration value (pipe to eval to apply)",
     )
     .addHelpText(
       "after",
       `
 Valid keys:
-  create-uri  Default scaffold URI used by \`npx aidd create\`.
-              Saved to ~/.aidd/config.yml and applied as AIDD_CUSTOM_CREATE_URI
-              on each CLI invocation (explicit env var always takes precedence).
+  create-uri  Default scaffold URI used by \`npx aidd create\`
+              (equivalent to setting AIDD_CUSTOM_CREATE_URI)
+
+Usage:
+  Apply in current shell:
+    eval "$(npx aidd set create-uri <uri>)"
+
+  Make permanent — add the printed export to your shell profile (~/.bashrc, ~/.zshrc, etc.)
 
 Examples:
   $ npx aidd set create-uri https://github.com/org/scaffold
   $ npx aidd set create-uri file:///path/to/my-scaffold
 `,
     )
-    .action(async (key, value) => {
-      const VALID_KEYS = ["create-uri"];
-      if (!VALID_KEYS.includes(key)) {
-        console.error(
+    .action((key, value) => {
+      const KEY_TO_ENV = {
+        "create-uri": "AIDD_CUSTOM_CREATE_URI",
+      };
+
+      if (!KEY_TO_ENV[key]) {
+        process.stderr.write(
           chalk.red(
-            `❌ Unknown setting: "${key}". Valid settings: ${VALID_KEYS.join(", ")}`,
+            `❌ Unknown setting: "${key}". Valid settings: ${Object.keys(KEY_TO_ENV).join(", ")}\n`,
           ),
         );
         process.exit(1);
         return;
       }
 
-      try {
-        await writeConfig({ updates: { [key]: value } });
-        console.log(
-          chalk.green(`✅ ${key} saved to ~/.aidd/config.yml: ${value}`),
-        );
-        process.exit(0);
-      } catch (err) {
-        console.error(chalk.red(`❌ Failed to write config: ${err.message}`));
-        process.exit(1);
-      }
+      const envVar = KEY_TO_ENV[key];
+      // Machine-readable export to stdout — safe to pipe to eval
+      process.stdout.write(`export ${envVar}=${value}\n`);
+      // Human guidance to stderr so it doesn't pollute eval
+      process.stderr.write(
+        chalk.green(
+          `# To apply in the current shell:\n#   eval "$(npx aidd set ${key} ${value})"\n`,
+        ),
+      );
+      process.exit(0);
     });
 
   return program;
 };
-
-// Apply ~/.aidd/config.yml to process.env before CLI parses.
-// This lets `npx aidd set create-uri <uri>` act as a persistent env var
-// without modifying shell profiles. An explicit env var always wins.
-const persistedConfig = await readConfig();
-if (persistedConfig["create-uri"] && !process.env.AIDD_CUSTOM_CREATE_URI) {
-  process.env.AIDD_CUSTOM_CREATE_URI = persistedConfig["create-uri"];
-}
 
 createCli().parse();
