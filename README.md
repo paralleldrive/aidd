@@ -434,15 +434,17 @@ npx aidd create file:///path/to/scaffold my-project     # local scaffold directo
 
 For full documentation on authoring your own scaffolds, see [ai/scaffolds/SCAFFOLD-AUTHORING.md](./ai/scaffolds/SCAFFOLD-AUTHORING.md).
 
-To avoid passing the URI every time, set `AIDD_CUSTOM_CREATE_URI` in your environment. The `set create-uri` command prints the export statement for you:
+To avoid passing the URI on every invocation, save it to your user config with `set create-uri`. It is read automatically whenever you run `npx aidd create`:
 
 ```bash
-# Apply in your current shell session:
-eval "$(npx aidd set create-uri https://github.com/org/scaffold)"
-
-# Make it permanent — copy the printed export into your ~/.bashrc or ~/.zshrc:
+npx aidd set create-uri https://github.com/org/scaffold
 npx aidd set create-uri file:///path/to/my-scaffold
-# → export AIDD_CUSTOM_CREATE_URI=file:///path/to/my-scaffold
+```
+
+The value is saved to `~/.aidd/config.yml`. The lookup priority is:
+
+```
+CLI <type> arg  >  AIDD_CUSTOM_CREATE_URI env var  >  ~/.aidd/config.yml  >  default (next-shadcn)
 ```
 
 ## ⚙️ Customizing aidd Framework for your Project

@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import chalk from "chalk";
 import { Command } from "commander";
 
+import { writeConfig } from "../lib/aidd-config.js";
 import { executeClone, handleCliErrors } from "../lib/cli-core.js";
 import { generateAllIndexes } from "../lib/index-generator.js";
 import { scaffoldCleanup } from "../lib/scaffold-cleanup.js";
@@ -364,55 +365,44 @@ Examples:
       }
     });
 
-  // set subcommand — print the shell export statement for a known setting
+  // set subcommand — persist a value to ~/.aidd/config.yml
   program
     .command("set <key> <value>")
-    .description(
-      "Print the shell export statement for a configuration value (pipe to eval to apply)",
-    )
+    .description("Save a user-level configuration value to ~/.aidd/config.yml")
     .addHelpText(
       "after",
       `
 Valid keys:
-  create-uri  Default scaffold URI used by \`npx aidd create\`
-              (equivalent to setting AIDD_CUSTOM_CREATE_URI)
-
-Usage:
-  Apply in current shell:
-    eval "$(npx aidd set create-uri <uri>)"
-
-  Make permanent — add the printed export to your shell profile (~/.bashrc, ~/.zshrc, etc.)
+  create-uri  Default scaffold URI used by \`npx aidd create\`.
+              Priority: CLI <type> arg > AIDD_CUSTOM_CREATE_URI env var > ~/.aidd/config.yml
 
 Examples:
   $ npx aidd set create-uri https://github.com/org/scaffold
   $ npx aidd set create-uri file:///path/to/my-scaffold
 `,
     )
-    .action((key, value) => {
-      const KEY_TO_ENV = {
-        "create-uri": "AIDD_CUSTOM_CREATE_URI",
-      };
-
-      if (!KEY_TO_ENV[key]) {
-        process.stderr.write(
+    .action(async (key, value) => {
+      const VALID_KEYS = ["create-uri"];
+      if (!VALID_KEYS.includes(key)) {
+        console.error(
           chalk.red(
-            `❌ Unknown setting: "${key}". Valid settings: ${Object.keys(KEY_TO_ENV).join(", ")}\n`,
+            `❌ Unknown setting: "${key}". Valid settings: ${VALID_KEYS.join(", ")}`,
           ),
         );
         process.exit(1);
         return;
       }
 
-      const envVar = KEY_TO_ENV[key];
-      // Machine-readable export to stdout — safe to pipe to eval
-      process.stdout.write(`export ${envVar}=${value}\n`);
-      // Human guidance to stderr so it doesn't pollute eval
-      process.stderr.write(
-        chalk.green(
-          `# To apply in the current shell:\n#   eval "$(npx aidd set ${key} ${value})"\n`,
-        ),
-      );
-      process.exit(0);
+      try {
+        await writeConfig({ updates: { [key]: value } });
+        console.log(
+          chalk.green(`✅ ${key} saved to ~/.aidd/config.yml: ${value}`),
+        );
+        process.exit(0);
+      } catch (err) {
+        console.error(chalk.red(`❌ Failed to write config: ${err.message}`));
+        process.exit(1);
+      }
     });
 
   return program;

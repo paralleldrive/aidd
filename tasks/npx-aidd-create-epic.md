@@ -126,3 +126,38 @@ End-to-end tests using `scaffold-example` as the test fixture.
 - Given `AIDD_CUSTOM_CREATE_URI` set to a `file://` URI, should use it over the default extension
 - Given `aidd scaffold-cleanup test-project`, should remove `test-project/.aidd/`
 - Given `--agent claude` flag, should pass the agent name through to `prompt` step invocations
+
+---
+
+## Rename `AIDD_CUSTOM_EXTENSION_URI` → `AIDD_CUSTOM_CREATE_URI`
+
+Rename the environment variable everywhere it appears for consistency with the `create` subcommand name.
+
+**Requirements**:
+- Given any reference to `AIDD_CUSTOM_EXTENSION_URI` in source, tests, or docs, should be replaced with `AIDD_CUSTOM_CREATE_URI`
+
+---
+
+## Add `set` subcommand and user-level config (`~/.aidd/config.yml`)
+
+### Architectural decision
+
+The extension URI priority chain is:
+
+```
+CLI <type> arg  >  AIDD_CUSTOM_CREATE_URI env var  >  ~/.aidd/config.yml  >  default (next-shadcn)
+```
+
+The user config file (`~/.aidd/config.yml`) is read **directly** by `resolveExtension` as a third-level fallback — it is NOT applied to `process.env` at startup. The env var remains a distinct, higher-priority override (useful for CI and one-off runs). The `set` command provides a convenient way to write to `~/.aidd/config.yml` without hand-editing YAML.
+
+YAML is used for the config file because it is token-friendly for AI context injection.
+
+### `npx aidd set <key> <value>`
+
+**Requirements**:
+- Given `npx aidd set create-uri <uri>`, should write `create-uri: <uri>` to `~/.aidd/config.yml`, creating the directory and file if they don't exist
+- Given an existing `~/.aidd/config.yml`, should merge the new value without losing other keys
+- Given an unknown `<key>`, should print a clear error and exit 1
+- Given `npx aidd create` with no `<type>` arg and no `AIDD_CUSTOM_CREATE_URI` env var, should fall back to the `create-uri` value from `~/.aidd/config.yml`
+- Given `AIDD_CUSTOM_CREATE_URI` env var is set, should take precedence over `~/.aidd/config.yml`
+- Given a CLI `<type>` arg, should take precedence over both the env var and `~/.aidd/config.yml`
