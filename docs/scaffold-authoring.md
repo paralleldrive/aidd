@@ -42,6 +42,7 @@ steps:
 - `steps` is not an array (e.g. a string or plain object)
 - Any step is not a plain object (e.g. a bare string or `null`)
 - Any step has no recognized keys (`run` or `prompt`)
+- Any step has both `run` and `prompt` keys (ambiguous — use two separate steps instead)
 
 Run `npx aidd verify-scaffold <name-or-uri>` at any time to check your manifest without executing it:
 
