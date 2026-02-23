@@ -432,7 +432,7 @@ npx aidd create https://github.com/org/repo my-project  # remote GitHub repo (la
 npx aidd create file:///path/to/scaffold my-project     # local scaffold directory
 ```
 
-For full documentation on authoring your own scaffolds, see [ai/scaffolds/SCAFFOLD-AUTHORING.md](./ai/scaffolds/SCAFFOLD-AUTHORING.md).
+For full documentation on authoring your own scaffolds, see [docs/scaffold-authoring.md](./docs/scaffold-authoring.md).
 
 To avoid passing the URI on every invocation, save it to your user config with `set create-uri`. It is read automatically whenever you run `npx aidd create`:
 
