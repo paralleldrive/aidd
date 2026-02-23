@@ -151,6 +151,19 @@ The existing `!typeDir.startsWith(scaffoldsRoot + path.sep)` check incorrectly a
 
 ---
 
+## Support `GITHUB_TOKEN` for private repos and higher rate limits
+
+`defaultResolveRelease` and `defaultDownloadAndExtract` currently make unauthenticated requests, limiting usage to public repos and 60 API requests/hr per IP. Adding optional `GITHUB_TOKEN` support covers private-repo scaffold authors and avoids spurious rate-limit failures in busy environments.
+
+**Requirements**:
+- Given `GITHUB_TOKEN` is set in the environment, `defaultResolveRelease` should include an `Authorization: Bearer ${GITHUB_TOKEN}` header on the GitHub API request
+- Given `GITHUB_TOKEN` is set in the environment, `defaultDownloadAndExtract` should include an `Authorization: Bearer ${GITHUB_TOKEN}` header only when the download URL's hostname is `api.github.com`, `github.com`, or `codeload.github.com` — never for third-party hosts
+- Given the GitHub API returns 403 (rate limited), the error should say "GitHub API rate limit exceeded — set GITHUB_TOKEN for 5,000 req/hr" regardless of whether a token is set
+- Given the GitHub API returns 404 and `GITHUB_TOKEN` is **not** set, the error should include the hint: "If the repo is private, set GITHUB_TOKEN to authenticate"
+- Given the GitHub API returns 404 and `GITHUB_TOKEN` **is** set, the error should not include that hint (the token is set; the repo simply doesn't exist or has no releases)
+
+---
+
 ## Fix `verify-scaffold` HTTP/HTTPS scaffold download location and cleanup
 
 `verify-scaffold` downloaded remote scaffolds to `.aidd/scaffold/` in the current working directory and never cleaned them up — a silent filesystem side effect for a read-only validation command.
