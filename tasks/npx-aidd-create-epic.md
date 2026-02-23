@@ -21,6 +21,7 @@ New Commander subcommand `create [type] <folder>` added to `bin/aidd.js`.
 - Given `AIDD_CUSTOM_CREATE_URI` env var is set and no `<type>` arg, should use the env URI (supports `http://`, `https://`, and `file://` schemes)
 - Given `--agent <name>` flag, should use that agent CLI for `prompt` steps (default: `claude`)
 - Given scaffold completes successfully, should suggest `npx aidd scaffold-cleanup` to remove downloaded extension files
+- Given only a single `https://` or `file://` URI argument with no folder, should print `error: missing required argument 'folder'` and exit 1 (not silently create a directory with a mangled URL path)
 
 ---
 
