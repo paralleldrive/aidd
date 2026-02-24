@@ -95,5 +95,5 @@ Using `commit.md`:
   ```
 
 Commands {
-  🐛 /fix - fix a bug or review feedback following the full AIDD fix process
+  🐛 /aidd-fix - fix a bug or review feedback following the full AIDD fix process
 }
