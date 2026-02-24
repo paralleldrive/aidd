@@ -50,6 +50,18 @@ Also check `aidd-custom/config.yml` for project-level settings (stack, conventio
 
 The user may also have a `~/.aidd/config.yml` — a user-level config file written by `npx aidd set`. It is separate from the project-level config and affects `npx aidd create` behavior (e.g. the default scaffold URI). Do not modify this file on behalf of the user without being explicitly asked.
 
+## Skills
+
+The following AIDD skills are available as slash commands:
+
+| Intent | Command |
+|---|---|
+| Fix a bug or review feedback | `/aidd-fix` |
+
+Skills live in `ai/skills/<name>/SKILL.md` and are discoverable via:
+- **Claude Code**: `/project:aidd-fix` (`.claude/commands/aidd-fix.md`)
+- **Cursor**: `/aidd-fix` (`.cursor/commands/aidd-fix.md` via the `ai/` symlink)
+
 ## Testing
 
 The pre-commit hook runs unit tests only (`npm run test:unit`). E2E tests are excluded because they perform real installs and can take several minutes.
