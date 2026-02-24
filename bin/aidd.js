@@ -40,6 +40,7 @@ const createCli = () => {
       "-c, --cursor",
       "create .cursor symlink for Cursor editor integration",
     )
+    .option("--claude", "create .claude symlink for Claude Code integration")
     .option(
       "-i, --index",
       "generate index.md files from frontmatter in ai/ subfolders",
@@ -90,7 +91,15 @@ To install for Cursor:
 
   npx aidd --cursor
 
-Install without Cursor integration:
+To install for Claude Code:
+
+  npx aidd --claude
+
+To install for both:
+
+  npx aidd --cursor --claude
+
+Install without editor integration:
 
   npx aidd my-project
 `,
@@ -104,7 +113,10 @@ https://paralleldrive.com
 `,
     )
     .action(
-      async (targetDirectory, { force, dryRun, verbose, cursor, index }) => {
+      async (
+        targetDirectory,
+        { force, dryRun, verbose, cursor, claude, index },
+      ) => {
         // Handle --index option separately
         if (index) {
           const targetPath = path.resolve(process.cwd(), targetDirectory);
@@ -139,6 +151,7 @@ https://paralleldrive.com
         }
 
         const result = await executeClone({
+          claude,
           cursor,
           dryRun,
           force,
