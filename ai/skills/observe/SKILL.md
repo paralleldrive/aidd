@@ -31,6 +31,7 @@ const [count, setCount] = Observe.createState(0);
 
 | Helper | Usage |
 |--------|-------|
+| `Observe.withMap(obs, fn)` | Transform value; map from one type to another |
 | `Observe.withFilter(obs, fn)` | Transform or filter; return `undefined` to skip |
 | `Observe.withDefault(default, obs)` | Use default when value is undefined |
 

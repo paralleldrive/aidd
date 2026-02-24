@@ -2,7 +2,7 @@
 
 **Status**: ✅ COMPLETED
 **Completed**: 2025-02-23
-**Goal**: Add a `lit` skill that guides AI in Lit element authoring following firefly-platform patterns.
+**Goal**: Add a `lit` skill that guides AI in Lit element authoring following established architecture patterns.
 
 ## Summary
 

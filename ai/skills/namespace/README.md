@@ -9,7 +9,7 @@ src/types/point.ts
 
     
     export const length = ({ x, y }: Point) => Math.hypot(x, y);
-    export const add ({ x: x1, y: y1 }: Point, { x: x2, y: y2 }: Point): Point => { x: x1 + x2, y: y1 + y2 };
+    export const add = ({ x: x1, y: y1 }: Point, { x: x2, y: y2 }: Point): Point => ({ x: x1 + x2, y: y1 + y2 });
 
 With this file in context run
 
@@ -21,12 +21,12 @@ The expected resulting files will be:
 src/types/point/point.ts
 
     export type Point = { x: number, y: number };
-    export * as point from "./namespace.ts";
+    export * as Point from "./public.js";
 
-src/types/point/namespace.ts
+src/types/point/public.ts
 
-    export * from "./length.ts";
-    export * from "./add.ts";
+    export * from "./length.js";
+    export * from "./add.js";
 
 src/types/point/length.ts
 

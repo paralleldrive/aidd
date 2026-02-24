@@ -57,13 +57,13 @@ export const generationPlugin = Database.Plugin.create({
 
 **Final composition** — combine all plugins into the app plugin:
 ```ts
-export const studioPlugin = Database.Plugin.combine(
-  scheduler, spectrumPlugin, projectDataPlugin,
-  authPlugin, uiStatePlugin, generationPlugin
+export const appPlugin = Database.Plugin.combine(
+  corePlugin, themePlugin, dataPlugin,
+  authPlugin, uiPlugin, featurePlugin
 );
 
-export type StudioPlugin = typeof studioPlugin;
-export type StudioDatabase = Database.Plugin.ToDatabase<StudioPlugin>;
+export type AppPlugin = typeof appPlugin;
+export type AppDatabase = Database.Plugin.ToDatabase<AppPlugin>;
 ```
 
 ---
@@ -100,8 +100,8 @@ Global state not tied to entities. Use `as Type` to provide the compile-time typ
 
 ```ts
 resources: {
-  spectrumColor: { default: 'dark' as SpectrumColor },
-  spectrumScale: { default: 'medium' as SpectrumScale },
+  themeColor: { default: 'dark' as ThemeColor },
+  themeScale: { default: 'medium' as ThemeScale },
 },
 ```
 
@@ -148,8 +148,8 @@ transactions: {
   updateLayout: (store, { entity, layout }: { entity: Entity; layout: Layout }) => {
     store.update(entity, { layout });
   },
-  setSpectrumColor: (store, color: SpectrumColor) => {
-    store.resources.spectrumColor = color;
+  setThemeColor: (store, color: ThemeColor) => {
+    store.resources.themeColor = color;
   },
 },
 ```
