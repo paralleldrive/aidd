@@ -52,15 +52,9 @@ The user may also have a `~/.aidd/config.yml` — a user-level config file writt
 
 ## Skills
 
-The following AIDD skills are available as slash commands:
-
-| Intent | Command |
-|---|---|
-| Fix a bug or review feedback | `/aidd-fix` |
-
-Skills live in `ai/skills/<name>/SKILL.md` and are discoverable via:
-- **Claude Code**: `/project:aidd-fix` — run `npx aidd --claude` to create the `.claude → ai` symlink
-- **Cursor**: `/aidd-fix` — run `npx aidd --cursor` to create the `.cursor → ai` symlink
+```
+fix bug → /aidd-fix
+```
 
 ## Testing
 
