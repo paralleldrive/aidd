@@ -1,5 +1,5 @@
 ---
-name: ecs
+name: aidd-ecs
 description: Enforces @adobe/data/ecs best practices. Use this whenever @adobe/data/ecs is imported, when creating or modifying Database.Plugin definitions, or when working with ECS components, resources, transactions, actions, systems, or services.
 ---
 
@@ -11,19 +11,23 @@ Plugins are created with `Database.Plugin.create()` from `@adobe/data/ecs`.
 
 Properties **must** appear in this exact order. All are optional.
 
-| # | Property | Signature | Purpose |
-|---|----------|-----------|---------|
-| 1 | `extends` | `Plugin` | Base plugin to extend |
-| 2 | `services` | `(db) => ServiceInstance` | Singleton service factories |
-| 3 | `components` | schema object | ECS component schemas |
-| 4 | `resources` | `{ default: value as Type }` | Global resource schemas |
-| 5 | `archetypes` | `['comp1', 'comp2']` | Standard ECS archetypes; storage tables for efficient insertions |
-| 6 | `computed` | `(db) => Observe<T>` | Computed observables |
-| 7 | `transactions` | `(store, payload) => void` | Synchronous, deterministic atomic mutations |
-| 8 | `actions` | `(db, payload) => T` | General functions |
-| 9 | `systems` | `{ create: (db) => fn \| void }` | Per-frame (60fps) or init-only |
+```sudolang
+PluginPropertyOrder [
+  "extends — Plugin, base plugin to extend"
+  "services — (db) => ServiceInstance, singleton service factories"
+  "components — schema object, ECS component schemas"
+  "resources — { default: value as Type }, global resource schemas"
+  "archetypes — ['comp1', 'comp2'], standard ECS archetypes; storage tables for efficient insertions"
+  "computed — (db) => Observe<T>, computed observables"
+  "transactions — (store, payload) => void, synchronous deterministic atomic mutations"
+  "actions — (db, payload) => T, general functions"
+  "systems — { create: (db) => fn | void }, per-frame (60fps) or init-only"
+]
 
-**Wrong order throws at runtime.** If you define `transactions` before `components`, it will error.
+Constraints {
+  Properties must appear in this exact order; wrong order throws at runtime
+}
+```
 
 ---
 
@@ -154,12 +158,16 @@ transactions: {
 },
 ```
 
-- `store.update(entity, data)` — update entity components
-- `store.resources.x = value` — mutate resources
-- `store.get(entity, 'component')` — read component value
-- `store.read(entity)` - read all entity component values
-- `store.read(entity, archetype)` - read entity component values in archetype
-- `store.select(archetype.components, { where })` — query entities
+```sudolang
+StoreAPI {
+  "store.update(entity, data)" = "update entity components"
+  "store.resources.x = value" = "mutate resources"
+  "store.get(entity, 'component')" = "read component value"
+  "store.read(entity)" = "read all entity component values"
+  "store.read(entity, archetype)" = "read entity component values in archetype"
+  "store.select(archetype.components, { where })" = "query entities"
+}
+```
 
 ### actions
 
@@ -213,19 +221,26 @@ systems: {
 },
 ```
 
-- `before` / `after` — hard ordering constraints
-- `during` — soft preference for same execution tier
+```sudolang
+Schedule {
+  before: "hard ordering constraints"
+  after: "hard ordering constraints"
+  during: "soft preference for same execution tier"
+}
+```
 
 ---
 
 ## Naming conventions
 
-| Item | Convention | Example |
-|------|-----------|---------|
-| File | `*-plugin.ts` (kebab-case) | `layout-plugin.ts` |
-| Export | `*Plugin` (camelCase) | `layoutPlugin` |
-| System | `plugin_name__system` (snake_case, double underscore) | `layout_plugin__system` |
-| Init system | `plugin_name_initialize` | `ui_state_plugin_initialize` |
+```sudolang
+PluginNaming {
+  file: "*-plugin.ts (kebab-case) — e.g. layout-plugin.ts"
+  export: "*Plugin (camelCase) — e.g. layoutPlugin"
+  system: "plugin_name__system (snake_case, double underscore) — e.g. layout_plugin__system"
+  initSystem: "plugin_name_initialize — e.g. ui_state_plugin_initialize"
+}
+```
 
 ---
 
@@ -240,12 +255,17 @@ export type MyStore = Database.Plugin.ToStore<typeof myPlugin>;
 
 ## Execute
 
-When creating or modifying a plugin:
-1. Verify property order matches the table (extends, services, components, resources, archetypes, computed, transactions, actions, systems).
-2. Use `extends` for single-parent, `Database.Plugin.combine()` for multiple peers.
-3. Ensure services only access `db.services` from extended plugins (not forward references).
-4. Export `type *Database = Database.Plugin.ToDatabase<typeof *Plugin>` when consumers need typed db access.
-5. Follow naming conventions for files, exports, and systems.
+```sudolang
+fn whenCreatingOrModifyingPlugin() {
+  Constraints {
+    Verify property order matches (extends, services, components, resources, archetypes, computed, transactions, actions, systems)
+    Use extends for single-parent; Database.Plugin.combine() for multiple peers
+    Ensure services only access db.services from extended plugins (not forward references)
+    Export type *Database = Database.Plugin.ToDatabase<typeof *Plugin> when consumers need typed db access
+    Follow naming conventions for files, exports, and systems
+  }
+}
+```
 
 ## Additional resources
 

@@ -13,7 +13,7 @@ src/types/point.ts
 
 With this file in context run
 
-    /namespace
+    /aidd-namespace
 
 The expected resulting files will be:
 

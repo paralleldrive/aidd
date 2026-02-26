@@ -1,5 +1,5 @@
 ---
-name: observe
+name: aidd-observe
 description: Enforces Observe pattern best practices from @adobe/data/observe. Use when working with Observe, observables, reactive data flow, service Observe properties, or when the user asks about Observe.withMap, Observe.withFilter, Observe.fromConstant, Observe.fromProperties, or similar.
 ---
 
@@ -82,13 +82,18 @@ Observe.withFilter(
 
 ## Execute
 
-When adding or using Observe:
-1. Use `Observe.fromConstant` for static values.
-2. Use `Observe.fromProperties` to combine multiple observables.
-3. Use `Observe.withFilter` when mapping and/or filtering.
-4. Use `Observe.createState` for mutable state with a setter.
-5. Call `unobserve()` when cleaning up (e.g. component unmount).
+```sudolang
+fn whenAddingOrUsingObserve() {
+  Constraints {
+    Use Observe.fromConstant for static values
+    Use Observe.fromProperties to combine multiple observables
+    Use Observe.withFilter when mapping and/or filtering
+    Use Observe.createState for mutable state with a setter
+    Call unobserve() when cleaning up (e.g. component unmount)
+  }
+}
+```
 
 ## Related
 
-- [service](../service/SKILL.md) — Observe in front-end services (data up via Observe)
+- [service](../aidd-service/SKILL.md) — Observe in front-end services (data up via Observe)

@@ -1,6 +1,6 @@
 # Layout design tokens
 
-Standard CSS classes for layout components. Use these instead of custom CSS in most cases. See [SKILL.md](SKILL.md) for terminal vs layout component rules.
+Standard CSS classes for layout components. Use these instead of custom CSS in most cases. See [SKILL.md](../SKILL.md) for terminal vs layout component rules.
 
 Most applications should define these tokens in a `common.css` file and make it available globally according to the UI tech stack. Define `--layout-gap`, `--layout-gutter`, and `--layout-padding` (e.g. on `:root`) with your spacing scale. In Lit, import the styles and include them in the `export const styles` property of the root element or shared base class.
 
