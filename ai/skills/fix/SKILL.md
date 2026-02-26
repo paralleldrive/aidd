@@ -31,7 +31,7 @@ Given a bug report or review feedback:
 If a fix is required:
 
 1. Locate the existing task epic that covers this area of the codebase
-2. If no matching epic exists, create one at `$projectRoot/tasks/<name>-epic.md` using `task-creator.mdc`
+2. If no matching epic exists, create one at `$projectRoot/tasks/<name>-epic.md` using `/task`
 3. Add a requirement bullet in **"Given X, should Y"** format that precisely describes the correct behavior
 4. The epic update is its own discrete step — commit it separately or include it in the fix commit with a clear message
 
@@ -42,7 +42,7 @@ epicConstraints {
 
 ## Step 3 — TDD: write a failing test first
 
-Using `tdd.mdc`:
+Using `/task`:
 
 1. Write a test that captures the new requirement
 2. Run the unit test runner and confirm the test **fails**
@@ -67,7 +67,7 @@ Using `tdd.mdc`:
 
 ## Step 5 — Review and run e2e tests
 
-Using `review.mdc`:
+Using `/review`:
 
 1. Run the full e2e suite and confirm all tests pass
 
@@ -80,7 +80,7 @@ Using `review.mdc`:
 
 ## Step 6 — Commit and push
 
-Using `commit.md`:
+Using `/commit`:
 
 1. Stage only the files changed by this fix
 2. Write a conventional commit message: `fix(<scope>): <description>`
