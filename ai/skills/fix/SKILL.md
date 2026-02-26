@@ -87,3 +87,7 @@ Using `/commit`:
   ```sh
   git push -u origin <branch-name>
   ```
+
+Commands {
+  🐛 /aidd-fix - fix a bug or review feedback following the full AIDD fix process
+}
