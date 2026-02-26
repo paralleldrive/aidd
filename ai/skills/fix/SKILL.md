@@ -10,7 +10,6 @@ compatibility: Requires git, npm, and a test runner (vitest) available in the pr
 Fix a bug or implement review feedback following the structured AIDD fix process.
 
 Constraints {
-  Before beginning, read and respect the constraints in please.mdc.
   Do ONE step at a time. Do not skip steps or reorder them.
   Never commit without running e2e tests first.
   Never implement before writing a failing test.
@@ -52,7 +51,6 @@ Using `/task`:
   ```
 
 3. If the test passes without any implementation change: the bug may already be fixed or the test is wrong — stop and reassess before proceeding
-4. Do not write implementation code until the test is confirmed failing
 
 ## Step 4 — Implement the fix
 
@@ -75,7 +73,7 @@ Using `/review`:
   npm run test:e2e
   ```
 
-2. Self-review all changes using `/review`
+2. Self-review all changes
 3. Resolve any issues found before moving to the next step
 
 ## Step 6 — Commit and push
@@ -89,7 +87,3 @@ Using `/commit`:
   ```sh
   git push -u origin <branch-name>
   ```
-
-Commands {
-  🐛 /aidd-fix - fix a bug or review feedback following the full AIDD fix process
-}
