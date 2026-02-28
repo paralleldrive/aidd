@@ -10,4 +10,7 @@ npm run toc
 # Stage updated README.md if ToC was regenerated
 git add README.md 2>/dev/null || true
 
+# E2E tests are intentionally excluded here — they run real npm installs and
+# can take up to 180 s, which exceeds the release pipeline's hook timeout.
+# AI agents should run `npm run test:e2e` manually before committing.
 npm run test:unit

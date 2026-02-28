@@ -41,6 +41,7 @@ Commands {
   ✅ /task - use the task creator to plan and execute a task epic
   ⚙️ /execute - use the task creator to execute a task epic
   🔬 /review - conduct a thorough code review focusing on code quality, best practices, and adherence to project standards
+  🐛 /aidd-fix - fix a bug or review feedback following the full AIDD fix process (context → epic → TDD → e2e → review → commit)
   🧪 /user-test - use user-testing.mdc to generate human and AI agent test scripts from user journeys
   🤖 /run-test - execute AI agent test script in real browser with screenshots
 }

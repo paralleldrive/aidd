@@ -37,6 +37,10 @@ Includes:
   - [Installation & Usage](#installation--usage)
   - [Command Options](#command-options)
   - [Examples](#examples)
+  - [`npx aidd create` — Scaffold a new project](#npx-aidd-create--scaffold-a-new-project)
+- [⚙️ Customizing aidd Framework for your Project](#-customizing-aidd-framework-for-your-project)
+  - [`aidd-custom/config.yml`](#aidd-customconfigyml)
+  - [`aidd-custom/AGENTS.md`](#aidd-customagentsmd)
 - [📁 AI System Structure](#-ai-system-structure)
   - [Key Components](#key-components)
 - [🎯 AI Integration](#-ai-integration)
@@ -415,6 +419,77 @@ npx aidd --index --verbose # Show all generated files
 # Multiple projects
 npx aidd frontend-app
 npx aidd backend-api
+```
+
+### `npx aidd create` — Scaffold a new project
+
+Use the `create` subcommand to scaffold a new project from a manifest-driven scaffold extension:
+
+```bash
+npx aidd create my-project                              # built-in next-shadcn scaffold
+npx aidd create scaffold-example my-project             # named scaffold bundled in aidd
+npx aidd create https://github.com/org/repo my-project  # remote GitHub repo (latest release)
+npx aidd create file:///path/to/scaffold my-project     # local scaffold directory
+```
+
+For full documentation on authoring your own scaffolds, see [docs/scaffold-authoring.md](./docs/scaffold-authoring.md).
+
+To avoid passing the URI on every invocation, save it to your user config with `set create-uri`. It is read automatically whenever you run `npx aidd create`:
+
+```bash
+npx aidd set create-uri https://github.com/org/scaffold
+npx aidd set create-uri file:///path/to/my-scaffold
+```
+
+The value is saved to `~/.aidd/config.yml`. You can also hand-edit it directly:
+
+```yaml
+# ~/.aidd/config.yml
+create-uri: https://github.com/your-org/my-scaffold
+```
+
+The lookup priority is:
+
+```
+CLI <type> arg  >  AIDD_CUSTOM_CREATE_URI env var  >  ~/.aidd/config.yml  >  default (next-shadcn)
+```
+
+## ⚙️ Customizing aidd Framework for your Project
+
+After installing the aidd system, create an `aidd-custom/` directory at your project root to extend or override the defaults without touching the built-in `ai/` files. Changes in `aidd-custom/` supersede the project root in case of any conflict.
+
+```
+your-project/
+├── ai/                        # built-in aidd framework files (don't edit)
+├── aidd-custom/               # your project-specific customizations
+│   ├── config.yml             # project-level aidd settings
+│   └── AGENTS.md              # project-specific agent instructions
+└── ...
+```
+
+### `aidd-custom/config.yml`
+
+Store project-level aidd settings as YAML (token-friendly for AI context injection):
+
+```yaml
+# aidd-custom/config.yml
+stack: next-shadcn
+team: my-org
+```
+
+### `aidd-custom/AGENTS.md`
+
+Project-specific instructions for AI agents. Write rules, constraints, and context that apply only to your project. AI agents are instructed to read `aidd-custom/AGENTS.md` after `AGENTS.md` — directives here override the defaults.
+
+```markdown
+# Project Agent Instructions
+
+## Stack
+We use Next.js 15 App Router with Tailwind CSS and shadcn/ui.
+
+## Conventions
+- All server actions live in `lib/actions/`
+- Use `createRoute` from `aidd/server` for API routes
 ```
 
 ## 📁 AI System Structure

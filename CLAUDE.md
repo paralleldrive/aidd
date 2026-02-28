@@ -42,20 +42,6 @@ If any conflicts are detected between a requested task and the vision document, 
 
 Never proceed with a task that contradicts the vision without explicit user approval.
 
-## Project Customizations
-
-If an `aidd-custom/` directory exists in the project root, agents must read `aidd-custom/AGENTS.md` after reading this file. Directives in `aidd-custom/AGENTS.md` are project-specific and **supersede** any conflicting instructions in this file.
-
-Also check `aidd-custom/config.yml` for project-level settings (stack, conventions, etc.).
-
-The user may also have a `~/.aidd/config.yml` — a user-level config file written by `npx aidd set`. It is separate from the project-level config and affects `npx aidd create` behavior (e.g. the default scaffold URI). Do not modify this file on behalf of the user without being explicitly asked.
-
-## Skills
-
-```
-fix bug → /aidd-fix
-```
-
 ## Testing
 
 The pre-commit hook runs unit tests only (`npm run test:unit`). E2E tests are excluded because they perform real installs and can take several minutes.

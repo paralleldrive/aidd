@@ -60,8 +60,6 @@ When writing functional requirements for a user story, use this guide for functi
 
 **File:** `review-example.md`
 
-*No description available*
-
 ### 🔬 Code Review
 
 **File:** `review.mdc`
@@ -83,8 +81,6 @@ when the user asks you to complete a task, use this guide for systematic task/ep
 ### TDD Engineer
 
 **File:** `tdd.mdc`
-
-*No description available*
 
 ### UI/UX Engineer
 
