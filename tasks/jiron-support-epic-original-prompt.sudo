@@ -1,0 +1,81 @@
+# Original Prompt - Jiron Support
+
+Please create a /task to add Jiron support to the aidd framework.
+
+
+Jiron Support:
+
+Jiron server:
+- Given functional requirements in a task, the AI agent should build a Jiron API which satisfies those functional requirements. See https://github.com/ericelliott/jiron
+
+Jiron Client
+
+- Given a Jiron server API endpoint, dynamically build web components capable of interacting with the endpoint:
+  - support siren semantics: https://github.com/kevinswiber/siren
+    - note: siren is kindof a mapping of html to json, so we can represent entity IDs with html-style URIs to support linking resources to other resources, including side-lining, rather than embedding child objects, collections, etc.
+
+Related, maybe useful: https://github.com/ericelliott/siren-resource
+
+Why?
+
+- Token-friendly AI agent-browsable interaction support for apps
+- Alternate server-rendered view of app pages - we should add an ai/rules and ai/commands pair to create server-rendered views for SEO and agent navigation. For browsers: render HTML. For agents, allow them to get a token-efficient Jiron view of that same document tree by fetching path/pagename.jiron. create a link with a real that clearly identifies this as a token-effient view for agents. Should include and HTML comment with instructions to the agent to fetch the Jiron views, instead.
+
+Before beginning:
+  Improve this prompt. Expand only where clarity is needed. Remove unnecessary detail. Favor inference to reduce token use. Use SudoLang syntax where it increases precision or compression. Markdown is valid SudoLang. Reference the syntax here: https://github.com/paralleldrive/sudolang/blob/main/syntaxes/syntax-test.sudo
+  Verify all facts against supplied resources. Never hallucinate.
+
+Create four files next to the task document:
+
+"${fileName}-original-prompt.sudo"
+"${fileName}-enhanced-prompt.sudo"
+"${fileName}-questions.md"
+"${fileName}-roundtable.md"
+
+file "${fileName}-original-prompt.sudo":
+  content: the exact prompt as received
+
+file "${fileName}-enhanced-prompt.sudo":
+  content:
+    improved prompt with:
+      concise structure
+      explicit intent
+      minimal rules
+      heavy reliance on inference
+      verified contextual details
+      SudoLang syntax only where beneficial
+
+file "${fileName}-questions.md":
+  content:
+    section "Open questions":
+      list all questions that arise during task interpretation
+      for each question:
+        write the literal question
+        infer the most likely answer using supplied resources and reasoning
+        include the inferred answer inline
+    section "Panel answers":
+      include the top one or two answers selected by the ExpertPanel and RTC
+    section "Unresolved":
+      list any questions that cannot be efficiently inferred
+
+file "${fileName}-roundtable.md":
+  content:
+    ExpertPanel:
+      assemble a small panel of relevant experts
+      their purpose is to critique the task and examine all open questions
+      each provides a concise viewpoint and critiques the others
+      panel surfaces uncertainties and proposes candidate answers
+    RTC depth 10:
+      evaluate all proposed answers
+      select the top one or two insights
+    section "Panel recommendations":
+      include those selected insights
+      note: these insights must also appear in "${fileName}-questions.md" under "Panel answers"
+
+function ImprovePrompt() {
+  1. restate objectives with minimal words
+  2. compress complexity into simple actionable blocks
+  3. specify required artifacts with compact SudoLang interface patterns
+  4. verify assumptions using supplied resources
+  5. rewrite with maximum clarity and minimal token footprint
+}
