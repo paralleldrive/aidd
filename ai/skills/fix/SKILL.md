@@ -63,9 +63,7 @@ Using `/execute`:
 
 3. Implement ONLY what makes the test pass — do not over-engineer or clean up unrelated code
 
-## Step 5 — Review and run e2e tests
-
-Using `/review`:
+## Step 5 — Run e2e tests and self-review
 
 1. Run the full e2e suite and confirm all tests pass
 
@@ -73,7 +71,7 @@ Using `/review`:
   npm run test:e2e
   ```
 
-2. Self-review all changes
+2. Optionally, use `/review` to self-review all changes
 3. Resolve any issues found before moving to the next step
 
 ## Step 6 — Commit and push
