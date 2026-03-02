@@ -36,7 +36,7 @@ See [`aidd-service/index.md`](./aidd-service/index.md) for contents.
 
 See [`aidd-structure/index.md`](./aidd-structure/index.md) for contents.
 
-### 📁 fix/
+### 📁 aidd-fix/
 
-See [`fix/index.md`](./fix/index.md) for contents.
+See [`aidd-fix/index.md`](./aidd-fix/index.md) for contents.
 
