@@ -2,6 +2,8 @@
 name: aidd-fix
 description: >
   Fix a bug or implement review feedback following the AIDD fix process.
+  Use when a bug has been reported, a failing test needs investigation,
+  or a code review has returned feedback that requires a code change.
 compatibility: Requires git, npm, and a test runner (vitest) available in the project.
 ---
 
@@ -64,19 +66,24 @@ Using `/execute`:
 
 3. Implement ONLY what makes the test pass — do not over-engineer or clean up unrelated code
 
-## Step 5 — Run e2e tests and self-review
+## Step 5 — Self-review and run all tests
 
-1. Check `aidd-custom/config.yml` for the `e2eBeforeCommit` setting:
-   - If `e2eBeforeCommit: true`, run the full e2e suite and confirm all tests pass:
+1. Run `/review` to self-review all changes
+2. Resolve any issues found before moving to the next step
+3. Run lint and unit tests to confirm all changes pass:
+
+  ```sh
+  npm run test:unit
+  ```
+
+4. Check `aidd-custom/config.yml` for the `e2eBeforeCommit` setting:
+   - `e2eBeforeCommit: true` → run the full e2e suite before continuing:
 
      ```sh
      npm run test:e2e
      ```
 
-   - If `e2eBeforeCommit: false` (the default), skip local e2e — the CI pipeline will run the full suite
-
-2. Run `/review` to self-review all changes
-3. Resolve any issues found before moving to the next step
+   - `e2eBeforeCommit: false` (the default) → skip local e2e — CI will run the full suite
 
 ## Step 6 — Commit and push
 
