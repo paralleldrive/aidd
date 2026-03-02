@@ -76,11 +76,14 @@ Using `/execute`:
   npm run test:unit
   ```
 
-  If `aidd-custom/config.yml` sets `e2eBeforeCommit: true`, also run:
+4. Check `aidd-custom/config.yml` for the `e2eBeforeCommit` setting:
+   - `e2eBeforeCommit: true` → run the full e2e suite before continuing:
 
-  ```sh
-  npm run test:e2e
-  ```
+     ```sh
+     npm run test:e2e
+     ```
+
+   - `e2eBeforeCommit: false` (the default) → skip local e2e — CI will run the full suite
 
 ## Step 6 — Commit and push
 
