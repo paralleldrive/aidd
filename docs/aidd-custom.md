@@ -39,6 +39,7 @@ manually.
 ## Keeping Customizations Upgrade-Safe
 
 Because `aidd-custom/` lives outside `ai/`, re-running `npx aidd --force` to
-update the framework will **not** overwrite your customizations. Only
-`aidd-custom/config.yml` is skipped on re-install (unless `--force` is passed),
-so your settings and custom skills are preserved across framework upgrades.
+update the framework will **not** overwrite anything in `aidd-custom/`.
+`aidd-custom/config.yml` is also skipped on a fresh install if it already
+exists (unless `--force` is passed), so your settings and custom skills are
+preserved across framework upgrades.
