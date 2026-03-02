@@ -11,7 +11,8 @@ Fix a bug or implement review feedback following the structured AIDD fix process
 
 Constraints {
   Do ONE step at a time. Do not skip steps or reorder them.
-  Run lint, unit and e2e tests prior to committing code. Planning and documentation (epics, /plan files, /docs, etc) are exempt.
+  Run lint and unit tests prior to committing code. Planning and documentation (epics, /plan files, /docs, etc) are exempt.
+  Run e2e tests prior to committing only if `aidd-custom/config.yml` sets `e2eBeforeCommit: true`.
   Never implement before writing a failing test.
   Never write a test after implementing — that is not TDD.
 }
@@ -65,11 +66,14 @@ Using `/execute`:
 
 ## Step 5 — Run e2e tests and self-review
 
-1. Run the full e2e suite and confirm all tests pass
+1. Check `aidd-custom/config.yml` for the `e2eBeforeCommit` setting:
+   - If `e2eBeforeCommit: true`, run the full e2e suite and confirm all tests pass:
 
-  ```sh
-  npm run test:e2e
-  ```
+     ```sh
+     npm run test:e2e
+     ```
+
+   - If `e2eBeforeCommit: false` (the default), skip local e2e — the CI pipeline will run the full suite
 
 2. Run `/review` to self-review all changes
 3. Resolve any issues found before moving to the next step
