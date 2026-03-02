@@ -90,7 +90,7 @@ Using `/execute`:
 Using `/commit`:
 
 1. Stage only the files changed by this fix
-2. Write a conventional commit message: `fix(<scope>): <description>`
+2. Write a conventional commit message following `/commit` (e.g. `type(optional-scope): description`)
 3. Push to the PR branch
 
   ```sh
