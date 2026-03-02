@@ -41,3 +41,7 @@ If any conflicts are detected between a requested task and the vision document, 
 3. Ask the user to clarify how to resolve the conflict before proceeding
 
 Never proceed with a task that contradicts the vision without explicit user approval.
+
+## Task Index
+
+fix bug => /aidd-fix
