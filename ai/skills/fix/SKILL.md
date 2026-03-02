@@ -41,7 +41,7 @@ epicConstraints {
 
 ## Step 3 — TDD: write a failing test first
 
-Using `/task`:
+Using `/execute`:
 
 1. Write a test that captures the new requirement
 2. Run the unit test runner and confirm the test **fails**
