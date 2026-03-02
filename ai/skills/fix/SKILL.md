@@ -71,7 +71,7 @@ Using `/execute`:
   npm run test:e2e
   ```
 
-2. Optionally, use `/review` to self-review all changes
+2. Run `/review` to self-review all changes
 3. Resolve any issues found before moving to the next step
 
 ## Step 6 — Commit and push
