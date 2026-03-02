@@ -8,6 +8,10 @@ This index provides an overview of the contents in this directory.
 
 See [`aidd-ecs/index.md`](./aidd-ecs/index.md) for contents.
 
+### 📁 aidd-fix/
+
+See [`aidd-fix/index.md`](./aidd-fix/index.md) for contents.
+
 ### 📁 aidd-layout/
 
 See [`aidd-layout/index.md`](./aidd-layout/index.md) for contents.
@@ -35,8 +39,4 @@ See [`aidd-service/index.md`](./aidd-service/index.md) for contents.
 ### 📁 aidd-structure/
 
 See [`aidd-structure/index.md`](./aidd-structure/index.md) for contents.
-
-### 📁 aidd-fix/
-
-See [`aidd-fix/index.md`](./aidd-fix/index.md) for contents.
 
