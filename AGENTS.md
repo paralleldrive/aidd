@@ -45,8 +45,8 @@ Never proceed with a task that contradicts the vision without explicit user appr
 ## Custom Skills and Configuration
 
 Project-specific customization lives in `aidd-custom/`. Before starting work,
-read `aidd-custom/index.md` to load any project-specific skills and
-configuration into context.
+read `aidd-custom/index.md` to discover available project-specific skills,
+and read `aidd-custom/config.yml` to load configuration into context.
 
 ## Task Index
 

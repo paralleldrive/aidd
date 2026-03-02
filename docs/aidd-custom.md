@@ -32,9 +32,9 @@ existing skill such as `ai/skills/fix/SKILL.md` for a reference template.
 ## How Agents Discover It
 
 The root `AGENTS.md` (written by the installer) instructs agents to read
-`aidd-custom/index.md` before starting work. This loads your custom skills and
-configuration into context without requiring agents to scan the directory
-manually.
+`aidd-custom/index.md` to discover available project-specific skills, and read
+`aidd-custom/config.yml` to load configuration into context — without
+requiring agents to scan the directory manually.
 
 ## Keeping Customizations Upgrade-Safe
 
