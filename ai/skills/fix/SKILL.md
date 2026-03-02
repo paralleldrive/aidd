@@ -11,7 +11,7 @@ Fix a bug or implement review feedback following the structured AIDD fix process
 
 Constraints {
   Do ONE step at a time. Do not skip steps or reorder them.
-  Never commit code without running e2e tests first. Planning and documentation commits (epics, task files) are exempt.
+  Run lint, unit and e2e tests prior to committing code. Planning and documentation (epics, /plan files, /docs, etc) are exempt.
   Never implement before writing a failing test.
   Never write a test after implementing — that is not TDD.
 }
