@@ -95,3 +95,17 @@ export function appendDirectives(
  * // result.action: "created" | "appended" | "unchanged"
  */
 export function ensureAgentsMd(targetBase: string): Promise<AgentsMdResult>;
+
+/**
+ * Ensure CLAUDE.md exists and contains agent guidelines.
+ *
+ * - If CLAUDE.md does not exist, creates it with the standard agent guidelines content.
+ * - If CLAUDE.md exists and already has all required directives (e.g. created by a
+ *   previous install), leaves it unchanged.
+ * - If CLAUDE.md exists and explicitly references AGENTS.md, leaves it unchanged.
+ * - Otherwise appends a short pointer to AGENTS.md.
+ *
+ * @param targetBase - Base directory for CLAUDE.md
+ * @returns Result indicating action taken
+ */
+export function ensureClaudeMd(targetBase: string): Promise<AgentsMdResult>;
