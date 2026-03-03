@@ -84,6 +84,7 @@ Parse and execute manifest steps sequentially in the target directory.
 - Given `steps` is present but is not an array (e.g. a string or plain object), should throw `ScaffoldValidationError` with a message that includes `"steps"` and the actual type received
 - Given a step item is not a plain object (e.g. a bare string, `null`, or nested array), should throw `ScaffoldValidationError` identifying the offending step number
 - Given a step item has no recognized keys (`run` or `prompt`), should throw `ScaffoldValidationError` identifying the offending step number and the keys that were found
+- Given a step item where `run` or `prompt` is not a string (e.g. `run: 123` or `prompt: [a, b]`), should throw `ScaffoldValidationError` with a message identifying the step number, key name, and actual type received
 - Given `steps` is absent or `null`, should return an empty array (backward-compatible default)
 
 ---
