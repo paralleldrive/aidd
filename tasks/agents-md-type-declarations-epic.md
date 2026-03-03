@@ -52,3 +52,22 @@ signature.
   entry in `missingDirectives`.
 - Given `appendDirectives` is called with an empty `missingDirectives` array,
   should append a block with no section content (i.e. sections string is empty).
+
+---
+
+## Pre-commit sync of AGENTS.md and CLAUDE.md
+
+Keep `AGENTS.md` and `CLAUDE.md` at the repo root in sync with the current
+`agentsMdContent` template so they never drift silently between manual `npx aidd`
+runs.
+
+**Requirements**:
+- Given a developer commits to this repo, should regenerate `AGENTS.md` and
+  `CLAUDE.md` from `agentsMdContent` if either file's content differs from the
+  template.
+- Given `AGENTS.md` or `CLAUDE.md` does not exist, should create it with
+  `agentsMdContent`.
+- Given `AGENTS.md` or `CLAUDE.md` already matches `agentsMdContent` exactly,
+  should leave it unchanged (no unnecessary write or stage).
+- Given the pre-commit hook runs `node bin/aidd.js --index`, should automatically
+  stage any regenerated `AGENTS.md` or `CLAUDE.md`.
