@@ -9,6 +9,15 @@ Today there's no way to bootstrap a new project from the AIDD ecosystem — devs
 
 ---
 
+## CLAUDE.md stability on repeated installs
+
+Ensure `ensureClaudeMd` does not modify a `CLAUDE.md` that was created by a previous install.
+
+**Requirements**:
+- Given `npx aidd` is run a second time on a project where `CLAUDE.md` was created by the first run, should return `action: "unchanged"` and not modify the file
+
+---
+
 ## Add `create` subcommand
 
 New Commander subcommand `create [type] <folder>` added to `bin/aidd.js`.
