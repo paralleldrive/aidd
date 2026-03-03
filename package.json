@@ -14,12 +14,14 @@
     "error-causes": "^3.0.2",
     "fs-extra": "^11.1.1",
     "gray-matter": "^4.0.3",
-    "js-sha3": "^0.9.3"
+    "js-sha3": "^0.9.3",
+    "js-yaml": "^4.1.1"
   },
   "description": "The standard framework for AI Driven Development.",
   "devDependencies": {
     "@biomejs/biome": "2.3.12",
     "@types/fs-extra": "^11.0.4",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^25.3.3",
     "@vitest/coverage-v8": "^3.2.4",
     "doctoc": "^2.2.1",
