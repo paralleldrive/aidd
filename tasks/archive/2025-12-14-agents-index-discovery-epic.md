@@ -132,6 +132,28 @@ Required directives:
 
 ---
 
+## Task 5: Fix Duplicate Wrapper Heading in appendDirectives
+
+**Context**: When `appendDirectives` is called multiple times on the same file (e.g., a user runs `npx aidd` twice after upgrading), the `---` separator and `## AIDD Agent Directives (Auto-appended)` heading are unconditionally prepended each time — even though individual subsections are already deduplicated. This results in duplicate headings and dividers in AGENTS.md.
+
+**Requirements**:
+
+- Given `appendDirectives` is called on content that already contains `## AIDD Agent Directives (Auto-appended)`, should NOT add a second wrapper heading or `---` separator
+- Given `appendDirectives` is called twice on the same file, should produce exactly one `## AIDD Agent Directives (Auto-appended)` heading
+- Given `appendDirectives` is called twice on the same file, should produce exactly one `---` separator from the auto-append block
+- Given the wrapper heading is already present and new sections need appending, should append the new section content directly under the existing heading
+
+**Success Criteria**:
+
+- [ ] `appendDirectives` checks for existing wrapper heading before prepending it
+- [ ] Running `ensureAgentsMd` twice produces only one `## AIDD Agent Directives (Auto-appended)` heading
+- [ ] Unit tests assert single heading and separator after two calls
+
+**Dependencies**: Tasks 1-4
+**Estimated Effort**: Small
+
+---
+
 ## Files Created/Modified
 
 **New Files**:
