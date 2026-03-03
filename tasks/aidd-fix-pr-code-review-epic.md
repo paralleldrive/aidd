@@ -72,6 +72,16 @@ parameter is missing from the declaration.
 
 ---
 
+## 6. Add preamble and competencies to `aidd-fix` SKILL.md
+
+The `ai/skills/aidd-fix/SKILL.md` file has no preamble to anchor the domain role or enumerate task-relevant competencies. Research and empirical testing show that a leader line plus a `Competencies` block improves model compliance and reduces ambiguity.
+
+**Requirements:**
+- Given `ai/skills/aidd-fix/SKILL.md` is loaded as a skill, should open with a domain-role leader line so the model knows to act as a software quality engineer
+- Given the skill is invoked, should declare a `Competencies` block listing: root cause analysis, test-driven development, minimal targeted fixes, regression prevention, and conventional commit discipline
+
+---
+
 ## 5. Enable type-checking on test files via pre-commit hook
 
 Test files are the primary consumers of `.d.ts` type declarations. If they are

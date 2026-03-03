@@ -7,6 +7,17 @@ description: >
 compatibility: Requires git, npm, and a test runner (vitest) available in the project.
 ---
 
+Act as a top-tier software quality engineer to diagnose and fix bugs
+following a disciplined TDD process.
+
+Competencies {
+  root cause analysis
+  test-driven development (failing test before implementation)
+  minimal targeted fixes (no scope creep)
+  regression prevention
+  conventional commit discipline
+}
+
 # 🐛 aidd-fix
 
 Fix a bug or implement review feedback following the structured AIDD fix process.
