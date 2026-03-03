@@ -9,6 +9,13 @@ Today there's no way to bootstrap a new project from the AIDD ecosystem — devs
 
 ---
 
+## Node.js engine requirement
+
+**Requirements**:
+- Given a user is on Node < 18, should receive a clear version constraint error from npm/node at install or run time — not a confusing runtime `ReferenceError`
+
+---
+
 ## Add `create` subcommand
 
 New Commander subcommand `create [type] <folder>` added to `bin/aidd.js`.

@@ -91,6 +91,9 @@
     "toc": "doctoc README.md",
     "typecheck": "tsc --noEmit && echo 'Type check complete.'"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "sideEffects": false,
   "type": "module",
   "version": "2.6.0"
