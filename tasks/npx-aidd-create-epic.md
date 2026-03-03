@@ -30,6 +30,7 @@ New Commander subcommand `create [type] <folder>` added to `bin/aidd.js`.
 Resolve extension source and fetch `README.md`, `SCAFFOLD-MANIFEST.yml`, and `bin/extension.js`.
 
 **Requirements**:
+- Given `AIDD_CUSTOM_CREATE_URI` was not set before a test, should be fully absent from `process.env` after the test completes — even if the test throws
 - Given a named scaffold type, should read files directly from `ai/scaffolds/<type>` in the package
 - Given an HTTP/HTTPS URI pointing to a GitHub repository, should download the latest GitHub release tarball (rather than git clone) and extract it to `<folder>/.aidd/scaffold/` — this gives versioned, reproducible scaffolds without fetching the full git history
 - Given a `file://` URI, should read extension files from the local path it points to without copying them
