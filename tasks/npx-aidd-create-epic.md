@@ -18,7 +18,7 @@ New Commander subcommand `create [type] <folder>` added to `bin/aidd.js`.
 - Given `<type>` matching a scaffold name, should resolve to `ai/scaffolds/<type>` in the package
 - Given `<type>` as an HTTP/HTTPS URI, should treat it as a remote extension source
 - Given no `<type>` and no `AIDD_CUSTOM_CREATE_URI`, should use the bundled `ai/scaffolds/next-shadcn` extension
-- Given `AIDD_CUSTOM_CREATE_URI` env var is set and no `<type>` arg, should use the env URI (supports `http://`, `https://`, and `file://` schemes)
+- Given `AIDD_CUSTOM_CREATE_URI` env var is set and no `<type>` arg, should use the env URI (supports `https://` and `file://` schemes only — `http://` is rejected)
 - Given `--agent <name>` flag, should use that agent CLI for `prompt` steps (default: `claude`)
 - Given scaffold completes successfully, should suggest `npx aidd scaffold-cleanup` to remove downloaded extension files
 - Given only a single `https://` or `file://` URI argument with no folder, should print `error: missing required argument 'folder'` and exit 1 (not silently create a directory with a mangled URL path)
