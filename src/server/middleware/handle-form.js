@@ -1,15 +1,7 @@
 /**
  * Create a form handler with validation, honeypot support, and PII scrubbing.
  *
- * @param {Object} opts
- * @param {string} opts.name - Name of the form for logging, metrics, and errors
- * @param {import('@sinclair/typebox').TObject} opts.schema - TypeBox schema for the request body
- * @param {(body: Record<string, unknown>) => Promise<void>} opts.processSubmission -
- *   Async function that processes a valid submission
- * @param {string[]} [opts.pii] -
- *   Field names that may contain PII, used to configure logger scrubbing
- * @param {string} [opts.honeypotField] -
- *   Optional honeypot field. Any non-empty value causes the submission to be rejected
+ * @param {{ name: string, schema: import('@sinclair/typebox').TObject, processSubmission: (body: Record<string, unknown>) => Promise<void>, pii?: string[], honeypotField?: string }} opts
  * @returns {Function} Middleware function that validates and processes the form
  *
  * @example
@@ -24,11 +16,13 @@
 
 import { TypeCompiler } from "@sinclair/typebox/compiler";
 
+/** @param {any} response @param {any} data */
 const log = (response, data) => {
   const logger = response.locals?.log || console.log;
   logger(data);
 };
 
+/** @param {Iterable<{ path: string, message: string }>} errors */
 const formatErrors = (errors) => {
   return [...errors].map((err) => {
     const path = err.path.slice(1) || "root";
@@ -46,13 +40,15 @@ const formatErrors = (errors) => {
   });
 };
 
-const handleForm = ({
-  name,
-  schema,
-  processSubmission,
-  pii,
-  honeypotField,
-}) => {
+const handleForm = (
+  /** @type {{ name: string, schema: import('@sinclair/typebox').TObject, processSubmission: (body: Record<string, unknown>) => Promise<void>, pii?: string[], honeypotField?: string }} */ {
+    name,
+    schema,
+    processSubmission,
+    pii,
+    honeypotField,
+  },
+) => {
   // Validate required parameters at factory creation time
   if (!name) throw new Error("handleForm: name is required");
   if (!schema) throw new Error("handleForm: schema is required");
@@ -62,7 +58,9 @@ const handleForm = ({
   // Compile schema once when middleware is created, not on every request
   const validator = TypeCompiler.Compile(schema);
 
-  return async ({ request, response }) => {
+  return async (
+    /** @type {import('../index.js').ServerContext} */ { request, response },
+  ) => {
     // Don't process if a prior middleware already rejected the request
     if (response.statusCode && response.statusCode >= 400) {
       return { request, response };

@@ -4,10 +4,7 @@
  * Security: allowedOrigins is REQUIRED. This forces explicit configuration
  * and prevents accidental exposure of APIs to all origins.
  *
- * @param {Object} options
- * @param {string|string[]} options.allowedOrigins - Allowed origins (REQUIRED)
- * @param {string[]} [options.allowedHeaders] - Allowed headers
- * @param {string[]} [options.allowedMethods] - Allowed HTTP methods
+ * @param {{ allowedOrigins?: string | string[], allowedHeaders?: string[], allowedMethods?: string[] }} [options]
  * @returns {Function} CORS middleware
  *
  * @example
@@ -35,17 +32,19 @@
 
 import { createError } from "error-causes";
 
-const createWithCors = ({
-  allowedOrigins,
-  allowedHeaders = [
-    "Origin",
-    "X-Requested-With",
-    "Content-Type",
-    "Accept",
-    "Authorization",
-  ],
-  allowedMethods = ["GET", "POST", "PUT", "PATCH", "DELETE"],
-} = {}) => {
+const createWithCors = (
+  /** @type {{ allowedOrigins?: string | string[], allowedHeaders?: string[], allowedMethods?: string[] }} */ {
+    allowedOrigins,
+    allowedHeaders = [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "Authorization",
+    ],
+    allowedMethods = ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  } = {},
+) => {
   // Security: Require explicit origin configuration
   if (!allowedOrigins) {
     throw createError({
@@ -58,6 +57,7 @@ const createWithCors = ({
     });
   }
 
+  /** @param {string | undefined} requestOrigin */
   const getOrigin = (requestOrigin) => {
     // Security: Never allow null origin (can be exploited)
     if (requestOrigin === "null") {
@@ -69,14 +69,19 @@ const createWithCors = ({
       return allowedOrigins === requestOrigin ? requestOrigin : null;
     }
     if (Array.isArray(allowedOrigins)) {
-      return allowedOrigins.includes(requestOrigin) ? requestOrigin : null;
+      return allowedOrigins.includes(requestOrigin ?? "")
+        ? requestOrigin
+        : null;
     }
     return null;
   };
 
+  /** @param {import('../index.js').ServerContext} context */
   const appendHeaders = ({ request, response }) => {
     // Node.js normalizes all incoming headers to lowercase
-    const requestOrigin = request.headers?.origin;
+    const requestOrigin = /** @type {string | undefined} */ (
+      request.headers?.origin
+    );
     const origin = getOrigin(requestOrigin);
 
     if (origin) {
@@ -96,7 +101,9 @@ const createWithCors = ({
     return response;
   };
 
-  return async ({ request, response }) => ({
+  return async (
+    /** @type {import('../index.js').ServerContext} */ { request, response },
+  ) => ({
     request,
     response: appendHeaders({ request, response }),
   });
