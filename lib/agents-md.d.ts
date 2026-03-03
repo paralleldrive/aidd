@@ -14,7 +14,7 @@ export interface AgentsMdResult {
 export const requiredDirectives: readonly string[];
 
 /** Default content for newly created AGENTS.md files */
-export const AGENTS_MD_CONTENT: string;
+export const agentsMdContent: string;
 
 /**
  * Check if AGENTS.md exists at the target path
