@@ -1,3 +1,4 @@
+// @ts-check
 import { assert } from "riteway/vitest";
 import { describe, test } from "vitest";
 
@@ -5,9 +6,9 @@ import { asyncPipe } from "./async-pipe.js";
 
 describe("asyncPipe", () => {
   test("pipes async functions in sequence", async () => {
-    const add1 = async (x) => x + 1;
-    const multiply2 = async (x) => x * 2;
-    const subtract3 = async (x) => x - 3;
+    const add1 = async (/** @type {number} */ x) => x + 1;
+    const multiply2 = async (/** @type {number} */ x) => x * 2;
+    const subtract3 = async (/** @type {number} */ x) => x - 3;
 
     const pipeline = asyncPipe(add1, multiply2, subtract3);
     const result = await pipeline(5);
@@ -21,7 +22,7 @@ describe("asyncPipe", () => {
   });
 
   test("handles single function", async () => {
-    const double = async (x) => x * 2;
+    const double = async (/** @type {number} */ x) => x * 2;
     const pipeline = asyncPipe(double);
     const result = await pipeline(4);
 

@@ -5,14 +5,24 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["ES2020"],
-    "module": "ES2020",
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "noEmit": true,
+    "paths": {
+      "aidd/server": ["./src/server/index.js"],
+      "aidd/utils": ["./utils/index.js"]
+    },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2020"
   },
-  "exclude": ["node_modules", "**/*.test.js"],
-  "include": ["lib/**/*.d.ts", "src/**/*.d.ts"]
+  "exclude": ["node_modules"],
+  "include": [
+    "lib/**/*.d.ts",
+    "lib/**/*.test.js",
+    "src/**/*.d.ts",
+    "utils/**/*.d.ts",
+    "utils/**/*.test.js"
+  ]
 }
