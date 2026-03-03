@@ -53,14 +53,31 @@ export function writeAgentsFile(
   content: string,
 ): Promise<void>;
 
+/** A section entry in DIRECTIVE_APPEND_SECTIONS */
+export interface DirectiveAppendSection {
+  /** Markdown content to append when one or more keywords are missing */
+  content: string;
+  /** Directive keywords that this section satisfies */
+  keywords: readonly string[];
+}
+
+/**
+ * Maps sets of directive keywords to the markdown sections that satisfy them.
+ * `appendDirectives` uses this table to emit only the sections whose keywords
+ * are absent from the existing file, preventing duplication on upgrade.
+ */
+export const DIRECTIVE_APPEND_SECTIONS: ReadonlyArray<DirectiveAppendSection>;
+
 /**
  * Append directives to existing AGENTS.md
  * @param targetBase - Base directory containing AGENTS.md
  * @param existingContent - Current content of AGENTS.md
+ * @param missingDirectives - List of directive keywords that are absent
  */
 export function appendDirectives(
   targetBase: string,
   existingContent: string,
+  missingDirectives: string[],
 ): Promise<void>;
 
 /**
