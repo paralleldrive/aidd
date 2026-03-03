@@ -127,7 +127,7 @@ https://paralleldrive.com
             }
             process.exit(0);
           } else {
-            console.error(chalk.red(`❌ ${result.error}`));
+            console.error(chalk.red(`❌ ${result.error.message}`));
             process.exit(1);
           }
           return;

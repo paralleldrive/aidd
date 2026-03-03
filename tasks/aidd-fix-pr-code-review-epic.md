@@ -53,9 +53,9 @@ The type declaration (`lib/index-generator.d.ts`) currently types it as `string`
 only, which is wrong for the catch path.
 
 **Requirements:**
-- Given `generateAllIndexes` encounters a missing `ai/` directory, should return `error` as a string message (current behaviour is acceptable)
-- Given `generateAllIndexes` throws during index generation, should return `error` as `{ cause, message }` object consistent with other error shapes in the codebase
-- Given `GenerateAllResult` in `lib/index-generator.d.ts`, should type `error` as `string | { cause?: unknown; message: string }` to cover both paths
+- Given `generateAllIndexes` encounters a missing `ai/` directory, should return `error` as `{ message: string }` object (normalized from plain string) so both error paths share the same shape
+- Given `generateAllIndexes` throws during index generation, should return `error` as `{ cause?: unknown; message: string }` object consistent with other error shapes in the codebase
+- Given `GenerateAllResult` in `lib/index-generator.d.ts`, should type `error` as `{ cause?: unknown; message: string }` to accurately reflect the unified object shape across both error paths
 
 ---
 
