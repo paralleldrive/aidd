@@ -106,3 +106,24 @@ export function ensureAgentsMd(targetBase: string): Promise<AgentsMdResult>;
  * @returns Result indicating action taken
  */
 export function ensureClaudeMd(targetBase: string): Promise<AgentsMdResult>;
+
+/** Result of a single file sync in syncRootAgentFiles */
+export interface SyncFileResult {
+  /** Filename that was processed (e.g. "AGENTS.md" or "CLAUDE.md") */
+  file: string;
+  /** Action taken: "created", "updated", or "unchanged" */
+  action: "created" | "updated" | "unchanged";
+}
+
+/**
+ * Overwrite AGENTS.md and CLAUDE.md with the current agentsMdContent template
+ * if either file is missing or its content differs from the template.
+ * Used by the pre-commit hook to keep committed copies in sync whenever
+ * agentsMdContent is updated.
+ *
+ * @param targetBase - Base directory containing AGENTS.md and CLAUDE.md
+ * @returns Array of results for each file processed
+ */
+export function syncRootAgentFiles(
+  targetBase: string,
+): Promise<SyncFileResult[]>;

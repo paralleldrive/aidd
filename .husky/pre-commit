@@ -1,8 +1,8 @@
-# Generate index.md files for ai/ and aidd-custom/ folders
+# Generate index.md files for ai/ and aidd-custom/ folders, and sync AGENTS.md / CLAUDE.md
 node bin/aidd.js --index "$(git rev-parse --show-toplevel)"
 
-# Stage any updated index.md files
-git add 'ai/**/index.md' 'aidd-custom/**/index.md' 2>/dev/null || true
+# Stage any updated index.md files and synced agent files
+git add 'ai/**/index.md' 'aidd-custom/**/index.md' AGENTS.md CLAUDE.md 2>/dev/null || true
 
 # Generate ToC for README.md
 npm run toc

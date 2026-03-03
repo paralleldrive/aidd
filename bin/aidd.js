@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import chalk from "chalk";
 import { Command } from "commander";
 
+import { syncRootAgentFiles } from "../lib/agents-md.js";
 import { writeConfig } from "../lib/aidd-config.js";
 import { executeClone, handleCliErrors } from "../lib/cli-core.js";
 import { generateAllIndexes } from "../lib/index-generator.js";
@@ -142,11 +143,19 @@ https://paralleldrive.com
                 console.log(chalk.gray(`  - ${idx.path}`));
               });
             }
-            process.exit(0);
           } else {
             console.error(chalk.red(`❌ ${result.error.message}`));
             process.exit(1);
           }
+
+          const syncResults = await syncRootAgentFiles(targetPath);
+          syncResults
+            .filter(({ action }) => action !== "unchanged")
+            .forEach(({ file, action }) => {
+              console.log(chalk.green(`✅ ${action} ${file}`));
+            });
+
+          process.exit(0);
           return;
         }
 
