@@ -21,6 +21,7 @@ New Commander subcommand `create [type] <folder>` added to `bin/aidd.js`.
 - Given `AIDD_CUSTOM_EXTENSION_URI` env var is set and no `<type>` arg, should use the env URI (supports `http://`, `https://`, and `file://` schemes)
 - Given `--agent <name>` flag, should use that agent CLI for `prompt` steps (default: `claude`)
 - Given scaffold completes successfully, should suggest `npx aidd scaffold-cleanup` to remove downloaded extension files
+- Given a scaffold folder path that contains spaces, the cleanup tip should produce a shell-safe command with the path quoted in double quotes
 
 ---
 
