@@ -22,6 +22,7 @@ New Commander subcommand `create [type] <folder>` added to `bin/aidd.js`.
 - Given `--agent <name>` flag, should use that agent CLI for `prompt` steps (default: `claude`)
 - Given scaffold completes successfully, should suggest `npx aidd scaffold-cleanup` to remove downloaded extension files
 - Given only a single `https://` or `file://` URI argument with no folder, should print `error: missing required argument 'folder'` and exit 1 (not silently create a directory with a mangled URL path)
+- Given `resolveExtension` rejects for any reason (e.g. user cancels remote code confirmation, network failure), should not create any directory on disk
 
 ---
 
