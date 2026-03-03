@@ -232,3 +232,4 @@ YAML is used for the config file because it is token-friendly for AI context inj
 - Given `npx aidd create` with no `<type>` arg and no `AIDD_CUSTOM_CREATE_URI` env var, should fall back to the `create-uri` value from `~/.aidd/config.yml`
 - Given `AIDD_CUSTOM_CREATE_URI` env var is set, should take precedence over `~/.aidd/config.yml`
 - Given a CLI `<type>` arg, should take precedence over both the env var and `~/.aidd/config.yml`
+- Given a config file containing a YAML-specific tag (e.g. `!!binary`), `readConfig` should return `{}` (unsafe YAML types are rejected by `yaml.JSON_SCHEMA`)
