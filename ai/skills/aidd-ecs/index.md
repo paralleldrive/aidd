@@ -14,5 +14,3 @@ Enforces @adobe/data/ecs best practices. Use this whenever @adobe/data/ecs is im
 
 **File:** `data-modeling.md`
 
-*No description available*
-
