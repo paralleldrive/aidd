@@ -69,6 +69,7 @@ NamingConstraints {
   Use strong negatives over weak ones: `isEmpty(thing)` not `!isDefined(thing)`.
   Mixins and function decorators use `with${Thing}`. e.g. `withUser`, `withFeatures`, `withAuth`.
   Avoid ALL_CAPS for constants. Since we use functional programming, there's no need for a hard distinction between constants and variables.
+  Exception: environment variable names use ALL_CAPS (e.g. `process.env.AIDD_CUSTOM_EXTENSION_URI`) to make it immediately clear they originate from the environment.
 }
 
 Comments {
