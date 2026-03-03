@@ -3,6 +3,7 @@
  * Provides standardized error response helper
  */
 
+/** @param {any} response */
 const appendServerError = (response) => {
   if (!response.locals) response.locals = {};
   response.locals.serverError = ({
@@ -19,7 +20,9 @@ const appendServerError = (response) => {
   return response;
 };
 
-const withServerError = async ({ request, response }) => ({
+const withServerError = async (
+  /** @type {import('../index.js').ServerContext} */ { request, response },
+) => ({
   request,
   response: appendServerError(response),
 });

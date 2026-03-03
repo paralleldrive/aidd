@@ -5,17 +5,20 @@
 
 import { createError } from "error-causes";
 
+/** @param {import('../index.js').ServerContext} context */
 const defaultOnUnauthenticated = ({ response }) => {
   response.status(401).json({ error: "Unauthorized" });
 };
 
+/** @param {any} response */
 const ensureLocals = (response) => {
   if (!response.locals) response.locals = {};
   return response;
 };
 
+/** @param {{ auth: import('../index.js').BetterAuthInstance, request: import('../index.js').Request }} options */
 const getSession = async ({ auth, request }) => {
-  const result = await auth.api.getSession({ headers: request.headers });
+  const result = await auth.api.getSession({ headers: request.headers ?? {} });
   return result;
 };
 
@@ -23,9 +26,7 @@ const getSession = async ({ auth, request }) => {
  * Creates auth middleware that requires authentication
  * Returns 401 if no valid session
  *
- * @param {Object} options
- * @param {Object} options.auth - better-auth instance
- * @param {Function} [options.onUnauthenticated] - Custom handler for 401 responses
+ * @param {{ auth?: import('../index.js').BetterAuthInstance, onUnauthenticated?: Function }} [options]
  * @returns {Function} Middleware function
  *
  * @example
@@ -49,7 +50,9 @@ const createWithAuth = ({
     });
   }
 
-  return async ({ request, response }) => {
+  return async (
+    /** @type {import('../index.js').ServerContext} */ { request, response },
+  ) => {
     ensureLocals(response);
 
     const result = await getSession({ auth, request });
@@ -59,7 +62,8 @@ const createWithAuth = ({
       return { request, response };
     }
 
-    response.locals.auth = {
+    const locals = /** @type {any} */ (response.locals);
+    locals.auth = {
       session: result.session,
       user: result.user,
     };
@@ -72,8 +76,7 @@ const createWithAuth = ({
  * Creates auth middleware that allows anonymous requests
  * Attaches user if session exists, otherwise sets auth to null
  *
- * @param {Object} options
- * @param {Object} options.auth - better-auth instance
+ * @param {{ auth?: import('../index.js').BetterAuthInstance }} [options]
  * @returns {Function} Middleware function
  *
  * @example
@@ -96,17 +99,20 @@ const createWithOptionalAuth = ({ auth } = {}) => {
     });
   }
 
-  return async ({ request, response }) => {
+  return async (
+    /** @type {import('../index.js').ServerContext} */ { request, response },
+  ) => {
     ensureLocals(response);
 
     const result = await getSession({ auth, request });
 
+    const locals = /** @type {any} */ (response.locals);
     if (!result) {
-      response.locals.auth = null;
+      locals.auth = null;
       return { request, response };
     }
 
-    response.locals.auth = {
+    locals.auth = {
       session: result.session,
       user: result.user,
     };

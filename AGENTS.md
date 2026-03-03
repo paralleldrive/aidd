@@ -41,3 +41,13 @@ If any conflicts are detected between a requested task and the vision document, 
 3. Ask the user to clarify how to resolve the conflict before proceeding
 
 Never proceed with a task that contradicts the vision without explicit user approval.
+
+## Custom Skills and Configuration
+
+Project-specific customization lives in `aidd-custom/`. Before starting work,
+read `aidd-custom/index.md` to discover available project-specific skills,
+and read `aidd-custom/config.yml` to load configuration into context.
+
+## Task Index
+
+fix bug => /aidd-fix

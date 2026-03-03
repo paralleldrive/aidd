@@ -1,8 +1,7 @@
 /**
  * CSRF protection middleware using double-submit cookie pattern
  *
- * @param {Object} options
- * @param {number} [options.maxAge=10800] - Cookie max age in seconds (default: 3 hours)
+ * @param {{ maxAge?: number }} [options]
  * @returns {Function} CSRF middleware
  *
  * @example
@@ -23,18 +22,28 @@ const SAFE_METHODS = ["GET", "HEAD", "OPTIONS"];
 const COOKIE_NAME = "csrf_token";
 const DEFAULT_MAX_AGE = 3 * 60 * 60; // 3 hours in seconds
 
+/** @param {string | undefined} cookieHeader */
 const parseCookies = (cookieHeader) => {
   if (!cookieHeader) return {};
-  return cookieHeader.split(";").reduce((cookies, cookie) => {
-    const parts = cookie.trim().split("=");
-    const name = parts[0];
-    // Rejoin remaining parts to handle values containing '='
-    const value = parts.slice(1).join("=");
-    cookies[name] = value;
-    return cookies;
-  }, {});
+  return cookieHeader
+    .split(";")
+    .reduce(
+      (
+        /** @type {Record<string, string>} */ cookies,
+        /** @type {string} */ cookie,
+      ) => {
+        const parts = cookie.trim().split("=");
+        const name = parts[0];
+        // Rejoin remaining parts to handle values containing '='
+        const value = parts.slice(1).join("=");
+        cookies[name] = value;
+        return cookies;
+      },
+      {},
+    );
 };
 
+/** @param {string | undefined} token */
 const hashToken = (token) => sha3_256(token || "");
 
 // Hash both tokens before comparison.
@@ -45,13 +54,19 @@ const hashToken = (token) => sha3_256(token || "");
 //   2. A cryptographic hash makes any change in the input completely
 //      change the output, so there is no prefix-based timing signal.
 //   3. Hashing also keeps raw CSRF token values out of logs and errors.
+/** @param {string} token1 @param {string} token2 */
 const tokensMatch = (token1, token2) => hashToken(token1) === hashToken(token2);
 
+/** @param {any} response @param {any} data */
 const log = (response, data) => {
   const logger = response.locals?.log || console.log;
   logger(data);
 };
 
+/**
+ * @param {any} response
+ * @param {{ requestId: string | undefined, method: string | undefined, url: string | undefined, hasCookie: boolean, hasHeader: boolean, hasBody: boolean }} details
+ */
 const rejectRequest = (
   response,
   { requestId, method, url, hasCookie, hasHeader, hasBody },
@@ -73,6 +88,7 @@ const rejectRequest = (
 };
 
 const createWithCSRF = ({ maxAge = DEFAULT_MAX_AGE } = {}) => {
+  /** @param {string} token */
   const buildCookieString = (token) => {
     const parts = [
       `${COOKIE_NAME}=${token}`,
@@ -86,12 +102,16 @@ const createWithCSRF = ({ maxAge = DEFAULT_MAX_AGE } = {}) => {
     return parts.join("; ");
   };
 
-  return async ({ request, response }) => {
+  return async (
+    /** @type {import('../index.js').ServerContext} */ { request, response },
+  ) => {
     if (!response.locals) response.locals = {};
 
-    if (SAFE_METHODS.includes(request.method)) {
+    if (SAFE_METHODS.includes(request.method ?? "")) {
       // Reuse existing token if present, otherwise generate new one
-      const cookies = parseCookies(request.headers?.cookie);
+      const cookies = parseCookies(
+        /** @type {string | undefined} */ (request.headers?.cookie),
+      );
       const existingToken = cookies[COOKIE_NAME];
       const token = existingToken || createId();
 
@@ -102,9 +122,13 @@ const createWithCSRF = ({ maxAge = DEFAULT_MAX_AGE } = {}) => {
     }
 
     // Unsafe method - validate CSRF token
-    const cookies = parseCookies(request.headers?.cookie);
+    const cookies = parseCookies(
+      /** @type {string | undefined} */ (request.headers?.cookie),
+    );
     const cookieToken = cookies[COOKIE_NAME];
-    const headerToken = request.headers?.["x-csrf-token"];
+    const headerToken = /** @type {string | undefined} */ (
+      request.headers?.["x-csrf-token"]
+    );
     const bodyToken = request.body?._csrf;
     const submittedToken = headerToken || bodyToken;
 

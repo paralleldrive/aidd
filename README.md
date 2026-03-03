@@ -45,6 +45,7 @@ Includes:
   - [Creating Your Vision Document](#creating-your-vision-document)
   - [How Agents Use the Vision Document](#how-agents-use-the-vision-document)
   - [AGENTS.md File](#agentsmd-file)
+  - [`aidd-custom/` — Project Customization](#aidd-custom--project-customization)
 - [🔧 Cursor Editor Setup](#-cursor-editor-setup)
   - [Automatic Setup (Recommended)](#automatic-setup-recommended)
   - [When to Use `--cursor`](#when-to-use---cursor)
@@ -538,6 +539,12 @@ When you run the AIDD installer, it automatically creates (or updates) an `AGENT
 - Practice progressive discovery (only reading folders relevant to the current task)
 - Respect the vision document as the source of truth
 - Handle conflicts appropriately
+
+### `aidd-custom/` — Project Customization
+
+The installer also creates `aidd-custom/config.yml` in your project root. This folder is the place for project-specific overrides: custom skills, behavior configuration, and additional agent directives. Agents are instructed to read `aidd-custom/index.md` on startup so your customizations are always in context.
+
+See [docs/aidd-custom.md](docs/aidd-custom.md) for all available options.
 
 ## 🔧 Cursor Editor Setup
 

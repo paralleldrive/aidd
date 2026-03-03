@@ -4,14 +4,14 @@ import { createError } from "error-causes";
  * Loads configuration from environment variables
  *
  * @param {string[]} keys - Array of environment variable names to load
- * @returns {Promise<Object>} Config object with key-value pairs
+ * @returns {Promise<Record<string, string | undefined>>} Config object with key-value pairs
  *
  * @example
  * const config = await loadConfigFromEnv(['DATABASE_URL', 'API_KEY', 'PORT']);
  * // => { DATABASE_URL: 'postgres://...', API_KEY: 'abc123', PORT: '3000' }
  */
 const loadConfigFromEnv = async (keys = []) => {
-  const config = {};
+  const config = /** @type {Record<string, string | undefined>} */ ({});
   for (const key of keys) {
     config[key] = process.env[key];
   }
@@ -21,8 +21,8 @@ const loadConfigFromEnv = async (keys = []) => {
 /**
  * Creates a config object with a get() method that throws on missing keys
  *
- * @param {Object} configData - Raw config key-value pairs
- * @returns {Object} Config object with get() method
+ * @param {Record<string, any>} configData - Raw config key-value pairs
+ * @returns {import('../index.js').ConfigObject} Config object with get() method
  *
  * @example
  * const config = createConfigObject({ API_KEY: 'abc123' });
@@ -30,7 +30,7 @@ const loadConfigFromEnv = async (keys = []) => {
  * config.get('MISSING'); // => throws caused error
  */
 const createConfigObject = (configData) => ({
-  get(key) {
+  get(/** @type {string} */ key) {
     if (!(key in configData)) {
       throw createError({
         message: `Required configuration key "${key}" is not defined.`,
@@ -46,7 +46,7 @@ const createConfigObject = (configData) => ({
  * Config injection middleware factory
  * Loads configuration and attaches to response.locals
  *
- * @param {Function} configLoader - Async function that returns config
+ * @param {() => Promise<Record<string, any>>} configLoader - Async function that returns config
  * @returns {Function} Middleware function
  *
  * @example
@@ -68,6 +68,7 @@ const createConfigObject = (configData) => ({
  * });
  */
 const createWithConfig = (configLoader) => {
+  /** @param {any} response */
   const appendConfig = async (response) => {
     const configData = await configLoader();
     if (!response.locals) response.locals = {};
@@ -75,7 +76,9 @@ const createWithConfig = (configLoader) => {
     return response;
   };
 
-  return async ({ request, response }) => ({
+  return async (
+    /** @type {import('../index.js').ServerContext} */ { request, response },
+  ) => ({
     request,
     response: await appendConfig(response),
   });
