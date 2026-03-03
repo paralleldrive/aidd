@@ -16,8 +16,10 @@ Extract `createCursorSymlink` from `lib/cli-core.js` into a generic, parameteriz
 **Requirements**:
 - Given `createSymlink({ name, targetBase, force })`, should create a symlink at `targetBase/name` pointing to the relative path `ai`
 - Given the symlink target already exists and `force` is false, should throw a `ValidationError` with code `"VALIDATION_ERROR"`
+- Given the symlink target already exists and `force` is false, should throw an error whose `cause.name` is `"ValidationError"` so that `handleCliErrors` dispatches to the correct handler
 - Given the symlink target already exists and `force` is true, should remove the existing entry and create the symlink
 - Given any unexpected filesystem error, should throw a `FileSystemError` with code `"FILESYSTEM_ERROR"` wrapping the original error
+- Given any unexpected filesystem error, should throw an error whose `cause.name` is `"FileSystemError"` so that `handleCliErrors` dispatches to the correct handler
 - Given `lib/cursor-symlink.test.js` is replaced by `lib/symlinks.test.js`, all existing cursor tests should continue to pass
 
 ---
