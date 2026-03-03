@@ -38,6 +38,15 @@ Resolve extension source and fetch `README.md`, `SCAFFOLD-MANIFEST.yml`, and `bi
 
 ---
 
+## Scaffold verifier
+
+Pre-flight checks that a resolved scaffold is structurally valid before any steps are executed.
+
+**Requirements**:
+- Given a missing manifest, should return an error message that includes the full `manifestPath` so the user knows exactly where the file was expected
+
+---
+
 ## SCAFFOLD-MANIFEST.yml runner
 
 Parse and execute manifest steps sequentially in the target directory.
