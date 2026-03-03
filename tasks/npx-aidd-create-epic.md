@@ -35,6 +35,7 @@ Resolve extension source and fetch `README.md`, `SCAFFOLD-MANIFEST.yml`, and `bi
 - Given any extension, should display README contents to the user before proceeding
 - Given a remote HTTP/HTTPS URI, should warn the user they are about to execute remote code and prompt for confirmation before downloading or running anything
 - Given fetched extension files, should leave them in place at `<folder>/.aidd/scaffold/` after scaffolding completes
+- Given `AIDD_CUSTOM_CREATE_URI` was not set before a test, should be fully absent (not the string `"undefined"`) after the test completes — even if the test throws
 
 ---
 
