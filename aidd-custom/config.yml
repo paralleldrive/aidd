@@ -1,0 +1,9 @@
+# AIDD Custom Configuration
+# Customize the AIDD Framework behavior for this project.
+# https://github.com/paralleldrive/aidd
+
+# Run e2e tests before committing (framework default: false)
+# This repo intentionally overrides the default to enforce local e2e runs
+# before every commit. Do not change this unless the team agrees to defer
+# e2e coverage entirely to CI.
+e2eBeforeCommit: true

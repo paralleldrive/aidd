@@ -20,7 +20,7 @@ export interface IndexWriteResult {
 export interface GenerateAllResult {
   success: boolean;
   message?: string;
-  error?: string;
+  error?: { cause?: unknown; message: string };
   indexes: IndexWriteResult[];
 }
 
@@ -85,10 +85,12 @@ export function writeIndex(dirPath: string): Promise<IndexWriteResult>;
  * Recursively generate index.md files for all subdirectories
  * @param dirPath - Starting directory
  * @param results - Accumulator for results (internal use)
+ * @param depth - Current recursion depth (internal use)
  */
 export function generateIndexRecursive(
   dirPath: string,
   results?: IndexWriteResult[],
+  depth?: number,
 ): Promise<IndexWriteResult[]>;
 
 /**

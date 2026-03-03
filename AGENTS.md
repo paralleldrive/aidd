@@ -42,19 +42,15 @@ If any conflicts are detected between a requested task and the vision document, 
 
 Never proceed with a task that contradicts the vision without explicit user approval.
 
-## Project Customizations
+## Custom Skills and Configuration
 
-If an `aidd-custom/` directory exists in the project root, agents must read `aidd-custom/AGENTS.md` after reading this file. Directives in `aidd-custom/AGENTS.md` are project-specific and **supersede** any conflicting instructions in this file.
+Project-specific customization lives in `aidd-custom/`. Before starting work,
+read `aidd-custom/index.md` to discover available project-specific skills,
+and read `aidd-custom/config.yml` to load configuration into context.
 
-Also check `aidd-custom/config.yml` for project-level settings (stack, conventions, etc.).
+## Task Index
 
-The user may also have a `~/.aidd/config.yml` — a user-level config file written by `npx aidd set`. It is separate from the project-level config and affects `npx aidd create` behavior (e.g. the default scaffold URI). Do not modify this file on behalf of the user without being explicitly asked.
-
-## Skills
-
-```
-fix bug → /aidd-fix
-```
+fix bug => /aidd-fix
 
 ## Testing
 

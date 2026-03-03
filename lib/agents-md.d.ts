@@ -11,10 +11,10 @@ export interface AgentsMdResult {
 }
 
 /** Required directive keywords that must be present in AGENTS.md */
-export const REQUIRED_DIRECTIVES: readonly string[];
+export const requiredDirectives: readonly string[];
 
 /** Default content for newly created AGENTS.md files */
-export const AGENTS_MD_CONTENT: string;
+export const agentsMdContent: string;
 
 /**
  * Check if AGENTS.md exists at the target path
@@ -53,14 +53,31 @@ export function writeAgentsFile(
   content: string,
 ): Promise<void>;
 
+/** A section entry in directiveAppendSections */
+export interface DirectiveAppendSection {
+  /** Markdown content to append when one or more keywords are missing */
+  content: string;
+  /** Directive keywords that this section satisfies */
+  keywords: readonly string[];
+}
+
+/**
+ * Maps sets of directive keywords to the markdown sections that satisfy them.
+ * `appendDirectives` uses this table to emit only the sections whose keywords
+ * are absent from the existing file, preventing duplication on upgrade.
+ */
+export const directiveAppendSections: ReadonlyArray<DirectiveAppendSection>;
+
 /**
  * Append directives to existing AGENTS.md
  * @param targetBase - Base directory containing AGENTS.md
  * @param existingContent - Current content of AGENTS.md
+ * @param missingDirectives - List of directive keywords that are absent
  */
 export function appendDirectives(
   targetBase: string,
   existingContent: string,
+  missingDirectives: string[],
 ): Promise<void>;
 
 /**
@@ -78,3 +95,14 @@ export function appendDirectives(
  * // result.action: "created" | "appended" | "unchanged"
  */
 export function ensureAgentsMd(targetBase: string): Promise<AgentsMdResult>;
+
+/**
+ * Ensure CLAUDE.md exists and references AGENTS.md.
+ * - Not present → create with agentsMdContent.
+ * - Present but missing AGENTS.md reference and incomplete directives → append pointer.
+ * - Present with all directives or AGENTS.md reference → leave unchanged.
+ *
+ * @param targetBase - Base directory for CLAUDE.md
+ * @returns Result indicating action taken
+ */
+export function ensureClaudeMd(targetBase: string): Promise<AgentsMdResult>;

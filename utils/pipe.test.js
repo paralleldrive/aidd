@@ -1,3 +1,4 @@
+// @ts-check
 import { assert } from "riteway/vitest";
 import { describe, test } from "vitest";
 
@@ -5,9 +6,9 @@ import { pipe } from "./pipe.js";
 
 describe("pipe", () => {
   test("pipes functions in sequence", () => {
-    const add1 = (x) => x + 1;
-    const multiply2 = (x) => x * 2;
-    const subtract3 = (x) => x - 3;
+    const add1 = (/** @type {number} */ x) => x + 1;
+    const multiply2 = (/** @type {number} */ x) => x * 2;
+    const subtract3 = (/** @type {number} */ x) => x - 3;
 
     const pipeline = pipe(add1, multiply2, subtract3);
     const result = pipeline(5);
@@ -21,7 +22,7 @@ describe("pipe", () => {
   });
 
   test("handles single function", () => {
-    const double = (x) => x * 2;
+    const double = (/** @type {number} */ x) => x * 2;
     const pipeline = pipe(double);
     const result = pipeline(4);
 
