@@ -42,6 +42,16 @@ If any conflicts are detected between a requested task and the vision document, 
 
 Never proceed with a task that contradicts the vision without explicit user approval.
 
+## Custom Skills and Configuration
+
+Project-specific customization lives in `aidd-custom/`. Before starting work,
+read `aidd-custom/index.md` to discover available project-specific skills,
+and read `aidd-custom/config.yml` to load configuration into context.
+
+## Task Index
+
+fix bug => /aidd-fix
+
 ## Testing
 
 The pre-commit hook runs unit tests only (`npm run test:unit`). E2E tests are excluded because they perform real installs and can take several minutes.
