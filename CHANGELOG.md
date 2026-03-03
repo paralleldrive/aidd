@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2026-03-02
+
+### Added
+- `aidd-fix` skill — structured bug-fixing workflow using a typed SudoLang pipeline with TDD discipline, exit gates, and delegation hints (`/execute`, `/commit`)
+- `aidd-ecs` skill — enforces `@adobe/data/ecs` best practices for Database.Plugin definitions, components, resources, transactions, actions, systems, and services
+- `aidd-layout` skill — enforces UI component layout and composition patterns (terminal vs. layout components, spacing, re-render efficiency)
+- `aidd-namespace` skill — ensures types and related functions follow a modular, discoverable, tree-shakeable namespace pattern
+- `aidd-observe` skill — enforces Observe pattern best practices from `@adobe/data/observe` (reactive data flow, observable composition helpers)
+- `aidd-react` skill — enforces React component authoring best practices (reactive binding, `useObservableValues`, action callbacks)
+- `aidd-structure` skill — enforces source code structuring and interdependency rules across types, services, plugins, and components layers
+- `vision.md` — project vision document as source of truth for AI agents; agents now check for conflicts before executing tasks
+- SudoLang syntax cheat sheet (`ai/rules/sudolang/sudolang-syntax.mdc`)
+- `npx aidd create` epic planned for app scaffolding CLI surface
+- Next.js + ShadCN setup guide (`docs/new-project-setup-nextjs-shadcn.md`)
+- `typecheck` npm script (`tsc --noEmit`) wired into `npm test` and `npm run test:unit`
+- `lib/cli-core.d.ts` type declarations for all exported CLI core functions
+
+### Changed
+- Replaced ESLint and Prettier with Biome for formatting and linting
+- Updated task execution steps and approval process in agent workflow documentation
+- Enhanced TDD documentation with UI testing strategy (Redux, sagas, Playwright, riteway/render)
+- Improved README with AI-generated code challenges and AIDD benefits
+
+### Fixed
+- ALL_CAPS plain JS constants renamed to camelCase per style guide (`requiredDirectives`, `agentsMdContent`, `maxRecursionDepth`, etc.)
+- `generateAllIndexes` error return type normalized to `{ message, cause? }` across all code paths
+- `generateIndexRecursive` type declaration updated to include optional `depth` parameter
+
 ## [2.4.0] - 2026-01-01
 
 ### Added
