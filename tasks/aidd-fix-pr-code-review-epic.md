@@ -22,11 +22,11 @@ Any exported names must also be updated in:
 - All test files that import these constants
 
 **Requirements:**
-- Given `REQUIRED_DIRECTIVES` is exported from `agents-md.js`, should be renamed to `requiredDirectives` in the source, type declaration, and all consumers
-- Given `DIRECTIVE_APPEND_SECTIONS` is exported from `agents-md.js`, should be renamed to `directiveAppendSections` in the source, type declaration, and all consumers
-- Given `AIDD_CUSTOM_CONFIG_CONTENT` is used in `cli-core.js`, should be renamed to `aiddCustomConfigContent` (internal, no d.ts change needed)
-- Given `MAX_RECURSION_DEPTH` is used in `index-generator.js`, should be renamed to `maxRecursionDepth` (internal, no d.ts change needed)
-- Given `FORBIDDEN_KEYS` is used in `index-generator.js`, should be renamed to `forbiddenKeys` (internal, no d.ts change needed)
+- Given `REQUIRED_DIRECTIVES` is a plain JS constant exported from `agents-md.js`, should be named `requiredDirectives` in source, type declaration, and all consumers
+- Given `DIRECTIVE_APPEND_SECTIONS` is a plain JS constant exported from `agents-md.js`, should be named `directiveAppendSections` in source, type declaration, and all consumers
+- Given `AIDD_CUSTOM_CONFIG_CONTENT` is a plain JS constant in `cli-core.js`, should be named `aiddCustomConfigContent`
+- Given `MAX_RECURSION_DEPTH` is a plain JS constant in `index-generator.js`, should be named `maxRecursionDepth`
+- Given `FORBIDDEN_KEYS` is a plain JS constant in `index-generator.js`, should be named `forbiddenKeys`
 
 ---
 
@@ -67,3 +67,14 @@ parameter is missing from the declaration.
 
 **Requirements:**
 - Given `generateIndexRecursive` is declared in `lib/index-generator.d.ts`, should include an optional `depth?: number` third parameter to accurately reflect the implementation signature
+
+---
+
+## 5. Enable type-checking on test files
+
+`tsconfig.json` currently excludes `**/*.test.js` and sets `checkJs: false`. This means the unit tests — the primary consumers of `.d.ts` type declarations — are never type-checked. A wrong or missing `.d.ts` declaration will go undetected, because no tooling validates it against real usage.
+
+**Requirements:**
+- Given test files consume exports from typed modules, should be validated by `npm run typecheck` against the declared types
+- Given a test file passes a wrong argument type to a declared function, should fail `npm run typecheck` with a type error
+- Given all test type usages conform to their declarations, should pass `npm run typecheck` with no errors
