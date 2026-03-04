@@ -137,6 +137,31 @@ describe("aidd create scaffold-example", () => {
     });
   });
 
+  test("installs release-it as a dev dependency", async () => {
+    const pkgPath = path.join(scaffoldExampleCtx.projectDir, "package.json");
+    const pkg = await fs.readJson(pkgPath);
+    const devDeps = pkg.devDependencies || {};
+
+    assert({
+      given: "scaffold-example scaffold runs",
+      should: "install release-it as a dev dependency",
+      actual: "release-it" in devDeps,
+      expected: true,
+    });
+  });
+
+  test("configures scripts.release as release-it", async () => {
+    const pkgPath = path.join(scaffoldExampleCtx.projectDir, "package.json");
+    const pkg = await fs.readJson(pkgPath);
+
+    assert({
+      given: "scaffold-example scaffold runs",
+      should: "configure scripts.release as release-it",
+      actual: pkg.scripts?.release,
+      expected: "release-it",
+    });
+  });
+
   test("sets up a test script in package.json", async () => {
     const pkgPath = path.join(scaffoldExampleCtx.projectDir, "package.json");
     const pkg = await fs.readJson(pkgPath);
