@@ -90,6 +90,7 @@ export function executeClone(options?: {
   dryRun?: boolean;
   verbose?: boolean;
   cursor?: boolean;
+  claude?: boolean;
 }): Promise<ExecuteCloneResult>;
 
 /**
