@@ -9,6 +9,7 @@ import { Command } from "commander";
 
 import { executeClone, handleCliErrors } from "../lib/cli-core.js";
 import { generateAllIndexes } from "../lib/index-generator.js";
+import { registerScaffoldCommands } from "../lib/scaffold-commands.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -192,4 +193,6 @@ https://paralleldrive.com
 };
 
 // Execute CLI
-createCli().parse();
+const cli = createCli();
+registerScaffoldCommands(cli);
+cli.parse();
