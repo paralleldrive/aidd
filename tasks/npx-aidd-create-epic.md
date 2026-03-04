@@ -44,7 +44,7 @@ New Commander subcommand `create [type] <folder>` added to `bin/aidd.js`.
 
 ## Extension resolver
 
-Resolve extension source and fetch `README.md`, `SCAFFOLD-MANIFEST.yml`, and `bin/extension.js`.
+Resolve extension source and fetch `README.md` and `SCAFFOLD-MANIFEST.yml`.
 
 **Requirements**:
 - Given `AIDD_CUSTOM_CREATE_URI` was not set before a test, should be fully absent from `process.env` after the test completes — even if the test throws
@@ -74,7 +74,6 @@ Parse and execute manifest steps sequentially in the target directory.
 - Given a `run` step, should execute it as a shell command in `<folder>`
 - Given a `prompt` step, should invoke the selected agent CLI (default: `claude`) with that prompt string in `<folder>`
 - Given any step fails, should report the error and halt execution
-- Given a `bin/extension.js` is present, should execute it via Node.js in `<folder>` after all manifest steps complete
 
 ### Manifest validation
 

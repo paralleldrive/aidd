@@ -10,8 +10,6 @@ A scaffold is a small repository that teaches `npx aidd create` how to bootstrap
 my-scaffold/
 ├── SCAFFOLD-MANIFEST.yml   # required — list of steps to execute
 ├── README.md               # optional — displayed to the user before steps run
-├── bin/
-│   └── extension.js        # optional — Node.js script run after all steps
 └── package.json            # required for publishing — see below
 ```
 
@@ -68,8 +66,7 @@ When you run `npm publish`, npm reads the `files` array to decide which paths ar
 {
   "files": [
     "SCAFFOLD-MANIFEST.yml",
-    "README.md",
-    "bin/**/*"
+    "README.md"
   ]
 }
 ```
@@ -99,8 +96,7 @@ Include `release-it` as a dev dependency and wire up a `release` script:
   },
   "files": [
     "SCAFFOLD-MANIFEST.yml",
-    "README.md",
-    "bin/**/*"
+    "README.md"
   ],
   "devDependencies": {
     "release-it": "latest"
