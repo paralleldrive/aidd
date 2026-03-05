@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import chalk from "chalk";
 import { Command } from "commander";
 
+import { syncRootAgentFiles } from "../lib/agents-md.js";
 import { executeClone, handleCliErrors } from "../lib/cli-core.js";
 import { generateAllIndexes } from "../lib/index-generator.js";
 
@@ -35,6 +36,7 @@ const createCli = () => {
       "-c, --cursor",
       "create .cursor symlink for Cursor editor integration",
     )
+    .option("--claude", "create .claude symlink for Claude Code integration")
     .option(
       "-i, --index",
       "generate index.md files from frontmatter in ai/ subfolders",
@@ -85,7 +87,15 @@ To install for Cursor:
 
   npx aidd --cursor
 
-Install without Cursor integration:
+To install for Claude Code:
+
+  npx aidd --claude
+
+To install for both:
+
+  npx aidd --cursor --claude
+
+Install without editor integration:
 
   npx aidd my-project
 `,
@@ -99,7 +109,10 @@ https://paralleldrive.com
 `,
     )
     .action(
-      async (targetDirectory, { force, dryRun, verbose, cursor, index }) => {
+      async (
+        targetDirectory,
+        { force, dryRun, verbose, cursor, claude, index },
+      ) => {
         // Handle --index option separately
         if (index) {
           const targetPath = path.resolve(process.cwd(), targetDirectory);
@@ -125,15 +138,24 @@ https://paralleldrive.com
                 console.log(chalk.gray(`  - ${idx.path}`));
               });
             }
-            process.exit(0);
           } else {
             console.error(chalk.red(`❌ ${result.error.message}`));
             process.exit(1);
           }
+
+          const syncResults = await syncRootAgentFiles(targetPath);
+          syncResults
+            .filter(({ action }) => action !== "unchanged")
+            .forEach(({ file, action }) => {
+              console.log(chalk.green(`✅ ${action} ${file}`));
+            });
+
+          process.exit(0);
           return;
         }
 
         const result = await executeClone({
+          claude,
           cursor,
           dryRun,
           force,
@@ -142,14 +164,6 @@ https://paralleldrive.com
         });
 
         if (!result.success) {
-          // Create a proper error with cause for handleErrors
-          const error = new Error(result.error.message, {
-            cause: result.error.cause || {
-              code: result.error.code || "UNEXPECTED_ERROR",
-            },
-          });
-
-          // Use handleErrors instead of manual switching
           try {
             handleCliErrors({
               CloneError: ({ message, cause }) => {
@@ -176,11 +190,11 @@ https://paralleldrive.com
                   "💡 Try using --force to overwrite existing files",
                 );
               },
-            })(error);
+            })(result.error);
           } catch {
-            // Fallback for unexpected errors
-            console.error(`❌ Unexpected Error: ${result.error.message}`);
-            if (verbose && result.error.cause) {
+            // Fallback for unexpected errors (e.g. an error without a cause code)
+            console.error(`❌ Unexpected Error: ${result.error?.message}`);
+            if (verbose && result.error?.cause) {
               console.error("🔍 Caused by:", result.error.cause);
             }
           }

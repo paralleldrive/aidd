@@ -22,18 +22,16 @@ export interface ResolvedPaths {
 }
 
 /** Error detail shape when executeClone fails */
-export interface ExecuteCloneError {
+export interface ExecuteCloneError extends Error {
   cause?: unknown;
   code?: string;
-  message: string;
-  type?: string;
 }
 
 /** Result returned by executeClone — covers success and error shapes */
 export type ExecuteCloneResult =
   | { paths: ResolvedPaths; success: true }
   | { dryRun: true; success: true }
-  | { error: ExecuteCloneError; success: false };
+  | { error: Error; success: false };
 
 /**
  * Create aidd-custom/config.yml with default project settings
@@ -90,6 +88,7 @@ export function executeClone(options?: {
   dryRun?: boolean;
   verbose?: boolean;
   cursor?: boolean;
+  claude?: boolean;
 }): Promise<ExecuteCloneResult>;
 
 /**

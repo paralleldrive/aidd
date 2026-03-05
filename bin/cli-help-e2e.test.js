@@ -147,11 +147,12 @@ describe("CLI help command", () => {
 
     assert({
       given: "CLI help command is run",
-      should: "show Quick Start section with README format",
+      should: "show Quick Start section with Cursor and Claude Code options",
       actual:
         stdout.includes("Quick Start") &&
         stdout.includes("To install for Cursor:") &&
-        stdout.includes("Install without Cursor integration:"),
+        stdout.includes("To install for Claude Code:") &&
+        stdout.includes("Install without editor integration:"),
       expected: true,
     });
   });
