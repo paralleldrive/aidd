@@ -1,6 +1,6 @@
 # aidd-decompose Epic
 
-**Status**: 🔄 IN PROGRESS  
+**Status**: ✅ COMPLETED (2026-03-04)  
 **Goal**: Build and npm-link the `aidd-decompose` skill, then run it once against the contractor-marketplace PR to validate and iterate.
 
 ## Overview
@@ -98,7 +98,7 @@ Commit all files on `feat/aidd-decompose` and verify the pre-commit hook auto-ge
 
 ---
 
-## 🔄 npm link and Test
+## ✅ npm link and Test
 
 Link the local aidd repo into paralleldrive.com and run `npx aidd --force` to install the skill, then invoke `/aidd-decompose` on the contractor-marketplace branch.
 

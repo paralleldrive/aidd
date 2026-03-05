@@ -2,12 +2,12 @@
 
 ## Current Epics
 
-### 📋 aidd-decompose Epic
+### ✅ aidd-decompose Epic
 
-**Status**: 📋 PLANNED  
+**Status**: ✅ COMPLETED (2026-03-04)  
 **File**: [`tasks/aidd-decompose-epic.md`](./tasks/aidd-decompose-epic.md)  
 **Goal**: Build and npm-link the `aidd-decompose` skill, then run it once against the contractor-marketplace PR to validate and iterate  
-**Tasks**: 7 tasks (branch, SKILL.md, references, commands, please.mdc, commit+verify, npm link+test)
+**Tasks**: 7 tasks — all complete
 
 ### 📋 `npx aidd create` Epic
 
