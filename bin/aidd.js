@@ -8,7 +8,8 @@ import chalk from "chalk";
 import { Command } from "commander";
 
 import { syncRootAgentFiles } from "../lib/agents-md.js";
-import { executeClone, handleCliErrors } from "../lib/cli-core.js";
+import { executeClone } from "../lib/cli-core.js";
+import { handleCliErrors } from "../lib/cli-errors.js";
 import { generateAllIndexes } from "../lib/index-generator.js";
 
 const __filename = fileURLToPath(import.meta.url);
