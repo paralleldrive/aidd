@@ -67,12 +67,16 @@ planDecomposition(groups) => plan {
   1. Infer merge strategy; present reasoning and ask user to confirm:
      - consolidation branch — create `decompose/{sanitizedBranchName}`; breakout PRs target it
      - direct-to-main — breakout PRs target the main branch directly
+     - two-track hybrid — consolidation branch for review + integration branch for smoke testing
+       (see Two-Track Hybrid section below; recommend when the source branch is already
+       fully functional and reviewer testability is important)
   2. Create tracking epic at `$projectRoot/tasks/decompose-{sanitizedBranchName}-epic.md`
      where sanitizedBranchName replaces all / with - (e.g. feat/my-pr → feat-my-pr)
      The epic must contain:
      - ASCII dependency graph showing module relationships between groups
      - Numbered PR table: `| # | Breakout | Files | Lines | Status |`
      - WIP issues section for known gaps or cross-cutting concerns
+     - If two-track hybrid: document the integrate branch name and double-apply protocol
   3. Present the full plan to the user and await approval before executing any breakout
 }
 
@@ -82,12 +86,21 @@ executeBreakouts(plan) => breakoutPRs {
   If consolidation branch strategy was chosen:
     git checkout {targetBranch} && git checkout -b decompose/{sanitizedBranchName}
 
+  If two-track hybrid strategy was chosen (in addition to consolidation branch):
+    git checkout {sourceBranch} && git checkout -b integrate/{sanitizedBranchName}
+    git push -u origin integrate/{sanitizedBranchName}
+    Document in the tracking epic:
+      - integrate branch is a full clone of the source (tests pass, lockfile intact)
+      - all feedback cherry-picks must be applied here before each breakout merges
+      - at the end, integrate/ and decompose/ should be functionally equivalent
+
   For each breakout in dependency order:
   1. Create branch: `git checkout -b breakout/{name}`
   2. Check out files from source: `git checkout {sourceBranch} -- {files}`
   3. Commit with a conventional message referencing the umbrella PR
   4. Push: `git push -u origin breakout/{name}`
-  5. Open PR via `gh pr create`:
+  5. Open PR via `gh pr create --draft`:
+     - Always open as draft so reviewers are not pinged until the full decomposition is ready
      - Target: consolidation branch if chosen, otherwise main
      - Body must link to the umbrella PR and include a placeholder "Review context" section
        (this will be filled in by syncFeedback during status runs)
@@ -104,6 +117,35 @@ trackProgress(breakoutPRs) => status {
 }
 
 decompose = analyzeBranch |> identifyGroups |> planDecomposition |> executeBreakouts |> trackProgress
+
+---
+
+## Two-Track Hybrid Pattern
+
+Use this pattern when the source branch is already fully functional and reviewer
+testability is a priority. It addresses the core problem with traditional slice-decompose:
+individual breakout PRs have broken imports and failing CI, making real review impossible.
+
+```
+master
+  └── decompose/{name}          ← REVIEW TRACK (breakout PRs build here in order)
+        ├── breakout/1-...      ← small diff, focused review
+        ├── breakout/2-...
+        └── ...
+
+{sourceBranch}
+  └── integrate/{name}          ← SMOKE TEST TRACK (full system, always runnable)
+        └── feedback cherry-picks applied here before each breakout merges
+```
+
+**Why not just use commit boundaries from the source branch?**
+Commit boundaries are often too coarse for effective review (a single "feat(ui)" commit
+can be 10,000+ lines). The domain-based groupings from Step 2 provide better granularity.
+The integrate branch solves testability without sacrificing grouping quality.
+
+**The one discipline risk:** every feedback implementation requires a double-apply —
+to the breakout branch AND the integrate branch. Make this a required checklist item,
+not an afterthought. A stale integrate branch provides false confidence.
 
 ---
 
@@ -142,6 +184,13 @@ syncFeedback(currentState) => updatedFeedback {
      c. Apply: `gh pr edit {pr} --body "..."`
   4. If feedback from one breakout applies to another (e.g. "use error-causes pattern"),
      propagate it: reference it explicitly in the affected breakout's PR description
+  5. If two-track hybrid is active:
+     a. Implement feedback on the breakout branch as normal
+     b. Cherry-pick the feedback commit(s) onto `integrate/{sanitizedBranchName}`
+     c. Run the full test suite on the integrate branch — smoke test catches regressions
+        in the full-system context before the breakout merges
+     d. If tests fail → investigate and fix before merging the breakout
+     e. If tests pass → proceed with merging the breakout to the decompose branch
 }
 
 ## Step S3 — Update Tracking

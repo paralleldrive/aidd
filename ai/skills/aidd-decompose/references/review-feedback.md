@@ -79,4 +79,17 @@ config → types/utils → services → components → pages → integration →
 - The PR is primarily additive (new files, new routes)
 - The target branch is stable during the decomposition window
 
+**Use a two-track hybrid** (consolidation branch + integration branch) when:
+- The source branch is already fully functional with passing tests
+- Reviewer testability is important — early breakout PRs would otherwise have broken CI
+- You want a smoke-test surface for review feedback before each breakout merges
+- How it works:
+  - `decompose/{name}` — the review track; breakout PRs build from master toward the full feature
+  - `integrate/{name}` — cloned from the fully-working source branch; feedback patches are
+    cherry-picked here after each breakout is approved, and the full test suite is run to
+    catch regressions before the breakout merges to the decompose track
+- The double-apply discipline (breakout branch AND integrate branch) is the main failure mode;
+  make it a required checklist item in the PR merge process
+
 When unsure, default to a consolidation branch — it is always safer.
+When the source already works end-to-end and testability matters, add the integration track.
