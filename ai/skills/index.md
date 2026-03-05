@@ -4,6 +4,10 @@ This index provides an overview of the contents in this directory.
 
 ## Subdirectories
 
+### 📁 aidd-decompose/
+
+See [`aidd-decompose/index.md`](./aidd-decompose/index.md) for contents.
+
 ### 📁 aidd-ecs/
 
 See [`aidd-ecs/index.md`](./aidd-ecs/index.md) for contents.

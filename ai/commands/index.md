@@ -4,6 +4,18 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### 📊 /aidd-decompose-status
+
+**File:** `aidd-decompose-status.md`
+
+*No description available*
+
+### 🧩 /aidd-decompose
+
+**File:** `aidd-decompose.md`
+
+*No description available*
+
 ### 🐛 /aidd-fix
 
 **File:** `aidd-fix.md`
