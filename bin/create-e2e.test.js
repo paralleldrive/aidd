@@ -223,46 +223,43 @@ describe("aidd create with AIDD_CUSTOM_CREATE_URI env var", () => {
 });
 
 describe("aidd scaffold-cleanup", () => {
-  let tempDir;
-  let projectDir;
+  const scaffoldDir = path.join(os.homedir(), ".aidd", "scaffold");
+  let scaffoldDirExistedBefore;
 
   beforeEach(async () => {
-    tempDir = path.join(os.tmpdir(), `aidd-e2e-cleanup-${Date.now()}`);
-    await fs.ensureDir(tempDir);
-    projectDir = path.join(tempDir, "test-project");
-    await fs.ensureDir(path.join(projectDir, ".aidd/scaffold"));
+    // Record pre-test state so afterEach can restore it cleanly
+    scaffoldDirExistedBefore = await fs.pathExists(scaffoldDir);
   });
 
   afterEach(async () => {
-    await fs.remove(tempDir);
+    // Remove the scaffold dir if it was created by the test
+    if (!scaffoldDirExistedBefore) {
+      await fs.remove(scaffoldDir);
+    }
   });
 
-  test("removes .aidd/ directory from the given folder", async () => {
-    await execAsync(`node ${cliPath} scaffold-cleanup test-project`, {
-      cwd: tempDir,
-    });
+  test("removes ~/.aidd/scaffold when it exists", async () => {
+    await fs.ensureDir(scaffoldDir);
 
-    const aiddExists = await fs.pathExists(path.join(projectDir, ".aidd"));
+    await execAsync(`node ${cliPath} scaffold-cleanup`);
+
+    const exists = await fs.pathExists(scaffoldDir);
 
     assert({
-      given: "aidd scaffold-cleanup test-project",
-      should: "remove test-project/.aidd/ directory",
-      actual: aiddExists,
+      given: "aidd scaffold-cleanup with ~/.aidd/scaffold present",
+      should: "remove ~/.aidd/scaffold",
+      actual: exists,
       expected: false,
     });
   });
 
-  test("reports nothing to clean up when .aidd/ does not exist", async () => {
-    const cleanDir = path.join(tempDir, "clean-project");
-    await fs.ensureDir(cleanDir);
+  test("reports nothing to clean up when ~/.aidd/scaffold does not exist", async () => {
+    await fs.remove(scaffoldDir);
 
-    const { stdout } = await execAsync(
-      `node ${cliPath} scaffold-cleanup clean-project`,
-      { cwd: tempDir },
-    );
+    const { stdout } = await execAsync(`node ${cliPath} scaffold-cleanup`);
 
     assert({
-      given: "scaffold-cleanup on directory without .aidd/",
+      given: "scaffold-cleanup when ~/.aidd/scaffold does not exist",
       should: "report nothing to clean up",
       actual: stdout.toLowerCase().includes("nothing"),
       expected: true,
