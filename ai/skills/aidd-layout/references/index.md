@@ -8,5 +8,3 @@ This index provides an overview of the contents in this directory.
 
 **File:** `design-tokens.md`
 
-*No description available*
-
