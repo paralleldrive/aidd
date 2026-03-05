@@ -1,3 +1,4 @@
+// @ts-check
 import { assert } from "riteway/vitest";
 import { describe, test } from "vitest";
 
@@ -5,9 +6,9 @@ import { compose } from "./compose.js";
 
 describe("compose", () => {
   test("composes functions in reverse sequence", () => {
-    const add1 = (x) => x + 1;
-    const multiply2 = (x) => x * 2;
-    const subtract3 = (x) => x - 3;
+    const add1 = (/** @type {number} */ x) => x + 1;
+    const multiply2 = (/** @type {number} */ x) => x * 2;
+    const subtract3 = (/** @type {number} */ x) => x - 3;
 
     const composed = compose(subtract3, multiply2, add1);
     const result = composed(5);
@@ -21,7 +22,7 @@ describe("compose", () => {
   });
 
   test("handles single function", () => {
-    const double = (x) => x * 2;
+    const double = (/** @type {number} */ x) => x * 2;
     const composed = compose(double);
     const result = composed(4);
 
@@ -34,8 +35,8 @@ describe("compose", () => {
   });
 
   test("demonstrates right-to-left execution order", () => {
-    const add1 = (x) => x + 1;
-    const multiply2 = (x) => x * 2;
+    const add1 = (/** @type {number} */ x) => x + 1;
+    const multiply2 = (/** @type {number} */ x) => x * 2;
 
     const composed = compose(multiply2, add1);
     const result = composed(5);
