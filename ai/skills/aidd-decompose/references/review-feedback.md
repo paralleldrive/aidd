@@ -8,8 +8,14 @@ Load this file during `analyzeBranch` to apply these constraints throughout the 
 ## PR Size Limits
 
 - **Target**: 500-1000 lines per breakout PR
-- **Hard max**: 2000 lines — split any group that exceeds this
+- **Hard max**: 2000 lines — split any group that exceeds this (slight overages ~10-15% are acceptable within reason when splitting would produce meaningless micro-PRs)
 - **Minimum**: no trivially small breakouts (< ~50 lines) unless they are true config-only changes
+
+## Generated and Binary Files
+
+- **Lockfiles** (`package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, etc.) are generated files and should be **excluded** from breakout PRs — they are unreviewable line-by-line and can be regenerated from `package.json` after merge. Ask the user before excluding them; in most cases they will agree.
+- **Binary assets** (images, fonts, compiled artifacts) are **not counted** toward the line limit — they are viewable in the GitHub PR diff UI without requiring line-by-line review.
+- Both lockfiles and binaries should be noted in the tracking epic's WIP Issues section as "excluded — to be regenerated/committed separately."
 
 ## Layer Dependency Order
 
@@ -44,6 +50,9 @@ config → types/utils → services → components → pages → integration →
 - Every breakout PR body must include a link to the umbrella PR
 - Every breakout PR body must include a "Review context" section (added/updated by `syncFeedback`)
   linking to the tracking epic's feedback ledger
+- If the breakout PR introduces **new environment variables**, include a "Vercel ENV vars" checklist
+  section in the PR body listing each new variable and a checkbox to confirm it has been added
+  to Vercel (for all relevant environments: Production, Preview, and Development)
 
 ## Breakout Grouping Rules
 
