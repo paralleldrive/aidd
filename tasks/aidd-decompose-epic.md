@@ -25,6 +25,16 @@ Author `ai/skills/aidd-decompose/SKILL.md` with both the decompose pipeline and 
 **Requirements**:
 - Given the file is authored, should include Agent Skills spec frontmatter with `name: aidd-decompose`, `description`, and `compatibility: Requires git and gh CLI`
 - Given the file is authored, should stay under 500 lines — reference material goes in `references/`
+- Given the file is authored, should define "umbrella PR" near the top so agents loading the status pipeline in isolation understand the term
+- Given the file is authored, should place pipeline summary expressions (`decompose = ...`, `status = ...`) after their respective steps, not before — consistent with aidd-fix pattern
+- Given the file is authored, should close with a `Commands { }` block listing both commands — consistent with aidd-fix pattern
+- Given a branch name contains `/`, should sanitize it to `-` when constructing the tracking epic file path
+- Given `analyzeBranch` reads the references file, should use the full path `ai/skills/aidd-decompose/references/review-feedback.md` not a bare relative path
+- Given `planDecomposition` creates the tracking epic, should use `$projectRoot/tasks/` as the path anchor
+- Given the user selects consolidation branch strategy, `executeBreakouts` should create `decompose/{sanitizedBranchName}` first and target all breakout PRs at it
+- Given `executeBreakouts` creates a breakout PR, should include a placeholder "Review context" section in the PR body (to be filled in by `syncFeedback`)
+- Given `syncFeedback` updates open breakout PR bodies, should use `gh pr view {pr} --json body -q .body` to read then `gh pr edit {pr} --body "..."` to write
+- Given `gatherStatus` is invoked, should first infer the tracking epic path from the current branch name, or ask the user if the file does not exist
 - Given the skill is loaded, should execute `analyzeBranch |> identifyGroups |> planDecomposition |> executeBreakouts |> trackProgress` for decomposition
 - Given the skill is loaded in status mode, should execute `gatherStatus |> syncFeedback |> updateTracking`
 - Given a step completes, should pause and get user approval before the next step
