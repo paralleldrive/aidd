@@ -1,6 +1,6 @@
 # aidd-decompose Epic
 
-**Status**: 📋 PLANNED  
+**Status**: 🔄 IN PROGRESS  
 **Goal**: Build and npm-link the `aidd-decompose` skill, then run it once against the contractor-marketplace PR to validate and iterate.
 
 ## Overview
@@ -9,7 +9,7 @@ PR #76 (`iwhite/contractor-marketplace`, ~39K additions) needs to be decomposed 
 
 ---
 
-## Create Feature Branch
+## ✅ Create Feature Branch
 
 Create `feat/aidd-decompose` in the aidd repo.
 
@@ -18,7 +18,7 @@ Create `feat/aidd-decompose` in the aidd repo.
 
 ---
 
-## Create SKILL.md
+## ✅ Create SKILL.md
 
 Author `ai/skills/aidd-decompose/SKILL.md` with both the decompose pipeline and the status pipeline.
 
@@ -58,7 +58,7 @@ Author `ai/skills/aidd-decompose/SKILL.md` with both the decompose pipeline and 
 
 ---
 
-## Create references/review-feedback.md
+## ✅ Create references/review-feedback.md
 
 Author `ai/skills/aidd-decompose/references/review-feedback.md` encoding known team PR standards.
 
@@ -68,7 +68,7 @@ Author `ai/skills/aidd-decompose/references/review-feedback.md` encoding known t
 
 ---
 
-## Create Commands
+## ✅ Create Commands
 
 Author `ai/commands/aidd-decompose.md` and `ai/commands/aidd-decompose-status.md` following the established command file pattern in `ai/commands/`.
 
@@ -78,7 +78,7 @@ Author `ai/commands/aidd-decompose.md` and `ai/commands/aidd-decompose-status.md
 
 ---
 
-## Update please.mdc
+## ✅ Update please.mdc
 
 Add both commands to the `Commands {}` block in `ai/rules/please.mdc` after the `/aidd-fix` entry.
 
@@ -88,7 +88,7 @@ Add both commands to the `Commands {}` block in `ai/rules/please.mdc` after the 
 
 ---
 
-## Commit and Verify Pre-commit Hook
+## ✅ Commit and Verify Pre-commit Hook
 
 Commit all files on `feat/aidd-decompose` and verify the pre-commit hook auto-generates `index.md` files.
 
@@ -98,7 +98,7 @@ Commit all files on `feat/aidd-decompose` and verify the pre-commit hook auto-ge
 
 ---
 
-## npm link and Test
+## 🔄 npm link and Test
 
 Link the local aidd repo into paralleldrive.com and run `npx aidd --force` to install the skill, then invoke `/aidd-decompose` on the contractor-marketplace branch.
 
