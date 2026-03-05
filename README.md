@@ -24,6 +24,7 @@ Includes:
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [About AIDD Framework](#about-aidd-framework)
+- [📚 Learning aidd Framework](#-learning-aidd-framework)
 - [🚀 Quick Start with AIDD CLI](#-quick-start-with-aidd-cli)
   - [📋 Requirements](#-requirements)
   - [Detailed Installation Instructions](#detailed-installation-instructions)
@@ -76,6 +77,18 @@ AIDD Framework is a collection of reusable metaprograms, agent orchestration sys
 /commit - commit the changes to the repository
 /user-test - generate user testing scripts for post-deploy validation
 ```
+
+## 📚 Learning aidd Framework
+
+aidd Framework combines modern software engineering practices with AI orchestration. To use it effectively, you'll benefit from understanding:
+
+- **Product & Planning**: Product management, user story mapping, functional requirements
+- **Development**: Test driven development, user testing, CI/CD workflows
+- **AI-Specific Skills**: Context engineering, prompt engineering, SudoLang, agent orchestration
+
+📖 **[Complete Learning Roadmap →](docs/learn-aidd-framework.md)** — Detailed competency areas, technical skills, and weekly training sessions
+
+**New to AI-driven development?** Start with the Quick Start below, then explore the `/discover` → `/task` → `/execute` workflow. The AI agents will guide you through the process.
 
 ## 🚀 Quick Start with AIDD CLI
 
