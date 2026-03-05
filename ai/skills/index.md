@@ -40,3 +40,7 @@ See [`aidd-service/index.md`](./aidd-service/index.md) for contents.
 
 See [`aidd-structure/index.md`](./aidd-structure/index.md) for contents.
 
+### 📁 create-skill/
+
+See [`create-skill/index.md`](./create-skill/index.md) for contents.
+
