@@ -4,11 +4,11 @@ There's a lot to learn about aidd Framework. It is more than a framework. It is 
 
 There are a few different areas you need to learn to get good at aidd Framework:
 
-- Product Management
-- User Story Mapping
-- Functional Requirements
-- Test Driven Development
-- User Testing
+- [Product Management](../ai/rules/productmanager.mdc)
+- [User Story Mapping](../ai/rules/productmanager.mdc)
+- [Functional Requirements](../ai/rules/requirements.mdc)
+- [Test Driven Development](../ai/rules/tdd.mdc)
+- [User Testing](user-testing.md)
 - Deployment & CI/CD
 - Post Deployment Smoke Testing
 - Product Validation
@@ -21,7 +21,7 @@ At a lower level, some technical skills you need to learn include:
 - Security
 - Performance and Optimization
 - SEO/GEO (Search Engine Optimization, Generative Engine (AI) Optimization)
-- SudoLang Syntax and Best Practices
+- [SudoLang Syntax and Best Practices](../ai/rules/sudolang/)
 - Target Language Syntax and Best Practices
 - Software Architecture
 - Agent Skills
