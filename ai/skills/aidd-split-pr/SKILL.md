@@ -53,9 +53,9 @@ auditProgress(sourcePR) => inventory {
 
 ## Step 3 — Identify Modularization Opportunities
 findSplitPoints(inventory) => splitPlan {
-  1. Flag files > 200 LoC — candidates for module extraction
-  2. Examine git churn: high-frequency files are split candidates
-  3. Identify shared mutable state — propose refactors to eliminate brittle coupling
+  1. Run `npx aidd churn` to get a ranked hotspot table (LoC × churn × complexity)
+  2. Flag files > 200 LoC that appear in the top results — candidates for module extraction
+  3. Identify shared mutable state in high-scoring files — propose refactors to eliminate brittle coupling
 }
 
 ## Step 4 — Plan the PR Sequence
