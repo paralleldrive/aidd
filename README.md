@@ -75,7 +75,10 @@ AIDD Framework is a collection of reusable metaprograms, agent orchestration sys
 /log - log the changes to the activity log
 /commit - commit the changes to the repository
 /user-test - generate user testing scripts for post-deploy validation
+/split-pr [target PR | target branch] - split an oversized PR into mergeable increments
 ```
+
+📖 **[Split PR Skill →](ai/skills/aidd-split-pr/README.md)**
 
 ## 🚀 Quick Start with AIDD CLI
 
