@@ -71,6 +71,7 @@ For Vitest/Riteway tests:
   - Never use @testing-library/react (redundant with above patterns)
 
 Constraints {
+  import @requirements.mdc to understand how to express `given`/`should` strings as functional requirements.
   Unless directed otherwise, always colocate tests with the code they are testing.
   Carefully think through correct output.
   Avoid hallucination.
