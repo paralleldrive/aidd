@@ -2,6 +2,13 @@
 
 ## Current Epics
 
+### 📋 `npx aidd churn` Epic
+
+**Status**: 📋 PLANNED  
+**File**: [`tasks/aidd-churn-epic.md`](./tasks/aidd-churn-epic.md)  
+**Goal**: CLI command that ranks files by composite hotspot score (LoC × churn × complexity + gzip density) to identify prime PR split candidates  
+**Tasks**: 8 tasks (tsmetrics-core install, churn collector, file metrics collector, composite scorer, churn command, output formatter, tests, skill + README update)
+
 ### 📋 `npx aidd create` Epic
 
 **Status**: 📋 PLANNED  
