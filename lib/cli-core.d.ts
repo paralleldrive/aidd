@@ -2,7 +2,7 @@
  * CLI core utilities for the aidd clone operation
  */
 
-import type { CausedError } from "./cli-errors.js";
+import type { CausedError } from "./error-causes.js";
 
 /** CLI output logger interface */
 export interface Logger {
