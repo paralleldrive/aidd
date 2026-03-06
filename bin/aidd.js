@@ -125,7 +125,6 @@ https://paralleldrive.com
               ),
             );
             process.exit(0);
-            return;
           }
 
           console.log(chalk.blue("Generating index.md files..."));
@@ -144,15 +143,21 @@ https://paralleldrive.com
             process.exit(1);
           }
 
-          const syncResults = await syncRootAgentFiles(targetPath);
-          syncResults
-            .filter(({ action }) => action !== "unchanged")
-            .forEach(({ file, action }) => {
-              console.log(chalk.green(`✅ ${action} ${file}`));
-            });
+          try {
+            const syncResults = await syncRootAgentFiles(targetPath);
+            syncResults
+              .filter(({ action }) => action !== "unchanged")
+              .forEach(({ file, action }) => {
+                console.log(chalk.green(`✅ ${action} ${file}`));
+              });
+          } catch (err) {
+            console.error(
+              chalk.red(`❌ Failed to sync agent files: ${err?.message}`),
+            );
+            process.exit(1);
+          }
 
           process.exit(0);
-          return;
         }
 
         const result = await executeClone({
