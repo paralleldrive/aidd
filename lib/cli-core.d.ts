@@ -2,6 +2,8 @@
  * CLI core utilities for the aidd clone operation
  */
 
+import type { CausedError } from "./cli-errors.js";
+
 /** CLI output logger interface */
 export interface Logger {
   cyan: (msg: string) => void;
@@ -21,17 +23,11 @@ export interface ResolvedPaths {
   targetBase: string;
 }
 
-/** Error detail shape when executeClone fails */
-export interface ExecuteCloneError extends Error {
-  cause?: unknown;
-  code?: string;
-}
-
 /** Result returned by executeClone — covers success and error shapes */
 export type ExecuteCloneResult =
   | { paths: ResolvedPaths; success: true }
   | { dryRun: true; success: true }
-  | { error: Error; success: false };
+  | { error: CausedError; success: false };
 
 /**
  * Create aidd-custom/config.yml with default project settings

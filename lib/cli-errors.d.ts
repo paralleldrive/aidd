@@ -1,16 +1,22 @@
-/** Shared CLI error type definitions and handler factory */
+/** Shape of every error created by the error-causes library via createError() */
+export interface CausedError extends Error {
+  cause: {
+    code: string;
+    name: string;
+    message: string;
+    [key: string]: unknown;
+  };
+}
 
+/** Error template objects — spread into createError() to throw structured errors */
 export const CloneError: { code: string; message: string };
 export const FileSystemError: { code: string; message: string };
 export const ValidationError: { code: string; message: string };
 
 /**
- * Error handler factory for CLI structured errors.
- * Accepts a map of handlers keyed by error name and returns a function
- * that routes a thrown error to the matching handler.
+ * Route a thrown CausedError to the matching handler by cause name.
+ * The returned function is passed directly to .catch() or called with a result.error.
  */
-export const handleCliErrors: (handlers: {
-  CloneError: (error: Error) => unknown;
-  FileSystemError: (error: Error) => unknown;
-  ValidationError: (error: Error) => unknown;
-}) => (error: Error) => unknown;
+export const handleCliErrors: (
+  handlers: Record<string, (error: CausedError) => unknown>,
+) => (error: Error) => unknown;
