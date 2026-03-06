@@ -391,6 +391,7 @@ aidd [target-directory] [options]
 | `-v, --verbose`    | Provide detailed output                                        |
 | `-c, --cursor`     | Create `.cursor` symlink for Cursor editor integration         |
 | `-i, --index`      | Generate `index.md` files from frontmatter in `ai/` subfolders |
+| `churn`            | Rank files by hotspot score (LoC × churn × complexity)         |
 | `-h, --help`       | Display help information                                       |
 | `--version`        | Show version number                                            |
 
@@ -400,6 +401,13 @@ aidd [target-directory] [options]
 # Basic usage
 npx aidd                    # Current directory
 npx aidd my-project        # Specific directory
+
+# Hotspot analysis
+npx aidd churn              # Rank files by LoC × churn × complexity (top 20, 90-day window)
+npx aidd churn --days 30    # Shorter window
+npx aidd churn --top 10     # Tighter list
+npx aidd churn --min-loc 100 # Higher LoC threshold
+npx aidd churn --json       # Machine-readable output
 
 # Preview and force options
 npx aidd --dry-run         # See what would be copied
