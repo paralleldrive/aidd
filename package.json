@@ -1,5 +1,8 @@
 {
   "author": "ParallelDrive",
+  "engines": {
+    "node": ">=18"
+  },
   "bin": {
     "aidd": "bin/aidd.js"
   },

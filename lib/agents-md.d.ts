@@ -2,7 +2,7 @@
  * AGENTS.md file management for AI agent directives
  */
 
-/** Result of ensureAgentsMd operation */
+/** Result of ensureAgentsMd or ensureClaudeMd operation */
 export interface AgentsMdResult {
   /** Action taken: "created", "appended", or "unchanged" */
   action: "created" | "appended" | "unchanged";
@@ -81,17 +81,44 @@ export function appendDirectives(
 ): Promise<void>;
 
 /**
- * Ensure AGENTS.md exists with required directives
- *
- * - If AGENTS.md does not exist, creates it with standard content
- * - If AGENTS.md exists but missing directives, appends them
- * - If AGENTS.md exists with all directives, does nothing
+ * Ensure AGENTS.md exists with required directives.
+ * - If AGENTS.md does not exist, creates it with standard content.
+ * - If AGENTS.md exists but is missing directives, appends them.
+ * - If AGENTS.md exists with all directives, does nothing.
  *
  * @param targetBase - Base directory for AGENTS.md
  * @returns Result indicating action taken
- *
- * @example
- * const result = await ensureAgentsMd('/path/to/project');
- * // result.action: "created" | "appended" | "unchanged"
  */
 export function ensureAgentsMd(targetBase: string): Promise<AgentsMdResult>;
+
+/**
+ * Ensure CLAUDE.md exists and references AGENTS.md.
+ * - Not present → create with agentsMdContent.
+ * - Present but missing AGENTS.md reference and incomplete directives → append pointer.
+ * - Present with all directives or AGENTS.md reference → leave unchanged.
+ *
+ * @param targetBase - Base directory for CLAUDE.md
+ * @returns Result indicating action taken
+ */
+export function ensureClaudeMd(targetBase: string): Promise<AgentsMdResult>;
+
+/** Result of a single file sync in syncRootAgentFiles */
+export interface SyncFileResult {
+  /** Filename that was processed (e.g. "AGENTS.md" or "CLAUDE.md") */
+  file: string;
+  /** Action taken: "created", "updated", or "unchanged" */
+  action: "created" | "updated" | "unchanged";
+}
+
+/**
+ * Overwrite AGENTS.md and CLAUDE.md with the current agentsMdContent template
+ * if either file is missing or its content differs from the template.
+ * Used by the pre-commit hook to keep committed copies in sync whenever
+ * agentsMdContent is updated.
+ *
+ * @param targetBase - Base directory containing AGENTS.md and CLAUDE.md
+ * @returns Array of results for each file processed
+ */
+export function syncRootAgentFiles(
+  targetBase: string,
+): Promise<SyncFileResult[]>;

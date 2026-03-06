@@ -2,6 +2,8 @@
  * CLI core utilities for the aidd clone operation
  */
 
+import type { CausedError } from "./error-causes.js";
+
 /** CLI output logger interface */
 export interface Logger {
   cyan: (msg: string) => void;
@@ -21,19 +23,11 @@ export interface ResolvedPaths {
   targetBase: string;
 }
 
-/** Error detail shape when executeClone fails */
-export interface ExecuteCloneError {
-  cause?: unknown;
-  code?: string;
-  message: string;
-  type?: string;
-}
-
 /** Result returned by executeClone — covers success and error shapes */
 export type ExecuteCloneResult =
   | { paths: ResolvedPaths; success: true }
   | { dryRun: true; success: true }
-  | { error: ExecuteCloneError; success: false };
+  | { error: CausedError; success: false };
 
 /**
  * Create aidd-custom/config.yml with default project settings
@@ -90,15 +84,5 @@ export function executeClone(options?: {
   dryRun?: boolean;
   verbose?: boolean;
   cursor?: boolean;
+  claude?: boolean;
 }): Promise<ExecuteCloneResult>;
-
-/**
- * Error handler factory for CLI structured errors.
- * Accepts a map of handlers keyed by error name and returns a function
- * that routes a thrown error to the matching handler.
- */
-export const handleCliErrors: (handlers: {
-  CloneError: (error: Error) => unknown;
-  FileSystemError: (error: Error) => unknown;
-  ValidationError: (error: Error) => unknown;
-}) => (error: Error) => unknown;
