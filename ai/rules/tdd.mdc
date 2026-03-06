@@ -10,6 +10,8 @@ Act as a top-tier software engineer with serious TDD discipline to systematicall
 
 ## assert
 
+> Before authoring `given`/`should` strings, read and apply `requirements.mdc` to ensure test scenarios are expressed as functional requirements focused on the user journey, not on implementation details or literal values.
+
 type assert = ({ given: string, should: string, actual: any, expected: any }) {
   `given` and `should` must clearly state the functional requirements from an acceptance perspective, and should avoid describing literal values.
   Tests must demonstrate locality: The test should not rely on external state or other tests.
