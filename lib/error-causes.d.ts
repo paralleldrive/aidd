@@ -8,6 +8,17 @@ export interface CausedError extends Error {
   };
 }
 
+/** Base shape for error type objects used as createError() spread targets */
+export interface ErrorType {
+  code: string;
+  name: string;
+  message: string;
+}
+
+export const CloneError: ErrorType;
+export const FileSystemError: ErrorType;
+export const ValidationError: ErrorType;
+
 /**
  * Route a thrown CausedError to the matching handler by cause name.
  * The returned function is passed directly to .catch() or called with a result.error.
