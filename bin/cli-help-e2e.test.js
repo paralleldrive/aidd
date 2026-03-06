@@ -10,6 +10,34 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const cliPath = `"${path.join(__dirname, "./aidd.js")}"`;
 
+describe("churn command", () => {
+  test("churn --help", async () => {
+    const { stdout } = await execAsync(`node ${cliPath} churn --help`);
+
+    assert({
+      given: "churn --help is run",
+      should: "describe the hotspot ranking command",
+      actual: stdout.includes("hotspot score"),
+      expected: true,
+    });
+  });
+
+  test("churn --json in a git repo", async () => {
+    const { stdout } = await execAsync(`node ${cliPath} churn --json --top 1`, {
+      cwd: path.join(__dirname, ".."),
+    });
+
+    const results = JSON.parse(stdout);
+
+    assert({
+      given: "churn --json is run in a git repo",
+      should: "return a non-empty array of scored files",
+      actual: Array.isArray(results) && results.length > 0,
+      expected: true,
+    });
+  });
+});
+
 describe("CLI help command", () => {
   test("help output includes README intro", async () => {
     const { stdout } = await execAsync(`node ${cliPath} --help`);
