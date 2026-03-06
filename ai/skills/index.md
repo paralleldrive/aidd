@@ -36,6 +36,10 @@ See [`aidd-react/index.md`](./aidd-react/index.md) for contents.
 
 See [`aidd-service/index.md`](./aidd-service/index.md) for contents.
 
+### 📁 aidd-split-pr/
+
+See [`aidd-split-pr/index.md`](./aidd-split-pr/index.md) for contents.
+
 ### 📁 aidd-structure/
 
 See [`aidd-structure/index.md`](./aidd-structure/index.md) for contents.
