@@ -86,5 +86,5 @@ Reference {
 }
 
 Commands {
-  ✂️ /split-pr - split an oversized PR into mergeable increments
+  ✂️ /split-pr [target PR | target branch] - split an oversized PR into mergeable increments
 }
