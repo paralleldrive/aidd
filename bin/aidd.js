@@ -7,11 +7,8 @@ import { fileURLToPath } from "url";
 import chalk from "chalk";
 import { Command } from "commander";
 
-import { collectChurn, handleChurnErrors } from "../lib/churn-collector.js";
-import { formatJson, formatTable } from "../lib/churn-formatter.js";
-import { scoreFiles } from "../lib/churn-scorer.js";
+import { addChurnCommand } from "../lib/churn-command.js";
 import { executeClone, handleCliErrors } from "../lib/cli-core.js";
-import { collectFileMetrics } from "../lib/file-metrics-collector.js";
 import { generateAllIndexes } from "../lib/index-generator.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -193,44 +190,6 @@ https://paralleldrive.com
         process.exit(result.success ? 0 : 1);
       },
     );
-};
-
-const addChurnCommand = (program) => {
-  program
-    .command("churn")
-    .description("rank files by hotspot score (LoC × churn × complexity)")
-    .option("--days <n>", "git log window in days", "90")
-    .option("--top <n>", "max results to show", "20")
-    .option("--min-loc <n>", "minimum lines of code to include", "50")
-    .option("--json", "output raw JSON")
-    .action(async ({ days, top, minLoc, json }) => {
-      const cwd = process.cwd();
-      try {
-        const churnMap = collectChurn({ cwd, days: Number(days) });
-        const files = [...churnMap.keys()];
-        const metricsMap = collectFileMetrics({ cwd, files });
-        const results = scoreFiles(churnMap, metricsMap, {
-          minLoc: Number(minLoc),
-          top: Number(top),
-        });
-        console.log(json ? formatJson(results) : formatTable(results));
-      } catch (err) {
-        try {
-          handleChurnErrors({
-            GitError: ({ message }) =>
-              console.error(chalk.red(`❌ Git error: ${message}`)),
-            NotAGitRepo: () =>
-              console.error(
-                chalk.red("❌ Not a git repository. Run inside a git repo."),
-              ),
-          })(err);
-        } catch {
-          console.error(chalk.red(`❌ ${err.message}`));
-        }
-        process.exit(1);
-      }
-    });
-  return program;
 };
 
 // Execute CLI
