@@ -19,6 +19,14 @@ PRs are hard to scope without knowing where complexity actually lives. Developer
 
 ## ✅ Churn Command
 
+## Fix Error Exit Code in churn Command 🔴 HIGH
+
+`handleChurnErrors` handlers return `undefined` (from `console.error`), which resolves the promise chain before the final `.catch(() => process.exit(1))` can fire. Known errors silently exit with code 0.
+
+**Requirements**:
+- Given a git error occurs during churn collection, should exit with code 1
+- Given the current directory is not a git repository, should exit with code 1
+
 ## ✅ Output Formatter
 
 ## ✅ Tests
