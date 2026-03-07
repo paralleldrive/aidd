@@ -27,13 +27,13 @@ describe("churn command", () => {
       cwd: path.join(__dirname, ".."),
     });
 
-    const results = JSON.parse(stdout);
+    const [first] = JSON.parse(stdout);
 
     assert({
-      given: "churn --json is run in a git repo",
-      should: "return a non-empty array of scored files",
-      actual: Array.isArray(results) && results.length > 0,
-      expected: true,
+      given: "churn --json --top 1 is run in a git repo",
+      should: "return a scored file entry with all expected fields",
+      actual: Object.keys(first).sort(),
+      expected: ["churn", "complexity", "file", "gzipRatio", "loc", "score"],
     });
   });
 });
