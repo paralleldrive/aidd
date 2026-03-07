@@ -391,7 +391,7 @@ aidd [target-directory] [options]
 | `-v, --verbose`    | Provide detailed output                                        |
 | `-c, --cursor`     | Create `.cursor` symlink for Cursor editor integration         |
 | `-i, --index`      | Generate `index.md` files from frontmatter in `ai/` subfolders |
-| `churn`            | Rank files by hotspot score (LoC × churn × complexity)         |
+| `churn`            | Rank files by hotspot score — see [`ai/skills/aidd-churn/SKILL.md`](ai/skills/aidd-churn/SKILL.md) |
 | `-h, --help`       | Display help information                                       |
 | `--version`        | Show version number                                            |
 
@@ -402,12 +402,9 @@ aidd [target-directory] [options]
 npx aidd                    # Current directory
 npx aidd my-project        # Specific directory
 
-# Hotspot analysis
-npx aidd churn              # Rank files by LoC × churn × complexity (top 20, 90-day window)
-npx aidd churn --days 30    # Shorter window
-npx aidd churn --top 10     # Tighter list
-npx aidd churn --min-loc 100 # Higher LoC threshold
-npx aidd churn --json       # Machine-readable output
+# Hotspot analysis (see ai/skills/aidd-churn/SKILL.md for details)
+npx aidd churn              # Rank files by hotspot score (top 20, 90-day window)
+npx aidd churn --days 30 --top 10 --min-loc 100 --json
 
 # Preview and force options
 npx aidd --dry-run         # See what would be copied
