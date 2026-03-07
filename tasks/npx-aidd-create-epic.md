@@ -1,6 +1,6 @@
 # `npx aidd create` Epic
 
-**Status**: ✅ DONE
+**Status**: 🔄 IN REVIEW — code review fixes required before merge
 **Goal**: Add a `create` subcommand to `aidd` that scaffolds new apps from manifest-driven extensions with fresh `@latest` installs.
 
 ## Overview
@@ -232,3 +232,125 @@ YAML is used for the config file because it is token-friendly for AI context inj
 - Given `AIDD_CUSTOM_CREATE_URI` env var is set, should take precedence over `~/.aidd/config.yml`
 - Given a CLI `<type>` arg, should take precedence over both the env var and `~/.aidd/config.yml`
 - Given a config file containing a YAML-specific tag (e.g. `!!binary`), `readConfig` should return `{}` (unsafe YAML types are rejected by `yaml.JSON_SCHEMA`)
+
+---
+
+## Code review fixes (from PR #124 review)
+
+### C1 — `createError` not used in `defaultResolveRelease` and `defaultDownloadAndExtract`
+
+`scaffold-resolver.js` throws plain `new Error()` in three places inside `defaultResolveRelease` (403, non-ok status, missing `tarball_url`) and one place inside `defaultDownloadAndExtract` (non-ok HTTP response) and one inside the tar `close` handler. Raw errors bypass `handleScaffoldErrors`, causing them to fall silently through to the generic fallback.
+
+**Requirements**:
+- Given `defaultResolveRelease` encounters a 403 response, should throw a `createError` with `ScaffoldNetworkError` shape (not a plain `new Error`)
+- Given `defaultResolveRelease` encounters any non-ok non-403 response, should throw a `createError` with `ScaffoldNetworkError` shape
+- Given `defaultResolveRelease` finds no `tarball_url` in the release, should throw a `createError` with `ScaffoldNetworkError` shape
+- Given `defaultDownloadAndExtract` receives a non-ok HTTP response, should throw a `createError` with `ScaffoldNetworkError` shape
+- Given `tar` exits with a non-zero code, should throw a `createError` with `ScaffoldNetworkError` shape
+
+---
+
+### C2 — `defaultConfirm` builds ad-hoc error objects with `Object.assign` instead of `createError`
+
+**Requirements**:
+- Given stdin closes before the user answers the confirmation prompt, should throw a `createError` with `ScaffoldCancelledError` shape (not `Object.assign(new Error(...), { type: "close" })`)
+- Given stdin errors before the user answers, should throw a `createError` with `ScaffoldCancelledError` shape
+
+---
+
+### C3 — `scaffold-verifier.js` uses `instanceof Error` check
+
+The project's `error-causes` rules explicitly prohibit `instanceof` for error type checking. Line 24 uses `err instanceof Error ? err.message : String(err)`.
+
+**Requirements**:
+- Given `parseManifest` throws for any reason inside `verifyScaffold`, should extract the error message without using `instanceof` (use `err?.message ?? String(err)`)
+
+---
+
+### H1 — ALL_CAPS constant names violate JS naming guide
+
+The JS guide states: *"Avoid ALL_CAPS for constants."* The naming convention applies to all constants regardless of whether they are module-level.
+
+**Requirements**:
+- Given any constant in new scaffold modules, should be named in camelCase, not SCREAMING_SNAKE_CASE
+- Affected names: `SCAFFOLD_DOWNLOAD_DIR`, `DEFAULT_SCAFFOLD_TYPE`, `KNOWN_STEP_KEYS`, `GITHUB_DOWNLOAD_HOSTNAMES`, `AIDD_HOME`, `CONFIG_FILE`
+
+---
+
+### H2 — `scaffold-resolver.js` exceeds 200 LoC and mixes 4 distinct concerns
+
+The file contains URL-type detection, GitHub API release resolution, tarball download + `tar` extraction, readline confirmation prompt, and path resolution. Per "one concern per file".
+
+**Requirements**:
+- Given the download/network concerns (GitHub release resolution, tarball download+extract, readline confirm), should live in a dedicated `lib/scaffold-downloader.js` module
+- Given `scaffold-resolver.js` after extraction, should be ≤ 200 LoC and concern itself only with path resolution (named, `file://`, `https://`)
+
+---
+
+### M1 — Dead `folder` parameter still passed in `scaffold-resolver.test.js`
+
+After removing `folder` from `resolveExtension`'s signature, many test call-sites still pass `folder: "/tmp/..."` which is silently ignored.
+
+**Requirements**:
+- Given any test call to `resolveExtension`, should not pass a `folder` property (it is no longer part of the API)
+
+---
+
+### M2 — Excessively verbose test files block the ≤1000 LoC per-PR budget
+
+- `scaffold-resolver.test.js`: 1147 lines for a 304-line implementation — dozens of tests repeat the same `error?.cause?.code === "SCAFFOLD_VALIDATION_ERROR"` pattern with trivially different inputs
+- `scaffold-runner.test.js`: 535 lines for a 133-line implementation — 8+ tests repeat the identical error-code assertion with minor input variation
+- `scaffold-create.test.js`: 334 lines for a 78-line implementation
+
+**Requirements**:
+- Given multiple test cases that differ only in input and all assert the same error code, should use a table-driven or parameterized pattern instead of repeating the full `let error = null; try/catch; assert` block
+- Given the total diff for any single PR, should not exceed +1000 LoC
+
+---
+
+### M3 — `scaffold-cleanup.test.js` third test is vacuous
+
+The test "targets ~/.aidd/scaffold by default (not the project directory)" never calls `scaffoldCleanup`. It constructs a path manually and asserts `startsWith(os.homedir())` on a string it built itself — proving nothing about the implementation.
+
+**Requirements**:
+- Given the default `scaffoldDir` behavior of `scaffoldCleanup`, should be verified by a test that calls `scaffoldCleanup()` with no arguments (possibly against a real temp dir, or by inspecting the exported `SCAFFOLD_DOWNLOAD_DIR` constant)
+
+---
+
+### M4 — `defaultLog` is a pointless wrapper
+
+`const defaultLog = (msg) => console.log(msg)` adds an indirection with zero value.
+
+**Requirements**:
+- Given the `log` parameter default in `resolveExtension`, should default directly to `console.log` without an intermediate wrapper
+
+---
+
+### L1 — `let paths` mutable variable in `resolveExtension`
+
+The `let paths` / `if-else if-else` assignment pattern in `resolveExtension` uses mutable state unnecessarily.
+
+**Requirements**:
+- Given the three resolution branches (http, file://, named), should be expressed as early-return branches or a helper that returns a value, avoiding mutable `let`
+
+---
+
+### L2 — Duplicate `handleScaffoldErrors` blocks in `scaffold-commands.js`
+
+The `create` and `verify-scaffold` handlers each contain a nearly identical `handleScaffoldErrors` call mapping the same four error types to the same display patterns.
+
+**Requirements**:
+- Given shared error display logic across scaffold CLI handlers, should be extracted into a single reusable helper to eliminate duplication
+
+---
+
+## PR splitting plan
+
+Current diff is +4414 LoC. Split into four PRs (≤ +1000 LoC each after test verbosity reduction):
+
+| PR | Contents |
+|----|----------|
+| **A** | `lib/aidd-config.js` + tests, `lib/scaffold-errors.js`, `package.json` (`js-yaml` dep + `engines`) |
+| **B** | `lib/scaffold-runner.js` + trimmed tests, `lib/scaffold-verifier.js` + tests, `ai/scaffolds/` fixtures, `docs/scaffold-authoring.md` |
+| **C** | Extract `lib/scaffold-downloader.js`, `lib/scaffold-resolver.js` (slimmed) + trimmed tests |
+| **D** | `lib/scaffold-cleanup.js` + tests, `lib/scaffold-create.js` + tests, `lib/scaffold-verify-cmd.js` + tests, `lib/scaffold-commands.js` + tests, `bin/aidd.js` changes, `bin/create-e2e.test.js` |
