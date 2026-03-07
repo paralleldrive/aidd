@@ -53,13 +53,24 @@ where refactoring effort pays off most.
 | **LoC** | Lines of code |
 | **Churn** | Commit touch count in the window |
 | **Cx** | Cyclomatic complexity |
-| **Density** | Gzip ratio (`gzip size / raw size`) — a proxy for information density; high density = tightly packed logic |
+| **Density** | `gzip size / raw size` as a percentage — a code quality signal; **higher is generally better** (see below) |
 | **File** | Relative path from project root |
 
-**Gzip density** is a supplemental signal. A file with high density but
-low complexity often contains generated or data-heavy code (e.g. fixtures,
-translations) that is safe to ignore. A file with both high complexity and
-high density is genuinely hard to reason about.
+### Density: a code quality signal
+
+The Density column shows how well the file compresses — specifically `gzip_size / raw_size` expressed as a percentage.
+
+Gzip (DEFLATE / LZ77) achieves compression by replacing repeated byte sequences with short back-references. The more repetition a file contains, the smaller the compressed output and the lower the percentage. This makes gzip ratio a practical proxy for information density — the amount of unique, non-redundant content per line.
+
+| Density % | Interpretation |
+| --- | --- |
+| **High (e.g. 80–95%)** | File compresses poorly — content is non-repetitive. **Generally a good sign**: code is unique and not copy-pasted. |
+| **Low (e.g. 20–40%)** | File compresses heavily — lots of repeated patterns. A warning sign for copy-paste duplication, boilerplate, or bloated switch/if chains. |
+| **Very high (95%+)** | Rarely seen in well-structured source. May indicate minified, obfuscated, or auto-generated content. Worth inspecting, but not inherently a problem. |
+
+Healthy application code typically falls in the 50–85% range. A file with unusually low density in the hotspot list is doubly worth refactoring: it scores high on risk *and* contains structural repetition that a refactor could eliminate.
+
+**Important:** density is a supplemental display column only — it does not factor into the hotspot score. The score formula remains `LoC × churn × complexity`.
 
 ## Usage
 
