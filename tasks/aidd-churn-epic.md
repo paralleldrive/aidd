@@ -1,6 +1,6 @@
 # aidd churn Epic
 
-**Status**: 🔄 IN PROGRESS (core complete, bug fixes remaining)  
+**Status**: 🔄 IN PROGRESS (core + bug fixes complete, follow-ups remaining)  
 **Goal**: Add `npx aidd churn` — a CLI command that ranks files by composite hotspot score to identify prime PR split candidates
 
 ## Overview
@@ -47,22 +47,15 @@ Replace `execSync` string interpolation with `spawnSync` args array to eliminate
 
 ---
 
-## Validate `--days` Input 🟡 LOW
+## ✅ Validate `--days` / `--top` / `--min-loc` Input
 
-`--days abc` silently returns the full git history. Should fail fast with a clear message.
-
-**Requirements**:
-- Given a non-numeric `--days` value, should print an error and exit 1
-- Given a non-positive `--days` value, should print an error and exit 1
+Expanded from original `--days`-only scope. All three numeric options are now validated via a rules-based dispatch (`optionRules` array + `validateRule` helper), eliminating the repeated if-branches and reducing cyclomatic complexity from 14 → 7.
 
 ---
 
-## Add churn signal to /review 🟡 LOW
+## ✅ Add churn signal to /review
 
-Add a single line to `review.mdc` instructing the agent to run `npx aidd churn` early and surface high-scoring files in the diff.
-
-**Requirements**:
-- Given a code review is running, should run `npx aidd churn` and flag diff files that rank in the top results
+Added to `review.mdc` Criteria: run `npx aidd churn` at the start of every review and cross-reference ranked files against the diff.
 
 ---
 
@@ -75,7 +68,7 @@ Add a single line to `review.mdc` instructing the agent to run `npx aidd churn` 
 
 ---
 
-## Fix TypeScript Runtime Dependency ⚠️ HIGH
+## ✅ Fix TypeScript Runtime Dependency
 
 `typescript` is in `devDependencies` but `tsmetrics-core` calls `require("typescript")` at runtime. Published packages omit devDependencies, so `npx aidd churn` fails with `Cannot find module 'typescript'` for any user who does not have TypeScript in their own project.
 
@@ -85,7 +78,7 @@ Add a single line to `review.mdc` instructing the agent to run `npx aidd churn` 
 
 ---
 
-## Fix Division by Zero on Empty Files ⚠️ HIGH
+## ✅ Fix Division by Zero on Empty Files
 
 `gzipSync(buf).length / buf.length` produces `Infinity` when `buf.length === 0`, which renders as `Infinity%` in the output table.
 
@@ -94,7 +87,7 @@ Add a single line to `review.mdc` instructing the agent to run `npx aidd churn` 
 
 ---
 
-## Fix Input Validation for CLI Options ⚠️ HIGH
+## ✅ Fix Input Validation for CLI Options
 
 `--days abc`, `--top abc`, and `--min-loc abc` silently produce `NaN`, which passes through to git or the scorer and causes cryptic errors instead of a clear user-facing message.
 
@@ -108,7 +101,7 @@ Add a single line to `review.mdc` instructing the agent to run `npx aidd churn` 
 
 ---
 
-## Fix Exit Code on Churn Errors 🟠 MEDIUM
+## ✅ Fix Exit Code on Churn Errors
 
 `handleChurnErrors` catches and resolves the error, so the trailing `.catch(() => process.exit(1))` never fires. The command exits 0 even when a git error occurs, breaking CI pipelines.
 
@@ -118,7 +111,7 @@ Add a single line to `review.mdc` instructing the agent to run `npx aidd churn` 
 
 ---
 
-## Fix File Column Alignment 🟡 LOW
+## ✅ Fix File Column Alignment
 
 The formatter uses `padStart` for all columns, giving file paths leading whitespace. Numeric columns should be right-aligned; the file path column should be left-aligned.
 
@@ -127,7 +120,7 @@ The formatter uses `padStart` for all columns, giving file paths leading whitesp
 
 ---
 
-## Fix ALL_CAPS Constants 🟡 LOW
+## ✅ Fix ALL_CAPS Constants
 
 `JS_TS_EXTENSIONS` and `HEADERS` violate the project JavaScript guide ("avoid ALL_CAPS for constants").
 

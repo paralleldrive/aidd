@@ -24,6 +24,7 @@ Criteria {
   Use docblocks for public APIs - but keep them minimal.
   Ensure there are no unused stray files or dead code.
   Dig deep. Look for: redundancies, forgotten files (d.ts, etc), things that should have been moved or deleted that were not. Simplicity is removing the obvious and adding the meaningful. Perfection is attained not when there is nothing more to add, but when there is nothing more to remove.
+  Run `npx aidd churn` at the start of the review and cross-reference the ranked files against the diff. Call out any diff file appearing in the top results, explain which signal (LoC, churn, or complexity) is driving the score, and factor it into the review priority.
 }
 
 Constraints {
