@@ -15,7 +15,8 @@
     "fs-extra": "^11.1.1",
     "gray-matter": "^4.0.3",
     "js-sha3": "^0.9.3",
-    "tsmetrics-core": "^1.4.1"
+    "tsmetrics-core": "^1.4.1",
+    "typescript": "^5.9.3"
   },
   "description": "The standard framework for AI Driven Development.",
   "devDependencies": {
@@ -27,7 +28,6 @@
     "husky": "^9.1.7",
     "release-it": "^19.0.5",
     "riteway": "^9.0.0-rc.1",
-    "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   },
   "exports": {
