@@ -22,6 +22,38 @@ describe("churn command", () => {
     });
   });
 
+  test("churn exits 1 outside a git repo", async () => {
+    let exitCode = 0;
+    try {
+      await execAsync(`node ${cliPath} churn --json`, { cwd: "/tmp" });
+    } catch (err) {
+      exitCode = err.code;
+    }
+
+    assert({
+      given: "churn is run outside a git repository",
+      should: "exit with code 1",
+      actual: exitCode,
+      expected: 1,
+    });
+  });
+
+  test("churn exits 1 with invalid --days", async () => {
+    let exitCode = 0;
+    try {
+      await execAsync(`node ${cliPath} churn --days abc`);
+    } catch (err) {
+      exitCode = err.code;
+    }
+
+    assert({
+      given: "churn is run with a non-numeric --days value",
+      should: "exit with code 1",
+      actual: exitCode,
+      expected: 1,
+    });
+  });
+
   test("churn --json in a git repo", async () => {
     const { stdout } = await execAsync(`node ${cliPath} churn --json --top 1`, {
       cwd: path.join(__dirname, ".."),
