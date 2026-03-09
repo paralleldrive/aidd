@@ -391,7 +391,7 @@ aidd [target-directory] [options]
 | `-v, --verbose`    | Provide detailed output                                        |
 | `-c, --cursor`     | Create `.cursor` symlink for Cursor editor integration         |
 | `-i, --index`      | Generate `index.md` files from frontmatter in `ai/` subfolders |
-| `churn`            | Rank files by hotspot score — see [`ai/skills/aidd-churn/SKILL.md`](ai/skills/aidd-churn/SKILL.md) |
+| `churn`            | Rank files by hotspot score — see [documentation](ai/skills/aidd-churn/README.md) |
 | `-h, --help`       | Display help information                                       |
 | `--version`        | Show version number                                            |
 
