@@ -2,13 +2,6 @@
 
 ## Current Epics
 
-### 📋 `npx aidd churn` Epic
-
-**Status**: 🔄 IN PROGRESS (core + bug fixes complete, follow-ups remaining)  
-**File**: [`tasks/aidd-churn-epic.md`](./tasks/aidd-churn-epic.md)  
-**Goal**: CLI command that ranks files by composite hotspot score (LoC × churn × complexity + gzip density) to identify prime PR split candidates  
-**Tasks**: Core complete. Remaining: filter non-source files, deduplicate ScoredFile typedef.
-
 ### 📋 `npx aidd create` Epic
 
 **Status**: 📋 PLANNED  
