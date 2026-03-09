@@ -228,7 +228,7 @@ describe("aidd create --agent flag", () => {
     const scaffoldUri = `file://${path.join(tempDir, "agent-test-scaffold")}`;
 
     // Use 'echo' as the agent: it just prints the prompt and exits successfully
-    await execAsync(
+    const { stdout } = await execAsync(
       `node ${cliPath} create --agent echo "${scaffoldUri}" agent-project`,
       { cwd: tempDir, timeout: 30_000 },
     );
@@ -242,5 +242,80 @@ describe("aidd create --agent flag", () => {
       actual: dirExists,
       expected: true,
     });
+
+    assert({
+      given:
+        "--agent echo with a manifest prompt step containing 'hello world'",
+      should:
+        "include the prompt text in stdout, proving echo was invoked with it",
+      actual: stdout.includes("hello world"),
+      expected: true,
+    });
   }, 30_000);
+});
+
+describe("aidd create — error paths", () => {
+  let tempDir;
+
+  beforeEach(async () => {
+    tempDir = path.join(os.tmpdir(), `aidd-e2e-errors-${Date.now()}`);
+    await fs.ensureDir(tempDir);
+  });
+
+  afterEach(async () => {
+    await fs.remove(tempDir);
+  });
+
+  test("exits non-zero for an unknown named scaffold", async () => {
+    let err;
+    try {
+      await execAsync(
+        `node ${cliPath} create nonexistent-scaffold-xyz my-project`,
+        { cwd: tempDir },
+      );
+    } catch (e) {
+      err = e;
+    }
+    assert({
+      given: "an unknown scaffold name",
+      should: "exit non-zero",
+      actual: err?.code !== 0,
+      expected: true,
+    });
+  });
+
+  test("exits non-zero when a URI is given without a folder argument", async () => {
+    let err;
+    try {
+      await execAsync(`node ${cliPath} create https://example.com`, {
+        cwd: tempDir,
+      });
+    } catch (e) {
+      err = e;
+    }
+    assert({
+      given: "a URI with no folder argument",
+      should: "exit non-zero",
+      actual: err?.code !== 0,
+      expected: true,
+    });
+  });
+
+  test("exits non-zero for a file:// URI pointing to a non-existent path", async () => {
+    let err;
+    try {
+      await execAsync(
+        `node ${cliPath} create "file:///tmp/nonexistent-scaffold-xyz" my-project`,
+        { cwd: tempDir },
+      );
+    } catch (e) {
+      err = e;
+    }
+    assert({
+      given: "a non-existent file:// scaffold path",
+      should: "exit non-zero",
+      actual: err?.code !== 0,
+      expected: true,
+    });
+  });
 });
