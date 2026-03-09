@@ -314,6 +314,7 @@ After removing `folder` from `resolveExtension`'s signature, many test call-site
 **Requirements**:
 - Given multiple test cases that differ only in input and all assert the same error code, should use a table-driven or parameterized pattern instead of repeating the full `let error = null; try/catch; assert` block
 - Given the total diff for any single PR, should not exceed +1000 LoC
+- Given multiple `assert` calls in one test that each check a different property of the same return value from the same operation, should be collapsed into a single `assert` on a composite `actual` / `expected` object
 
 ---
 
