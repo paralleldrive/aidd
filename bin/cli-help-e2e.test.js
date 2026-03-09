@@ -10,6 +10,66 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const cliPath = `"${path.join(__dirname, "./aidd.js")}"`;
 
+describe("churn command", () => {
+  test("churn --help", async () => {
+    const { stdout } = await execAsync(`node ${cliPath} churn --help`);
+
+    assert({
+      given: "churn --help is run",
+      should: "describe the hotspot ranking command",
+      actual: stdout.includes("hotspot score"),
+      expected: true,
+    });
+  });
+
+  test("churn exits 1 outside a git repo", async () => {
+    let exitCode = 0;
+    try {
+      await execAsync(`node ${cliPath} churn --json`, { cwd: "/tmp" });
+    } catch (err) {
+      exitCode = err.code;
+    }
+
+    assert({
+      given: "churn is run outside a git repository",
+      should: "exit with code 1",
+      actual: exitCode,
+      expected: 1,
+    });
+  });
+
+  test("churn exits 1 with invalid --days", async () => {
+    let exitCode = 0;
+    try {
+      await execAsync(`node ${cliPath} churn --days abc`);
+    } catch (err) {
+      exitCode = err.code;
+    }
+
+    assert({
+      given: "churn is run with a non-numeric --days value",
+      should: "exit with code 1",
+      actual: exitCode,
+      expected: 1,
+    });
+  });
+
+  test("churn --json in a git repo", async () => {
+    const { stdout } = await execAsync(`node ${cliPath} churn --json --top 1`, {
+      cwd: path.join(__dirname, ".."),
+    });
+
+    const [first] = JSON.parse(stdout);
+
+    assert({
+      given: "churn --json --top 1 is run in a git repo",
+      should: "return a scored file entry with all expected fields",
+      actual: Object.keys(first).sort(),
+      expected: ["churn", "complexity", "file", "gzipRatio", "loc", "score"],
+    });
+  });
+});
+
 describe("CLI help command", () => {
   test("help output includes README intro", async () => {
     const { stdout } = await execAsync(`node ${cliPath} --help`);
