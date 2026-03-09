@@ -179,6 +179,15 @@ The existing `!typeDir.startsWith(scaffoldsRoot + path.sep)` check incorrectly a
 
 ---
 
+## Strip `.git` suffix in `defaultResolveRelease` API URL construction
+
+`isGitHubRepoUrl` accepts URLs ending in `.git` (e.g. `https://github.com/org/repo.git`) by stripping the suffix during validation only. `defaultResolveRelease` does not strip the suffix before constructing the GitHub API URL, so passing a `.git` URL produces `https://api.github.com/repos/org/repo.git/releases/latest` — an invalid URL that returns a 404 with a misleading "no releases found" error.
+
+**Requirements**:
+- Given a GitHub repo URL ending with `.git` (e.g. `https://github.com/org/repo.git`), `defaultResolveRelease` should strip the `.git` suffix before constructing the API URL, producing `https://api.github.com/repos/org/repo/releases/latest`
+
+---
+
 ## Support `GITHUB_TOKEN` for private repos and higher rate limits
 
 `defaultResolveRelease` and `defaultDownloadAndExtract` currently make unauthenticated requests, limiting usage to public repos and 60 API requests/hr per IP. Adding optional `GITHUB_TOKEN` support covers private-repo scaffold authors and avoids spurious rate-limit failures in busy environments.
