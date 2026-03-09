@@ -57,7 +57,7 @@ interpretResults(hotspotReport) => analysis {
 ## Step 3 — Recommend
 
 ```sudolang
-recommend(analysis) => recommendations {
+recommend(analysis, { context = "standalone" } = {}) => recommendations {
   for each top hotspot {
     state: file path and score
     explain: WHY it ranks high — cite the specific metric(s) driving the score
@@ -69,7 +69,17 @@ recommend(analysis) => recommendations {
     }
     estimate: which metric drops the most after the refactor
   }
-  prReview => flag any diff files appearing in the top results and explain the added review risk
+  
+  if context === "prReview" {
+    cross-reference: identify files in both the diff AND the top hotspot results
+    for each match {
+      flag: "⚠️ This file is a hotspot"
+      explain: which signal (LoC, churn, complexity, or density) is driving the risk
+      reviewGuidance: prioritize this file for extra scrutiny — changes here have higher blast radius
+      recommend: consider splitting this file or extracting stable interfaces before merging
+    }
+    if no matches found => note that the diff avoids known hotspots (lower risk)
+  }
 }
 ```
 
