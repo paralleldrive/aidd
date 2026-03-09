@@ -11,6 +11,14 @@ PRs are hard to scope without knowing where complexity actually lives. Developer
 
 ## ✅ Install tsmetrics-core
 
+## Fix tsmetrics-core Peer Dependency Conflict 🔴 HIGH
+
+`tsmetrics-core@1.4.1` declares `peerDependencies: { "typescript": "^4.9.4" }` while the project uses TypeScript 5.x, causing `npm install` to fail without `--legacy-peer-deps`. Using a global `.npmrc` workaround silently suppresses peer-dep validation for the entire tree.
+
+**Requirements**:
+- Given the project installs dependencies without flags, should resolve cleanly with TypeScript 5.x satisfying tsmetrics-core's peer dep via package.json overrides
+- Given `tsmetrics-core` peer dep is pinned to TypeScript 4.x, should not require a global `legacy-peer-deps` workaround in `.npmrc`
+
 ## ✅ Churn Collector
 
 ## ✅ File Metrics Collector
@@ -29,9 +37,25 @@ PRs are hard to scope without knowing where complexity actually lives. Developer
 
 ## ✅ Output Formatter
 
+## Fix Locale-Dependent Score Rendering 🔴 HIGH
+
+`score.toLocaleString()` produces locale-dependent output. In German locale `20940` renders as `"20.940"`, in French as `"20 940"`. All other numeric columns use `String()`, making the Score column unpredictable across CI environments and potentially misread as a decimal.
+
+**Requirements**:
+- Given a score value, should render it as a plain integer string without locale formatting
+
 ## ✅ Tests
 
 ## ✅ Update split-pr Skill and README
+
+---
+
+## Fix Subdirectory File Path Resolution in churn Command 🔴 HIGH
+
+`git log --name-only` always outputs file paths relative to the repository root, but `collectFileMetrics` resolves those paths against `process.cwd()`. When a user runs `npx aidd churn` from a subdirectory (e.g. `/repo/src`), every file read silently fails because paths are resolved to `/repo/src/src/foo.js` instead of `/repo/src/foo.js`, producing a misleading "No hotspots found" output.
+
+**Requirements**:
+- Given the user runs `npx aidd churn` from a subdirectory of the git repository, should resolve file paths relative to the git repository root and produce results
 
 ---
 
@@ -75,6 +99,16 @@ Add a single line to `review.mdc` instructing the agent to run `npx aidd churn` 
 
 **Requirements**:
 - Given a code review is running, should run `npx aidd churn` and flag diff files that rank in the top results
+
+---
+
+## Deduplicate jsTsExtensions 🔵 NITPICK
+
+`jsTsExtensions` is defined locally in `file-metrics-collector.js` but should be exported from `churn-filters.js` as the single canonical source, so that `filterSourceFiles` and `measureComplexity` always stay in sync.
+
+**Requirements**:
+- Given `jsTsExtensions` is exported from `churn-filters.js`, should be importable and contain all standard JS/TS extensions
+- Given `file-metrics-collector.js` measures complexity, should use the same `jsTsExtensions` exported from `churn-filters.js`
 
 ---
 
