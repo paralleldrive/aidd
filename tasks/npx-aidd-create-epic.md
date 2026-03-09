@@ -296,6 +296,15 @@ After removing `folder` from `resolveExtension`'s signature, many test call-site
 
 ---
 
+### M0 — `prompt` step passes full text as a CLI arg without E2BIG guard
+
+`runManifest` calls `execStep([agent, step.prompt], folder)` which spawns the agent binary with the full prompt text as a single argument. Very long prompts can exceed OS `ARG_MAX` limits and produce a cryptic `E2BIG` spawn error with no scaffold context.
+
+**Requirements**:
+- Given a `prompt` step whose text would cause `spawn` to fail with `E2BIG` or `ENOBUFS`, should throw a `ScaffoldStepError` with a clear message identifying the step (including prompt length in chars), rather than letting the raw OS error propagate
+
+---
+
 ### M2 — Excessively verbose test files block the ≤1000 LoC per-PR budget
 
 - `scaffold-resolver.test.js`: 1147 lines for a 304-line implementation — dozens of tests repeat the same `error?.cause?.code === "SCAFFOLD_VALIDATION_ERROR"` pattern with trivially different inputs
@@ -341,6 +350,14 @@ The `create` and `verify-scaffold` handlers each contain a nearly identical `han
 
 **Requirements**:
 - Given shared error display logic across scaffold CLI handlers, should be extracted into a single reusable helper to eliminate duplication
+
+---
+
+### L3 — Test quality issues in `scaffold-commands.test.js`
+
+**Requirements**:
+- Given `scaffold-commands.test.js`, should not suppress TypeScript errors with `@ts-nocheck`; fix each surfaced type error directly or use a targeted `// @ts-ignore` on the specific line with an explanatory comment
+- Given the test for the `--agent` option existence, should assert `agentOption?.long === "--agent"` (identity) rather than `agentOption !== undefined` (boolean existence)
 
 ---
 
