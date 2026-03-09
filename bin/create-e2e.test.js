@@ -23,6 +23,7 @@ const cliPath = path.join(__dirname, "./aidd.js");
 const scaffoldExampleCtx = {
   tempDir: null,
   projectDir: null,
+  pkg: null,
   stdout: null,
 };
 
@@ -43,6 +44,9 @@ describe("aidd create scaffold-example", () => {
       { cwd: scaffoldExampleCtx.tempDir, timeout: 180_000 },
     );
     scaffoldExampleCtx.stdout = stdout;
+    scaffoldExampleCtx.pkg = await fs.readJson(
+      path.join(scaffoldExampleCtx.projectDir, "package.json"),
+    );
   }, 180_000);
 
   afterAll(async () => {
@@ -72,105 +76,33 @@ describe("aidd create scaffold-example", () => {
     });
   });
 
-  test("installs riteway as a dev dependency", async () => {
-    const pkgPath = path.join(scaffoldExampleCtx.projectDir, "package.json");
-    const pkg = await fs.readJson(pkgPath);
-    const devDeps = pkg.devDependencies || {};
+  test("installs all expected dev dependencies", async () => {
+    const { devDependencies } = scaffoldExampleCtx.pkg;
+    const expected = [
+      "riteway",
+      "vitest",
+      "@playwright/test",
+      "error-causes",
+      "@paralleldrive/cuid2",
+      "release-it",
+    ];
 
     assert({
-      given: "scaffold-example scaffold runs",
-      should: "install riteway as a dev dependency",
-      actual: "riteway" in devDeps,
-      expected: true,
+      given: "scaffold-example create",
+      should: "install all expected dev dependencies",
+      actual: expected.filter((dep) => !(dep in devDependencies)),
+      expected: [],
     });
   });
 
-  test("installs vitest as a dev dependency", async () => {
-    const pkgPath = path.join(scaffoldExampleCtx.projectDir, "package.json");
-    const pkg = await fs.readJson(pkgPath);
-    const devDeps = pkg.devDependencies || {};
+  test("configures expected package.json scripts", async () => {
+    const { scripts } = scaffoldExampleCtx.pkg;
 
     assert({
-      given: "scaffold-example scaffold runs",
-      should: "install vitest as a dev dependency",
-      actual: "vitest" in devDeps,
-      expected: true,
-    });
-  });
-
-  test("installs @playwright/test as a dev dependency", async () => {
-    const pkgPath = path.join(scaffoldExampleCtx.projectDir, "package.json");
-    const pkg = await fs.readJson(pkgPath);
-    const devDeps = pkg.devDependencies || {};
-
-    assert({
-      given: "scaffold-example scaffold runs",
-      should: "install @playwright/test as a dev dependency",
-      actual: "@playwright/test" in devDeps,
-      expected: true,
-    });
-  });
-
-  test("installs error-causes as a dev dependency", async () => {
-    const pkgPath = path.join(scaffoldExampleCtx.projectDir, "package.json");
-    const pkg = await fs.readJson(pkgPath);
-    const devDeps = pkg.devDependencies || {};
-
-    assert({
-      given: "scaffold-example scaffold runs",
-      should: "install error-causes as a dev dependency",
-      actual: "error-causes" in devDeps,
-      expected: true,
-    });
-  });
-
-  test("installs @paralleldrive/cuid2 as a dev dependency", async () => {
-    const pkgPath = path.join(scaffoldExampleCtx.projectDir, "package.json");
-    const pkg = await fs.readJson(pkgPath);
-    const devDeps = pkg.devDependencies || {};
-
-    assert({
-      given: "scaffold-example scaffold runs",
-      should: "install @paralleldrive/cuid2 as a dev dependency",
-      actual: "@paralleldrive/cuid2" in devDeps,
-      expected: true,
-    });
-  });
-
-  test("installs release-it as a dev dependency", async () => {
-    const pkgPath = path.join(scaffoldExampleCtx.projectDir, "package.json");
-    const pkg = await fs.readJson(pkgPath);
-    const devDeps = pkg.devDependencies || {};
-
-    assert({
-      given: "scaffold-example scaffold runs",
-      should: "install release-it as a dev dependency",
-      actual: "release-it" in devDeps,
-      expected: true,
-    });
-  });
-
-  test("configures scripts.release as release-it", async () => {
-    const pkgPath = path.join(scaffoldExampleCtx.projectDir, "package.json");
-    const pkg = await fs.readJson(pkgPath);
-
-    assert({
-      given: "scaffold-example scaffold runs",
-      should: "configure scripts.release as release-it",
-      actual: pkg.scripts?.release,
-      expected: "release-it",
-    });
-  });
-
-  test("sets up a test script in package.json", async () => {
-    const pkgPath = path.join(scaffoldExampleCtx.projectDir, "package.json");
-    const pkg = await fs.readJson(pkgPath);
-
-    assert({
-      given: "scaffold-example scaffold runs",
-      should: "configure a test script",
-      actual: typeof pkg.scripts?.test === "string",
-      expected: true,
+      given: "scaffold-example create",
+      should: "configure test and release scripts",
+      actual: { test: scripts.test, release: scripts.release },
+      expected: { test: "vitest run", release: "release-it" },
     });
   });
 
