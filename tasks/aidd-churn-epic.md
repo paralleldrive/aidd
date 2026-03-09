@@ -11,6 +11,14 @@ PRs are hard to scope without knowing where complexity actually lives. Developer
 
 ## ✅ Install tsmetrics-core
 
+## Fix tsmetrics-core Peer Dependency Conflict 🔴 HIGH
+
+`tsmetrics-core@1.4.1` declares `peerDependencies: { "typescript": "^4.9.4" }` while the project uses TypeScript 5.x, causing `npm install` to fail without `--legacy-peer-deps`. Using a global `.npmrc` workaround silently suppresses peer-dep validation for the entire tree.
+
+**Requirements**:
+- Given the project installs dependencies without flags, should resolve cleanly with TypeScript 5.x satisfying tsmetrics-core's peer dep via package.json overrides
+- Given `tsmetrics-core` peer dep is pinned to TypeScript 4.x, should not require a global `legacy-peer-deps` workaround in `.npmrc`
+
 ## ✅ Churn Collector
 
 ## ✅ File Metrics Collector
@@ -19,11 +27,49 @@ PRs are hard to scope without knowing where complexity actually lives. Developer
 
 ## ✅ Churn Command
 
+## Fix Error Exit Code in churn Command 🔴 HIGH
+
+`handleChurnErrors` handlers return `undefined` (from `console.error`), which resolves the promise chain before the final `.catch(() => process.exit(1))` can fire. Known errors silently exit with code 0.
+
+**Requirements**:
+- Given a git error occurs during churn collection, should exit with code 1
+- Given the current directory is not a git repository, should exit with code 1
+
+## Fix Silent Exit on Unexpected Errors in churn Command 🔴 HIGH
+
+The trailing `.catch()` calls `process.exit(1)` for unrecognized errors without printing any diagnostic output, making it impossible to debug failures.
+
+**Requirements**:
+- Given an unexpected error occurs during churn collection, should print the error message to stderr before exiting with code 1
+
+## Fix GitError Handler Showing Static Message Instead of Real stderr 🔴 HIGH
+
+The `GitError` handler destructures `{ message }` from the error, yielding the static string `"git command failed"` rather than the actual git stderr, which is stored as `cause.message`.
+
+**Requirements**:
+- Given a GitError with a specific stderr cause, should display the real git stderr output rather than the static error message
+
 ## ✅ Output Formatter
+
+## Fix Locale-Dependent Score Rendering 🔴 HIGH
+
+`score.toLocaleString()` produces locale-dependent output. In German locale `20940` renders as `"20.940"`, in French as `"20 940"`. All other numeric columns use `String()`, making the Score column unpredictable across CI environments and potentially misread as a decimal.
+
+**Requirements**:
+- Given a score value, should render it as a plain integer string without locale formatting
 
 ## ✅ Tests
 
 ## ✅ Update split-pr Skill and README
+
+---
+
+## ✅ Fix Subdirectory File Path Resolution in churn Command
+
+`git log --name-only` always outputs file paths relative to the repository root, but `collectFileMetrics` resolves those paths against `process.cwd()`. When a user runs `npx aidd churn` from a subdirectory (e.g. `/repo/src`), every file read silently fails because paths are resolved to `/repo/src/src/foo.js` instead of `/repo/src/foo.js`, producing a misleading "No hotspots found" output.
+
+**Requirements**:
+- Given the user runs `npx aidd churn` from a subdirectory of the git repository, should resolve file paths relative to the git repository root and produce results
 
 ---
 
@@ -34,6 +80,15 @@ Replace `execSync` string interpolation with `spawnSync` args array to eliminate
 ---
 
 ## ✅ Add Missing Collector Tests
+
+---
+
+## Fix functionComplexity Undercounting Multi-Level Nesting 🔴 HIGH
+
+`functionComplexity` only sums a function node's own complexity plus its **direct** non-visible children. Non-visible grandchildren (e.g. an `if` nested inside a `for`) are silently excluded, undercounting cyclomatic complexity for functions with multi-level nesting.
+
+**Requirements**:
+- Given a function node with a non-visible for-node containing a non-visible if-node, should include the complexity of all non-visible descendants, not just direct children
 
 ---
 
@@ -56,6 +111,16 @@ Expanded from original `--days`-only scope. All three numeric options are now va
 ## ✅ Add churn signal to /review
 
 Added to `review.mdc` Criteria: run `npx aidd churn` at the start of every review and cross-reference ranked files against the diff.
+
+---
+
+## Deduplicate jsTsExtensions 🔵 NITPICK
+
+`jsTsExtensions` is defined locally in `file-metrics-collector.js` but should be exported from `churn-filters.js` as the single canonical source, so that `filterSourceFiles` and `measureComplexity` always stay in sync.
+
+**Requirements**:
+- Given `jsTsExtensions` is exported from `churn-filters.js`, should be importable and contain all standard JS/TS extensions
+- Given `file-metrics-collector.js` measures complexity, should use the same `jsTsExtensions` exported from `churn-filters.js`
 
 ---
 
