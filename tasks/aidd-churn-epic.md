@@ -35,6 +35,20 @@ PRs are hard to scope without knowing where complexity actually lives. Developer
 - Given a git error occurs during churn collection, should exit with code 1
 - Given the current directory is not a git repository, should exit with code 1
 
+## Fix Silent Exit on Unexpected Errors in churn Command 🔴 HIGH
+
+The trailing `.catch()` calls `process.exit(1)` for unrecognized errors without printing any diagnostic output, making it impossible to debug failures.
+
+**Requirements**:
+- Given an unexpected error occurs during churn collection, should print the error message to stderr before exiting with code 1
+
+## Fix GitError Handler Showing Static Message Instead of Real stderr 🔴 HIGH
+
+The `GitError` handler destructures `{ message }` from the error, yielding the static string `"git command failed"` rather than the actual git stderr, which is stored as `cause.message`.
+
+**Requirements**:
+- Given a GitError with a specific stderr cause, should display the real git stderr output rather than the static error message
+
 ## ✅ Output Formatter
 
 ## Fix Locale-Dependent Score Rendering 🔴 HIGH
@@ -70,6 +84,15 @@ Replace `execSync` string interpolation with `spawnSync` args array to eliminate
 ---
 
 ## ✅ Add Missing Collector Tests
+
+---
+
+## Fix functionComplexity Undercounting Multi-Level Nesting 🔴 HIGH
+
+`functionComplexity` only sums a function node's own complexity plus its **direct** non-visible children. Non-visible grandchildren (e.g. an `if` nested inside a `for`) are silently excluded, undercounting cyclomatic complexity for functions with multi-level nesting.
+
+**Requirements**:
+- Given a function node with a non-visible for-node containing a non-visible if-node, should include the complexity of all non-visible descendants, not just direct children
 
 ---
 
