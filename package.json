@@ -75,6 +75,11 @@
       "optional": true
     }
   },
+  "overrides": {
+    "tsmetrics-core": {
+      "typescript": "$typescript"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/paralleldrive/aidd.git"
