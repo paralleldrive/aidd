@@ -102,12 +102,15 @@ New Commander subcommand `verify-scaffold [type]` that validates a scaffold conf
 
 ---
 
-## Fix `runCreate` scaffold download location
+## Fix `runCreate` scaffold file delivery
 
-`runCreate` resolves the scaffold extension without passing `scaffoldDownloadDir`, so GitHub release tarballs are extracted to the global `~/.aidd/scaffold/` instead of the project directory. Template files from the tarball are therefore inaccessible when manifest steps execute inside `<folder>`.
+`runCreate` never copies scaffold source files into the project directory. For downloaded scaffolds, template files sit unused in `~/.aidd/scaffold/`. For named and `file://` scaffolds, their on-disk source files are equally unreachable by manifest steps. The manifest also reads from the original source path rather than the project folder, which requires unnecessary branching logic.
 
 **Requirements**:
-- Given `runCreate` is called with a project `folder` and a downloaded scaffold, should pass `path.join(folder, ".aidd", "scaffold")` as `scaffoldDownloadDir` to `resolveExtensionFn` so scaffold template files are available within the project directory
+- Given any scaffold type (named, `file://`, or downloaded), should copy all files from the scaffold source directory into `<folder>/` before running the manifest
+- Given scaffold files have been copied to `<folder>/`, should run the manifest from `path.join(folder, "SCAFFOLD-MANIFEST.yml")` in all cases — never from the original source path
+- Given `<folder>` already exists on disk when `runCreate` is called, should throw `ScaffoldValidationError` with a message identifying the path, before resolving the extension or creating any files
+- Given `<folder>` does not exist, should proceed normally
 
 ---
 
