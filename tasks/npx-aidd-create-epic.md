@@ -102,6 +102,15 @@ New Commander subcommand `verify-scaffold [type]` that validates a scaffold conf
 
 ---
 
+## Fix `runCreate` scaffold download location
+
+`runCreate` resolves the scaffold extension without passing `scaffoldDownloadDir`, so GitHub release tarballs are extracted to the global `~/.aidd/scaffold/` instead of the project directory. Template files from the tarball are therefore inaccessible when manifest steps execute inside `<folder>`.
+
+**Requirements**:
+- Given `runCreate` is called with a project `folder` and a downloaded scaffold, should pass `path.join(folder, ".aidd", "scaffold")` as `scaffoldDownloadDir` to `resolveExtensionFn` so scaffold template files are available within the project directory
+
+---
+
 ## Add `scaffold-cleanup` subcommand
 
 New Commander subcommand `scaffold-cleanup [folder]` that removes the `.aidd/` working directory.
