@@ -26,12 +26,11 @@ The manifest is a YAML file with a single `steps` key containing an ordered list
 
 ```yaml
 steps:
-  - run: npm init -y
-  - run: npm pkg set scripts.test="vitest run"
-  - run: npm pkg set scripts.release="release-it"
   - run: npm install --save-dev vitest@latest release-it@latest
   - prompt: Set up a basic project structure with src/ and tests/
 ```
+
+> **Tip:** `npx aidd create` copies your scaffold's source files into the project directory before running any steps. Put a pre-configured `package.json` in your scaffold root (with `"type": "module"`, scripts, etc.) rather than using `npm init -y` — that way your template is the source of truth and the install step simply adds dependencies on top.
 
 ### Validation rules
 

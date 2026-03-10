@@ -4,10 +4,8 @@ A minimal scaffold used as the end-to-end test fixture for `npx aidd create`.
 
 ## What this scaffold does
 
-1. Initializes a new npm project (`npm init -y`)
-2. Configures a `test` script using Vitest
-3. Configures a `release` script using `release-it` for cutting tagged GitHub releases
-4. Installs the AIDD-standard dependencies at `@latest`:
+1. Copies a pre-configured `package.json` template into your project (ES module, `vitest run` test script, `release-it` release script)
+2. Installs the AIDD-standard dependencies at `@latest`:
    - `riteway` — functional assertion library
    - `vitest` — fast test runner
    - `@playwright/test` — browser automation testing

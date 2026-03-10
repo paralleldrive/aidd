@@ -130,11 +130,13 @@ New Commander subcommand `scaffold-cleanup [folder]` that removes the `.aidd/` w
 Minimal fast-running scaffold at `ai/scaffolds/scaffold-example` used as the e2e test fixture.
 
 **Requirements**:
-- Given the scaffold runs, should initialize a new npm project in `<folder>`
+- Given the scaffold runs, should produce a project with a pre-configured `package.json` (copied from the scaffold template) — not via `npm init -y`
+- Given the scaffold runs, should produce a `package.json` with `"type": "module"` so the project is an ES module by default
 - Given the scaffold runs, should install `riteway`, `vitest`, `@playwright/test`, `error-causes`, `@paralleldrive/cuid2`, and `release-it` at `@latest`
 - Given the scaffold runs, should configure `scripts.test` as `vitest run`
 - Given the scaffold runs, should configure `scripts.release` as `release-it` so the generated project can publish GitHub releases
 - Given the scaffold runs, should leave a working project where `npm test` can be invoked
+- Given `npm init -y` is not a step in the manifest, should not overwrite the template `package.json` with generated defaults
 
 ### Scaffold author release workflow
 

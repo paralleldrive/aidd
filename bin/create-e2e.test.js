@@ -106,6 +106,31 @@ describe("aidd create scaffold-example", () => {
     });
   });
 
+  test("produces an ES module project (type: module in package.json)", async () => {
+    assert({
+      given: "scaffold-example create",
+      should: 'set "type": "module" in package.json via the scaffold template',
+      actual: scaffoldExampleCtx.pkg.type,
+      expected: "module",
+    });
+  });
+
+  test("scaffold-example manifest does not use npm init -y", async () => {
+    const manifestPath = path.join(
+      __dirname,
+      "../ai/scaffolds/scaffold-example/SCAFFOLD-MANIFEST.yml",
+    );
+    const content = await fs.readFile(manifestPath, "utf-8");
+
+    assert({
+      given: "scaffold-example SCAFFOLD-MANIFEST.yml",
+      should:
+        "not contain npm init -y (anti-pattern when package.json template already exists in the scaffold)",
+      actual: content.includes("npm init"),
+      expected: false,
+    });
+  });
+
   test("copies scaffold source files (README.md) into the project directory", async () => {
     const readmePath = path.join(scaffoldExampleCtx.projectDir, "README.md");
     const exists = await fs.pathExists(readmePath);
