@@ -17,7 +17,7 @@ import {
 const execAsync = promisify(exec);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const cliPath = path.join(__dirname, "./aidd.js");
+const cliPath = `"${path.join(__dirname, "./aidd.js")}"`;
 
 // Shared state for the scaffold-example create tests (runs npm install once)
 const scaffoldExampleCtx = {
