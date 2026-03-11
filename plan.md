@@ -2,6 +2,12 @@
 
 ## Current Epics
 
+### 📋 `aidd create --prompt` Epic
+
+**Status**: 📋 PLANNED  
+**File**: [`tasks/aidd-create-prompt-epic.md`](./tasks/aidd-create-prompt-epic.md)  
+**Goal**: Add `--prompt` to `npx aidd create`, a standalone `npx aidd agent` subcommand, and a portable agent-config library so agents are invoked consistently and non-interactively across the AIDD toolkit
+
 ### 📋 `npx aidd create` Epic
 
 **Status**: 📋 PLANNED  
