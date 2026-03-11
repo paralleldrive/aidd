@@ -216,7 +216,7 @@ describe("aidd create --agent flag", () => {
     );
     await fs.writeFile(
       path.join(scaffoldDir, "SCAFFOLD-MANIFEST.yml"),
-      "steps:\n  - prompt: hello world\n",
+      "steps:\n  - run: echo aidd\n  - prompt: hello world\n",
     );
   });
 
