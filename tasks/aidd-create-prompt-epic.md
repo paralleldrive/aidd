@@ -9,15 +9,6 @@ Today scaffold `prompt:` steps spawn agents by name with no config (interactive 
 
 ---
 
-## Rename `.yaml` → `.yml`
-
-Establish `.yml` as the sole documented extension across the codebase; accept `.yaml` at runtime only as a silent fallback.
-
-**Requirements**:
-- Given `plan/story-map/review-command-journey.yaml`, rename to `.yml`
-
----
-
 ## `lib/agent-config.js` — Agent config library
 
 Shared AgentConfig abstraction (`{ command: string, args: string[] }`) with built-in presets and a resolution chain; exported as `aidd/agent-config` for future import by Riteway and other tools.
@@ -31,6 +22,7 @@ Shared AgentConfig abstraction (`{ command: string, args: string[] }`) with buil
 - Given an unknown name, `getAgentConfig` throws `ScaffoldValidationError` listing all supported agent names
 - Given a value ending in `.yml` or `.yaml`, `resolveAgentConfig` treats it as a file path, loads and validates `{ command, args? }` from that YAML file
 - Given a YAML agent config file missing the `command` field, `resolveAgentConfig` throws `ScaffoldValidationError`
+- Given a plain object `{ command, args? }`, `resolveAgentConfig` uses it directly as the AgentConfig
 - Given a plain agent name string, `resolveAgentConfig` delegates to `getAgentConfig`
 - Given `package.json`, the `"./agent-config"` export resolves to `lib/agent-config.js`
 
@@ -65,7 +57,7 @@ Standalone subcommand for invoking an AI agent in the current working directory,
 - Given `npx aidd agent --prompt "Build a todo app"`, resolves agent config and spawns the agent in the CWD
 - Given `--agent <name|path>`, uses it as the highest-priority override
 - Given `AIDD_AGENT_CONFIG` env var set to a name or `.yml`/`.yaml` file path, uses it when no `--agent` flag is present
-- Given `agent-config` key in CWD's `aidd-custom/config.yml` (name string or `.yml`/`.yaml` file path), uses it when neither CLI flag nor env var is set
+- Given `agent-config` key in CWD's `aidd-custom/config.yml` (name string, `.yml`/`.yaml` file path, or inline `{ command, args? }` object), uses it when neither CLI flag nor env var is set
 - Given none of the above, defaults to `getAgentConfig('claude')`
 - Given the agent process exits non-zero, reports `ScaffoldStepError` and exits 1
 
@@ -89,4 +81,4 @@ Surface the new `agent-config` setting so users know how to configure their pref
 
 **Requirements**:
 - Given `npx aidd` install, the generated `aidd-custom/config.yml` includes a commented `# agent-config: claude` example line
-- Given the `aidd-custom/README.md` config options table, adds an `agent-config` row documenting accepted values: an agent name (`claude`, `opencode`, `cursor`) or a path to a `.yml` agent config file
+- Given the `aidd-custom/README.md` config options table, adds an `agent-config` row documenting accepted values: an agent name (`claude`, `opencode`, `cursor`), a path to a `.yml` agent config file, or an inline `{ command, args }` object
