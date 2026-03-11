@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import chalk from "chalk";
 import { Command } from "commander";
 
+import { registerAgentCommand } from "../lib/agent-cli/command.js";
 import { addChurnCommand } from "../lib/churn-command.js";
 import { executeClone, handleCliErrors } from "../lib/cli-core.js";
 import { generateAllIndexes } from "../lib/index-generator.js";
@@ -196,4 +197,5 @@ https://paralleldrive.com
 // Execute CLI
 const cli = addChurnCommand(createCli());
 registerScaffoldCommands(cli);
+registerAgentCommand(cli);
 cli.parse();
