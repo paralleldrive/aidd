@@ -1,17 +1,17 @@
 # `aidd create --prompt` Epic
 
 **Status**: 📋 PLANNED  
-**Goal**: Add a `--prompt` flag to `npx aidd create` and a standalone `npx aidd agent` subcommand, backed by a portable agent-config library, so AI agents are invoked consistently and non-interactively across scaffold manifest steps, post-scaffold automation, and direct developer use.
+**Goal**: Add a `--prompt` flag to `npx aidd create`, a standalone `npx aidd agent` subcommand, and programmatic `runAgent` / `resolveAgentConfig` exports — backed by a portable agent-cli library so AI agents are invoked consistently and non-interactively across scaffold manifest steps, post-scaffold automation, direct CLI use, and third-party tools.
 
 ## Overview
 
-Today scaffold `prompt:` steps spawn agents by name with no config (interactive by default), `create` has no way to kick off autonomous development after scaffolding, and there is no standard way to invoke an agent in an existing project. This epic introduces a full agent invocation stack collocated in `lib/agent-cli/`: `errors.js` (scoped error types), `config.js` (the single module responsible for the full resolution chain: `--agent` CLI > `AIDD_AGENT_CONFIG` env > `agent-config` in `aidd-custom/config.yml` > claude default), and `command.js` (the `npx aidd agent` subcommand, registered via one import in `bin/aidd.js`). All resolution logic lives exclusively in `lib/agent-cli/config.js`; no other module reinvents it.
+Today scaffold `prompt:` steps spawn agents by name with no config (interactive by default), `create` has no way to kick off autonomous development after scaffolding, and there is no programmatic API for spawning agents. This epic introduces a full agent invocation stack collocated in `lib/agent-cli/`: `errors.js` (scoped error types), `config.js` (the single module responsible for the full resolution chain: `--agentConfig` CLI > `AIDD_AGENT_CONFIG` env > `agent-config` in `aidd-custom/config.yml` > claude default), `runner.js` (the `runAgent` spawn primitive), and `command.js` (the `npx aidd agent` subcommand, registered via one import in `bin/aidd.js`). All resolution logic lives exclusively in `lib/agent-cli/config.js`; no other module reinvents it.
 
 ---
 
 ## `lib/agent-cli/errors.js` — Agent error types
 
-One module defines all agent error types and the error handler via a single `errorCauses` call; both are exported for use by `lib/agent-cli/config.js` and `lib/agent-cli/command.js`.
+One module defines all agent error types and the error handler via a single `errorCauses` call; both are exported for use across `lib/agent-cli/`.
 
 **Requirements**:
 - Given the module, exports `AgentConfigReadError`, `AgentConfigParseError`, `AgentConfigValidationError`, and `handleAgentErrors` — all defined in one `errorCauses` call
@@ -39,6 +39,17 @@ The single module responsible for all agent config resolution; portable to Ritew
 
 ---
 
+## `lib/agent-cli/runner.js` — Agent runner
+
+Programmatic spawn primitive; exported as `aidd/agent` for use by third-party tools and by `command.js` internally.
+
+**Requirements**:
+- Given `runAgent({ agentConfig, prompt, cwd })`, spawns `[command, ...args, prompt]` as a no-shell array in `cwd` with `stdio: 'inherit'`
+- Given the spawned process exits non-zero, throws `ScaffoldStepError`
+- Given `package.json`, the `"./agent"` export resolves to `lib/agent-cli/runner.js`
+
+---
+
 ## Manifest validation — prompt ordering guard
 
 Enforce at parse time that no `prompt:` step appears before an aidd-installing `run:` step.
@@ -50,10 +61,10 @@ Enforce at parse time that no `prompt:` step appears before an aidd-installing `
 
 ## Manifest runner — non-interactive agent invocation
 
-Update `runManifest` to call `resolveAgentConfig` lazily only when a `prompt:` step is encountered; the `agent` parameter remains a string override — no caller changes required.
+Update `runManifest` to call `resolveAgentConfig` and `runAgent` lazily only when a `prompt:` step is encountered; the `agentConfig` parameter remains a string override — no caller changes required.
 
 **Requirements**:
-- Given a manifest `prompt:` step, calls `resolveAgentConfig({ value: agent, cwd: folder })` and spawns `[command, ...args, promptText]` in no-shell array form (non-interactive)
+- Given a manifest `prompt:` step, calls `resolveAgentConfig({ value: agentConfig, cwd: folder })` then `runAgent` with the result, spawning `[command, ...args, promptText]` (non-interactive)
 - Given no `prompt:` steps in the manifest, never calls `resolveAgentConfig`
 - Given existing tests asserting `[agent, promptText]` as the spawned command, updates them to assert `[command, ...args, promptText]`
 
@@ -65,23 +76,23 @@ Standalone subcommand registered via a single `registerAgentCommand(program)` im
 
 **Requirements**:
 - Given `bin/aidd.js`, adds exactly one import (`registerAgentCommand`) and one call (`registerAgentCommand(cli)`) — no agent-specific logic in the dispatcher
-- Given `npx aidd agent --prompt "Build a todo app"`, calls `resolveAgentConfig({ value: agentFlag, cwd: process.cwd() })` and spawns the agent in CWD
-- Given `--agent <name|path>`, passes it as the `value` override to `resolveAgentConfig`
+- Given `npx aidd agent --prompt "Build a todo app"`, calls `resolveAgentConfig({ value: agentConfigFlag, cwd: process.cwd() })` then `runAgent`
+- Given `--agentConfig <name|path>`, passes it as the `value` override to `resolveAgentConfig`
 - Given invoked without `--prompt`, prints an error and exits 1
-- Given the agent process exits non-zero, reports `ScaffoldStepError` and exits 1
 - Given an agent config error, uses `handleAgentErrors` to display a scoped message and exits 1
 
 ---
 
 ## `create` — add `--prompt` and wire agent config
 
-Add `--prompt` to `create`; pass the `--agent` flag value through to `runManifest` as the override, and re-resolve from the new project after manifest for the post-scaffold step.
+Rename `--agent` → `--agentConfig` on `create`; pass the flag value through to `runManifest`; after manifest completes re-resolve from the new project dir for the post-scaffold `--prompt` step.
 
 **Requirements**:
-- Given `--agent <name|path>` on `create`, passes it as the `agent` override to `runManifest` and as the `value` override to `resolveAgentConfig` for the post-scaffold `--prompt` step
-- Given `--prompt "Build a todo app"`, after all manifest steps complete, calls `resolveAgentConfig({ value: agentFlag, cwd: newProjectDir })` and spawns the agent in the new project directory
+- Given `--agentConfig <name|path>` on `create`, passes it as the `agentConfig` override to `runManifest` and as the `value` override to `resolveAgentConfig` for the post-scaffold `--prompt` step
+- Given `--prompt "Build a todo app"`, after all manifest steps complete, calls `resolveAgentConfig({ value: agentConfigFlag, cwd: newProjectDir })` then `runAgent` in the new project directory
 - Given the `--prompt` agent exits non-zero, reports `ScaffoldStepError` and exits 1
 - Given `--prompt` is absent, `create` behavior is unchanged
+- Given existing `--agent` usage, `--agentConfig` is the renamed replacement (breaking change; update docs and tests)
 
 ---
 
