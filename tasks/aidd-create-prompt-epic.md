@@ -5,20 +5,20 @@
 
 ## Overview
 
-Today scaffold `prompt:` steps spawn agents by name with no config (interactive by default), `create` has no way to kick off autonomous development after scaffolding, and there is no standard way to invoke an agent in an existing project. This epic introduces a full agent invocation stack: `lib/agent-errors.js` (scoped error types), `lib/agent-config.js` (the single module responsible for the full resolution chain: `--agent` CLI > `AIDD_AGENT_CONFIG` env > `agent-config` in `aidd-custom/config.yml` > claude default), and `lib/agent-command.js` (the `npx aidd agent` subcommand, registered via one import in `bin/aidd.js`). All resolution logic lives exclusively in `lib/agent-config.js`; no other module reinvents it.
+Today scaffold `prompt:` steps spawn agents by name with no config (interactive by default), `create` has no way to kick off autonomous development after scaffolding, and there is no standard way to invoke an agent in an existing project. This epic introduces a full agent invocation stack collocated in `lib/agent-cli/`: `errors.js` (scoped error types), `config.js` (the single module responsible for the full resolution chain: `--agent` CLI > `AIDD_AGENT_CONFIG` env > `agent-config` in `aidd-custom/config.yml` > claude default), and `command.js` (the `npx aidd agent` subcommand, registered via one import in `bin/aidd.js`). All resolution logic lives exclusively in `lib/agent-cli/config.js`; no other module reinvents it.
 
 ---
 
-## `lib/agent-errors.js` — Agent error types
+## `lib/agent-cli/errors.js` — Agent error types
 
-One module defines all agent error types and the error handler via a single `errorCauses` call; both are exported for use by `lib/agent-config.js` and `lib/agent-command.js`.
+One module defines all agent error types and the error handler via a single `errorCauses` call; both are exported for use by `lib/agent-cli/config.js` and `lib/agent-cli/command.js`.
 
 **Requirements**:
 - Given the module, exports `AgentConfigReadError`, `AgentConfigParseError`, `AgentConfigValidationError`, and `handleAgentErrors` — all defined in one `errorCauses` call
 
 ---
 
-## `lib/agent-config.js` — Agent config library
+## `lib/agent-cli/config.js` — Agent config library
 
 The single module responsible for all agent config resolution; portable to Riteway and other tools via the `aidd/agent-config` package export.
 
@@ -35,7 +35,7 @@ The single module responsible for all agent config resolution; portable to Ritew
 - Given a plain agent name string, `resolveAgentConfig` delegates to `getAgentConfig`
 - Given no explicit value, `resolveAgentConfig` reads `AIDD_AGENT_CONFIG` env var (name or `.yml`/`.yaml` path) before checking `agent-config` in `<cwd>/aidd-custom/config.yml`
 - Given none of the above yield a value, `resolveAgentConfig` returns `getAgentConfig('claude')`
-- Given `package.json`, the `"./agent-config"` export resolves to `lib/agent-config.js`
+- Given `package.json`, the `"./agent-config"` export resolves to `lib/agent-cli/config.js`
 
 ---
 
@@ -59,7 +59,7 @@ Update `runManifest` to call `resolveAgentConfig` lazily only when a `prompt:` s
 
 ---
 
-## `lib/agent-command.js` and `npx aidd agent` subcommand
+## `lib/agent-cli/command.js` and `npx aidd agent` subcommand
 
 Standalone subcommand registered via a single `registerAgentCommand(program)` import in `bin/aidd.js`; no agent logic in the main CLI dispatcher.
 
