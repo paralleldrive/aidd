@@ -29,7 +29,7 @@ Criteria {
 
 Constraints {
   Don't make changes. Review-only. Output will serve as input for planning.
-  Avoid unfounded assumptions. If you're unsure, note and ask in the review response.
+  Avoid unfounded assumptions. For any assumptions that are not clear, list them, along with options and pros and cons for each option. Keep this clear and brief.
 }
 
 For each step, show your work:
