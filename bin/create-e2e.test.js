@@ -278,9 +278,9 @@ describe("aidd create — error paths", () => {
     }
     assert({
       given: "an unknown scaffold name",
-      should: "exit non-zero",
-      actual: err?.code !== 0,
-      expected: true,
+      should: "exit with code 1",
+      actual: err?.code,
+      expected: 1,
     });
   });
 
@@ -295,9 +295,9 @@ describe("aidd create — error paths", () => {
     }
     assert({
       given: "a URI with no folder argument",
-      should: "exit non-zero",
-      actual: err?.code !== 0,
-      expected: true,
+      should: "exit with code 1",
+      actual: err?.code,
+      expected: 1,
     });
   });
 
@@ -313,9 +313,30 @@ describe("aidd create — error paths", () => {
     }
     assert({
       given: "a non-existent file:// scaffold path",
-      should: "exit non-zero",
-      actual: err?.code !== 0,
-      expected: true,
+      should: "exit with code 1",
+      actual: err?.code,
+      expected: 1,
+    });
+  });
+
+  test("exits non-zero when the destination folder already exists", async () => {
+    const existingFolder = path.join(tempDir, "already-exists");
+    await fs.ensureDir(existingFolder);
+
+    let err;
+    try {
+      await execAsync(
+        `node ${cliPath} create scaffold-example already-exists`,
+        { cwd: tempDir },
+      );
+    } catch (e) {
+      err = e;
+    }
+    assert({
+      given: "a destination folder that already exists",
+      should: "exit with code 1",
+      actual: err?.code,
+      expected: 1,
     });
   });
 });
