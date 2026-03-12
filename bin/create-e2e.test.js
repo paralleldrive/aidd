@@ -76,6 +76,20 @@ describe("aidd create scaffold-example", () => {
     });
   });
 
+  test("copies SCAFFOLD-MANIFEST.yml into the project directory", async () => {
+    const manifestPath = path.join(
+      scaffoldExampleCtx.projectDir,
+      "SCAFFOLD-MANIFEST.yml",
+    );
+    const exists = await fs.pathExists(manifestPath);
+    assert({
+      given: "scaffold-example create",
+      should: "copy SCAFFOLD-MANIFEST.yml into the project directory",
+      actual: exists,
+      expected: true,
+    });
+  });
+
   test("installs all expected dev dependencies", async () => {
     const { devDependencies } = scaffoldExampleCtx.pkg;
     const expected = [
