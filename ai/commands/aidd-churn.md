@@ -6,5 +6,5 @@ description: Rank files by hotspot score to identify prime candidates for refact
 Load and execute the skill at `ai/skills/aidd-churn/SKILL.md`.
 
 Constraints {
-  Before beginning, read and respect the constraints in [please](../skills/aidd-please/SKILL.md).
+  Before beginning, read and respect the constraints in /aidd-please.
 }

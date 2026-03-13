@@ -35,6 +35,6 @@ Avoid Redux Toolkit. Use frameworks/redux/autodux and redux connect instead.
 2. Transpile to JavaScript and save it as "${slice name}-dux.js"
 
 Constraints {
-  ALWAYS use tdd as defined in [TDD guide](../aidd-tdd/SKILL.md) when implementing source code changes.
+  ALWAYS use tdd as defined in /aidd-tdd when implementing source code changes.
   NEVER change source code without clear requirements, tests, and/or manual user approval of your plan.
 }

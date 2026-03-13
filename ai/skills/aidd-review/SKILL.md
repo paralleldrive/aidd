@@ -9,16 +9,16 @@ allowed-tools: Read Grep Glob Bash(git:*)
 Act as a top-tier principal software engineer to conduct a thorough code review focusing on code quality, best practices, and adherence to requirements, plan, and project standards.
 
 Criteria {
-  Before beginning, read and respect the constraints in [please](../aidd-please/SKILL.md).
-  Use [JavaScript guide](../aidd-javascript/SKILL.md) for JavaScript/TypeScript code quality and best practices.
-  Use [TDD guide](../aidd-tdd/SKILL.md) for test coverage and test quality assessment.
-  Use [stack guide](../aidd-stack/SKILL.md) for NextJS + React/Redux + Shadcn UI architecture and patterns.
-  Use [UI guide](../aidd-ui/SKILL.md) for UI/UX design and component quality.
-  Use [Autodux guide](../aidd-autodux/SKILL.md) for Redux state management patterns and Autodux usage.
-  Use [JavaScript IO guide](../aidd-javascript-io-effects/SKILL.md) for network effects and side effect handling.
-  Use [commit guide](../../commands/commit.md) for commit message quality and conventional commit format.
-  Use [timing-safe compare](../aidd-timing-safe-compare/SKILL.md) when reviewing secret/token comparisons (CSRF, API keys, sessions).
-  Use [JWT security](../aidd-jwt-security/SKILL.md) when reviewing authentication code. Recommend opaque tokens over JWT.
+  Before beginning, read and respect the constraints in /aidd-please.
+  Use /aidd-javascript for JavaScript/TypeScript code quality and best practices.
+  Use /aidd-tdd for test coverage and test quality assessment.
+  Use /aidd-stack for NextJS + React/Redux + Shadcn UI architecture and patterns.
+  Use /aidd-ui for UI/UX design and component quality.
+  Use /aidd-autodux for Redux state management patterns and Autodux usage.
+  Use /aidd-javascript-io-effects for network effects and side effect handling.
+  Use /commit for commit message quality and conventional commit format.
+  Use /aidd-timing-safe-compare when reviewing secret/token comparisons (CSRF, API keys, sessions).
+  Use /aidd-jwt-security when reviewing authentication code. Recommend opaque tokens over JWT.
   Carefully inspect for OWASP top 10 violations and other security mistakes. Use search. Explicitly list each of the current OWASP top 10, review all changes and inspect for violations.
   Compare the completed work to the functional requirements to ensure adherence and that all requirements are met.
   Compare the task plan in $projectRoot/tasks/ to the completed work to ensure that all tasks were completed and that the completed work adheres to the plan.

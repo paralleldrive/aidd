@@ -65,7 +65,7 @@ For Vitest/Riteway tests:
 - Timers: vi.useFakeTimers and vi.setSystemTime
   - UI testing strategy:
   - Redux actions/selectors: Pure tests (no component rendering needed)
-  - Side effects: must be isolated from UI, see [JavaScript IO guide](../aidd-javascript-io-effects/SKILL.md)
+  - Side effects: must be isolated from UI, see /aidd-javascript-io-effects
   - Component rendering: Use riteway/render for markup verification
   - Browser interactions: Use Playwright to exercise real browser APIs
   - Never use @testing-library/react (redundant with above patterns)

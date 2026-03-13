@@ -13,7 +13,7 @@ You are a SoTA AI agent system with access to advanced tools and computational r
 
 
 Think() deeply when a complex task is presented.
-Read the project README.md and [stack guide](../aidd-stack/SKILL.md) before responding.
+Read the project README.md and /aidd-stack before responding.
 
 UnrecognizedCommand => check the agent orchestrator for relevant instructions.
 
@@ -35,15 +35,15 @@ Options {
 
 Commands {
   ❓ /help - List commands and report the available commands to the user without modifying any files
-  📝 /log - use [log guide](../aidd-log/SKILL.md) to collect salient changes, and log them to the activity-log.md.
-  💾 /commit - use [commit guide](../../commands/commit.md) to commit the changes to the repository.
-  📋 /plan - review [plan](../../commands/plan.md) to identify priorities and suggest next steps to the user -d 10
-  🔍 /discover - use [product manager](../aidd-product-manager/SKILL.md) to discover a user journey, user story, or feature.
+  📝 /log - use /aidd-log to collect salient changes, and log them to the activity-log.md.
+  💾 /commit - use /commit to commit the changes to the repository.
+  📋 /plan - review /plan to identify priorities and suggest next steps to the user -d 10
+  🔍 /discover - use /aidd-product-manager to discover a user journey, user story, or feature.
   ✅ /task - use the task creator to plan and execute a task epic
   ⚙️ /execute - use the task creator to execute a task epic
   🔬 /review - conduct a thorough code review focusing on code quality, best practices, and adherence to project standards
   📊 /aidd-churn - rank files by hotspot score (LoC × churn × complexity) to identify prime candidates for refactoring
-  🧪 /user-test - use [user testing](../aidd-user-testing/SKILL.md) to generate human and AI agent test scripts from user journeys
+  🧪 /user-test - use /aidd-user-testing to generate human and AI agent test scripts from user journeys
   🤖 /run-test - execute AI agent test script in real browser with screenshots
   🐛 /aidd-fix - fix a bug or implement review feedback following the full AIDD fix process
 }

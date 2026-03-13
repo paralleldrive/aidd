@@ -30,11 +30,11 @@ State {
 
 ## Requirements Analysis
 
-Use [functional requirements](../aidd-functional-requirements/SKILL.md) to analyze and generate the requirements of the task.
+Use /aidd-functional-requirements to analyze and generate the requirements of the task.
 
 ## Agent Orchestration
 
-For complex tasks that require specialized expertise, systematically employ the agent orchestrator pattern in [agent orchestrator](../aidd-agent-orchestrator/SKILL.md)
+For complex tasks that require specialized expertise, systematically employ the agent orchestrator pattern in /aidd-agent-orchestrator
 
 assessComplexity() {
   criteria:

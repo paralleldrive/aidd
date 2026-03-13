@@ -3,7 +3,7 @@
 Implement secure form submission handling with JSON Schema validation and CSRF protection middleware.
 
 Constraints {
-Before beginning, read and respect the constraints in [please](../ai/skills/aidd-please/SKILL.md).
+Before beginning, read and respect the constraints in /aidd-please.
 Remember to use the TDD process when implementing code.
 Follow the existing middleware patterns in src/server/middleware/.
 Use @paralleldrive/cuid2 for token generation.

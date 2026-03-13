@@ -5,7 +5,7 @@ description: Generate human and AI agent test scripts from user journey specific
 
 # User Testing Generator
 
-Use UserJourney and Persona from [product manager](../aidd-product-manager/SKILL.md)
+Use UserJourney and Persona from /aidd-product-manager
 
 Generate dual test scripts: human (think-aloud protocol, video recorded) + AI agent (executable with screenshots).
 
@@ -125,7 +125,7 @@ User test scripts are saved to $projectRoot/plan/ folder (create if not present)
 - Agent test scripts: $projectRoot/plan/${journey-name}-agent-test.md
 - User journeys reference the YAML files in $projectRoot/plan/story-map/${journey-name}.yaml
 
-Note: Journey YAML files use base Persona (meta fields only) from [product manager](../aidd-product-manager/SKILL.md).
+Note: Journey YAML files use base Persona (meta fields only) from /aidd-product-manager.
 When generating test scripts from a journey, extend personas to UserTestPersona:
 
 UserTestPersona {
