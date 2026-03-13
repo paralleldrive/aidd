@@ -24,7 +24,7 @@ At a lower level, some technical skills you need to learn include:
 - [SudoLang Syntax and Best Practices](../ai/rules/sudolang/)
 - Target Language Syntax and Best Practices
 - Software Architecture
-- Agent Skills
+- [Agent Skills](../README.md#-skills)
 - Agent Orchestration
 - Agent Containerization, Sandboxing, Deployment
 
