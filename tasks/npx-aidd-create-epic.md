@@ -244,6 +244,20 @@ YAML is used for the config file because it is token-friendly for AI context inj
 
 ---
 
+## Copy scaffold files to project directory (issue #139)
+
+After validation, before running the manifest, scaffold source files must be copied
+into the project folder so manifest steps can reference them as local files.
+
+**Requirements**:
+- Given the destination folder already exists on disk, `runCreate` should throw `ScaffoldValidationError` with a message that includes the folder path
+- Given the destination folder already exists, `runCreate` should not proceed to resolve or download the extension
+- Given scaffold source files are resolved (named, `file://`, or remote), `runCreate` should copy them to the project folder before running the manifest
+- Given a scaffold source with files alongside the manifest, all files should be available in `<folder>` when manifest steps execute
+- Given the scaffold download destination already exists, `downloadExtension` should throw `ScaffoldValidationError` with a message that names the path and instructs the user to run `npx aidd scaffold-cleanup`
+
+---
+
 ## Code review fixes (from PR #124 review)
 
 ### C1 — `createError` not used in `defaultResolveRelease` and `defaultDownloadAndExtract`
