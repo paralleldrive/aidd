@@ -657,6 +657,12 @@ rm .cursor
 
 MIT © [ParallelDrive](https://github.com/paralleldrive)
 
+## 📹 Weekly Training Videos
+
+Watch recorded training sessions to learn AIDD workflows and best practices.
+
+📖 **[Browse all training videos →](docs/training-videos.md)**
+
 ## 🤝 Contributing
 
 We welcome contributions! Follow the [Development Workflow](#development-workflow) above, and see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
