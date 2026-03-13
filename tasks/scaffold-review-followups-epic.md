@@ -64,3 +64,13 @@ When `runCreate` throws `ScaffoldValidationError` because the destination folder
 - Given the e2e test for the folder-exists path, should remain passing with exit code 1
 
 ---
+
+## N1 — downloadExtension should throw ScaffoldDestinationError, not ScaffoldValidationError
+
+`downloadExtension` in `scaffold-resolver.js` was written (H1) before `ScaffoldDestinationError` existed (M2). Now that `ScaffoldDestinationError` is the canonical type for "destination already exists" errors, the download-dir conflict guard should use it.
+
+**Requirements**:
+- Given `scaffoldDownloadDir` already exists when `downloadExtension` is called, should throw `ScaffoldDestinationError` (not `ScaffoldValidationError`)
+- Given the unit test for `downloadExtension`, should assert `cause.code === "SCAFFOLD_DESTINATION_ERROR"`
+
+---
