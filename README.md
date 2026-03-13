@@ -31,12 +31,14 @@ Includes:
 - [🧪 User Testing](#-user-testing)
 - [Why SudoLang?](#why-sudolang)
 - [What's Included](#whats-included)
+- [📚 Learning aidd Framework](#-learning-aidd-framework)
 - [🚀 AIDD Server Framework](#-aidd-server-framework)
   - [Authentication Middleware](#authentication-middleware)
 - [🛠️ AIDD CLI Reference](#-aidd-cli-reference)
   - [Installation & Usage](#installation--usage)
   - [Command Options](#command-options)
   - [Examples](#examples)
+- [🧩 Skills](#-skills)
 - [📁 AI System Structure](#-ai-system-structure)
   - [Key Components](#key-components)
 - [🎯 AI Integration](#-ai-integration)
@@ -53,6 +55,7 @@ Includes:
   - [Manual Integration](#manual-integration)
   - [Troubleshooting](#troubleshooting)
 - [📄 License](#-license)
+- [📹 Weekly Training Sessions](#-weekly-training-sessions)
 - [🤝 Contributing](#-contributing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -203,6 +206,18 @@ Coming soon:
 - 🎨 UI sketch prompts
 - 📄 Documentation generators
 - 🔌 API design
+
+## 📚 Learning aidd Framework
+
+aidd Framework combines modern software engineering practices with AI orchestration. To use it effectively, you'll benefit from understanding:
+
+- **Product & Planning**: Product management, user story mapping, functional requirements
+- **Development**: Test driven development, user testing, CI/CD workflows
+- **AI-Specific Skills**: Context engineering, prompt engineering, SudoLang, agent orchestration
+
+📖 **[Complete Learning Roadmap →](docs/learn-aidd-framework.md)** — Detailed competency areas, technical skills, and weekly training sessions
+
+**New to AI-driven development?** Start with the Quick Start below, then explore the `/discover` → `/task` → `/execute` workflow. The AI agents will guide you through the process.
 
 ## 🚀 AIDD Server Framework
 
@@ -422,6 +437,13 @@ npx aidd --index --verbose # Show all generated files
 npx aidd frontend-app
 npx aidd backend-api
 ```
+
+## 🧩 Skills
+
+Skills are reusable agent workflows that extend AIDD with specialized capabilities. Invoke them by name in any AI coding assistant.
+
+- **[/aidd-churn](ai/skills/aidd-churn/README.md)** — Hotspot analysis: run `npx aidd churn`, interpret the ranked results, and recommend specific files to review or refactor with concrete strategies. Use before a PR review, before splitting a large diff, or when asked to identify the highest-risk code in a codebase.
+- **[/aidd-fix](ai/skills/aidd-fix/README.md)** — Fix a bug or implement review feedback following the AIDD fix process. Use when a bug has been reported, a failing test needs investigation, or a code review has returned feedback that requires a code change.
 
 ## 📁 AI System Structure
 
