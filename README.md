@@ -657,6 +657,12 @@ rm .cursor
 
 MIT © [ParallelDrive](https://github.com/paralleldrive)
 
+## 📹 Weekly Training Sessions
+
+Public-access, recorded trainings published to YouTube on a (mostly) weekly basis, covering AIDD Framework workflows and software engineering in general. We meet at 3:00pm PT every Tuesday.
+
+📖 **[Browse all training sessions →](docs/training-videos.md)**
+
 ## 🤝 Contributing
 
 We welcome contributions! Follow the [Development Workflow](#development-workflow) above, and see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
