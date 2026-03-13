@@ -74,3 +74,16 @@ When `runCreate` throws `ScaffoldValidationError` because the destination folder
 - Given the unit test for `downloadExtension`, should assert `cause.code === "SCAFFOLD_DESTINATION_ERROR"`
 
 ---
+
+## N2 — downloadExtension is exported as a public API but is an internal helper
+
+`downloadExtension` was exported from `lib/scaffold-resolver.js` solely to enable direct unit testing of the H1 behaviour (throwing when the download dir exists). Exporting it creates an unintended public bypass: callers can invoke it without the user-confirmation prompt, HTTPS guard, or GitHub release-resolution logic that `resolveExtension` provides.
+
+The correct fix is to thread `existsFn` up through `resolveExtension` (the real public API) so the behaviour can be tested without exporting the internal helper.
+
+**Requirements**:
+- Given `downloadExtension` is no longer exported, no external caller can bypass the confirmation/HTTPS guard in `resolveExtension`
+- Given `existsFn` is injectable via `resolveExtension`, the download-dir-exists guard is still fully testable without touching the real filesystem
+- Given all existing tests, should continue to pass with no behaviour change
+
+---
