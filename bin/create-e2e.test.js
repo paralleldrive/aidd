@@ -17,7 +17,6 @@ import {
 const execAsync = promisify(exec);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const cliPath = `"${path.join(__dirname, "./aidd.js")}"`;
 
 // Shared state for the scaffold-example create tests (runs npm install once)
 const scaffoldExampleCtx = {
@@ -29,6 +28,9 @@ const scaffoldExampleCtx = {
 
 describe("aidd create scaffold-example", () => {
   beforeAll(async () => {
+    // Run `npx aidd create scaffold-example` once and capture all outputs.
+    // Each test below asserts a single requirement against the shared result —
+    // this avoids repeating the expensive npm install for every assertion.
     scaffoldExampleCtx.tempDir = path.join(
       os.tmpdir(),
       `aidd-e2e-create-${Date.now()}`,
@@ -40,8 +42,8 @@ describe("aidd create scaffold-example", () => {
     );
 
     const { stdout } = await execAsync(
-      `node ${cliPath} create scaffold-example test-project`,
-      { cwd: scaffoldExampleCtx.tempDir, timeout: 180_000 },
+      `npx aidd create scaffold-example "${scaffoldExampleCtx.projectDir}"`,
+      { timeout: 180_000 },
     );
     scaffoldExampleCtx.stdout = stdout;
     scaffoldExampleCtx.pkg = await fs.readJson(
@@ -144,8 +146,7 @@ describe("aidd create with AIDD_CUSTOM_CREATE_URI env var", () => {
     );
     const uri = `file://${scaffoldExamplePath}`;
 
-    await execAsync(`node ${cliPath} create env-project`, {
-      cwd: envCtx.tempDir,
+    await execAsync(`npx aidd create "${envCtx.projectDir}"`, {
       env: { ...process.env, AIDD_CUSTOM_CREATE_URI: uri },
       timeout: 180_000,
     });
@@ -187,7 +188,7 @@ describe("aidd scaffold-cleanup", () => {
   test("removes ~/.aidd/scaffold when it exists", async () => {
     await fs.ensureDir(scaffoldDir);
 
-    await execAsync(`node ${cliPath} scaffold-cleanup`);
+    await execAsync(`npx aidd scaffold-cleanup`);
 
     const exists = await fs.pathExists(scaffoldDir);
 
@@ -202,7 +203,7 @@ describe("aidd scaffold-cleanup", () => {
   test("reports nothing to clean up when ~/.aidd/scaffold does not exist", async () => {
     await fs.remove(scaffoldDir);
 
-    const { stdout } = await execAsync(`node ${cliPath} scaffold-cleanup`);
+    const { stdout } = await execAsync(`npx aidd scaffold-cleanup`);
 
     assert({
       given: "scaffold-cleanup when ~/.aidd/scaffold does not exist",
@@ -242,13 +243,14 @@ describe("aidd create --agent flag", () => {
     const scaffoldUri = `file://${path.join(tempDir, "agent-test-scaffold")}`;
 
     // Use 'echo' as the agent: it just prints the prompt and exits successfully
+    const agentProjectDir = path.join(tempDir, "agent-project");
     const { stdout } = await execAsync(
-      `node ${cliPath} create --agent echo "${scaffoldUri}" agent-project`,
-      { cwd: tempDir, timeout: 30_000 },
+      `npx aidd create --agent echo "${scaffoldUri}" "${agentProjectDir}"`,
+      { timeout: 30_000 },
     );
 
     // The project directory should be created
-    const dirExists = await fs.pathExists(path.join(tempDir, "agent-project"));
+    const dirExists = await fs.pathExists(agentProjectDir);
 
     assert({
       given: "--agent echo flag with a scaffold containing a prompt step",
@@ -284,8 +286,7 @@ describe("aidd create — error paths", () => {
     let err;
     try {
       await execAsync(
-        `node ${cliPath} create nonexistent-scaffold-xyz my-project`,
-        { cwd: tempDir },
+        `npx aidd create nonexistent-scaffold-xyz "${path.join(tempDir, "my-project")}"`,
       );
     } catch (e) {
       err = e;
@@ -301,9 +302,7 @@ describe("aidd create — error paths", () => {
   test("exits non-zero when a URI is given without a folder argument", async () => {
     let err;
     try {
-      await execAsync(`node ${cliPath} create https://example.com`, {
-        cwd: tempDir,
-      });
+      await execAsync(`npx aidd create https://example.com`);
     } catch (e) {
       err = e;
     }
@@ -319,8 +318,7 @@ describe("aidd create — error paths", () => {
     let err;
     try {
       await execAsync(
-        `node ${cliPath} create "file:///tmp/nonexistent-scaffold-xyz" my-project`,
-        { cwd: tempDir },
+        `npx aidd create "file:///tmp/nonexistent-scaffold-xyz" "${path.join(tempDir, "my-project")}"`,
       );
     } catch (e) {
       err = e;
@@ -339,10 +337,7 @@ describe("aidd create — error paths", () => {
 
     let err;
     try {
-      await execAsync(
-        `node ${cliPath} create scaffold-example already-exists`,
-        { cwd: tempDir },
-      );
+      await execAsync(`npx aidd create scaffold-example "${existingFolder}"`);
     } catch (e) {
       err = e;
     }
