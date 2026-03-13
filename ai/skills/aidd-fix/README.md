@@ -36,7 +36,7 @@ summarize — do not modify any files.
 
 Locate the existing epic or create one at `tasks/<name>-epic.md`. Add a
 requirement in **"Given X, should Y"** format describing the correct
-observable behaviour — no implementation detail, only what the user or caller
+observable behavior — no implementation detail, only what the user or caller
 should experience.
 
 ```
@@ -49,7 +49,7 @@ validation error without submitting.
 Write a unit test that encodes the requirement, run `npm run test:unit`, and
 confirm it **fails**. If it passes without any implementation change, stop and
 reassess — the bug may already be fixed or the test is not targeting the right
-behaviour.
+behavior.
 
 ### Step 4 — Implement the fix
 
