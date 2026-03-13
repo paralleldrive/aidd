@@ -55,6 +55,7 @@ Includes:
   - [Manual Integration](#manual-integration)
   - [Troubleshooting](#troubleshooting)
 - [📄 License](#-license)
+- [📹 Weekly Training Sessions](#-weekly-training-sessions)
 - [🤝 Contributing](#-contributing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
