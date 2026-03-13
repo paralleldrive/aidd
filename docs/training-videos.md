@@ -8,7 +8,7 @@ Public-access, recorded trainings that we record and publish to YouTube on a (mo
 
 | Date | Title | Video |
 | ---------- | ----- | ----- |
-| 2026-03-10 | | [Watch](https://www.youtube.com/watch?v=dj2nF5ToEyY) |
+| 2026-03-10 | Learn AIDD Code Hotspot Analysis, AI Prompt Testing & a Better MCP | [Watch](https://www.youtube.com/watch?v=dj2nF5ToEyY) |
 | 2026-03-03 | Multi-Agent Swarms for PR fixes | [Watch](https://youtu.be/_0mqqjgDhvc) |
-| 2026-02-17 | | [Watch](https://www.youtube.com/watch?v=QZje1vGKb9E) |
-| 2026-01-20 | | [Watch](https://www.youtube.com/watch?v=JnoDjiwVj_k) |
+| 2026-02-17 | Weekly aidd Framework Training 2026-02-17 | [Watch](https://www.youtube.com/watch?v=QZje1vGKb9E) |
+| 2026-01-20 | 2026-01-20 - aidd Framework Weekly Training | [Watch](https://www.youtube.com/watch?v=JnoDjiwVj_k) |
