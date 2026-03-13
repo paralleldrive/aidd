@@ -30,7 +30,7 @@ writing a line of production code.
 Read the relevant source file(s) and colocated test file(s), then read the
 task epic in `tasks/` that covers this area. Reproduce or reason through the
 issue to confirm it actually exists. If no change is needed, stop and
-summarise — do not modify any files.
+summarize — do not modify any files.
 
 ### Step 2 — Document the requirement in the epic
 
