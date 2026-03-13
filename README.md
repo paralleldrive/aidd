@@ -423,6 +423,13 @@ npx aidd frontend-app
 npx aidd backend-api
 ```
 
+## 🛠️ Skills
+
+Skills are reusable agent workflows that extend AIDD with specialised capabilities. Invoke them by name in any AI coding assistant.
+
+- **[aidd-churn](ai/skills/aidd-churn/README.md)** — Hotspot analysis: run `npx aidd churn`, interpret the ranked results, and recommend specific files to review or refactor with concrete strategies. Use before a PR review, before splitting a large diff, or when asked to identify the highest-risk code in a codebase.
+- **[aidd-fix](ai/skills/aidd-fix/README.md)** — Fix a bug or implement review feedback following the AIDD fix process. Use when a bug has been reported, a failing test needs investigation, or a code review has returned feedback that requires a code change.
+
 ## 📁 AI System Structure
 
 After running the CLI, you'll have a complete `ai/` folder:
