@@ -38,7 +38,7 @@ Includes:
   - [Installation & Usage](#installation--usage)
   - [Command Options](#command-options)
   - [Examples](#examples)
-- [🛠️ Skills](#-skills)
+- [🧩 Skills](#-skills)
 - [📁 AI System Structure](#-ai-system-structure)
   - [Key Components](#key-components)
 - [🎯 AI Integration](#-ai-integration)
@@ -438,7 +438,7 @@ npx aidd frontend-app
 npx aidd backend-api
 ```
 
-## 🛠️ Skills
+## 🧩 Skills
 
 Skills are reusable agent workflows that extend AIDD with specialised capabilities. Invoke them by name in any AI coding assistant.
 

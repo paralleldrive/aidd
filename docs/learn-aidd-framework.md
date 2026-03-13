@@ -32,9 +32,6 @@ And of course, a lot more about AI in general.
 
 ## Weekly Training Sessions
 
-These are public-access, recorded trainings that we record and publish to YouTube on a (mostly) weekly basis. This allows bidirectional sharing of workflows and insights, and covers lots of different areas of aidd Framework and software engineering in general.
-
-- 2026-01-20 – [Weekly training session recording](https://www.youtube.com/watch?v=JnoDjiwVj_k)
-- 2026-02-17 – [Weekly training session recording](https://www.youtube.com/watch?v=QZje1vGKb9E)
-- 2026-03-03 – [Multi-agent swarms for PR fixes – weekly training recording](https://youtu.be/_0mqqjgDhvc)
+We publish public recordings on a (mostly) weekly basis.
+Browse all sessions on the [Weekly Training Sessions](training-videos.md) page.
 
