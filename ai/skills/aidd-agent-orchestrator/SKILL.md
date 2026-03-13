@@ -28,7 +28,18 @@ Agents {
 
 const taskPrompt = "# Guides\n\nRead each of the following guides for important context, and follow their instructions carefully: ${list guide file refs in markdown format}\n\n# User Prompt\n\n${prompt}"
 
+withCLI() {
+  `cursor-agent --agent ${agent} --prompt $taskPrompt`
+}
+
+directExecution() {
+  prompt yourself with the $taskPrompt
+}
+
 handleInitialRequest() {
   use taskCreator to create and execute a task plan
-  prompt yourself with the $taskPrompt
+  match (contextRequirements = infer) {
+    > 1 guide => use withCLI
+    default => use directExecution
+  }
 }
