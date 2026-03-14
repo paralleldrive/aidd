@@ -5,7 +5,9 @@ description: Ensures types and related functions are authored and consumed in a 
 
 # Type namespace pattern
 
-Single import surface per type: `<type-name>/<type-name>.ts`. Each constant or function lives in `<exported-name>.ts`; namespace re-export from `public.js`. Types live in the `types/` layer per [structure](../aidd-structure/SKILL.md).
+**Every declaration lives in its own file.** Single import surface per type: `<type-name>/<type-name>.ts`. Each constant or function lives in `<exported-name>.ts`; namespace re-export from `public.js`. Types live in the `types/` layer per [structure](../aidd-structure/SKILL.md).
+
+If a declaration is large (e.g. a service factory), it may have its own folder with separate files for supporting code; the folder still exports only that one declaration (e.g. the single factory function).
 
 **Precedence:** This skill defines the canonical pattern. Existing files may not yet follow it; all new work and changes must conform. Do not copy legacy structure when adding or editing code.
 
@@ -26,7 +28,12 @@ Constraints {
 
 Example: under `types/point/`, files `length.ts`, `add.ts`, and `normalize.ts` each export the like-named function.
 
-## Constant types
+## Constants and sub-types
+
+- **Constants** must be immutable; use `as const satisfies <OtherType>`.
+- **Sub-types** are allowed when they make importing, discovery, and meaning clearer.
+
+## Constant visibility
 
 ```sudolang
 ConstantVisibility {

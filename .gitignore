@@ -149,3 +149,6 @@ core.*
 # Local AIDD database
 .aidd/
 
+# Mac Files
+.DS_Store
+
