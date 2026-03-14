@@ -4,7 +4,7 @@ import { execSync } from "child_process";
 import process from "process";
 import { createError, errorCauses } from "error-causes";
 
-// Configuration objects (camelCase per javascript.mdc)
+// Configuration objects (camelCase per JavaScript guidelines)
 const bumpAliases = {
   breaking: "major",
   feature: "minor",
@@ -40,7 +40,7 @@ const [releaseErrors, handleReleaseErrors] = errorCauses({
 
 const { ValidationError, GitError, ReleaseItError } = releaseErrors;
 
-// Pure utility functions (explicit parameter defaults per javascript.mdc)
+// Pure utility functions (explicit parameter defaults per JavaScript guidelines)
 const parseBumpType = ({
   argv = process.argv,
   defaultType = defaultBump,
