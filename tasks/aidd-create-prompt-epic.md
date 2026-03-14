@@ -68,6 +68,7 @@ Update `runManifest` to call `resolveAgentConfig` and `runAgent` lazily only whe
 **Requirements**:
 - Given a manifest `prompt:` step, calls `resolveAgentConfig({ value: agentConfig, cwd: folder })` then `runAgent` with the result, spawning `[command, ...args, promptText]` (non-interactive)
 - Given no `prompt:` steps in the manifest, never calls `resolveAgentConfig`
+- Given a manifest with multiple `prompt:` steps, `resolveAgentConfig` should be called exactly once per `runManifest` invocation (not once per step)
 - Given existing tests asserting `[agent, promptText]` as the spawned command, updates them to assert `[command, ...args, promptText]`
 
 ---
