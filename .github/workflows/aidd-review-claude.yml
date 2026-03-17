@@ -1,0 +1,105 @@
+name: AIDD Review (Claude)
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  id-token: write
+
+concurrency:
+  group: aidd-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  aidd-review:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: anthropics/claude-code-action@v1
+        continue-on-error: true
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          classify_inline_comments: false
+          prompt: |
+            # Automated PR Review
+
+            Act as a top-tier principal software engineer reviewing PR #${{ github.event.pull_request.number }}
+            in ${{ github.repository }}.
+
+            Constraints {
+              Post inline comments only — do NOT post a summary comment.
+              Do NOT emit review text as plain messages between tool calls.
+              A post-processing step extracts your final message as the summary comment.
+            }
+
+            ReviewProcess {
+              1. Run `gh pr diff ${{ github.event.pull_request.number }}` to get the full diff.
+              2. Read ai/skills/aidd-review/SKILL.md and relevant reference files it
+                 points to. Execute the review process exactly as the skill defines it.
+              3. For file-specific findings, call
+                 mcp__github_inline_comment__create_inline_comment with the file path,
+                 line number, recommendation, and confirmed=true.
+                 match (tool availability) {
+                   case (unavailable or call fails) => run:
+                     echo "::warning::Inline comment MCP tool unavailable — falling back to summary"
+                   default => post inline comment
+                 }
+              4. As your FINAL message, write the full review summary in markdown.
+                 Follow the skill's output format. Be thorough — do not abbreviate.
+                 At the very end, add a "Quick fix prompt" section with a fenced code
+                 block (triple backticks) containing a standalone prompt a developer
+                 can copy-paste into Claude Code to fix all findings:
+
+                   ### Quick fix prompt
+                   ```text
+                   Fix the following review findings in PR #<number>:
+                   1. <file>:<line> — <what to fix>
+                   2. <file>:<line> — <what to fix>
+                   ...
+                   ```
+            }
+          claude_args: |
+            --model claude-sonnet-4-6 --max-turns 20 --allowedTools "Read,Glob,Grep,Bash(gh pr diff:*),Bash(gh pr view:*),Bash(echo:*),mcp__github_inline_comment__create_inline_comment" --disallowedTools "Task,Write,Edit"
+
+      - name: Post summary comment
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          LOG="/home/runner/work/_temp/claude-execution-output.json"
+          if [ ! -f "$LOG" ]; then
+            echo "::warning::No execution log found — skipping summary comment"
+            exit 0
+          fi
+
+          # Extract the last assistant message as the summary
+          BODY=$(python3 -c "
+          import json, sys
+          with open('$LOG') as f:
+              entries = json.load(f)
+          # Walk backwards to find the last assistant text message
+          for entry in reversed(entries):
+              if entry.get('type') == 'assistant':
+                  msg = entry.get('message', {})
+                  for block in msg.get('content', []):
+                      if block.get('type') == 'text':
+                          print(block['text'])
+                          sys.exit(0)
+          print('Review completed but no summary was generated.')
+          ")
+
+          gh pr comment "${{ github.event.pull_request.number }}" --body "$BODY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: claude-review-log
+          path: /home/runner/work/_temp/claude-execution-output.json
