@@ -140,3 +140,7 @@ Use a `file://` URI to test your scaffold without publishing:
 npx aidd verify-scaffold file:///path/to/my-scaffold
 npx aidd create file:///path/to/my-scaffold my-test-project
 ```
+
+### Downloaded scaffold files
+
+When `npx aidd create` downloads a scaffold from a remote URL (HTTP/HTTPS), the temporary files in `~/.aidd/scaffold/` are removed automatically after the scaffold finishes — whether it succeeds or fails. There is no manual cleanup step required.

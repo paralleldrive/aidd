@@ -122,12 +122,12 @@ describe("aidd create scaffold-example", () => {
     });
   });
 
-  test("does not suggest scaffold-cleanup for named (local) scaffolds", () => {
+  test("prints scaffold complete message on success", () => {
     assert({
       given: "scaffold-example (named scaffold) completes successfully",
-      should: "not suggest scaffold-cleanup because no tarball was downloaded",
-      actual: scaffoldExampleCtx.stdout.includes("scaffold-cleanup"),
-      expected: false,
+      should: "print the scaffold complete message",
+      actual: scaffoldExampleCtx.stdout.includes("Scaffold complete"),
+      expected: true,
     });
   });
 });
@@ -164,51 +164,6 @@ describe("aidd create with AIDD_CUSTOM_CREATE_URI env var", () => {
       given: "AIDD_CUSTOM_CREATE_URI set to a file:// URI",
       should: "use that URI as the extension source and scaffold the project",
       actual: exists,
-      expected: true,
-    });
-  });
-});
-
-describe("aidd scaffold-cleanup", () => {
-  const scaffoldDir = path.join(os.homedir(), ".aidd", "scaffold");
-  let scaffoldDirExistedBefore;
-
-  beforeEach(async () => {
-    // Record pre-test state so afterEach can restore it cleanly
-    scaffoldDirExistedBefore = await fs.pathExists(scaffoldDir);
-  });
-
-  afterEach(async () => {
-    // Remove the scaffold dir if it was created by the test
-    if (!scaffoldDirExistedBefore) {
-      await fs.remove(scaffoldDir);
-    }
-  });
-
-  test("removes ~/.aidd/scaffold when it exists", async () => {
-    await fs.ensureDir(scaffoldDir);
-
-    await execAsync(`npx aidd scaffold-cleanup`);
-
-    const exists = await fs.pathExists(scaffoldDir);
-
-    assert({
-      given: "aidd scaffold-cleanup with ~/.aidd/scaffold present",
-      should: "remove ~/.aidd/scaffold",
-      actual: exists,
-      expected: false,
-    });
-  });
-
-  test("reports nothing to clean up when ~/.aidd/scaffold does not exist", async () => {
-    await fs.remove(scaffoldDir);
-
-    const { stdout } = await execAsync(`npx aidd scaffold-cleanup`);
-
-    assert({
-      given: "scaffold-cleanup when ~/.aidd/scaffold does not exist",
-      should: "report nothing to clean up",
-      actual: stdout.toLowerCase().includes("nothing"),
       expected: true,
     });
   });
