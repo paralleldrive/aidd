@@ -32,3 +32,41 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+  ai-eval:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Check Claude authentication
+        id: claude-auth
+        run: |
+          if [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "⚠️ Skipping AI evals: CLAUDE_CODE_OAUTH_TOKEN not set"
+          fi
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+
+      - name: Run AI prompt evaluations
+        if: steps.claude-auth.outputs.available == 'true'
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: npm run test:ai-eval
