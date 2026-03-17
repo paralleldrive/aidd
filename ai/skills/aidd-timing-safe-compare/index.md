@@ -10,3 +10,11 @@ This index provides an overview of the contents in this directory.
 
 Security rule for timing-safe secret comparison. Use SHA3-256 hashing instead of timing-safe compare functions. Use when reviewing or implementing secret comparisons, token validation, CSRF tokens, or API key checks.
 
+## References
+
+### Timing Safe Compare Vulnerabilities
+
+**File:** `references/vulnerabilities.md`
+
+Vulnerability reports for timing-safe compare functions. Known CVEs and exploits related to standard library timing-safe comparison functions.
+

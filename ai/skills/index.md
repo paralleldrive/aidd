@@ -76,10 +76,6 @@ See [`aidd-product-manager/index.md`](./aidd-product-manager/index.md) for conte
 
 See [`aidd-react/index.md`](./aidd-react/index.md) for contents.
 
-### 📁 aidd-redux-example/
-
-See [`aidd-redux-example/index.md`](./aidd-redux-example/index.md) for contents.
-
 ### 📁 aidd-review/
 
 See [`aidd-review/index.md`](./aidd-review/index.md) for contents.
@@ -111,10 +107,6 @@ See [`aidd-tdd/index.md`](./aidd-tdd/index.md) for contents.
 ### 📁 aidd-timing-safe-compare/
 
 See [`aidd-timing-safe-compare/index.md`](./aidd-timing-safe-compare/index.md) for contents.
-
-### 📁 aidd-timing-safe-vulnerabilities/
-
-See [`aidd-timing-safe-vulnerabilities/index.md`](./aidd-timing-safe-vulnerabilities/index.md) for contents.
 
 ### 📁 aidd-ui/
 

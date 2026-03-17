@@ -4,7 +4,7 @@ import fs from "fs-extra";
 import { assert } from "riteway/vitest";
 import { describe, test } from "vitest";
 
-import { parseFrontmatter } from "../../lib/index-generator.js";
+import { parseFrontmatter } from "../../../lib/index-generator.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -13,7 +13,7 @@ describe("user-testing", () => {
     test("file exists with valid frontmatter", async () => {
       const filePath = path.join(
         __dirname,
-        "../skills/aidd-user-testing/SKILL.md",
+        "./SKILL.md",
       );
       const exists = await fs.pathExists(filePath);
 
@@ -45,7 +45,7 @@ describe("user-testing", () => {
     test("includes HumanScript and AgentScript templates", async () => {
       const filePath = path.join(
         __dirname,
-        "../skills/aidd-user-testing/SKILL.md",
+        "./SKILL.md",
       );
       const content = await fs.readFile(filePath, "utf-8");
 
@@ -67,7 +67,7 @@ describe("user-testing", () => {
 
   describe("user-test.md command", () => {
     test("command file exists", async () => {
-      const filePath = path.join(__dirname, "../commands/user-test.md");
+      const filePath = path.join(__dirname, "../../commands/user-test.md");
       const exists = await fs.pathExists(filePath);
 
       assert({
@@ -79,7 +79,7 @@ describe("user-testing", () => {
     });
 
     test("references user-testing skill", async () => {
-      const filePath = path.join(__dirname, "../commands/user-test.md");
+      const filePath = path.join(__dirname, "../../commands/user-test.md");
       const content = await fs.readFile(filePath, "utf-8");
 
       assert({
@@ -93,7 +93,7 @@ describe("user-testing", () => {
 
   describe("run-test.md command", () => {
     test("command file exists", async () => {
-      const filePath = path.join(__dirname, "../commands/run-test.md");
+      const filePath = path.join(__dirname, "../../commands/run-test.md");
       const exists = await fs.pathExists(filePath);
 
       assert({
@@ -105,7 +105,7 @@ describe("user-testing", () => {
     });
 
     test("references user-testing skill", async () => {
-      const filePath = path.join(__dirname, "../commands/run-test.md");
+      const filePath = path.join(__dirname, "../../commands/run-test.md");
       const content = await fs.readFile(filePath, "utf-8");
 
       assert({
@@ -119,7 +119,7 @@ describe("user-testing", () => {
 
   describe("documentation", () => {
     test("user testing guide exists", async () => {
-      const filePath = path.join(__dirname, "../../docs/user-testing.md");
+      const filePath = path.join(__dirname, "../../../docs/user-testing.md");
       const exists = await fs.pathExists(filePath);
 
       assert({
@@ -133,7 +133,7 @@ describe("user-testing", () => {
 
   describe("README integration", () => {
     test("README includes user-test command", async () => {
-      const filePath = path.join(__dirname, "../../README.md");
+      const filePath = path.join(__dirname, "../../../README.md");
       const content = await fs.readFile(filePath, "utf-8");
 
       assert({

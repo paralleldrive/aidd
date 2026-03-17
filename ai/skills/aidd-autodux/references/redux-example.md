@@ -1,9 +1,4 @@
----
-name: aidd-redux-example
-description: Autodux usage example showing a Todo App implementation in SudoLang. Use as reference when building Redux state management with the Autodux pattern.
----
-
-## AutoduxUsage Example: Todo App
+## Autodux Usage Example: Todo App
 
 /*
 This is an example SudoLang source that can be transpiled to JavaScript using:

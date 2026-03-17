@@ -10,3 +10,11 @@ This index provides an overview of the contents in this directory.
 
 Create and transpile Autodux Redux state management dux objects. Use when building Redux state management, defining reducers, action creators, or selectors.
 
+## References
+
+### Redux Example
+
+**File:** `references/redux-example.md`
+
+Autodux usage example showing a Todo App implementation in SudoLang.
+
