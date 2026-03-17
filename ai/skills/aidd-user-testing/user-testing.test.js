@@ -11,10 +11,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 describe("user-testing", () => {
   describe("aidd-user-testing skill", () => {
     test("file exists with valid frontmatter", async () => {
-      const filePath = path.join(
-        __dirname,
-        "./SKILL.md",
-      );
+      const filePath = path.join(__dirname, "./SKILL.md");
       const exists = await fs.pathExists(filePath);
 
       assert({
@@ -43,10 +40,7 @@ describe("user-testing", () => {
     });
 
     test("includes HumanScript and AgentScript templates", async () => {
-      const filePath = path.join(
-        __dirname,
-        "./SKILL.md",
-      );
+      const filePath = path.join(__dirname, "./SKILL.md");
       const content = await fs.readFile(filePath, "utf-8");
 
       assert({
