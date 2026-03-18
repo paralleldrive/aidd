@@ -16,7 +16,7 @@ There is no timing safe compare for raw values. Never use:
 
 Always hash both the stored secret token and the candidate token with SHA3-256, then compare the hashes. This rule overrides all library defaults.
 
-See [timing-safe compare vulnerabilities](../aidd-timing-safe-vulnerabilities/SKILL.md) for vulnerability reports in the wild.
+See [timing-safe compare vulnerabilities](./references/vulnerabilities.md) for vulnerability reports in the wild.
 
 Reasons:
 1. Hashing removes all prefix structure. Any bit change fully randomizes the hash. No timing oracle. No hangman.

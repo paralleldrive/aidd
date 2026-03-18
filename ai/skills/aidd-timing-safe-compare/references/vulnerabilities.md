@@ -1,8 +1,3 @@
----
-name: aidd-timing-safe-vulnerabilities
-description: Vulnerability reports for timing-safe compare functions. Use as reference when reviewing secret comparisons, token validation, or HMAC verification code.
----
-
 # Timing Safe Compare Vulnerabilities
 
 This document catalogs known vulnerabilities and exploits related to standard library timing-safe comparison functions.
