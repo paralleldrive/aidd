@@ -32,6 +32,10 @@ See [`aidd-fix/index.md`](./aidd-fix/index.md) for contents.
 
 See [`aidd-functional-requirements/index.md`](./aidd-functional-requirements/index.md) for contents.
 
+### 📁 aidd-geo-interview/
+
+See [`aidd-geo-interview/index.md`](./aidd-geo-interview/index.md) for contents.
+
 ### 📁 aidd-javascript/
 
 See [`aidd-javascript/index.md`](./aidd-javascript/index.md) for contents.
@@ -99,6 +103,10 @@ See [`aidd-structure/index.md`](./aidd-structure/index.md) for contents.
 ### 📁 aidd-sudolang-syntax/
 
 See [`aidd-sudolang-syntax/index.md`](./aidd-sudolang-syntax/index.md) for contents.
+
+### 📁 aidd-technical-seo/
+
+See [`aidd-technical-seo/index.md`](./aidd-technical-seo/index.md) for contents.
 
 ### 📁 aidd-task-creator/
 
