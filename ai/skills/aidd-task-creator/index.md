@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### aidd-task-creator — Task Planning & Execution Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### Task Creator
 
 **File:** `SKILL.md`

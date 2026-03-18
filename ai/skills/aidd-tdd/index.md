@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### aidd-tdd — Test-Driven Development Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### TDD Engineer
 
 **File:** `SKILL.md`

@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### aidd-javascript-io-effects — Saga Pattern Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### JavaScript IO Guide
 
 **File:** `SKILL.md`

@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### aidd-stack — Tech Stack Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### Tech Stack
 
 **File:** `SKILL.md`

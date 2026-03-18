@@ -10,6 +10,12 @@ See [`references/index.md`](./references/index.md) for contents.
 
 ## Files
 
+### aidd-layout — UI Component Layout Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### Layout and component types
 
 **File:** `SKILL.md`

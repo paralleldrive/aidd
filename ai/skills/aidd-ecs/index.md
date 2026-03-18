@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### aidd-ecs — ECS Plugin Authoring Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### Database.Plugin authoring
 
 **File:** `SKILL.md`

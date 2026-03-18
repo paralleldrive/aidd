@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### aidd-observe — Observe Pattern Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### Observe pattern
 
 **File:** `SKILL.md`

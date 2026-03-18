@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### aidd-error-causes — Structured Error Handling Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### Error Causes Rule
 
 **File:** `SKILL.md`

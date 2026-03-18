@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### aidd-lit — Lit Element Authoring Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### Lit element authoring
 
 **File:** `SKILL.md`

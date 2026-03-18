@@ -10,6 +10,12 @@ See [`references/index.md`](./references/index.md) for contents.
 
 ## Files
 
+### aidd-review — Code Review Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### 🔬 Code Review
 
 **File:** `SKILL.md`

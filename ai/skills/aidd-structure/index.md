@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### aidd-structure — Source Code Structure Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### Standard folder structure
 
 **File:** `SKILL.md`

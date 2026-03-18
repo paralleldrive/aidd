@@ -10,6 +10,12 @@ See [`references/index.md`](./references/index.md) for contents.
 
 ## Files
 
+### aidd-autodux — Redux State Management Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### Autodux
 
 **File:** `SKILL.md`

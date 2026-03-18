@@ -10,6 +10,12 @@ See [`references/index.md`](./references/index.md) for contents.
 
 ## Files
 
+### aidd-timing-safe-compare — Secret Comparison Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### Constraint: Timing Safe Compare
 
 **File:** `SKILL.md`

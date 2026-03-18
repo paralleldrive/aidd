@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### aidd-functional-requirements — Requirement Specification Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### Functional requirements
 
 **File:** `SKILL.md`

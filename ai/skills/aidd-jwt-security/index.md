@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### aidd-jwt-security — JWT Security Review Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### JWT Security Review
 
 **File:** `SKILL.md`

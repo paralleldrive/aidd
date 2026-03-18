@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### aidd-service — Data Service Authoring Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### Service authoring
 
 **File:** `SKILL.md`

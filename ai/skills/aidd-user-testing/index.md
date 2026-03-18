@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### aidd-user-testing — User Test Script Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### User Testing Generator
 
 **File:** `SKILL.md`

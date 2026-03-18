@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### aidd-log — Changelog Reference
+
+**File:** `README.md`
+
+*No description available*
+
 ### log
 
 **File:** `SKILL.md`
