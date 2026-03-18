@@ -1,7 +1,5 @@
 import 'ai/skills/aidd-review/SKILL.md'
-import 'ai-evals/aidd-review/fixtures/user-service.js'
-import 'ai-evals/aidd-review/fixtures/utils.js'
-import 'ai-evals/aidd-review/fixtures/data-fetch.js'
+
 
 userPrompt = """
 Run the full /review process on the three fixture files in ai-evals/aidd-review/fixtures/:
@@ -18,8 +16,8 @@ Follow the ReviewProcess defined in the review skill. Conduct a thorough code re
 - Given user-service.js compares secrets with === operator, should flag timing-unsafe secret comparison
 - Given user-service.js uses imperative for loop with push and mutation, should flag imperative style and input mutation
 - Given user-service.js logs the auth token to console, should flag sensitive data exposure in logs
-- Given utils.js uses pure functions with parameter defaults, should not flag any major violations
-- Given utils.js hashes secrets before comparison, should recognize correct timing-safe pattern
+- Given utils.js uses pure functions with parameter defaults, should not flag any CRITICAL or HIGH severity violations
+- Given utils.js hashes secrets before comparison, should recognize hash-before-compare as the correct timing-safe pattern per project standards
 - Given data-fetch.js uses || for defaults instead of parameter defaults, should flag || default pattern as a style issue
 - Given data-fetch.js uses an IIFE instead of a block scope, should flag IIFE usage
 - Given data-fetch.js uses ALL_CAPS constant naming, should flag ALL_CAPS naming convention violation
