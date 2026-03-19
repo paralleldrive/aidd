@@ -101,6 +101,8 @@ Rename `--agent` → `--agentConfig` on `create`; pass the flag value through to
 - Given the `--prompt` agent exits non-zero, reports `ScaffoldStepError` and exits 1
 - Given `--prompt` is absent, `create` behavior is unchanged
 - Given existing `--agent` usage, `--agentConfig` is the renamed replacement (breaking change; update docs and tests)
+- Given `AIDD_AGENT_CONFIG=opencode` is set and `--agentConfig` is not passed, `npx aidd create` should use opencode for prompt steps
+- Given `agent-config: opencode` in `aidd-custom/config.yml` and `--agentConfig` is not passed, `npx aidd create` should use opencode for prompt steps
 
 ---
 
