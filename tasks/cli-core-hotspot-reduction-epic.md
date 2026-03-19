@@ -24,6 +24,7 @@ Extract aidd-custom setup functions to a dedicated subfolder to:
 - **Given** all tests pass before refactoring, **should** pass after refactoring
 - **Given** user runs with --dry-run flag, **should** display status for both aidd-custom/config.yml AND aidd-custom/AGENTS.md
 - **Given** functions were moved to `lib/aidd-custom/setup.js`, **should** update CHANGELOG.md to reference correct module location instead of `lib/cli-core.js`
+- **Given** a successful non–dry-run clone reaches the agent setup phase, **should** run the same AGENTS.md, aidd-custom scaffold, and index generation steps as before the refactor (observable files and content under `targetBase`)
 
 ### Non-Functional Requirements
 
