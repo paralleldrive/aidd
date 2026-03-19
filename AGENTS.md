@@ -48,6 +48,8 @@ Project-specific customization lives in `aidd-custom/`. Before starting work,
 read `aidd-custom/index.md` to discover available project-specific skills,
 and read `aidd-custom/config.yml` to load configuration into context.
 
+import aidd-custom/AGENTS.md // settings from this import should override the root AGENTS.md settings
+
 ## Task Index
 
 fix bug => /aidd-fix

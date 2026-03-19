@@ -82,4 +82,4 @@ const createRoute =
     }
   };
 
-export { createRoute, convertMiddleware };
+export { convertMiddleware, createRoute };

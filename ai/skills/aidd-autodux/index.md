@@ -2,6 +2,12 @@
 
 This index provides an overview of the contents in this directory.
 
+## Subdirectories
+
+### 📁 references/
+
+See [`references/index.md`](./references/index.md) for contents.
+
 ## Files
 
 ### Autodux
