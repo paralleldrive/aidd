@@ -47,6 +47,7 @@ Includes:
   - [Creating Your Vision Document](#creating-your-vision-document)
   - [How Agents Use the Vision Document](#how-agents-use-the-vision-document)
   - [AGENTS.md File](#agentsmd-file)
+    - [Migrating an Existing AGENTS.md](#migrating-an-existing-agentsmd)
   - [`aidd-custom/` — Project Customization](#aidd-custom--project-customization)
 - [🔧 Cursor Editor Setup](#-cursor-editor-setup)
   - [Automatic Setup (Recommended)](#automatic-setup-recommended)
@@ -565,10 +566,29 @@ When you run the AIDD installer, it automatically creates (or updates) an `AGENT
 - Practice progressive discovery (only reading folders relevant to the current task)
 - Respect the vision document as the source of truth
 - Handle conflicts appropriately
+- Import project-specific overrides from `aidd-custom/AGENTS.md`
+
+The root `AGENTS.md` includes an import directive that tells agents to load and prioritize project-specific settings from `aidd-custom/AGENTS.md`, ensuring your customizations override default framework behavior.
+
+#### Migrating an Existing AGENTS.md
+
+If your project already has an `AGENTS.md` file before you install AIDD:
+
+1. **AIDD appends framework directives** — The installer adds AIDD’s standard agent directives to your existing root `AGENTS.md` rather than replacing the file wholesale.
+2. **Move your custom instructions** — Copy your original, project-specific rules into `aidd-custom/AGENTS.md` (or merge them with any content the installer placed there).
+3. **Preserve override behavior** — Keeping customizations in `aidd-custom/AGENTS.md` ensures they override framework defaults via the root file’s import directive.
+4. **Trim the root file** — After migrating, the root `AGENTS.md` should contain only AIDD framework directives (plus the import of `aidd-custom/AGENTS.md`), not duplicated or conflicting custom text.
 
 ### `aidd-custom/` — Project Customization
 
-The installer also creates `aidd-custom/config.yml` in your project root. This folder is the place for project-specific overrides: custom skills, behavior configuration, and additional agent directives. Agents are instructed to read `aidd-custom/index.md` on startup so your customizations are always in context.
+The installer also creates `aidd-custom/config.yml` and `aidd-custom/AGENTS.md` in your project root. This folder is the place for project-specific overrides:
+
+- **`config.yml`** — Framework behavior configuration (e.g., `e2eBeforeCommit`)
+- **`AGENTS.md`** — Project-specific agent instructions that override root `AGENTS.md` settings
+- **`skills/`** — Custom skills specific to your project
+- **Additional `.md` files** — Extra agent rules and commands
+
+Agents are instructed to read `aidd-custom/index.md` on startup so your customizations are always in context.
 
 See [docs/aidd-custom.md](docs/aidd-custom.md) for all available options.
 

@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- `import aidd-custom/AGENTS.md` directive in root `AGENTS.md` — allows projects to override root-level agent directives with project-specific settings
+- `aidd-custom/AGENTS.md` scaffold — created automatically on `npx aidd` install to provide a place for project-specific agent instruction overrides
+- `createAiddCustomAgentsMd` function in `lib/aidd-custom/setup.js` — ensures `aidd-custom/AGENTS.md` is created on first install and never overwritten
+
+### Changed
+- `scaffold-cleanup` CLI subcommand removed — downloaded scaffold files are now cleaned up automatically after every `npx aidd create <url>`; the subcommand is internal only
+
+### Fixed
+- `npx aidd create <url>` no longer fails on repeated runs with a destination-conflict error — `~/.aidd/scaffold/` is cleaned up automatically after every create, whether it succeeds or fails (fixes #157)
+
 ## [2.6.0] - 2026-03-02
 
 ### Added
