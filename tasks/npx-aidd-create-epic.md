@@ -110,6 +110,7 @@ New Commander subcommand `verify-scaffold [type]` that validates a scaffold conf
 
 **Requirements**:
 - Given scaffold files were downloaded, `runCreate` should call `scaffoldCleanup` in a `finally` block so cleanup occurs on both success and failure
+- Given `copyFn` or `ensureDirFn` throws after a successful download, `runCreate` should still call `scaffoldCleanup` (the `try/finally` must cover these operations, not just `runManifest`)
 - Given the `scaffold-cleanup` subcommand was previously registered, should be removed from the CLI — `npx aidd scaffold-cleanup` should exit with an unknown command error
 
 ---
