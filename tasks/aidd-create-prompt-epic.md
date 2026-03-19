@@ -104,6 +104,7 @@ Rename `--agent` → `--agentConfig` on `create`; pass the flag value through to
 - Given existing `--agent` usage, `--agentConfig` is the renamed replacement (breaking change; update docs and tests)
 - Given `AIDD_AGENT_CONFIG=opencode` is set and `--agentConfig` is not passed, `npx aidd create` should use opencode for prompt steps
 - Given `agent-config: opencode` in `aidd-custom/config.yml` and `--agentConfig` is not passed, `npx aidd create` should use opencode for prompt steps
+- Given `runCreate`, should not accept `ensureDirFn`, `copyFn`, `existsFn`, `resolveAgentConfigFn`, or `runAgentFn` as parameters; integration tests use real temp directories and a minimal `steps: []` scaffold fixture
 
 ---
 
