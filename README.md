@@ -31,12 +31,14 @@ Includes:
 - [🧪 User Testing](#-user-testing)
 - [Why SudoLang?](#why-sudolang)
 - [What's Included](#whats-included)
+- [📚 Learning aidd Framework](#-learning-aidd-framework)
 - [🚀 AIDD Server Framework](#-aidd-server-framework)
   - [Authentication Middleware](#authentication-middleware)
 - [🛠️ AIDD CLI Reference](#-aidd-cli-reference)
   - [Installation & Usage](#installation--usage)
   - [Command Options](#command-options)
   - [Examples](#examples)
+- [🧩 Skills](#-skills)
 - [📁 AI System Structure](#-ai-system-structure)
   - [Key Components](#key-components)
 - [🎯 AI Integration](#-ai-integration)
@@ -53,6 +55,7 @@ Includes:
   - [Manual Integration](#manual-integration)
   - [Troubleshooting](#troubleshooting)
 - [📄 License](#-license)
+- [📹 Weekly Training Sessions](#-weekly-training-sessions)
 - [🤝 Contributing](#-contributing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -128,17 +131,17 @@ npx aidd my-project
    ```bash
    cd my-project
    ls ai/                    # See available components
-   cat ai/rules/please.mdc   # Read the main orchestrator
+   cat ai/skills/aidd-please/SKILL.md   # Read the main orchestrator
    ```
 
 5. **Start using AI workflows**:
-   - Reference `ai/rules/` in AI prompts for better context
+   - Reference `ai/skills/` in AI prompts for better context
    - Use `ai/commands/` as workflow templates
-   - Customize rules for your specific project needs
+   - Customize skills for your specific project needs
 
 This gives you immediate access to:
 
-- 🤖 **Agent orchestration rules** (`ai/rules/`)
+- 🤖 **Agent orchestration skills** (`ai/skills/`)
 - ⚙️ **AI workflow commands** (`ai/commands/`)
 - 📋 **Development best practices** (JavaScript, TDD, UI/UX)
 - 🎯 **Product management tools** (user stories, journey mapping)
@@ -203,6 +206,18 @@ Coming soon:
 - 🎨 UI sketch prompts
 - 📄 Documentation generators
 - 🔌 API design
+
+## 📚 Learning aidd Framework
+
+aidd Framework combines modern software engineering practices with AI orchestration. To use it effectively, you'll benefit from understanding:
+
+- **Product & Planning**: Product management, user story mapping, functional requirements
+- **Development**: Test driven development, user testing, CI/CD workflows
+- **AI-Specific Skills**: Context engineering, prompt engineering, SudoLang, agent orchestration
+
+📖 **[Complete Learning Roadmap →](docs/learn-aidd-framework.md)** — Detailed competency areas, technical skills, and weekly training sessions
+
+**New to AI-driven development?** Start with the Quick Start below, then explore the `/discover` → `/task` → `/execute` workflow. The AI agents will guide you through the process.
 
 ## 🚀 AIDD Server Framework
 
@@ -423,6 +438,13 @@ npx aidd frontend-app
 npx aidd backend-api
 ```
 
+## 🧩 Skills
+
+Skills are reusable agent workflows that extend AIDD with specialized capabilities. Invoke them by name in any AI coding assistant.
+
+- **[/aidd-churn](ai/skills/aidd-churn/README.md)** — Hotspot analysis: run `npx aidd churn`, interpret the ranked results, and recommend specific files to review or refactor with concrete strategies. Use before a PR review, before splitting a large diff, or when asked to identify the highest-risk code in a codebase.
+- **[/aidd-fix](ai/skills/aidd-fix/README.md)** — Fix a bug or implement review feedback following the AIDD fix process. Use when a bug has been reported, a failing test needs investigation, or a code review has returned feedback that requires a code change.
+
 ## 📁 AI System Structure
 
 After running the CLI, you'll have a complete `ai/` folder:
@@ -436,13 +458,12 @@ your-project/
 │   │   ├── review.md         # Code reviews
 │   │   ├── task.md           # Task management
 │   │   └── ...
-│   ├── rules/                # Agent orchestration rules
-│   │   ├── agent-orchestrator.mdc
-│   │   ├── javascript/       # JS/TS best practices
-│   │   ├── frameworks/       # Redux, TDD patterns
-│   │   ├── productmanager.mdc
-│   │   ├── tdd.mdc
-│   │   ├── ui.mdc
+│   ├── skills/               # Agent orchestration skills
+│   │   ├── aidd-please/      # Main agent orchestrator
+│   │   ├── aidd-javascript/  # JS/TS best practices
+│   │   ├── aidd-tdd/         # Test-driven development
+│   │   ├── aidd-review/      # Code review guidelines
+│   │   ├── aidd-ui/          # UI/UX design guidelines
 │   │   └── ...
 │   └── ...
 ├── plan/                     # Product discovery artifacts
@@ -454,13 +475,13 @@ your-project/
 
 ### Key Components
 
-- **Agent Orchestrator** (`ai/rules/agent-orchestrator.mdc`) - Coordinates multiple AI agents
-- **Development Rules** (`ai/rules/javascript/`, `ai/rules/tdd.mdc`) - Best practices and patterns
+- **Agent Orchestrator** (`ai/skills/aidd-agent-orchestrator/SKILL.md`) - Coordinates multiple AI agents
+- **Development Skills** (`ai/skills/aidd-javascript/`, `ai/skills/aidd-tdd/`) - Best practices and patterns
 - **Workflow Commands** (`ai/commands/`) - Structured AI interaction templates
-- **Product Management** (`ai/rules/productmanager.mdc`) - User stories and journey mapping
+- **Product Management** (`ai/skills/aidd-product-manager/SKILL.md`) - User stories and journey mapping
 - **Product Discovery Artifacts** (`plan/story-map/`) - User journeys, personas, and story maps (YAML format)
 - **User Testing Scripts** (`plan/`) - Human and AI agent test scripts generated from journeys
-- **UI/UX Guidelines** (`ai/rules/ui.mdc`) - Design and user experience standards
+- **UI/UX Guidelines** (`ai/skills/aidd-ui/SKILL.md`) - Design and user experience standards
 
 ## 🎯 AI Integration
 
@@ -589,20 +610,20 @@ npx aidd my-project
 
 **For Cursor users with existing rules:**
 
-Reference the rules in your prompts or add to `.cursor/rules`:
+Reference the skills in your prompts or add to `.cursor/skills`:
 
 ```
-See ai/rules/javascript/javascript.mdc for JavaScript best practices
-See ai/rules/tdd.mdc for test-driven development
-See ai/rules/productmanager.mdc for product management
+See ai/skills/aidd-javascript/SKILL.md for JavaScript best practices
+See ai/skills/aidd-tdd/SKILL.md for test-driven development
+See ai/skills/aidd-product-manager/SKILL.md for product management
 ```
 
 **For other editors (VS Code, Vim, etc.):**
 
-Reference rules directly in your AI assistant prompts:
+Reference skills directly in your AI assistant prompts:
 
 ```
-Please follow the guidelines in ai/rules/javascript/javascript.mdc
+Please follow the guidelines in ai/skills/aidd-javascript/SKILL.md
 Use the workflow from ai/commands/task.md
 ```
 
@@ -615,7 +636,7 @@ Use the workflow from ai/commands/task.md
 ls ai/
 
 # Verify key files exist
-ls ai/rules/please.mdc
+ls ai/skills/aidd-please/SKILL.md
 ls ai/commands/
 ```
 
@@ -656,6 +677,12 @@ rm .cursor
 ## 📄 License
 
 MIT © [ParallelDrive](https://github.com/paralleldrive)
+
+## 📹 Weekly Training Sessions
+
+Public-access, recorded trainings published to YouTube on a (mostly) weekly basis, covering AIDD Framework workflows and software engineering in general. We meet at 3:00pm PT every Tuesday.
+
+📖 **[Browse all training sessions →](docs/training-videos.md)**
 
 ## 🤝 Contributing
 

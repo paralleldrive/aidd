@@ -84,4 +84,4 @@ const createWithConfig = (configLoader) => {
   });
 };
 
-export { createWithConfig, loadConfigFromEnv, createConfigObject };
+export { createConfigObject, createWithConfig, loadConfigFromEnv };
