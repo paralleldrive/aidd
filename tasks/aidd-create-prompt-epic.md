@@ -37,6 +37,9 @@ The single module responsible for all agent config resolution; portable to Ritew
 - Given none of the above yield a value, `resolveAgentConfig` returns `getAgentConfig('claude')`
 - Given `package.json`, the `"./agent-config"` export resolves to `lib/agent-cli/config.js`
 - Given `getAgentConfig` is called multiple times with the same name, each call should return a distinct object (mutations to one must not affect the other)
+- Given `agent-config` in `aidd-custom/config.yml` is a YAML mapping with a `command` field, `resolveAgentConfig` should use it as the agent config
+- Given `value` is `null` or an array, `resolveAgentConfig` should throw `AgentConfigValidationError`
+- Given `agent-config: ./agent.yml` in `aidd-custom/config.yml` and the file exists in `cwd`, `resolveAgentConfig` should load it regardless of which directory the CLI was invoked from
 
 ---
 
@@ -48,6 +51,8 @@ Programmatic spawn primitive; exported as `aidd/agent` for use by third-party to
 - Given `runAgent({ agentConfig, prompt, cwd })`, spawns `[command, ...args, prompt]` as a no-shell array in `cwd` with `stdio: 'inherit'`
 - Given the spawned process exits non-zero, throws `ScaffoldStepError`
 - Given the agent command does not exist (ENOENT), `runAgent` should reject with `ScaffoldStepError` instead of crashing the process
+- Given `spawn` emits an `error` event with `code === 'E2BIG'` or `code === 'ENOBUFS'`, `runAgent` should reject with a `ScaffoldStepError` whose message says 'Argument list too long for spawn'
+- Given the spawned agent process is terminated by a signal, `runAgent` should reject with a `ScaffoldStepError` whose message includes the signal name rather than 'code null'
 - Given `package.json`, the `"./agent"` export resolves to `lib/agent-cli/runner.js`
 
 ---
