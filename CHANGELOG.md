@@ -8,11 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `npx aidd agent --prompt "<text>"` — new CLI subcommand that delegates a prompt to an AI agent (claude, opencode, or cursor) directly from the terminal
+- `--prompt <text>` flag on `npx aidd create` — after scaffolding completes, runs an AI agent in the new project directory to kick off autonomous development
+- `--agent-config <name|path>` on `create` and `agent` — configures which AI agent to use; accepts a preset name (`claude`, `opencode`, `cursor`), a path to a YAML config file, or falls through the full resolution chain
+- Agent config resolution chain: explicit flag → `AIDD_AGENT_CONFIG` env var → `agent-config` in `aidd-custom/config.yml` → claude default
+- `agent-config` option in `aidd-custom/config.yml` — documented in `docs/aidd-custom.md` and pre-populated as a commented example in the install template
+- `aidd/agent` package export — programmatic access to `runAgent` for third-party tools and scaffold manifests
+- `aidd/agent-config` package export — programmatic access to `getAgentConfig` / `resolveAgentConfig` with full TypeScript types
+- `ScaffoldDestinationError` — dedicated error type (code `SCAFFOLD_DESTINATION_ERROR`) when `npx aidd create` target folder already exists; displays a clear `❌ Destination conflict` message with actionable hint
+- Manifest prompt-step ordering guard — `parseManifest` now throws `ScaffoldValidationError` if a `prompt:` step appears before any `run:` step that invokes the `aidd` CLI, preventing agents from running before the framework is installed
 - `import aidd-custom/AGENTS.md` directive in root `AGENTS.md` — allows projects to override root-level agent directives with project-specific settings
 - `aidd-custom/AGENTS.md` scaffold — created automatically on `npx aidd` install to provide a place for project-specific agent instruction overrides
-- `createAiddCustomAgentsMd` function in `lib/aidd-custom/setup.js` — ensures `aidd-custom/AGENTS.md` is created on first install and never overwritten
 
 ### Changed
+- `--agent` flag on `npx aidd create` renamed to `--agent-config` — accepts a preset name or YAML path; no Commander default so `AIDD_AGENT_CONFIG` and `aidd-custom/config.yml` are respected when the flag is omitted
 - `scaffold-cleanup` CLI subcommand removed — downloaded scaffold files are now cleaned up automatically after every `npx aidd create <url>`; the subcommand is internal only
 
 ### Fixed
