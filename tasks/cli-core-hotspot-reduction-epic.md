@@ -22,6 +22,8 @@ Extract aidd-custom setup functions to a dedicated subfolder to:
 - **Given** type definitions exist in cli-core.d.ts, **should** be extracted to `lib/aidd-custom/setup.d.ts`
 - **Given** cli-core imports these functions, **should** import from new module location
 - **Given** all tests pass before refactoring, **should** pass after refactoring
+- **Given** user runs with --dry-run flag, **should** display status for both aidd-custom/config.yml AND aidd-custom/AGENTS.md
+- **Given** functions were moved to `lib/aidd-custom/setup.js`, **should** update CHANGELOG.md to reference correct module location instead of `lib/cli-core.js`
 
 ### Non-Functional Requirements
 

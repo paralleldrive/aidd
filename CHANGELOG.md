@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `import aidd-custom/AGENTS.md` directive in root `AGENTS.md` — allows projects to override root-level agent directives with project-specific settings
 - `aidd-custom/AGENTS.md` scaffold — created automatically on `npx aidd` install to provide a place for project-specific agent instruction overrides
-- `createAiddCustomAgentsMd` function exported from `lib/cli-core.js` — ensures `aidd-custom/AGENTS.md` is created on first install and never overwritten
+- `createAiddCustomAgentsMd` function in `lib/aidd-custom/setup.js` — ensures `aidd-custom/AGENTS.md` is created on first install and never overwritten
 
 ## [2.6.0] - 2026-03-02
 
