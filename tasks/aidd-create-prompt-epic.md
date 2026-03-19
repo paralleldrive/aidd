@@ -63,6 +63,7 @@ Enforce at parse time that no `prompt:` step appears before an aidd-installing `
 
 **Requirements**:
 - Given a manifest where a `prompt:` step appears before any `run:` step containing the string `"aidd"`, `parseManifest` throws `ScaffoldValidationError` with a message advising that a `run:` step invoking aidd (e.g. `run: npx aidd .`) must precede any `prompt:` step
+- Given a manifest where the only run step mentioning `"aidd"` is `echo aidd` (not an invocation of the aidd CLI), `parseManifest` should throw `ScaffoldValidationError`
 
 ---
 
