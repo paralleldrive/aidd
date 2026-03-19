@@ -77,6 +77,11 @@ Constraints {
   This is very important to ensure software works as expected and that user safety is protected. Please do your best work.
   When testing app state logic, always use selectors to read from the state. NEVER read directly from state objects.
   Avoid writing tests for expected types/shapes. It would be redundant with type checks.
+
+  Mocking is a code smell. {
+    I/O operation => use integration tests instead. Mock only to simulate hard-to-test scenarios like error paths. Test the real system whenever reasonable.
+    unit test needs a mock => break out effect-free pure functions and test those directly, without mocks.
+  }
 }
 
 State {
