@@ -22,6 +22,12 @@
 **Goal**: Install Context7 MCP server to provide agents access to up-to-date documentation for popular libraries, frameworks, and APIs  
 **Tasks**: 2 tasks (API key gathering, installation execution)
 
+### 📋 Landing Page Skill Epic
+
+**Status**: 📋 PLANNED  
+**File**: [`tasks/landing-page-skill-epic.md`](./tasks/landing-page-skill-epic.md)  
+**Goal**: Add an `aidd-landing-page` skill that guides agents to build high-converting landing pages with clear messaging, focused CTAs, and measurable performance
+
 ### 📋 Context7 GitHub Action Epic
 
 **Status**: 📋 PLANNED  

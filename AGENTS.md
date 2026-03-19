@@ -51,3 +51,4 @@ and read `aidd-custom/config.yml` to load configuration into context.
 ## Task Index
 
 fix bug => /aidd-fix
+landing page => /aidd-landing-page
