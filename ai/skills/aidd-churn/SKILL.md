@@ -26,6 +26,7 @@ Constraints {
   Name specific files; explain which signal (LoC, churn, complexity, or density) is driving each score
   For each recommendation, propose a concrete strategy — not generic advice
   Communicate as friendly markdown prose — not raw SudoLang syntax
+  (Cx > 9 | LoC > 400 | density < 35%) => recommend refactor. If current changes caused these thresholds to be exceeded, recommend refactor before merging.
 }
 
 ## Step 1 — Collect hotspot data
