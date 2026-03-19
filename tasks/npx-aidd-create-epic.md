@@ -36,7 +36,9 @@ New Commander subcommand `create [type] <folder>` added to `bin/aidd.js`.
 - Given no `<type>` and no `AIDD_CUSTOM_CREATE_URI`, should use the bundled `ai/scaffolds/next-shadcn` extension
 - Given `AIDD_CUSTOM_CREATE_URI` env var is set and no `<type>` arg, should use the env URI (supports `https://` and `file://` schemes only — `http://` is rejected)
 - Given `--agent <name>` flag, should use that agent CLI for `prompt` steps (default: `claude`)
-- Given scaffold completes successfully, should suggest `npx aidd scaffold-cleanup` to remove downloaded extension files
+- Given scaffold completes successfully with a downloaded (HTTP/HTTPS) source, should automatically cleanup downloaded scaffold files so subsequent runs do not fail with a destination-conflict error
+- Given scaffold fails mid-run (e.g. `runManifest` throws) with a downloaded source, should still cleanup downloaded scaffold files (cleanup in `finally`, not just on success)
+- Given scaffold completes successfully with a named or `file://` source (`downloaded: false`), should NOT delete those files (they are not temporary downloads)
 - Given only a single `https://` or `file://` URI argument with no folder, should print `error: missing required argument 'folder'` and exit 1 (not silently create a directory with a mangled URL path)
 - Given `resolveExtension` rejects for any reason (e.g. user cancels remote code confirmation, network failure), should not create any directory on disk
 
@@ -102,14 +104,16 @@ New Commander subcommand `verify-scaffold [type]` that validates a scaffold conf
 
 ---
 
-## Add `scaffold-cleanup` subcommand
+## `scaffold-cleanup` — internal only (no public CLI subcommand)
 
-New Commander subcommand `scaffold-cleanup [folder]` that removes the `.aidd/` working directory.
+`scaffoldCleanup` is an internal helper called automatically by `runCreate` in a `finally` block. It is **not** exposed as a public CLI subcommand because there is no user-facing way to opt out of auto-cleanup (no `--keep` flag), making a public cleanup command asymmetric and confusing.
 
 **Requirements**:
-- Given `npx aidd scaffold-cleanup <folder>`, should delete `<folder>/.aidd/`
-- Given no `<folder>` arg, should delete `.aidd/` in the current working directory
-- Given `.aidd/` does not exist, should report that there is nothing to clean up
+- Given scaffold files were downloaded, `runCreate` should call `scaffoldCleanup` in a `finally` block so cleanup occurs on both success and failure
+- Given `copyFn` or `ensureDirFn` throws after a successful download, `runCreate` should still call `scaffoldCleanup` (the `try/finally` must cover these operations, not just `runManifest`)
+- Given the `scaffold-cleanup` subcommand was previously registered, should be removed from the CLI — `npx aidd scaffold-cleanup` should exit with an unknown command error
+- Given `scaffoldCleanupFn` throws and `runManifestFn` also threw, should propagate the original manifest error to the caller (not the cleanup error)
+- Given `scaffoldCleanupFn` throws but `runManifestFn` succeeded, `runCreate` should still resolve successfully — cleanup errors are best-effort and must never surface to the caller
 
 ---
 
@@ -152,7 +156,7 @@ End-to-end tests using `scaffold-example` as the test fixture.
 **Requirements**:
 - Given `aidd create scaffold-example test-project`, should create `test-project/` with expected packages installed
 - Given `AIDD_CUSTOM_CREATE_URI` set to a `file://` URI, should use it over the default extension
-- Given `aidd scaffold-cleanup test-project`, should remove `test-project/.aidd/`
+- Given `aidd create scaffold-example test-project`, should not leave `~/.aidd/scaffold/` behind after a successful run (auto-cleanup)
 - Given `--agent claude` flag, should pass the agent name through to `prompt` step invocations
 
 ---
