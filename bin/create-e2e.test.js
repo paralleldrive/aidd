@@ -214,7 +214,7 @@ describe("aidd scaffold-cleanup", () => {
   });
 });
 
-describe("aidd create --agentConfig flag", () => {
+describe("aidd create --agent-config flag", () => {
   let tempDir;
   let echoAgentConfigPath;
 
@@ -252,7 +252,7 @@ describe("aidd create --agentConfig flag", () => {
     // so the prompt step runs `echo hello world` and exits successfully.
     const agentProjectDir = path.join(tempDir, "agent-project");
     const { stdout } = await execAsync(
-      `npx aidd create --agentConfig "${echoAgentConfigPath}" "${scaffoldUri}" "${agentProjectDir}"`,
+      `npx aidd create --agent-config "${echoAgentConfigPath}" "${scaffoldUri}" "${agentProjectDir}"`,
       { timeout: 30_000 },
     );
 
@@ -261,7 +261,7 @@ describe("aidd create --agentConfig flag", () => {
 
     assert({
       given:
-        "--agentConfig <yaml-config> flag with a scaffold containing a prompt step",
+        "--agent-config <yaml-config> flag with a scaffold containing a prompt step",
       should: "run the prompt step using the specified agent config",
       actual: dirExists,
       expected: true,
@@ -269,7 +269,7 @@ describe("aidd create --agentConfig flag", () => {
 
     assert({
       given:
-        "--agentConfig echo-agent.yml with a manifest prompt step containing 'hello world'",
+        "--agent-config echo-agent.yml with a manifest prompt step containing 'hello world'",
       should:
         "include the prompt text in stdout, proving the agent was invoked with it",
       actual: stdout.includes("hello world"),
