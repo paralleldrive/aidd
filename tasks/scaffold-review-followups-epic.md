@@ -24,7 +24,7 @@ After `copyFn` runs, the manifest has been copied into `<folder>`. `runManifest`
 `downloadExtension` in `scaffold-resolver.js` silently removes `~/.aidd/scaffold/` before downloading. Issue #139 explicitly requires a thrown error so users know to run the cleanup tool.
 
 **Requirements**:
-- Given `~/.aidd/scaffold/` already exists when `downloadExtension` is called, should throw `ScaffoldValidationError` with a message that names the path and instructs the user to manually delete it (note: `npx aidd scaffold-cleanup` is no longer a public CLI command — auto-cleanup handles this in normal flows)
+- Given `~/.aidd/scaffold/` already exists when `downloadExtension` is called, should throw `ScaffoldDestinationError` with a message that names the path and instructs the user to manually delete it (note: `npx aidd scaffold-cleanup` is no longer a public CLI command — auto-cleanup handles this in normal flows)
 - Given `~/.aidd/scaffold/` does not exist, should proceed with the download as before
 - Given the unit test suite in `scaffold-resolver.test.js`, should cover both the throw and the pass-through cases using an injectable `existsFn`
 - Given the epic in `tasks/npx-aidd-create-epic.md`, should include this requirement under the issue #139 section
