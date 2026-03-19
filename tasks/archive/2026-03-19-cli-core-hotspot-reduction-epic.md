@@ -1,5 +1,7 @@
 # CLI Core Hotspot Reduction Epic
 
+**Status**: ✅ COMPLETE
+
 ## Context
 
 `lib/cli-core.js` is the 2nd highest hotspot in the codebase (score: 25,674, complexity: 22). PR #161 added aidd-custom setup functionality directly to this file, increasing LOC by 40 lines. This violates architectural best practices for hotspot management.
@@ -56,13 +58,25 @@ Extract aidd-custom setup functions to a dedicated subfolder to:
 
 ## Tasks
 
-- [ ] Write failing test expecting imports from new location
-- [ ] Create `lib/aidd-custom/` directory
-- [ ] Extract functions to `lib/aidd-custom/setup.js`
-- [ ] Extract tests to `lib/aidd-custom/setup.test.js`
-- [ ] Create `lib/aidd-custom/setup.d.ts`
-- [ ] Update imports in `lib/cli-core.js`
-- [ ] Update exports/types in `lib/cli-core.d.ts`
-- [ ] Verify all tests pass
-- [ ] Run lint and type check
-- [ ] Commit changes
+- [x] Write failing test expecting imports from new location
+- [x] Create `lib/aidd-custom/` directory
+- [x] Extract functions to `lib/aidd-custom/setup.js`
+- [x] Extract tests to `lib/aidd-custom/setup.test.js`
+- [x] Create `lib/aidd-custom/setup.d.ts`
+- [x] Update imports in `lib/cli-core.js`
+- [x] Update exports/types in `lib/cli-core.d.ts`
+- [x] Extract agent setup orchestration to `lib/agents-setup.js`
+- [x] Update test patterns to use createTempDir
+- [x] Add dry-run output for AGENTS.md
+- [x] Fix CHANGELOG module references
+- [x] Verify all tests pass (402 passing)
+- [x] Run lint and type check (all passing)
+- [x] Commit changes (all pushed)
+
+## Results
+
+- cli-core.js: 388 → 307 lines (-21%)
+- cli-core.js complexity: 23 → 16 (-30%)
+- cli-core.test.js: 287 → 101 lines (-65%)
+- New modules: lib/aidd-custom/setup.js, lib/agents-setup.js
+- All 402 tests passing
