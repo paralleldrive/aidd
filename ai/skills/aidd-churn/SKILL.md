@@ -26,7 +26,7 @@ Constraints {
   Name specific files; explain which signal (LoC, churn, complexity, or density) is driving each score
   For each recommendation, propose a concrete strategy — not generic advice
   Communicate as friendly markdown prose — not raw SudoLang syntax
-  (Cx > 9 | LoC > 400 | density < 35%) => if current changes caused this, analyze whether both LoC and Cx can be reduced together — show your work: 🎯 restate |> 💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond. Both improve => recommend refactor before merging; otherwise report findings.
+  (Cx > 9 | LoC > 400 | density < 35%) => if current changes caused this, analyze refactor paths — show your work: 🎯 restate |> 💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond. If a refactor path drops the composite score (LoC × churn × Cx) by >15%, recommend it before merging; otherwise report findings.
 }
 
 ## Step 1 — Collect hotspot data
