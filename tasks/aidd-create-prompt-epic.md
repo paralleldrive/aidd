@@ -41,6 +41,7 @@ The single module responsible for all agent config resolution; portable to Ritew
 - Given `value` is `null` or an array, `resolveAgentConfig` should throw `AgentConfigValidationError`
 - Given `agent-config: ./agent.yml` in `aidd-custom/config.yml` and the file exists in `cwd`, `resolveAgentConfig` should load it regardless of which directory the CLI was invoked from
 - Given `agent-config` in `aidd-custom/config.yml` contains an invalid value (typo, bad YAML path, missing command), `resolveAgentConfig` should warn to stderr and fall through to the claude default rather than silently ignoring the error
+- Given `agent-config` in `aidd-custom/config.yml` references a missing YAML file, `resolveAgentConfig` should warn with a message specific to the read failure (not a generic 'failed to read' message)
 
 ---
 
