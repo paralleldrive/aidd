@@ -41,6 +41,13 @@ steps:
 - Any step is not a plain object (e.g. a bare string or `null`)
 - Any step has no recognized keys (`run` or `prompt`)
 - Any step has both `run` and `prompt` keys (ambiguous — use two separate steps instead)
+- Any `prompt:` step appears before a `run:` step that invokes the `aidd` CLI
+
+**The `aidd` ordering rule:** every manifest that contains a `prompt:` step must first install the AIDD framework with a `run:` step such as `run: npx aidd .`. This ensures the AI agent has access to AIDD's prompts and skills when it runs. Valid invocation forms include `npx aidd`, `bunx aidd`, `yarn dlx aidd`, `pnpm dlx aidd`, and `npx -y aidd`.
+
+    steps:
+      - run: npx aidd .      # ← required before any prompt: step
+      - prompt: Set up the project structure
 
 Run `npx aidd verify-scaffold <name-or-uri>` at any time to check your manifest without executing it:
 
@@ -144,3 +151,38 @@ npx aidd create file:///path/to/my-scaffold my-test-project
 ### Downloaded scaffold files
 
 When `npx aidd create` downloads a scaffold from a remote URL (HTTP/HTTPS), the temporary files in `~/.aidd/scaffold/` are removed automatically after the scaffold finishes — whether it succeeds or fails. There is no manual cleanup step required.
+
+---
+
+## Using named scaffolds (no local clone required)
+
+The built-in scaffolds (`next-shadcn`, `scaffold-example`) are bundled inside the `aidd` npm package. When you run `npx aidd create my-app` or `npx aidd create next-shadcn my-app`, the CLI:
+
+1. Locates the scaffold in the installed package (`<package>/ai/scaffolds/next-shadcn/`)
+2. Copies the scaffold files into your new project directory
+3. Executes the manifest steps inside that directory
+
+No local clone of the `paralleldrive/aidd` repository is needed. The scaffold is fetched and run entirely through npm.
+
+### Using `next-shadcn` (the default)
+
+```bash
+# Uses next-shadcn by default
+npx aidd create my-app
+
+# Equivalent — explicit scaffold name
+npx aidd create next-shadcn my-app
+
+# After scaffolding, kick off an agent in the new project automatically
+npx aidd create my-app --prompt "Add authentication using NextAuth.js"
+```
+
+### Building a custom scaffold based on next-shadcn
+
+Reference a GitHub release to create a versioned, shareable scaffold:
+
+```bash
+npx aidd create https://github.com/your-org/my-next-scaffold my-app
+```
+
+See _Distributing via GitHub releases_ above for packaging instructions.

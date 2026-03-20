@@ -1,2 +1,20 @@
 steps:
-  - prompt: "This scaffold is a placeholder. Full next-shadcn scaffolding is coming soon. For now, please manually set up your Next.js project using: npx create-next-app@latest"
+  # Install the AIDD framework first — agents need it to be present before prompt: steps run.
+  - run: npx aidd .
+  - prompt: >
+      Bootstrap a Next.js 15 project with the following stack:
+      - App Router, TypeScript, Tailwind CSS v4
+      - shadcn/ui (run `npx shadcn@latest init` with default settings)
+      - Vitest for unit tests, Playwright for e2e tests
+      - error-causes for typed error handling
+
+      Steps:
+      1. Run `npx create-next-app@latest . --typescript --tailwind --app --no-src-dir --import-alias "@/*"` to scaffold the base project.
+      2. Initialise shadcn/ui with `npx shadcn@latest init -d`.
+      3. Add a sample `Button` component: `npx shadcn@latest add button`.
+      4. Install dev dependencies: `npm install --save-dev vitest @vitejs/plugin-react @playwright/test error-causes`.
+      5. Add `"test": "vitest run"` and `"test:e2e": "playwright test"` scripts to package.json.
+      6. Create a minimal `vitest.config.ts` and a smoke test in `__tests__/page.test.ts` that imports the home page.
+      7. Update `app/page.tsx` to use the shadcn Button to confirm the integration works.
+
+      Confirm the project builds with `npm run build` and unit tests pass with `npm test`.

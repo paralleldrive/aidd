@@ -23,6 +23,13 @@ Or simply (next-shadcn is the default):
 npx aidd create my-app
 ```
 
-## Status
+## How it works
 
-This scaffold is a stub. Full implementation is planned for a future release.
+No local clone of the aidd repository is required. Named scaffolds ship inside
+the `aidd` npm package itself, so `npx aidd create my-app` fetches and runs this
+scaffold entirely through npm — the scaffold files are copied from the installed
+package into the new project folder before any steps run.
+
+The manifest follows the required ordering rule: the first step runs `npx aidd .`
+to install the AIDD framework in the new project, ensuring it is available before
+the AI agent `prompt:` step executes.
