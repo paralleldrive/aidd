@@ -1,118 +1,30 @@
-# skills
+## Skills Index
 
-This index provides an overview of the contents in this directory.
-
-## Subdirectories
-
-### 📁 aidd-agent-orchestrator/
-
-See [`aidd-agent-orchestrator/index.md`](./aidd-agent-orchestrator/index.md) for contents.
-
-### 📁 aidd-autodux/
-
-See [`aidd-autodux/index.md`](./aidd-autodux/index.md) for contents.
-
-### 📁 aidd-churn/
-
-See [`aidd-churn/index.md`](./aidd-churn/index.md) for contents.
-
-### 📁 aidd-ecs/
-
-See [`aidd-ecs/index.md`](./aidd-ecs/index.md) for contents.
-
-### 📁 aidd-error-causes/
-
-See [`aidd-error-causes/index.md`](./aidd-error-causes/index.md) for contents.
-
-### 📁 aidd-fix/
-
-See [`aidd-fix/index.md`](./aidd-fix/index.md) for contents.
-
-### 📁 aidd-functional-requirements/
-
-See [`aidd-functional-requirements/index.md`](./aidd-functional-requirements/index.md) for contents.
-
-### 📁 aidd-javascript/
-
-See [`aidd-javascript/index.md`](./aidd-javascript/index.md) for contents.
-
-### 📁 aidd-javascript-io-effects/
-
-See [`aidd-javascript-io-effects/index.md`](./aidd-javascript-io-effects/index.md) for contents.
-
-### 📁 aidd-jwt-security/
-
-See [`aidd-jwt-security/index.md`](./aidd-jwt-security/index.md) for contents.
-
-### 📁 aidd-layout/
-
-See [`aidd-layout/index.md`](./aidd-layout/index.md) for contents.
-
-### 📁 aidd-lit/
-
-See [`aidd-lit/index.md`](./aidd-lit/index.md) for contents.
-
-### 📁 aidd-log/
-
-See [`aidd-log/index.md`](./aidd-log/index.md) for contents.
-
-### 📁 aidd-namespace/
-
-See [`aidd-namespace/index.md`](./aidd-namespace/index.md) for contents.
-
-### 📁 aidd-observe/
-
-See [`aidd-observe/index.md`](./aidd-observe/index.md) for contents.
-
-### 📁 aidd-please/
-
-See [`aidd-please/index.md`](./aidd-please/index.md) for contents.
-
-### 📁 aidd-product-manager/
-
-See [`aidd-product-manager/index.md`](./aidd-product-manager/index.md) for contents.
-
-### 📁 aidd-react/
-
-See [`aidd-react/index.md`](./aidd-react/index.md) for contents.
-
-### 📁 aidd-review/
-
-See [`aidd-review/index.md`](./aidd-review/index.md) for contents.
-
-### 📁 aidd-service/
-
-See [`aidd-service/index.md`](./aidd-service/index.md) for contents.
-
-### 📁 aidd-stack/
-
-See [`aidd-stack/index.md`](./aidd-stack/index.md) for contents.
-
-### 📁 aidd-structure/
-
-See [`aidd-structure/index.md`](./aidd-structure/index.md) for contents.
-
-### 📁 aidd-sudolang-syntax/
-
-See [`aidd-sudolang-syntax/index.md`](./aidd-sudolang-syntax/index.md) for contents.
-
-### 📁 aidd-task-creator/
-
-See [`aidd-task-creator/index.md`](./aidd-task-creator/index.md) for contents.
-
-### 📁 aidd-tdd/
-
-See [`aidd-tdd/index.md`](./aidd-tdd/index.md) for contents.
-
-### 📁 aidd-timing-safe-compare/
-
-See [`aidd-timing-safe-compare/index.md`](./aidd-timing-safe-compare/index.md) for contents.
-
-### 📁 aidd-ui/
-
-See [`aidd-ui/index.md`](./aidd-ui/index.md) for contents.
-
-### 📁 aidd-user-testing/
-
-See [`aidd-user-testing/index.md`](./aidd-user-testing/index.md) for contents.
-
+- aidd-agent-orchestrator - Agent orchestrator that coordinates specialized agents for software development tasks. Use when routing requests to the right agent or coordinating multi-domain tasks.
+- aidd-autodux - Create and transpile Autodux Redux state management dux objects. Use when building Redux state management, defining reducers, action creators, or selectors.
+- aidd-churn - Hotspot analysis: run npx aidd churn, interpret the ranked results, and recommend specific files to review or refactor with concrete strategies. Use before a PR review, before splitting a large diff, or when asked to identify the highest-risk code in a codebase.
+- aidd-ecs - Enforces @adobe/data/ecs best practices. Use this whenever @adobe/data/ecs is imported, when creating or modifying Database.Plugin definitions, or when working with ECS components, resources, transactions, actions, systems, or services.
+- aidd-error-causes - Use the error-causes library for structured error handling in JavaScript/TypeScript. Use when throwing errors, catching errors, defining error types, or implementing error routing.
+- aidd-fix - Fix a bug or implement review feedback following the AIDD fix process. Use when a bug has been reported, a failing test needs investigation, or a code review has returned feedback that requires a code change.
+- aidd-functional-requirements - Write functional requirements for a user story. Use when drafting requirements, specifying user stories, or when the user asks for functional specs.
+- aidd-javascript - JavaScript and TypeScript best practices and guidance. Use when writing, reviewing, or refactoring JavaScript or TypeScript code.
+- aidd-javascript-io-effects - Isolate network I/O and side effects using the saga pattern with call and put. Use when making network requests, invoking side effects, or implementing Redux sagas.
+- aidd-jwt-security - JWT security review patterns. Use when reviewing or implementing authentication code, token handling, session management, or when JWT is mentioned.
+- aidd-layout - Enforces UI component layout and composition patterns. Use when designing layouts, creating UI components, spacing, gaps, or when the user asks about component hierarchy, terminal vs layout components, or re-render efficiency.
+- aidd-lit - Enforces Lit element authoring best practices. Use when creating Lit elements, binding elements, presentations, DatabaseElement, useObservableValues, or when the user asks about Lit UI patterns, reactive binding, or action callbacks.
+- aidd-log - Document completed epics in a structured changelog with emoji categorization. Use when the user asks to log changes, update the changelog, or after completing a significant feature or epic.
+- aidd-namespace - Ensures types and related functions are authored and consumed in a modular, discoverable, tree-shakeable pattern. Use when creating types, refactoring type folders, defining schemas, importing types, or when the user mentions type namespaces, constants, or Schema.ToType.
+- aidd-observe - Enforces Observe pattern best practices from @adobe/data/observe. Use when working with Observe, observables, reactive data flow, service Observe properties, or when the user asks about Observe.withMap, Observe.withFilter, Observe.fromConstant, Observe.fromProperties, or similar.
+- aidd-please - General AI assistant for software development projects. Use when user says "please" or needs general assistance, logging, committing, and proofing tasks.
+- aidd-product-manager - Plan features, user stories, user journeys, and conduct product discovery. Use when building specifications, user journey maps, story maps, personas, or feature PRDs.
+- aidd-react - Enforces React component authoring best practices. Use when creating React components, binding components, presentations, useObservableValues, or when the user asks about React UI patterns, reactive binding, or action callbacks.
+- aidd-review - Conduct a thorough code review focusing on code quality, best practices, security, test coverage, and adherence to project standards and functional requirements. Use when reviewing code, pull requests, or completed epics.
+- aidd-service - Enforces asynchronous data service authoring best practices. Use when creating front-end or back-end services, service interfaces, Observe patterns, AsyncDataService, or when the user asks about service layer, data flow, unidirectional UI, or action/observable design.
+- aidd-stack - Tech stack guidance for NextJS + React/Redux + Shadcn UI features. Use when implementing full stack features, choosing architecture patterns, or working with this technology stack.
+- aidd-structure - Enforces source code structuring and interdependency best practices. Use when creating folders, moving files, adding imports, or when the user asks about architecture, layering, or module dependencies.
+- aidd-sudolang-syntax - Quick cheat sheet for SudoLang syntax. Use when writing or reading SudoLang pseudocode, interfaces, constraints, or function definitions.
+- aidd-task-creator - Systematic task and epic planning and execution. Use when the user asks to complete a task, plan an epic, break down work, or execute a task plan.
+- aidd-tdd - Systematic test-driven development with proper test isolation. Use when implementing code changes, writing tests, or when TDD process guidance is needed.
+- aidd-timing-safe-compare - Security rule for timing-safe secret comparison. Use SHA3-256 hashing instead of timing-safe compare functions. Use when reviewing or implementing secret comparisons, token validation, CSRF tokens, or API key checks.
+- aidd-ui - Design beautiful and friendly user interfaces and experiences. Use when building UI components, styling, animations, accessibility, responsive design, or working with design systems.
+- aidd-user-testing - Generate human and AI agent test scripts from user journey specifications. Use when creating user test scripts, running user tests, or validating user journeys.
