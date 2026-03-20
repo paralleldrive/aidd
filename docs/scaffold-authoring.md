@@ -126,16 +126,9 @@ npx aidd create https://github.com/your-org/my-scaffold my-project
 
 ---
 
-## Distributing via GitHub releases (recommended) vs git clone
+## Distributing via GitHub releases
 
-| | GitHub release tarball | git clone |
-|---|---|---|
-| **Versioned** | Yes — pinned to a tag | No — always HEAD |
-| **Reproducible** | Yes | No |
-| **Download size** | Small — source only | Large — includes git history |
-| **No git required on consumer** | Yes (HTTP download) | No (requires git) |
-
-The AIDD resolver will download and extract the release tarball rather than cloning the repository, giving users a fast, versioned, reproducible scaffold install.
+The AIDD resolver downloads a release tarball from GitHub rather than cloning the repository. This gives consumers a fast, versioned, reproducible install with no git tooling required. Git clone is not a supported consumer path — `npx aidd create` only accepts HTTP/HTTPS tarball URLs, named scaffolds bundled in the package, and `file://` URIs for local testing.
 
 ---
 

@@ -96,6 +96,16 @@ Standalone subcommand registered via a single `registerAgentCommand(program)` im
 
 ---
 
+## Named scaffold code path — no local clone required
+
+All branches of `npx aidd create` resolve a source path, copy it into the project folder via `fs.copy`, then run the manifest — there is no separate code path for local clones.
+
+**Requirements**:
+- Given `npx aidd create my-project` run without a local clone of the aidd repository, the default named scaffold resolves, copies, and executes correctly
+- Given `npx aidd create next-shadcn my-project`, the scaffold files are copied from the npm-installed package into the project folder using the same fs.copy mechanism as URL scaffolds
+
+---
+
 ## `create` — add `--prompt` and wire agent config
 
 Rename `--agent` → `--agentConfig` on `create`; pass the flag value through to `runManifest`; after manifest completes re-resolve from the new project dir for the post-scaffold `--prompt` step.
