@@ -33,6 +33,9 @@ steps:
   - prompt: Set up a basic project structure with src/ and tests/
 ```
 
+> **Prefer `run:` over `prompt:` for CLI operations.**
+> Anything expressible as a deterministic shell command (package installs, `npx` scaffolding tools, `npm pkg set`, file generation) MUST use `run:`. Reserve `prompt:` for work that genuinely requires agent reasoning — creative decisions, wiring together components, writing app-specific logic.
+
 ### Validation rules
 
 `npx aidd create` validates the manifest before executing any steps. Your manifest will be rejected with a clear error if:

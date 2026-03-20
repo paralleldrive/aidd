@@ -66,6 +66,7 @@ Programmatic spawn primitive; exported as `aidd/agent` for use by third-party to
 Enforce at parse time that no `prompt:` step appears before an aidd-installing `run:` step.
 
 **Requirements**:
+- Given a scaffold manifest, deterministic CLI operations should use `run:` steps rather than delegating to an agent `prompt:` step
 - Given a manifest where a `prompt:` step appears before any `run:` step containing the string `"aidd"`, `parseManifest` throws `ScaffoldValidationError` with a message advising that a `run:` step invoking aidd (e.g. `run: npx aidd .`) must precede any `prompt:` step
 - Given a manifest where the only run step mentioning `"aidd"` is `echo aidd` (not an invocation of the aidd CLI), `parseManifest` should throw `ScaffoldValidationError`
 - Given `run: npx -y aidd .` or `run: npx --yes aidd .` before a prompt step, `parseManifest` should accept the manifest
