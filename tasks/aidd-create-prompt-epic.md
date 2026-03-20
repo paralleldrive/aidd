@@ -40,6 +40,7 @@ The single module responsible for all agent config resolution; portable to Ritew
 - Given `agent-config` in `aidd-custom/config.yml` is a YAML mapping with a `command` field, `resolveAgentConfig` should use it as the agent config
 - Given `value` is `null` or an array, `resolveAgentConfig` should throw `AgentConfigValidationError`
 - Given `agent-config: ./agent.yml` in `aidd-custom/config.yml` and the file exists in `cwd`, `resolveAgentConfig` should load it regardless of which directory the CLI was invoked from
+- Given `agent-config` in `aidd-custom/config.yml` contains an invalid value (typo, bad YAML path, missing command), `resolveAgentConfig` should warn to stderr and fall through to the claude default rather than silently ignoring the error
 
 ---
 
@@ -105,6 +106,7 @@ Rename `--agent` → `--agentConfig` on `create`; pass the flag value through to
 - Given `AIDD_AGENT_CONFIG=opencode` is set and `--agentConfig` is not passed, `npx aidd create` should use opencode for prompt steps
 - Given `agent-config: opencode` in `aidd-custom/config.yml` and `--agentConfig` is not passed, `npx aidd create` should use opencode for prompt steps
 - Given `runCreate`, should not accept `ensureDirFn`, `copyFn`, `existsFn`, `resolveAgentConfigFn`, or `runAgentFn` as parameters; integration tests use real temp directories and a minimal `steps: []` scaffold fixture
+- Given the failing scaffold fixture used in tests, the run step should exit non-zero on all platforms including Windows
 
 ---
 
