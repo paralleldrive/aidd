@@ -10,7 +10,7 @@ This index provides an overview of the contents in this directory.
 
 *No description available*
 
-### Type namespace pattern
+### Should we use single file or namespace pattern?
 
 **File:** `SKILL.md`
 

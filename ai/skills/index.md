@@ -16,6 +16,10 @@ See [`aidd-autodux/index.md`](./aidd-autodux/index.md) for contents.
 
 See [`aidd-churn/index.md`](./aidd-churn/index.md) for contents.
 
+### 📁 aidd-data/
+
+See [`aidd-data/index.md`](./aidd-data/index.md) for contents.
+
 ### 📁 aidd-ecs/
 
 See [`aidd-ecs/index.md`](./aidd-ecs/index.md) for contents.
