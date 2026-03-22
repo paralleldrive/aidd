@@ -1,9 +1,17 @@
-# aidd-log — Changelog Reference
+# aidd-log
 
-`/aidd-log` documents completed epics in a structured changelog using emoji
-categorization, focusing on significant user-facing accomplishments.
+Documents completed epics in a structured changelog with emoji categorization.
 
-## Format
+## Why
+
+A consistent changelog format makes it easy to scan project history for
+significant user-facing accomplishments. Logging at the epic level keeps the
+signal-to-noise ratio high.
+
+## Usage
+
+Invoke `/aidd-log` after completing a significant feature or epic. Entries
+follow this format:
 
 ```markdown
 ## 2026-03-18
@@ -11,36 +19,10 @@ categorization, focusing on significant user-facing accomplishments.
 - :rocket: - Epic Name - Brief description
 ```
 
-## Emoji categories
+Log only completed epics — not config changes, file moves, minor fixes, or
+internal refactoring. Descriptions stay under 50 characters.
 
-| Emoji | Type |
-| --- | --- |
-| :rocket: | New feature |
-| :bug: | Bug fix |
-| :memo: | Documentation |
-| :arrows_counterclockwise: | Refactor |
-| :package: | Dependency update |
-| :art: | Design |
-| :iphone: | UI/UX |
-| :bar_chart: | Analytics |
-| :lock: | Security |
-
-## What to log
-
-**Log only completed epics** — major feature releases, user-impacting changes,
-significant architecture decisions.
-
-**Do not log**: config changes, file moves, minor bug fixes, documentation
-updates, dependency updates, internal refactoring, test changes, or meta-work.
-
-## Constraints
-
-- Reverse chronological order (most recent at top)
-- Descriptions under 50 characters
-- Focus on epic-level accomplishments, not implementation details
-- Omit the word "epic" from descriptions
-
-## When to use `/aidd-log`
+## When to use
 
 - After completing a significant feature or epic
 - When the user asks to log changes or update the changelog

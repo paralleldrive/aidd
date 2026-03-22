@@ -1,54 +1,22 @@
-# aidd-service — Data Service Authoring Reference
+# aidd-service
 
-`/aidd-service` enforces best practices for asynchronous data services, covering
-the front-end / back-end split, service interfaces, folder structure, and
-unidirectional data flow.
+Enforces best practices for asynchronous data services with unidirectional data
+flow: data down via `Observe`, actions up as void calls.
 
-## Front-end vs back-end services
+## Why
 
-| Type | Returns | Called by |
-| --- | --- | --- |
-| **Front-end** | `Observe<Data>`, void actions, sub-Services | UI components |
-| **Back-end** | `Promise<Data>`, `AsyncGenerator<Data>` | Front-end services only |
+Separating service interfaces from implementations makes services portable,
+inspectable, and swappable across process boundaries. The unidirectional
+pattern keeps data flow predictable.
 
-UI components follow a unidirectional path: **data down** via `Observe`, **actions
-up** as void calls.
+## Usage
 
-## Front-end service interface
+Invoke `/aidd-service` when creating data services. Front-end services return
+`Observe<Data>` and void actions; back-end services return `Promise<Data>` or
+`AsyncGenerator<Data>`. Each function lives in its own file. Interface files
+contain types only — no implementation. No classes.
 
-A front-end service interface may contain:
-
-- `Observe<Data>` — observable properties or factories
-- Sub-Services — nested service interfaces
-- Action functions — zero or more Data arguments, **return void only**
-- Factory functions — create observables or sub-Services
-
-Validate with `Assert<AsyncDataService.IsValid<ServiceInterface>>`.
-
-## Folder structure
-
-```
-services/<name>-service/
-  <name>-service.ts              # Interface: types only, no implementation
-  <function-name>.ts             # One file per function
-  <impl>-<name>-service.ts       # Implementation factory
-  public.ts                      # Re-exports create and helpers
-```
-
-- Each function lives in its own file — not a single `-service-functions.ts`
-- Interface file: types and optional JSON schemas only
-- Implementation: factory function or static plain object — **no classes**
-- Namespace: `export * as ServiceName from './public.js'`
-
-## Benefits
-
-- **Unidirectional flow** — data down via actions, data up via Observe
-- **Async isolation** — view and service decoupled
-- **Inspectability** — action/observable data is serializable
-- **Portability** — implementation swappable across process boundaries
-- **Lazy loading** — `AsyncDataService.createLazy` for deferred initialization
-
-## When to use `/aidd-service`
+## When to use
 
 - Creating front-end or back-end data services
 - Defining service interfaces or implementations

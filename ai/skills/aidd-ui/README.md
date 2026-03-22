@@ -1,28 +1,22 @@
-# aidd-ui — UI/UX Design Reference
+# aidd-ui
 
-`/aidd-ui` guides the design and implementation of beautiful, friendly user
-interfaces with attention to aesthetics, accessibility, motion design, and
-responsive layouts.
+Guides the design and implementation of beautiful, friendly user interfaces
+with attention to aesthetics, accessibility, and responsive layouts.
 
-## Skills
+## Why
 
-- CSS, HTML, JavaScript, React
-- Animation and motion design
-- Graphic design and UI/UX design
-- Accessibility
-- Responsive design
-- Design systems
+Good UI is intuitive, accessible, and visually appealing. This skill ensures
+interfaces use the existing design system and apply thoughtful motion design
+for a polished user experience.
 
-## Approach
+## Usage
 
-- Use the existing project design system and Storybook components
-- Focus on intuitive, accessible, and visually appealing interfaces
-- Apply subtle but delightful motion design for UX
-- Prioritize user experience and ease of use
+Invoke `/aidd-ui` when building UI components or making design decisions. The
+skill covers CSS, HTML, React, animation, accessibility, responsive design,
+and design systems. It prioritizes using existing project Storybook components.
 
-## When to use `/aidd-ui`
+## When to use
 
 - Building UI components or styling
 - Working with animations, motion design, or transitions
 - Designing for accessibility or responsive layouts
-- Making UI/UX design decisions

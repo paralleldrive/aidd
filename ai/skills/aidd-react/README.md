@@ -1,60 +1,24 @@
-# aidd-react — React Component Authoring Reference
+# aidd-react
 
-`/aidd-react` enforces React component authoring best practices using the
-binding component / presentation split, `useObservableValues` from
-`@adobe/data-react`, and a single-context architecture.
+Enforces React component authoring best practices using the binding component /
+presentation split and `useObservableValues` from `@adobe/data-react`.
 
-## useDatabase — single context
+## Why
 
-Binding components **must** call `useDatabase` to obtain the main service context.
-Do not access any other React context — additional contexts create a context
-waterfall and hurt performance. All services and state are reachable from the
-database (`db.services`, `db.observe`, `db.transactions`).
+Separating data binding from pure rendering keeps components small, testable,
+and predictable. Binding components handle reactive subscriptions;
+presentations are pure functions that receive data and action callbacks as
+props.
 
-## Binding component vs presentation
+## Usage
 
-| Concern | Binding component | Presentation |
-| --- | --- | --- |
-| Type | React component with hooks | Pure function (no hooks) |
-| Receives | Observed values via `useObservableValues` | Data and action callbacks as props |
-| Returns | Delegates to presentation | JSX |
-| Logic | Minimal — reactive binding only | None — pure rendering |
+Invoke `/aidd-react` when creating or modifying React components. Binding
+components call `useDatabase` for the single service context and use one
+`useObservableValues` call. Presentations export only `render` and are the
+unit-tested layer. Action callbacks use `verbNoun` semantics, not
+`onClick`/`onToggle` style.
 
-## useObservableValues
-
-Most binding components use a **single** `useObservableValues` call. Observe only
-the minimal values required for rendering. Use `Observe.withDefault` for
-slow-resolving values.
-
-```tsx
-function Counter() {
-  const db = useDatabase(counterPlugin);
-  const values = useObservableValues(() => ({
-    count: db.observe.resources.count,
-  }));
-  if (!values) return null;
-  return presentation.render({ ...values, increment: db.transactions.increment });
-}
-```
-
-## Props from parent
-
-Only pass props when needed to identify which database entity to bind to (e.g.,
-`entity` for table rows). Single-instance components observe values directly.
-
-## Action callbacks
-
-- Semantics are `verbNoun` — not `onClick`/`onToggle` style
-- Pass function references directly when the signature matches
-- Wrap only when you need to supply arguments
-
-## Key rules
-
-- Presentation files export **only** `render` (and localization bundles)
-- Unit test presentations (`*-presentation.test.tsx`), not binding components
-- Keep binding components extremely small — no business logic
-
-## When to use `/aidd-react`
+## When to use
 
 - Creating or modifying React components
 - Working with binding components, presentations, or `useObservableValues`
