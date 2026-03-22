@@ -5,13 +5,20 @@
 
 ## Overview
 
-OWASP Top 10 is a useful backstop but it is too coarse to catch **policy-level** failures that keep showing up in real systems (e.g. optional global auth off, transport-inconsistent gates, secrets in URLs, implicit automation targets). Reviewers need **explicit, project-agnostic rules** that force a **first-pass** search for those patterns. This epic adds a dedicated **AIDD security review** skill with a **non-optional checklist**, wires it into **`aidd-review`**, and documents **how “no shared secrets between our services” interacts with CI and third parties** so agents do not treat it as absolutist fiction.
+OWASP Top 10 is a useful backstop but it is too coarse to catch **policy-level** failures that keep showing up in real systems (optional global auth off, transport-inconsistent gates, secrets in URLs, implicit automation targets). Reviewers need **explicit, project-agnostic rules** that force a **first-pass** search for those patterns. This epic adds a dedicated **AIDD security review** skill with a **non-optional checklist**, wires it into **`aidd-review`**, and spells out how **first-party** service trust, **CI**, and **third-party** boundaries fit **least privilege** and **layered** controls—not as a waiver for weak defaults, but as **scoped exceptions** with rotation, isolation, and documentation.
+
+## Principles (anchor the new skill and every review pass)
+
+- **Principle of least knowledge** — components should not receive or retain more about peers’ secrets than they need to verify or authorize; prefer verify-with-public-material where feasible.
+- **Principle of least privilege** — every principal (human, service, integration, CI job) gets the **minimum** access, duration, and scope required; document any broader access as **time-bounded** and **revocable**.
+- **Security in layers** — no single control (TLS, network zone, “it’s localhost”) substitutes for **authn/authz** on the control plane; alternate transports and side-channels get the **same** bar unless explicitly classified and justified.
+- **Prefer the safer option** — if a mechanism is **sometimes** dangerous and a **strictly better** pattern exists for the context (passkeys vs passwords, asymmetric vs duplicated symmetric keys, explicit binding vs implicit defaults), the review should **default to the better option** and treat the weaker one as **FAIL** unless the epic/task documents an approved exception.
 
 ---
 
 ## Author the explicit security review skill
 
-Create `.cursor/skills/aidd-security-review/SKILL.md` (and mirror to `ai/skills/` if required by repo conventions for sync) containing a **numbered or structured checklist** the reviewer must walk on every security-relevant review. The skill must **not** replace OWASP but **must** run **before** or **in addition to** OWASP, and must require **explicit PASS/FAIL (or N/A + rationale)** per item in the written review output.
+Create `.cursor/skills/aidd-security-review/SKILL.md` (and mirror to `ai/skills/` if required by repo conventions for sync) containing a **numbered or structured checklist** the reviewer must walk on every security-relevant review. Open the skill with the **Principles** block from this epic (least knowledge, least privilege, security in layers, prefer the safer option). The skill must **not** replace OWASP but **must** run **before** or **in addition to** OWASP, and must require **explicit PASS/FAIL (or N/A + rationale)** per item in the written review output.
 
 **Requirements**:
 
