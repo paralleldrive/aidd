@@ -1,24 +1,24 @@
 # AIDD Review Explicit Security Skill Epic
 
 **Status**: 📋 PLANNED
-**Goal**: Mandatory checklist skill for `/aidd-review` so structural auth/secret failures surface on first pass—not only via OWASP Top 10.
+**Goal**: **Require** a checklist skill on `/aidd-review` so structural auth/secret bugs show up on first pass—OWASP alone is not enough.
 
 ## Overview
 
-OWASP is too coarse for **policy** bugs (auth off by default, transport mismatch, secrets in URLs, implicit automation targets). This epic adds **`aidd-security-review`** (non-optional checklist + **PASS / FAIL / N/A+rationale** per item), wires it into **`aidd-review`**, and defines how **first-party**, **CI**, and **third-party** fit **least privilege** and **layered** controls: **scoped exceptions** only, with rotation, isolation, and docs—never weak defaults by default.
+OWASP misses **policy** failures—e.g. **auth off by default**, **HTTP vs WebSocket auth split**, …. This epic ships **`aidd-security-review`**: a **required** checklist; each line gets **PASS / FAIL / N/A + rationale** in the review. Wire it into **`aidd-review`**. Spell out how **first-party**, **CI**, and **third-party** map to **least privilege** and **layers**: **scoped exceptions** only—rotate, isolate, document—no silent weak defaults.
 
 ## Principles (copy into the new skill verbatim)
 
-- **Least knowledge** — verify with **public** material where feasible; minimize what each component holds about peers’ secrets.
-- **Least privilege** — minimum access, duration, scope per human, service, integration, CI job; broader access must be **time-bounded**, **revocable**, **documented**.
-- **Security in layers** — TLS, network zone, localhost **do not** replace control-plane **authn/authz**; WebSocket, SSE, gRPC, IPC match HTTP for the **same** resource class unless **classified and justified**.
-- **Prefer the safer option** — if a pattern is only *sometimes* safe and a better one exists (passkeys vs passwords, asymmetric vs duplicated symmetric keys, explicit vs implicit automation binding), **FAIL** the weaker choice unless the **epic/task** records an approved exception.
+- **Least knowledge** — Prefer verify-with-**public** material. Hold less of peers’ secrets.
+- **Least privilege** — Minimize access, duration, scope for every human, service, integration, CI job. Widen only with **time bounds**, **revocation**, **docs**.
+- **Security in layers** — TLS, zone, localhost **≠** control-plane **authn/authz**. Match **WS / SSE / gRPC / IPC** to HTTP for the **same** capability unless you **classify and justify** a difference.
+- **Prefer the safer option** — **FAIL** the weaker pattern when a better one fits (passkeys over passwords, asymmetric over duplicated symmetric keys, explicit binding over implicit defaults). **Epic/task** must record any approved exception.
 
 ---
 
 ## Author the explicit security review skill
 
-Add `.cursor/skills/aidd-security-review/SKILL.md` (mirror to `ai/skills/` if repo requires). Lead with the **Principles** block above, then a **checklist** for every security-relevant review. Run it **with** OWASP (not instead). Each checklist item: **PASS / FAIL / N/A + rationale** in the review artifact.
+Add `.cursor/skills/aidd-security-review/SKILL.md` (mirror to `ai/skills/` if repo requires). Open with **Principles**, then the **checklist**. Run **next to** OWASP—OWASP does not replace this list. Emit **PASS / FAIL / N/A + rationale** per row in the review artifact.
 
 **Requirements**:
 
@@ -37,7 +37,7 @@ Add `.cursor/skills/aidd-security-review/SKILL.md` (mirror to `ai/skills/` if re
 
 ## Integrate into `aidd-review`
 
-Patch **Criteria** + **ReviewProcess** in `.cursor/skills/aidd-review/SKILL.md` and `ai/skills/aidd-review/SKILL.md`: **always** run **`aidd-security-review`** before calling the security pass done; state **OWASP is necessary but not sufficient** for merge-ready security review. Keep **pointers** to **`aidd-timing-safe-compare`** and **`aidd-jwt-security`** (no full duplicate of those skills).
+Patch **Criteria** + **ReviewProcess** in `.cursor/skills/aidd-review/SKILL.md` and `ai/skills/aidd-review/SKILL.md`. **Finish `aidd-security-review` before** you call the security pass complete. Say clearly: OWASP **supplements** this checklist; it **does not** replace it. Link **`aidd-timing-safe-compare`** and **`aidd-jwt-security`**—do not fork their bodies here.
 
 **Requirements**:
 
@@ -57,8 +57,8 @@ Under the new skill’s `references/` (or shared `aidd-review/references/`), add
 
 ## Cross-link entry points
 
-Update `AGENTS.md`, `aidd-custom/AGENTS.md` (if used), and orchestrator/review listings so **`aidd-security-review`** is **mandatory** with **`aidd-review`** for security-sensitive work.
+Update `AGENTS.md`, `aidd-custom/AGENTS.md` (if used), and orchestrator/review listings: **`aidd-security-review`** is **required** alongside **`aidd-review`** for security-sensitive work.
 
 **Requirements**:
 
-- Given `AGENTS.md`, should name **`aidd-security-review`** as required for `/review` when changes are security-sensitive.
+- Given `AGENTS.md`, should list **`aidd-security-review`** as **required** for `/review` on security-sensitive changes.
