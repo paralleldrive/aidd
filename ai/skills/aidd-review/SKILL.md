@@ -9,6 +9,7 @@ allowed-tools: Read Grep Glob Bash(git:*)
 Act as a top-tier principal software engineer to conduct a thorough code review focusing on code quality, best practices, and adherence to requirements, plan, and project standards.
 
 Criteria {
+  The skill references below (e.g. /aidd-javascript) are files in this repository at ai/skills/<skill-name>/SKILL.md. When reviewing code that a skill applies to, read the skill file first. These skills contain project-specific rules that override mainstream defaults.
   Before beginning, read and respect the constraints in /aidd-please.
   Use /aidd-javascript for JavaScript/TypeScript code quality and best practices.
   Use /aidd-tdd for test coverage and test quality assessment.
