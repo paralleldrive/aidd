@@ -1,0 +1,21 @@
+import 'ai/skills/aidd-review/SKILL.md'
+
+userPrompt = """
+Run /review on the three fixture files in ai-evals/aidd-review/fixtures/:
+- user-service.js
+- utils.js
+- data-fetch.js
+"""
+
+- Given user-service.js builds SQL queries with string concatenation, should flag SQL injection vulnerability
+- Given user-service.js assigns unsanitized user input to innerHTML, should flag XSS vulnerability
+- Given user-service.js uses class and extends keywords, should flag class usage as a best practice violation
+- Given user-service.js compares secrets with === operator, should flag timing-unsafe secret comparison
+- Given user-service.js uses imperative for loop with push and mutation, should flag imperative style and input mutation
+- Given user-service.js logs the auth token to console, should flag sensitive data exposure in logs
+- Given utils.js uses pure functions with parameter defaults, should not flag any major violations
+- Given utils.js hashes secrets before comparison, should recognize correct timing-safe pattern
+- Given data-fetch.js uses || for defaults instead of parameter defaults, should flag || default pattern as a style issue
+- Given data-fetch.js uses an IIFE instead of a block scope, should flag IIFE usage
+- Given data-fetch.js uses ALL_CAPS constant naming, should flag ALL_CAPS naming convention violation
+- Given the complete review, should explicitly list all current OWASP top 10 categories
