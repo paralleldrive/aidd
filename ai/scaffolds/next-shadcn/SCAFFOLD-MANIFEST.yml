@@ -1,15 +1,14 @@
 steps:
-  # create-next-app refuses a non-empty directory; stash copied scaffold metadata first, restore after.
+  # shadcn init may refuse a non-empty directory; stash copied scaffold metadata first, restore after.
   - run: node -e "const fs=require('fs'),path=require('path'),s='.aidd-scaffold-stash',f=['SCAFFOLD-MANIFEST.yml','README.md','index.md'];fs.mkdirSync(s,{recursive:true});for(const x of f){try{fs.renameSync(x,path.join(s,x));}catch(e){if(e.code!=='ENOENT')throw e;}}"
-  - run: npx create-next-app@latest . --typescript --tailwind --eslint --app --import-alias "@/*" --use-npm --yes
+  - run: npx shadcn@latest init -t next
   - run: node -e "const fs=require('fs'),path=require('path'),s='.aidd-scaffold-stash',f=['SCAFFOLD-MANIFEST.yml','README.md','index.md'];for(const x of f){const p=path.join(s,x);try{if(fs.existsSync(p))fs.renameSync(p,x);}catch(e){throw e;}}try{fs.rmSync(s,{recursive:true,force:true});}catch(e){}"
   # Install the AIDD framework before any prompt: step — agents need ai/ and skills when the prompt runs.
   - run: npx aidd .
-  - run: npx shadcn@latest init -d
   - run: npx shadcn@latest add button
   - run: npm install --save-dev vitest @vitejs/plugin-react @playwright/test error-causes
   - run: npm pkg set scripts.test="vitest run" scripts.test:e2e="playwright test"
   - prompt: >
-      Wire the shadcn Button into app/page.tsx, add a minimal vitest.config.ts, and create a smoke test
-      in __tests__/page.test.ts that confirms the home page renders without errors.
-      Ensure npm run build and npm test succeed.
+      Wire the Button component into app/page.tsx. Create a minimal vitest.config.ts
+      and a smoke test in __tests__/page.test.ts that confirms the home page renders
+      without errors. Verify the project builds with npm run build and npm test passes.
