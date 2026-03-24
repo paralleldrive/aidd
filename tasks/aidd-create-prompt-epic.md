@@ -44,6 +44,7 @@ The single module responsible for all agent config resolution; portable to Ritew
 - Given `agent-config` in `aidd-custom/config.yml` references a missing YAML file, `resolveAgentConfig` should warn with a message specific to the read failure (not a generic 'failed to read' message)
 - Given an inline YAML object in `aidd-custom/config.yml` missing the `command` field, `resolveAgentConfig` should warn and fall back to claude
 - Given `agent-config: false` in `aidd-custom/config.yml`, `resolveAgentConfig` should warn and fall back to claude rather than silently ignoring the value
+- Given `agent-config: 42` (a number) in `aidd-custom/config.yml`, `resolveAgentConfig` should warn with an `AgentConfigValidationError` message rather than a TypeError
 
 ---
 
