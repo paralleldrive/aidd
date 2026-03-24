@@ -68,6 +68,10 @@ See [`aidd-observe/index.md`](./aidd-observe/index.md) for contents.
 
 See [`aidd-please/index.md`](./aidd-please/index.md) for contents.
 
+### 📁 aidd-pr/
+
+See [`aidd-pr/index.md`](./aidd-pr/index.md) for contents.
+
 ### 📁 aidd-product-manager/
 
 See [`aidd-product-manager/index.md`](./aidd-product-manager/index.md) for contents.
