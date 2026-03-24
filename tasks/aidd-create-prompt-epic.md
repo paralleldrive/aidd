@@ -25,7 +25,8 @@ The single module responsible for all agent config resolution; portable to Ritew
 **Requirements**:
 - Given agent name `'claude'`, `getAgentConfig` returns `{ command: 'claude', args: ['-p'] }`
 - Given agent name `'opencode'`, `getAgentConfig` returns `{ command: 'opencode', args: ['run'] }`
-- Given agent name `'cursor'`, `getAgentConfig` returns `{ command: 'agent', args: ['--print'] }`
+- Given agent name `'cursor'`, `getAgentConfig` returns `{ command: 'cursor', args: ['agent', '--print'] }`
+- Given `--agent-config cursor`, the spawned command should be `cursor agent --print <prompt>`, not `agent --print <prompt>`
 - Given no argument, `getAgentConfig` defaults to the claude preset
 - Given any casing (e.g. `'Claude'`), `getAgentConfig` resolves case-insensitively
 - Given an unknown name, `getAgentConfig` throws `AgentConfigValidationError` listing all supported agent names
