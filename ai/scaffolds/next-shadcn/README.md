@@ -25,10 +25,8 @@ npx aidd create my-app
 
 ## How it works
 
-No local clone of the aidd repository is required. Named scaffolds ship inside
-the `aidd` npm package itself, so `npx aidd create my-app` fetches and runs this
-scaffold entirely through npm — the scaffold files are copied from the installed
-package into the new project folder before any steps run.
+Named scaffolds ship inside the `aidd` package — `npx aidd create my-app` copies
+the scaffold files into your new project folder before any steps run.
 
 The manifest follows the required ordering rule: the first step runs `npx aidd .`
 to install the AIDD framework in the new project, ensuring it is available before

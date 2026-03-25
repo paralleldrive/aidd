@@ -152,15 +152,9 @@ When `npx aidd create` downloads a scaffold from a remote URL (HTTP/HTTPS), the 
 
 ---
 
-## Using named scaffolds (no local clone required)
+## Using named scaffolds
 
-The built-in scaffolds (`next-shadcn`, `scaffold-example`) are bundled inside the `aidd` npm package. When you run `npx aidd create my-app` or `npx aidd create next-shadcn my-app`, the CLI:
-
-1. Locates the scaffold in the installed package (`<package>/ai/scaffolds/next-shadcn/`)
-2. Copies the scaffold files into your new project directory
-3. Executes the manifest steps inside that directory
-
-No local clone of the `paralleldrive/aidd` repository is needed. The scaffold is fetched and run entirely through npm.
+The built-in scaffolds (`next-shadcn`, `scaffold-example`) are bundled inside the `aidd` package. When you run `npx aidd create my-app`, the CLI locates the scaffold, copies its files into your new project directory, and executes the manifest steps.
 
 ### Using `next-shadcn` (the default)
 
