@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`npx aidd scaffold-cleanup`** removed — downloaded scaffold files are now cleaned up automatically after every `npx aidd create <url>`. Remove any explicit `scaffold-cleanup` calls from your workflows. ⚠️ Requires a major version bump.
 
 ### Changed
+- `aidd-tdd` skill — added mocking constraint: I/O operations should use integration tests; unit tests needing a mock should extract effect-free pure functions instead
+- `aidd-churn` skill — churn scores now exclude intra-PR commits automatically (scoped to `git merge-base HEAD origin/main`); added >15% composite score gate with RTC analysis for threshold breaches
 
 ### Fixed
 - `npx aidd create <url>` no longer fails on repeated runs with a destination-conflict error — `~/.aidd/scaffold/` is cleaned up automatically after every create, whether it succeeds or fails (fixes #157)
