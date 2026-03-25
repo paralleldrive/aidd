@@ -7,9 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Breaking Changes
-- **`npx aidd create`:** `--agent` renamed to `--agent-config` (preset name or YAML path; behavior unchanged). **Migration:** update any scripts or automation that pass `--agent` to use `--agent-config` instead.
-
 ### Added
 - `npx aidd agent --prompt "<text>"` — new CLI subcommand that delegates a prompt to an AI agent (claude, opencode, or cursor) directly from the terminal
 - `--prompt <text>` flag on `npx aidd create` — after scaffolding completes, runs an AI agent in the new project directory to kick off autonomous development
@@ -24,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `aidd-custom/AGENTS.md` scaffold — created automatically on `npx aidd` install to provide a place for project-specific agent instruction overrides
 
 ### Changed
+- `--agent-config` flag on `npx aidd create` — renamed from `--agent` during development; `--agent` was never in a published release
 - `scaffold-cleanup` CLI subcommand removed — downloaded scaffold files are now cleaned up automatically after every `npx aidd create <url>`; the subcommand is internal only
 
 ### Fixed
