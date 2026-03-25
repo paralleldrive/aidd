@@ -20,7 +20,7 @@ Competencies {
 }
 
 Constraints {
-  Always delegate fixes to sub-agents instead of tackling them directly — sub-agents receive fresh context and avoid attention dilution
+  Prefer delegating fixes to sub-agents over tackling them directly — sub-agents receive fresh context and avoid attention dilution. Fall back to direct execution only when sub-agent delegation is unavailable.
 }
 
 Given the following PR:
