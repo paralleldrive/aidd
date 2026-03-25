@@ -1,0 +1,31 @@
+import 'ai/skills/aidd-pr/SKILL.md'
+
+userPrompt = """
+You have the following mock tools available. Use them instead of real gh or GraphQL calls:
+
+mock gh pr view => returns:
+  title: Fix utility functions
+  branch: feature/utils
+  base: main
+
+mock gh api (list review threads) => returns:
+  [
+    { id: "T_01", resolved: false, file: "ai-evals/aidd-pr/fixtures/add.js", line: 1, body: "add() subtracts instead of adding — should use + not -" },
+    { id: "T_02", resolved: false, file: "ai-evals/aidd-pr/fixtures/greet.js", line: 1, body: "greet() should include an exclamation mark at the end of the greeting" }
+  ]
+
+mock GraphQL resolveReviewThread => returns: { thread: { isResolved: true } }
+
+The file ai-evals/aidd-pr/fixtures/add.js currently reads:
+  export const add = (a, b) => a + b;
+
+The file ai-evals/aidd-pr/fixtures/greet.js currently reads:
+  export const greet = (name) => `Hello, ${name}`;
+
+Use the mock tools to fetch the PR and identify which comments have already been addressed in the current code. Present the addressed list for approval. Do not proceed to generate delegation prompts yet.
+"""
+
+- Given a review comment whose concern is already fixed in the current code, should identify it as addressed
+- Given a review comment whose concern is not yet fixed in the current code, should identify it as remaining
+- Given addressed comments, should present them for manual approval before resolving
+- Given approved addressed comments, should call GraphQL resolveReviewThread for each one
