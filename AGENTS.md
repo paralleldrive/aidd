@@ -42,6 +42,11 @@ If any conflicts are detected between a requested task and the vision document, 
 
 Never proceed with a task that contradicts the vision without explicit user approval.
 
+## Skills
+
+import @skills/index.md
+import @aidd-custom/skills/index.md
+
 ## Custom Skills and Configuration
 
 Project-specific customization lives in `aidd-custom/`. Before starting work,
