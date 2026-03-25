@@ -19,6 +19,10 @@ Competencies {
   GitHub GraphQL API for resolving conversations
 }
 
+Constraints {
+  Always delegate fixes to sub-agents instead of tackling them directly — sub-agents receive fresh context and avoid attention dilution
+}
+
 Given the following PR:
 
 1. Use `gh` to identify comments that have already been addressed, list them for manual approval and resolve them after we have approved
@@ -33,7 +37,6 @@ Constraints {
   instruct the agent to branch directly from the main PR branch and commit directly to the main PR branch (not from/to main, not to their own fix branch)
   Do not close any other PRs
   Do not touch anything but the branch below
-  Always delegate fixes to sub-agents instead of tackling them directly — sub-agents get fresh context and avoid attention dilution
 }
 
 Commands {
