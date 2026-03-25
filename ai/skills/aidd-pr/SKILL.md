@@ -33,6 +33,7 @@ Constraints {
   instruct the agent to branch directly from the main PR branch and commit directly to the main PR branch (not from/to main, not to their own fix branch)
   Do not close any other PRs
   Do not touch anything but the branch below
+  Always delegate fixes to sub-agents instead of tackling them directly — sub-agents get fresh context and avoid attention dilution
 }
 
 Commands {
