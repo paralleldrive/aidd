@@ -1,5 +1,18 @@
 steps:
-  # shadcn init may refuse a non-empty directory; stash copied scaffold metadata first, restore after.
+  # WHY THIS STASH IS REQUIRED:
+  # Before the manifest steps run, runCreate copies the entire scaffold template
+  # (including SCAFFOLD-MANIFEST.yml, README.md, index.md) into the destination
+  # folder. This makes the folder non-empty before shadcn init runs.
+  #
+  # `npx shadcn@latest init -t next` calls `create-next-app` under the hood.
+  # create-next-app refuses non-empty destination directories and exits with:
+  #   "The directory <name> contains files that could conflict: SCAFFOLD-MANIFEST.yml"
+  #
+  # Without the stash, the scaffold fails immediately at the shadcn init step.
+  # The stash temporarily moves those aidd-owned files to a hidden directory so
+  # create-next-app sees an empty destination, then restores them afterwards.
+  # Verified: npx create-next-app@latest . --yes in a directory containing
+  # SCAFFOLD-MANIFEST.yml exits 1 with the conflict error above.
   - run: node -e "const fs=require('fs'),path=require('path'),s='.aidd-scaffold-stash',f=['SCAFFOLD-MANIFEST.yml','README.md','index.md'];fs.mkdirSync(s,{recursive:true});for(const x of f){try{fs.renameSync(x,path.join(s,x));}catch(e){if(e.code!=='ENOENT')throw e;}}"
   - run: npx shadcn@latest init -t next
   - run: node -e "const fs=require('fs'),path=require('path'),s='.aidd-scaffold-stash',f=['SCAFFOLD-MANIFEST.yml','README.md','index.md'];for(const x of f){const p=path.join(s,x);try{if(fs.existsSync(p))fs.renameSync(p,x);}catch(e){throw e;}}try{fs.rmSync(s,{recursive:true,force:true});}catch(e){}"
