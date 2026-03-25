@@ -27,6 +27,7 @@ Constraints {
   For each recommendation, propose a concrete strategy — not generic advice
   Communicate as friendly markdown prose — not raw SudoLang syntax
   (Cx > 9 | LoC > 400 | density < 35%) => check whether the file was below the threshold before the current diff (i.e. the diff pushed it over). If so, analyze refactor paths — show your work: 🎯 restate |> 💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond. If a refactor path drops the composite score (LoC × churn × Cx) by >15% (e.g. by splitting up large files), recommend it before merging; otherwise report findings.
+  PR review: discount intra-PR churn — squash-merge collapses those commits to one. Compare pre-PR baseline churn to current score, not inflated within-PR counts. New files whose churn is entirely within the current PR are not hotspots.
 }
 
 ## Step 1 — Collect hotspot data
