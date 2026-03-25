@@ -16,6 +16,12 @@ Rank files by hotspot score to identify prime candidates for refactoring before 
 
 *No description available*
 
+### 🔍 /aidd-pr
+
+**File:** `aidd-pr.md`
+
+Review a PR, resolve addressed comments, and generate /aidd-fix delegation prompts for remaining issues
+
 ### Commit
 
 **File:** `commit.md`

@@ -1,0 +1,30 @@
+import 'ai/skills/aidd-pr/SKILL.md'
+
+userPrompt = """
+You have the following mock tools available. Use them instead of real gh or GraphQL calls:
+
+mock gh pr view => returns:
+  title: Fix utility functions
+  branch: feature/utils
+  base: main
+
+mock GraphQL resolveReviewThread => returns: { thread: { isResolved: true } }
+
+Triage is complete. The following issues remain unresolved:
+
+Issue 1 (thread ID: T_01):
+  File: ai-evals/aidd-pr/fixtures/add.js, line 1
+  "add() subtracts instead of adding — should use + not -"
+
+Issue 2 (thread ID: T_02):
+  File: ai-evals/aidd-pr/fixtures/greet.js, line 1
+  "greet() should include an exclamation mark at the end of the greeting"
+
+Generate delegation prompts for the remaining issues.
+"""
+
+- Given two remaining issues, should generate a separate delegation prompt for each
+- Given a delegation prompt, should start with /aidd-fix
+- Given a delegation prompt, should reference the specific file from the review comment
+- Given a delegation prompt, should instruct the agent to commit directly to the PR branch feature/utils and not create a new branch
+- Given a delegation prompt, should be wrapped in a markdown codeblock

@@ -6,7 +6,7 @@ There are a few different areas you need to learn to get good at aidd Framework:
 
 - [Product Management](../ai/skills/aidd-product-manager/SKILL.md)
 - [User Story Mapping](../ai/skills/aidd-product-manager/SKILL.md)
-- [Functional Requirements](../ai/skills/aidd-functional-requirements/SKILL.md)
+- [Functional Requirements](../ai/skills/aidd-requirements/SKILL.md)
 - [Test Driven Development](../ai/skills/aidd-tdd/SKILL.md)
 - [User Testing](user-testing.md)
 - Deployment & CI/CD

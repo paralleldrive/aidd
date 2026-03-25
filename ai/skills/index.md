@@ -28,10 +28,6 @@ See [`aidd-error-causes/index.md`](./aidd-error-causes/index.md) for contents.
 
 See [`aidd-fix/index.md`](./aidd-fix/index.md) for contents.
 
-### 📁 aidd-functional-requirements/
-
-See [`aidd-functional-requirements/index.md`](./aidd-functional-requirements/index.md) for contents.
-
 ### 📁 aidd-javascript/
 
 See [`aidd-javascript/index.md`](./aidd-javascript/index.md) for contents.
@@ -68,6 +64,10 @@ See [`aidd-observe/index.md`](./aidd-observe/index.md) for contents.
 
 See [`aidd-please/index.md`](./aidd-please/index.md) for contents.
 
+### 📁 aidd-pr/
+
+See [`aidd-pr/index.md`](./aidd-pr/index.md) for contents.
+
 ### 📁 aidd-product-manager/
 
 See [`aidd-product-manager/index.md`](./aidd-product-manager/index.md) for contents.
@@ -75,6 +75,10 @@ See [`aidd-product-manager/index.md`](./aidd-product-manager/index.md) for conte
 ### 📁 aidd-react/
 
 See [`aidd-react/index.md`](./aidd-react/index.md) for contents.
+
+### 📁 aidd-requirements/
+
+See [`aidd-requirements/index.md`](./aidd-requirements/index.md) for contents.
 
 ### 📁 aidd-review/
 

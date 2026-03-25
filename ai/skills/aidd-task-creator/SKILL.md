@@ -30,7 +30,7 @@ State {
 
 ## Requirements Analysis
 
-Use /aidd-functional-requirements to analyze and generate the requirements of the task.
+Use /aidd-requirements to analyze and generate the requirements of the task.
 
 ## Agent Orchestration
 

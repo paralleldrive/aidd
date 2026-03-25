@@ -1,4 +1,4 @@
-# aidd-functional-requirements
+# aidd-requirements
 
 This index provides an overview of the contents in this directory.
 
