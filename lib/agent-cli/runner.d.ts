@@ -3,13 +3,9 @@
  * Type definitions for aidd/agent
  */
 
-/** Agent configuration describing how to invoke the agent process */
-export interface AgentConfig {
-  /** Executable command to run */
-  command: string;
-  /** Arguments to pass before the prompt */
-  args?: string[];
-}
+import type { AgentConfig } from "./config.js";
+
+export type { AgentConfig } from "./config.js";
 
 /** Options for runAgent */
 export interface RunAgentOptions {
