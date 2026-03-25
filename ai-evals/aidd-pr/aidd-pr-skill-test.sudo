@@ -1,23 +1,23 @@
 import 'ai/skills/aidd-pr/SKILL.md'
 
 userPrompt = """
-A PR has the following open review comments:
+PR branch: `feature/utils`
 
-1. "The error message in src/lib/auth.js line 42 is too generic — it should distinguish between invalid credentials and account lockout."
-2. "The helper function formatDate in src/utils/date.js line 17 is duplicated in src/utils/format.js line 83."
-3. "Missing null check before calling .trim() on userInput in src/lib/validator.js line 29."
+The following review comments are open on this PR:
 
-The PR branch is `feature/user-auth`. None of the comments have been addressed yet.
+Comment 1 (thread ID: T_01):
+  File: ai-evals/aidd-pr/fixtures/add.js, line 1
+  "add() subtracts instead of adding — should use + not -"
 
-Run /aidd-pr on this PR.
+Comment 2 (thread ID: T_02):
+  File: ai-evals/aidd-pr/fixtures/greet.js, line 1
+  "greet() should include an exclamation mark at the end of the greeting"
+
+Both comments are unresolved. Run /aidd-pr on this PR.
 """
 
-- Given open review comments on a PR, should list comments requiring action before generating delegation prompts
-- Given a review comment about a specific file and line, should generate a delegation prompt that references that file and line
-- Given multiple open issues, should generate one delegation prompt per issue rather than a combined prompt
-- Given a delegation prompt, should start the prompt with /aidd-fix
-- Given a delegation prompt, should instruct the agent to work directly on the PR branch and not create a new branch
-- Given a delegation prompt, should wrap the prompt in a markdown codeblock
-- Given a delegation prompt containing code examples, should indent any nested codeblocks to prevent breaking the outer block
-- Given multiple issues, should not address any issue directly — should delegate each one to a sub-agent
-- Given the /aidd-pr delegate command, should dispatch each delegation prompt to a sub-agent rather than executing fixes directly
+- Given two open review comments, should generate a separate delegation prompt for each issue
+- Given a delegation prompt, should start with /aidd-fix
+- Given a delegation prompt, should reference the specific file mentioned in the review comment
+- Given a delegation prompt, should instruct the agent to commit directly to the PR branch feature/utils
+- Given a delegation prompt, should be wrapped in a markdown codeblock
