@@ -20,9 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `import aidd-custom/AGENTS.md` directive in root `AGENTS.md` — allows projects to override root-level agent directives with project-specific settings
 - `aidd-custom/AGENTS.md` scaffold — created automatically on `npx aidd` install to provide a place for project-specific agent instruction overrides
 
+### Breaking Changes
+- **`npx aidd scaffold-cleanup`** removed — downloaded scaffold files are now cleaned up automatically after every `npx aidd create <url>`. Remove any explicit `scaffold-cleanup` calls from your workflows. ⚠️ Requires a major version bump.
+
 ### Changed
-- `--agent-config` flag on `npx aidd create` — renamed from `--agent` during development; `--agent` was never in a published release
-- `scaffold-cleanup` CLI subcommand removed — downloaded scaffold files are now cleaned up automatically after every `npx aidd create <url>`; the subcommand is internal only
 
 ### Fixed
 - `npx aidd create <url>` no longer fails on repeated runs with a destination-conflict error — `~/.aidd/scaffold/` is cleaned up automatically after every create, whether it succeeds or fails (fixes #157)
