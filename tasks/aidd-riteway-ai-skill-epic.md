@@ -22,7 +22,7 @@ Add `ai/skills/aidd-riteway-ai/SKILL.md` following the AgentSkills specification
 - Given a unit eval for a step that involves tool calls (gh, GraphQL, API), should instruct the agent to inform the prompted agent that it is operating in a test environment and should use mock tools with stub return values instead of calling real APIs
 - Given a unit eval for step 1 of a tool-calling flow, should instruct the agent to assert that the correct tool calls are made — not pre-supply the answers those calls would return
 - Given a unit eval for step N > 1, should instruct the agent to supply the output of the previous step as context in the `userPrompt`
-- Given an e2e eval is desired, should instruct the agent to use real tools and follow the `-e2e.test.sudo` naming convention — note: e2e evals for tool-calling skills like `/aidd-pr` require a fixture repo on GitHub with known PR/review state, which is significant infrastructure; unit evals with mocks cover the meaningful reasoning surface and are preferred
+- Given an e2e eval, should instruct the agent to use real tools and follow the `-e2e.test.sudo` naming convention, mirroring the project's existing unit/e2e split
 - Given fixture files needed by the eval, should be small files with one clear bug or condition per file
 - Given assertions, should derive them strictly from the functional requirements of the skill under test using `/aidd-requirements` format, and include only assertions that test distinct observable behaviors
 
