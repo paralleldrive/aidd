@@ -60,6 +60,7 @@ Programmatic spawn primitive; exported as `aidd/agent` for use by third-party to
 - Given `spawn` emits an `error` event with `code === 'E2BIG'` or `code === 'ENOBUFS'`, `runAgent` should reject with a `ScaffoldStepError` whose message says 'Argument list too long for spawn'
 - Given the spawned agent process is terminated by a signal, `runAgent` should reject with a `ScaffoldStepError` whose message includes the signal name rather than 'code null'
 - Given `package.json`, the `"./agent"` export resolves to `lib/agent-cli/runner.js`
+- Given `runAgent` is called with an empty prompt, it should reject with an error rather than spawning the agent process with an empty string
 
 ---
 
