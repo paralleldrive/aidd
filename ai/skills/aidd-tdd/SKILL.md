@@ -79,8 +79,7 @@ Constraints {
   Avoid writing tests for expected types/shapes. It would be redundant with type checks.
 
   Mocking is a code smell. {
-    I/O operation => use integration tests instead. Mock only to simulate hard-to-test scenarios like error paths. Test the real system whenever reasonable.
-    unit test needs a mock => break out effect-free pure functions and test those directly, without mocks.
+    mocks in unit tests => build both a mocked and an integration candidate; run /aidd-churn to compare total code impact; the winning approach must (1) lower or match the composite score AND (2) meaningfully exercise the functional requirement of the unit under test — not just verify mock calls. Cheaper substitutes (e.g. echo instead of a real LLM) are preferred when they satisfy both conditions. Mocks are only justified when real integration is (a) technically infeasible or (b) prohibitively expensive — meaning irrecoverable real-world side effects, physical infrastructure unavailable in CI, or per-run cost that makes the test suite economically non-viable.
   }
 }
 
