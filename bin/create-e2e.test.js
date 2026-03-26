@@ -233,6 +233,71 @@ describe("aidd create --agent-config flag", () => {
   }, 30_000);
 });
 
+describe("aidd agent command", () => {
+  let tempDir;
+
+  beforeEach(async () => {
+    tempDir = path.join(os.tmpdir(), `aidd-e2e-agent-cmd-${Date.now()}`);
+    await fs.ensureDir(tempDir);
+  });
+
+  afterEach(async () => {
+    await fs.remove(tempDir);
+  });
+
+  test("exits 0 and echoes the prompt when using an echo agent config", async () => {
+    const configPath = path.join(tempDir, "echo-agent.yml");
+    await fs.writeFile(configPath, "command: echo\n");
+
+    const { stdout } = await execAsync(
+      `npx aidd agent --prompt "hello" --agent-config "${configPath}"`,
+      { timeout: 10_000 },
+    );
+
+    assert({
+      given: "aidd agent --prompt hello with an echo agent config",
+      should: "exit 0 and include the prompt text in stdout",
+      actual: stdout.includes("hello"),
+      expected: true,
+    });
+  }, 10_000);
+
+  test("exits 1 when --prompt is not provided", async () => {
+    let exitCode = 0;
+    try {
+      await execAsync("npx aidd agent", { timeout: 10_000 });
+    } catch (err) {
+      exitCode = err.code;
+    }
+
+    assert({
+      given: "aidd agent invoked without --prompt",
+      should: "exit with code 1",
+      actual: exitCode,
+      expected: 1,
+    });
+  }, 10_000);
+
+  test("exits 1 when the agent config file does not exist", async () => {
+    let exitCode = 0;
+    try {
+      await execAsync(
+        `npx aidd agent --prompt "hello" --agent-config "${tempDir}/nonexistent.yml"`,
+        { timeout: 10_000 },
+      );
+    } catch (err) {
+      exitCode = err.code;
+    }
+
+    assert({
+      given: "aidd agent with a non-existent agent config YAML path",
+      should: "exit with code 1",
+      actual: exitCode,
+      expected: 1,
+    });
+  }, 10_000);
+});
+
 describe("aidd create — error paths", () => {
   let tempDir;
 

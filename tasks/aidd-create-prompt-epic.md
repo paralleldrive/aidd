@@ -93,10 +93,9 @@ Standalone subcommand registered via a single `registerAgentCommand(program)` im
 
 **Requirements**:
 - Given `bin/aidd.js`, adds exactly one import (`registerAgentCommand`) and one call (`registerAgentCommand(cli)`) — no agent-specific logic in the dispatcher
-- Given `npx aidd agent --prompt "Build a todo app"`, calls `resolveAgentConfig({ value: agentConfigFlag, cwd: process.cwd() })` then `runAgent`
-- Given `--agentConfig <name|path>`, passes it as the `value` override to `resolveAgentConfig`
-- Given invoked without `--prompt`, prints an error and exits 1
-- Given an agent config error, uses `handleAgentErrors` to display a scoped message and exits 1
+- Given `npx aidd agent --prompt "hello" --agent-config echo-agent.yml` (where `echo-agent.yml` contains `command: echo`), exits 0 and the prompt text appears in stdout
+- Given invoked without `--prompt`, exits 1
+- Given `--agent-config` pointing to a non-existent YAML file, exits 1
 
 ---
 
