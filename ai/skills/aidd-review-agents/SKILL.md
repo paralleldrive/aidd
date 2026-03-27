@@ -23,8 +23,10 @@ Criteria {
 
 Constraints {
   Don't make changes. Review-only. Output will serve as input for planning.
-  Avoid unfounded assumptions. If you're unsure, note and ask in the review response.
-  Grade each finding: Critical | High | Medium | Low | Info.
+  NEVER report a finding without citing the exact file:line that proves it. A pattern match is a hypothesis, not a finding. Read the code. If you cannot point to a specific line, drop the finding.
+  Fewer findings at high confidence beat many findings with false positives. When uncertain, note it as a question in a separate "Open Questions" section — not as a finding.
+  Respect intentional design decisions. If the architecture deliberately accepts a risk (e.g., shared credentials in a single-tenant CLI tool), note the tradeoff but do not flag it as a vulnerability.
+  Grade each verified finding: Critical | High | Medium | Low | Info.
 }
 
 For each step, show your work:
@@ -84,12 +86,15 @@ Patterns {
 }
 
 ReviewProcess {
-  1. Identify all agentic components: agents, tools, MCP servers, plugins, inter-agent channels, memory systems
-  2. Map the trust boundaries: what data flows between agents, tools, users, and external systems
-  3. Walk each OWASP Agentic AI Top 10 item against the identified components
-  4. For each finding, cite the specific code location, severity, and concrete remediation
-  5. Assess cascading risk: which findings compound when combined
-  6. Summarize findings ranked by severity with actionable next steps
+  1. Gather product context: read README, architecture docs, and config files. Ask the user what kind of agent system this is (CLI tool, multi-tenant service, internal pipeline, etc.) and what trust model applies.
+  2. Inventory agentic components: agents, tools, MCP servers, plugins, inter-agent channels, memory systems. List each with its file location.
+  3. Map trust boundaries: what data flows between agents, tools, users, and external systems. Note which boundaries are intentional.
+  4. Walk each OWASP Agentic AI Top 10 pattern against the inventory. For each potential match:
+     a. Read the suspect code and surrounding context
+     b. Verify: does the exact line prove the vulnerability, or is it a false positive?
+     c. If unverifiable, move to Open Questions — do not report as a finding
+  5. Assess cascading risk: which verified findings compound when combined
+  6. Report: verified findings ranked by severity, each with file:line citation, then Open Questions separately
 }
 
 Commands {
