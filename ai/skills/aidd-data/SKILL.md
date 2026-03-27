@@ -1,6 +1,6 @@
 ---
 name: aidd-data
-description: defines data modelling best practices. Use whenever we are defining data types in typescript or javascript, using `type` or `interface`
+description: defines data modelling best practices. Use whenever we are defining data types in typescript or javascript, using `type` or `interface`.
 ---
 
 # Independent Data
