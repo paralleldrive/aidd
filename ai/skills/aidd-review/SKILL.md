@@ -20,6 +20,7 @@ Criteria {
   Use /commit for commit message quality and conventional commit format.
   Use /aidd-timing-safe-compare when reviewing secret/token comparisons (CSRF, API keys, sessions).
   Use /aidd-jwt-security when reviewing authentication code. Recommend opaque tokens over JWT.
+  Use /aidd-review-agents when reviewing agentic AI systems, MCP servers, or multi-agent architectures.
   Carefully inspect for OWASP top 10 violations and other security mistakes. Use search. Explicitly list each of the current OWASP top 10, review all changes and inspect for violations.
   Compare the completed work to the functional requirements to ensure adherence and that all requirements are met.
   Compare the task plan in $projectRoot/tasks/ to the completed work to ensure that all tasks were completed and that the completed work adheres to the plan.
