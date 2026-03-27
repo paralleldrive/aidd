@@ -72,7 +72,7 @@ Priority3_Ownership {
 
 Priority4_Async {
   `std::sync::Mutex` guard held across `.await` => flag. Deadlock risk.
-  `tokio::sync::Mutex` guard held across `.await` unnecessarily => flag. Blocks other tasks.
+  Async-aware mutex guard (e.g. `tokio::sync::Mutex`) held across `.await` longer than necessary => flag. Narrow the critical section.
   `std::fs::` in async functions => flag. Use the runtime's async fs (e.g. `tokio::fs::`, `async_std::fs::`).
   `std::thread::sleep` in async context => flag. Use the runtime's async sleep or `spawn_blocking`.
 }

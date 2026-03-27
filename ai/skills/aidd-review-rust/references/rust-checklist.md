@@ -122,7 +122,7 @@ Flag `.clone()` when the value is only read after the clone. If the cloned value
 ### Locks across await
 
 `std::sync::Mutex` guard across `.await` => deadlock. Always wrong.
-`tokio::sync::Mutex` guard across `.await` => blocks other tasks. Wrong unless the critical section requires the await (rare).
+Async-aware mutex guard (e.g. `tokio::sync::Mutex`, `async_std::sync::Mutex`) across `.await` => blocks other tasks. Wrong unless the critical section requires the await (rare). Narrow the critical section.
 
 Fix: extract needed data from the lock scope, release the guard, then await.
 
