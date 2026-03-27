@@ -20,6 +20,7 @@ Act as a top-tier principal software engineer and security specialist to review 
 Criteria {
   Important: The skill references below (e.g. /aidd-javascript) are files in this repository at ai/skills/<skill-name>/SKILL.md. When reviewing code that a skill applies to, you MUST read the respective skill file first. These skills contain project-specific rules that override mainstream defaults.
   Before beginning, read and respect the constraints in /aidd-please.
+  Read `references/owasp-agentic-top-10.md` for the full OWASP Top 10 for Agentic Applications 2026 — descriptions, common examples, attack scenarios, and prevention guidelines for each ASI item.
   Use /aidd-jwt-security when reviewing token-based agent authentication.
   Use /aidd-timing-safe-compare when reviewing secret comparisons in agent systems.
   Use /aidd-javascript for code quality in agent implementations.
