@@ -73,8 +73,8 @@ Priority3_Ownership {
 Priority4_Async {
   `std::sync::Mutex` guard held across `.await` => flag. Deadlock risk.
   `tokio::sync::Mutex` guard held across `.await` unnecessarily => flag. Blocks other tasks.
-  `std::fs::` in async functions => flag. Use `tokio::fs::`.
-  `std::thread::sleep` in async context => flag. Use `tokio::time::sleep`.
+  `std::fs::` in async functions => flag. Use the runtime's async fs (e.g. `tokio::fs::`, `async_std::fs::`).
+  `std::thread::sleep` in async context => flag. Use the runtime's async sleep or `spawn_blocking`.
 }
 
 Priority5_TypeDesign {
@@ -85,7 +85,7 @@ Priority5_TypeDesign {
 }
 
 Priority6_Testing {
-  Async tests not using `#[tokio::test]` => flag.
+  Async tests using plain `#[test]` instead of a runtime-specific macro (e.g. `#[tokio::test]`, `#[async_std::test]`) => flag.
   Tests without assertions => flag.
   `std::env::set_var` in multi-threaded test context => flag. Unsound since Rust 1.66.
 }

@@ -13,8 +13,8 @@ unsafe {            — must have // SAFETY: comment above
 .lock().            — check if guard is held across .await
 .read().            — check if RwLock guard is held across .await
 .write().           — check if RwLock guard is held across .await
-std::fs::           — should be tokio::fs:: in async code
-std::thread::sleep  — should be tokio::time::sleep in async code
+std::fs::           — should use runtime's async fs in async code
+std::thread::sleep  — should use runtime's async sleep in async code
 == "               — check if comparing secrets (needs constant-time)
 &Vec<              — should be &[T] in function params
 &String            — should be &str in function params
@@ -131,8 +131,8 @@ Fix: extract needed data from the lock scope, release the guard, then await.
 `std::fs::*`, `std::thread::sleep`, CPU-heavy computation in async context blocks the tokio runtime thread pool.
 
 Fixes:
-- `tokio::fs::*` for file I/O
-- `tokio::time::sleep` for delays
+- Runtime's async fs (`tokio::fs::*`, `async_std::fs::*`) for file I/O
+- Runtime's async sleep (`tokio::time::sleep`, `async_std::task::sleep`) for delays
 - `tokio::task::spawn_blocking` for CPU-heavy work
 
 ## Priority 5: Type Design
@@ -157,11 +157,11 @@ Bare `u64` or `String` used as different kinds of IDs (user ID, order ID) that s
 
 ### Async test macros
 
-`#[test]` on an async fn does not execute the future. Must use `#[tokio::test]`.
+`#[test]` on an async fn does not execute the future. Must use a runtime-specific macro (e.g. `#[tokio::test]`, `#[async_std::test]`).
 
 ### Environment mutation
 
-`std::env::set_var` and `std::env::remove_var` are unsound in multi-threaded programs since Rust 1.66. In `#[tokio::test]` (multi-threaded by default), this is a data race.
+`std::env::set_var` and `std::env::remove_var` are unsound in multi-threaded programs since Rust 1.66. In multi-threaded async test runtimes (e.g. `#[tokio::test]`), this is a data race.
 
 ## Code Examples
 
