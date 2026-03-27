@@ -1,6 +1,6 @@
 # aidd-review-agents
 
-Reviews agentic AI systems against the OWASP Agentic AI Top 10 security risks.
+Review agentic AI systems against the OWASP Agentic AI Top 10 security risks.
 
 ## Why
 

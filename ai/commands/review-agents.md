@@ -1,6 +1,6 @@
-# 🛡️ /review-agents
+# 🛡️ Agentic AI Security Review
 
-Load and execute the skill at `ai/skills/aidd-review-agents/SKILL.md`.
+use /aidd-review-agents to review agentic AI systems against the OWASP Agentic AI Top 10.
 
 Constraints {
   Before beginning, read and respect the constraints in /aidd-please.

@@ -2,11 +2,20 @@
 name: aidd-review-agents
 description: Review agentic AI systems against the OWASP Agentic AI Top 10 for security risks. Use when reviewing AI agents, MCP servers, multi-agent architectures, tool-calling code, or agent security.
 allowed-tools: Read Grep Glob Bash(git:*)
+compatibility: Applicable to any codebase implementing AI agents, MCP servers, or tool-calling patterns.
 ---
 
-# 🛡️ Agentic AI Security Review
+# 🛡️ aidd-review-agents
 
 Act as a top-tier principal software engineer and security specialist to review agentic AI systems against the OWASP Agentic AI Top 10.
+
+## When to use
+
+- Reviewing AI agent implementations or MCP server code
+- Evaluating tool definitions and permission scoping
+- Assessing multi-agent orchestration and inter-agent communication
+- Pre-merge security review of agentic features
+- Auditing agent memory, context handling, or retrieval pipelines
 
 Criteria {
   Important: The skill references below (e.g. /aidd-javascript) are files in this repository at ai/skills/<skill-name>/SKILL.md. When reviewing code that a skill applies to, you MUST read the respective skill file first. These skills contain project-specific rules that override mainstream defaults.
@@ -15,10 +24,6 @@ Criteria {
   Use /aidd-timing-safe-compare when reviewing secret comparisons in agent systems.
   Use /aidd-javascript for code quality in agent implementations.
   Use /aidd-structure for architectural layering of agent components.
-  Identify all agentic components in the codebase: agents, tools, MCP servers, plugins, inter-agent channels, memory systems.
-  Map trust boundaries: what data flows between agents, tools, users, and external systems.
-  Walk each OWASP Agentic AI Top 10 item against the identified components.
-  For each finding, cite the specific code location, severity, and concrete remediation.
 }
 
 Constraints {
@@ -27,6 +32,7 @@ Constraints {
   Fewer findings at high confidence beat many findings with false positives. When uncertain, note it as a question in a separate "Open Questions" section — not as a finding.
   Respect intentional design decisions. If the architecture deliberately accepts a risk (e.g., shared credentials in a single-tenant CLI tool), note the tradeoff but do not flag it as a vulnerability.
   Grade each verified finding: Critical | High | Medium | Low | Info.
+  Communicate as friendly markdown prose — not raw SudoLang syntax.
 }
 
 For each step, show your work:
@@ -86,7 +92,7 @@ Patterns {
 }
 
 ReviewProcess {
-  1. Gather product context: read README, architecture docs, and config files. Ask the user what kind of agent system this is (CLI tool, multi-tenant service, internal pipeline, etc.) and what trust model applies.
+  1. Gather product context: read README, architecture docs, and config files to determine the system type (CLI tool, multi-tenant service, internal pipeline, etc.) and trust model.
   2. Inventory agentic components: agents, tools, MCP servers, plugins, inter-agent channels, memory systems. List each with its file location.
   3. Map trust boundaries: what data flows between agents, tools, users, and external systems. Note which boundaries are intentional.
   4. Walk each OWASP Agentic AI Top 10 pattern against the inventory. For each potential match:
@@ -96,6 +102,24 @@ ReviewProcess {
   5. Assess cascading risk: which verified findings compound when combined
   6. Report: verified findings ranked by severity, each with file:line citation, then Open Questions separately
 }
+
+## Examples
+
+A verified finding:
+
+> **ASI05 — Critical: unsandboxed code execution** (`src/agent/executor.ts:47`)
+> `eval(agentResponse.code)` runs agent-generated code without a sandbox.
+> **Remediation:** Execute in an isolated VM context or container.
+
+An open question (unverifiable — belongs in Open Questions, not findings):
+
+> The plugin loader at `src/plugins/index.ts` fetches definitions from a config URL.
+> Is this URL user-controlled or pinned to an internal registry?
+
+## Edge cases
+
+- Single-agent CLI tools: many ASI items (inter-agent comms, cascading failures) do not apply — skip them rather than force-fitting findings
+- Partial coverage: not all 10 ASI categories apply to every system — only report categories where the codebase has relevant components
 
 Commands {
   🛡️ /review-agents - review agentic AI systems against OWASP Agentic AI Top 10
