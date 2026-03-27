@@ -2,6 +2,8 @@
 
 This document catalogs known vulnerabilities and exploits related to standard library timing-safe comparison functions.
 
+These cases concern **raw secret comparison** or flawed timing-compare APIs—not comparing two **SHA3-256 digests** with ordinary fixed-length equality after both values were hashed as the skill requires. Digest outputs are not aligned with secret prefixes in a way that enables hangman-style timing attacks; `===` on those digests does not need to be “upgraded” to `timingSafeEqual`.
+
 ## Example vulnerabilities
 
 - **CVE-2022-48566**: Python's `hmac.compare_digest` was vulnerable to timing attacks due to interpreter/JIT optimizations that could skip work when the result was already determined
