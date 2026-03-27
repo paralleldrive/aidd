@@ -13,9 +13,9 @@ steps:
   # create-next-app sees an empty destination, then restores them afterwards.
   # Verified: npx create-next-app@latest . --yes in a directory containing
   # SCAFFOLD-MANIFEST.yml exits 1 with the conflict error above.
-  - run: node -e "const fs=require('fs'),path=require('path'),s='.aidd-scaffold-stash',f=['SCAFFOLD-MANIFEST.yml','README.md','index.md'];fs.mkdirSync(s,{recursive:true});for(const x of f){try{fs.renameSync(x,path.join(s,x));}catch(e){if(e.code!=='ENOENT')throw e;}}"
+  - run: node stash.js
   - run: npx shadcn@latest init -t next
-  - run: node -e "const fs=require('fs'),path=require('path'),s='.aidd-scaffold-stash',f=['SCAFFOLD-MANIFEST.yml','README.md','index.md'];for(const x of f){const p=path.join(s,x);try{if(fs.existsSync(p))fs.renameSync(p,x);}catch(e){throw e;}}try{fs.rmSync(s,{recursive:true,force:true});}catch(e){}"
+  - run: node restore.js
   # Install the AIDD framework before any prompt: step — agents need ai/ and skills when the prompt runs.
   - run: npx aidd .
   - run: npx shadcn@latest add button
