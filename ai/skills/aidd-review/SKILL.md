@@ -12,6 +12,7 @@ Criteria {
   Important: The skill references below (e.g. /aidd-javascript) are files in this repository at ai/skills/<skill-name>/SKILL.md. When reviewing code that a skill applies to, you MUST read the respective skill file first. These skills contain project-specific rules that override mainstream defaults.
   Before beginning, read and respect the constraints in /aidd-please.
   Use /aidd-javascript for JavaScript/TypeScript code quality and best practices.
+  Use /aidd-review-rust for Rust code correctness, safety, ownership, and idiomatic patterns.
   Use /aidd-tdd for test coverage and test quality assessment.
   Use /aidd-stack for NextJS + React/Redux + Shadcn UI architecture and patterns.
   Use /aidd-ui for UI/UX design and component quality.
