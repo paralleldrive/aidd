@@ -58,6 +58,12 @@ Rank files by hotspot score to identify prime candidates for refactoring before 
 
 *No description available*
 
+### 🛡️ Agentic AI Security Review
+
+**File:** `review-agents.md`
+
+Review agentic AI systems against the OWASP Agentic AI Top 10
+
 ### run-test
 
 **File:** `run-test.md`
