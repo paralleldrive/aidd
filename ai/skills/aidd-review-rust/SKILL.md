@@ -50,6 +50,7 @@ Priority1_Safety {
   `.expect()` on user input or network results => flag. `expect` is only for programmer invariants.
   `panic!()`, `unreachable!()` on recoverable conditions => flag. Return Result instead.
   Missing error context => flag when `?` propagates without `.context()` or `.map_err()` and the caller cannot determine which operation failed.
+  Empty error-handling arms (`Err(_) => {}`, `.ok()` discarding actionable errors) => flag. Handle or propagate the error.
 }
 
 Priority2_Security {
@@ -64,6 +65,7 @@ Priority3_Ownership {
   `&Vec<T>` in function params => flag. Accept `&[T]`.
   `&String` in function params => flag. Accept `&str`.
   `&PathBuf` in function params => flag. Accept `&Path`.
+  `&Box<T>` in function params => flag. Accept `&T`.
   `.clone()` where a borrow would work => flag. Borrow instead.
   `.to_string()` or `.to_owned()` inside a loop on the same value => flag. Hoist outside loop.
 }

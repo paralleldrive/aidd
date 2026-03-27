@@ -19,7 +19,9 @@ std::thread::sleep  — should be tokio::time::sleep in async code
 &Vec<              — should be &[T] in function params
 &String            — should be &str in function params
 &PathBuf           — should be &Path in function params
+&Box<              — should be &T in function params
 .clone()            — verify borrow would not suffice
+Err(_) =>          — check for silently swallowed errors
 format!(.* user     — check for injection via user input interpolation
 password            — verify not logged or included in error messages
 token               — verify not logged or included in error messages
@@ -52,6 +54,29 @@ let data = serde_json::from_reader(file)?;
 // Clear: caller knows exactly what failed
 let file = File::open(path).map_err(|e| AppError::FileOpen { path, source: e })?;
 let data = serde_json::from_reader(file).context("parsing config")?;
+```
+
+### Silently swallowed errors
+
+`Err(_) => {}`, `Err(_) => ()`, or `.ok()` on a Result whose error carries actionable information. Silent discard hides bugs.
+
+Deterministic rule:
+- Empty `Err(_)` match arms => always wrong
+- `.ok()` discarding I/O, network, or parse errors => always wrong
+- `let _ = tx.send(...)` in shutdown/cleanup paths => acceptable (receiver may be dropped)
+
+```rust
+// ALWAYS WRONG: error silently ignored
+match do_work() {
+    Ok(v) => v,
+    Err(_) => {}
+}
+
+// CORRECT: log, propagate, or convert
+match do_work() {
+    Ok(v) => v,
+    Err(e) => return Err(e.into()),
+}
 ```
 
 ## Priority 2: Security
