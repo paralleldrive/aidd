@@ -127,6 +127,13 @@ Rename `--agent` → `--agentConfig` on `create`; pass the flag value through to
 
 ---
 
+## `lib/churn-collector.js` — accurate PR-aware churn counting
+
+**Requirements**:
+- Given a PR branch, `collectChurn` should report each file's churn as its commit count on the main branch history plus one (for the upcoming squash merge), regardless of clone depth or remote availability
+
+---
+
 ## `aidd-custom/config.yml` template and docs
 
 **Requirements**:
