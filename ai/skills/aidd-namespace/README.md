@@ -1,38 +1,28 @@
-# Namespace Example.
+# aidd-namespace
 
-Create a new file like this:
+Ensures types and related functions are authored in a modular, discoverable,
+tree-shakeable namespace pattern.
 
+## Why
 
-src/types/point.ts
+Colocating a type with its associated functions in a namespace folder makes
+the API discoverable via autocomplete and ensures unused functions are
+tree-shaken at build time.
 
-    export type Point = { x: number, y: number };
+## Usage
 
-    
-    export const length = ({ x, y }: Point) => Math.hypot(x, y);
-    export const add = ({ x: x1, y: y1 }: Point, { x: x2, y: y2 }: Point): Point => ({ x: x1 + x2, y: y1 + y2 });
+Invoke `/aidd-namespace` with a file containing a type and its functions. The
+skill restructures it into a namespace folder:
 
-With this file in context run
+```
+src/types/point.ts          →  src/types/point/point.ts    (type + re-export)
+                                src/types/point/public.ts   (barrel)
+                                src/types/point/length.ts   (one function per file)
+                                src/types/point/add.ts
+```
 
-    /aidd-namespace
+## When to use
 
-The expected resulting files will be:
-
-
-src/types/point/point.ts
-
-    export type Point = { x: number, y: number };
-    export * as Point from "./public.js";
-
-src/types/point/public.ts
-
-    export * from "./length.js";
-    export * from "./add.js";
-
-src/types/point/length.ts
-
-    export const length = ({ x, y }: Point) => Math.hypot(x, y);
-
-src/types/point/add.ts
-
-    export const add = ({ x: x1, y: y1 }: Point, { x: x2, y: y2 }: Point): Point => ({ x: x1 + x2, y: y1 + y2 });
-
+- Creating types with associated functions
+- Refactoring type folders into the namespace pattern
+- Defining schemas or imports for types

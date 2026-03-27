@@ -69,6 +69,28 @@ export function generateFileEntry(
 export function generateSubdirEntry(subdirName: string): string;
 
 /**
+ * Check if a directory is a skills directory
+ * @param dirPath - Directory to check
+ */
+export function isSkillsDirectory(dirPath: string): Promise<boolean>;
+
+/**
+ * Generate a simple bullet entry for a skill from its SKILL.md frontmatter
+ * @param dirPath - Parent directory containing the skill subdirectory
+ * @param subdirName - Name of the skill subdirectory
+ */
+export function generateSkillEntry(
+  dirPath: string,
+  subdirName: string,
+): Promise<string | null>;
+
+/**
+ * Generate skills index content with simple bullet format
+ * @param dirPath - Skills directory to generate index for
+ */
+export function generateSkillsIndexContent(dirPath: string): Promise<string>;
+
+/**
  * Generate index.md content for a directory
  * @param dirPath - Directory to generate index for
  */
