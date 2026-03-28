@@ -132,6 +132,7 @@ Rename `--agent` → `--agentConfig` on `create`; pass the flag value through to
 **Requirements**:
 - Given a PR branch, `collectChurn` should report each file's churn as its commit count on the main branch history plus one (for the upcoming squash merge), regardless of clone depth or remote availability
 - Given a repository whose default branch is not `main` (e.g. `master`), `collectChurn` should correctly scope churn to that branch's history
+- Given a file deleted in this PR, `collectChurn` should not include it in the churn map with an inflated +1 count
 
 ---
 
