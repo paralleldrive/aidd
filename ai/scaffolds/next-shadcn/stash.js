@@ -1,20 +1,20 @@
-const fs = require("fs");
-const path = require("path");
+import { mkdirSync, renameSync } from "fs";
+import { join } from "path";
 
 const stashDir = ".aidd-scaffold-stash";
 const files = [
   "SCAFFOLD-MANIFEST.yml",
   "README.md",
   "index.md",
-  "stash.cjs",
-  "restore.cjs",
+  "stash.js",
+  "restore.js",
 ];
 
-fs.mkdirSync(stashDir, { recursive: true });
+mkdirSync(stashDir, { recursive: true });
 
 for (const file of files) {
   try {
-    fs.renameSync(file, path.join(stashDir, file));
+    renameSync(file, join(stashDir, file));
   } catch (e) {
     if (e.code !== "ENOENT") throw e;
   }
