@@ -15,7 +15,7 @@ steps:
   # SCAFFOLD-MANIFEST.yml exits 1 with the conflict error above.
   - run: node stash.js
   - run: npx shadcn@latest init -t next
-  - run: node restore.js
+  - run: node .aidd-scaffold-stash/restore.js
   # Install the AIDD framework before any prompt: step — agents need ai/ and skills when the prompt runs.
   - run: npx aidd .
   - run: npx shadcn@latest add button

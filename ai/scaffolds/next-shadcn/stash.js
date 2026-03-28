@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const stashDir = ".aidd-scaffold-stash";
-const files = ["SCAFFOLD-MANIFEST.yml", "README.md", "index.md"];
+const files = ["SCAFFOLD-MANIFEST.yml", "README.md", "index.md", "stash.js", "restore.js"];
 
 fs.mkdirSync(stashDir, { recursive: true });
 
