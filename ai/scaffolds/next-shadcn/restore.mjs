@@ -6,8 +6,8 @@ const files = [
   "SCAFFOLD-MANIFEST.yml",
   "README.md",
   "index.md",
-  "stash.js",
-  "restore.js",
+  "stash.mjs",
+  "restore.mjs",
 ];
 
 for (const file of files) {

@@ -13,9 +13,9 @@ steps:
   # create-next-app sees an empty destination, then restores them afterwards.
   # Verified: npx create-next-app@latest . --yes in a directory containing
   # SCAFFOLD-MANIFEST.yml exits 1 with the conflict error above.
-  - run: node --input-type=module stash.js
+  - run: node stash.mjs
   - run: npx shadcn@latest init -t next
-  - run: node --input-type=module .aidd-scaffold-stash/restore.js
+  - run: node .aidd-scaffold-stash/restore.mjs
   # Install the AIDD framework before any prompt: step — agents need ai/ and skills when the prompt runs.
   - run: npx aidd .
   - run: npx shadcn@latest add button
