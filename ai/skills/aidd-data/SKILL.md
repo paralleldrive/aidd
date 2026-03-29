@@ -14,6 +14,9 @@ Can be deterministically derived directly or indirectly from "Independent Data".
 
 # General Data Rules
 
+Use `type` for data type declarations.
+Do NOT use `interface` for data type declarations.
+
 Prefer simple, readonly JSON values as they are easy to inspect, serialize and deserialize.
 
 Use simple, descriptive, readable camelCase names for properties on objects.
@@ -33,6 +36,17 @@ Anything other than that should never be used for either independent or dependen
 For performance reasons we may use other classes such as typed buffers, Sets or Maps within particular algorithms, but the external inputs and outputs from those algorithms should be standard data.
 
 Prefer arrays or tuples over objects if the indices are integers starting at 0 and have no gaps.
+
+## Discriminated Unions
+
+Using discriminated unions can be useful sometimes to attach different properties depending on the type. Keep in mind however that there is a balance between that and usability and concision of your type definitions. If almost all or almost all the properties are the same between all members of a discriminated union then probably just use the simpler declaration.
+
+```
+// bad because they both contain all the same properties
+type Foo = { type: "a", value: string } | { type: "b", value: string }
+// good
+type Foo = { type: "a" | "b", value: string }
+```
 
 ## Example Types
 
