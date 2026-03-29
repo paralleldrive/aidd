@@ -45,3 +45,5 @@ import { resolveAgentConfig } from 'aidd/agent-config';
 // Priority: explicit value → AIDD_AGENT_CONFIG env → aidd-custom/config.yml → claude
 const config = await resolveAgentConfig({ cwd: process.cwd() });
 ```
+
+For CLI usage, see [Agent CLI](agent-cli.md).

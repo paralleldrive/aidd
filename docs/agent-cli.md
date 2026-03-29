@@ -74,3 +74,5 @@ npx aidd create my-app --agent-config cursor --prompt "Review the scaffold and s
 For the full option table and behavior notes, see **[aidd-custom.md](./aidd-custom.md)** — **config.yml options**.
 
 **Reminder:** `agent-config` accepts `claude`, `opencode`, `cursor`, a path to a `.yml` (or `.yaml`) agent config file, or an inline object with `command` and `args`.
+
+For programmatic use (`runAgent`, `resolveAgentConfig`), see [Agent API](agent-api.md).
