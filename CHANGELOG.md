@@ -5,15 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.0.0] - 2026-03-29
 
 ### Added
+- `npx aidd agent --prompt "<text>"` — new CLI subcommand that delegates a prompt to an AI agent (claude, opencode, or cursor) directly from the terminal
+- `--prompt <text>` flag on `npx aidd create` — after scaffolding completes, runs an AI agent in the new project directory to kick off autonomous development
+- `--agent-config <name|path>` on `create` and `agent` — configures which AI agent to use; accepts a preset name (`claude`, `opencode`, `cursor`), a path to a YAML config file, or falls through the full resolution chain
+- Agent config resolution chain: explicit flag → `AIDD_AGENT_CONFIG` env var → `agent-config` in `aidd-custom/config.yml` → claude default
+- `agent-config` option in `aidd-custom/config.yml` — documented in `docs/aidd-custom.md` and pre-populated as a commented example in the install template
+- `aidd/agent` package export — programmatic access to `runAgent` for third-party tools and scaffold manifests
+- `aidd/agent-config` package export — programmatic access to `getAgentConfig` / `resolveAgentConfig` with full TypeScript types
+- `ScaffoldDestinationError` — dedicated error type (code `SCAFFOLD_DESTINATION_ERROR`) when `npx aidd create` target folder already exists; displays a clear `❌ Destination conflict` message with actionable hint
+- Manifest prompt-step ordering guard — `parseManifest` now throws `ScaffoldValidationError` if a `prompt:` step appears before any `run:` step that invokes the `aidd` CLI, preventing agents from running before the framework is installed
 - `import aidd-custom/AGENTS.md` directive in root `AGENTS.md` — allows projects to override root-level agent directives with project-specific settings
 - `aidd-custom/AGENTS.md` scaffold — created automatically on `npx aidd` install to provide a place for project-specific agent instruction overrides
-- `createAiddCustomAgentsMd` function in `lib/aidd-custom/setup.js` — ensures `aidd-custom/AGENTS.md` is created on first install and never overwritten
+
+### Breaking Changes
+- **`npx aidd scaffold-cleanup`** removed — downloaded scaffold files are now cleaned up automatically after every `npx aidd create <url>`. Remove any explicit `scaffold-cleanup` calls from your workflows. ⚠️ Requires a major version bump.
 
 ### Changed
-- `scaffold-cleanup` CLI subcommand removed — downloaded scaffold files are now cleaned up automatically after every `npx aidd create <url>`; the subcommand is internal only
+- `aidd-tdd` skill — added mocking constraint: I/O operations should use integration tests; unit tests needing a mock should extract effect-free pure functions instead
+- `aidd-churn` skill — churn scores now exclude intra-PR commits automatically (scoped to `git merge-base HEAD origin/main`); added >15% composite score gate with RTC analysis for threshold breaches
 
 ### Fixed
 - `npx aidd create <url>` no longer fails on repeated runs with a destination-conflict error — `~/.aidd/scaffold/` is cleaned up automatically after every create, whether it succeeds or fails (fixes #157)

@@ -101,6 +101,15 @@ Install without Cursor integration:
 npx aidd my-project
 ```
 
+```bash
+# Run an agent directly
+npx aidd agent --prompt "Set up authentication"
+# Scaffold + run agent in one command
+npx aidd create my-app --prompt "Set up authentication"
+```
+
+_See [Agent CLI](docs/agent-cli.md) for full usage._
+
 ### 📋 Requirements
 
 - **Node.js**: 16.0.0+ (requires ESM support)
@@ -260,6 +269,11 @@ export default createRoute(
   }
 );
 ```
+
+- `aidd/agent` — spawn an AI agent process programmatically
+- `aidd/agent-config` — resolve agent configuration from presets, env, or config file
+
+_See [Agent API](docs/agent-api.md) for full usage._
 
 **Core Features:**
 

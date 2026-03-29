@@ -55,13 +55,7 @@ jobs:
 
       - name: Check Claude authentication
         id: claude-auth
-        run: |
-          if [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
-            echo "available=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "available=false" >> "$GITHUB_OUTPUT"
-            echo "⚠️ Skipping AI evals: CLAUDE_CODE_OAUTH_TOKEN not set"
-          fi
+        run: node scripts/check-claude-ai-eval-gate.js
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
