@@ -17,7 +17,7 @@
       "node lib/update-latest-tag-hook.js ${version}",
       "echo 🎉 Successfully released ${name} v${version}"
     ],
-    "before:init": ["npm test"]
+    "before:init": ["npm run test:unit"]
   },
   "npm": {
     "publish": true
