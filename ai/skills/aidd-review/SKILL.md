@@ -18,7 +18,7 @@ Criteria {
   Use /aidd-autodux for Redux state management patterns and Autodux usage.
   Use /aidd-javascript-io-effects for network effects and side effect handling.
   Use /commit for commit message quality and conventional commit format.
-  Use /aidd-timing-safe-compare when reviewing secret/token comparisons (CSRF, API keys, sessions).
+  Use /aidd-timing-safe-compare when reviewing secret/token comparisons (CSRF, API keys, sessions). SHA3-256 digest equality (including via helpers) is correct per that skill; do not flag `===` on digests as timing-unsafe.
   Use /aidd-jwt-security when reviewing authentication code. Recommend opaque tokens over JWT.
   Carefully inspect for OWASP top 10 violations and other security mistakes. Use search. Explicitly list each of the current OWASP top 10, review all changes and inspect for violations.
   Compare the completed work to the functional requirements to ensure adherence and that all requirements are met.
