@@ -169,15 +169,21 @@ describe("aidd create with AIDD_CUSTOM_CREATE_URI env var", () => {
   });
 });
 
-describe("aidd create --agent flag", () => {
+describe("aidd create --agent-config flag", () => {
   let tempDir;
+  let echoAgentConfigPath;
 
   beforeEach(async () => {
     tempDir = path.join(os.tmpdir(), `aidd-e2e-agent-${Date.now()}`);
     await fs.ensureDir(tempDir);
 
+    // Create a YAML agent config that uses 'echo' as the command —
+    // resolveAgentConfig loads it as { command: 'echo' } so the prompt
+    // step spawns `echo <prompt>` instead of a real AI CLI.
+    echoAgentConfigPath = path.join(tempDir, "echo-agent.yml");
+    await fs.writeFile(echoAgentConfigPath, "command: echo\n");
+
     // Create a minimal scaffold fixture with a prompt step
-    // Use 'echo' as a fake agent so prompt step completes without real AI
     const scaffoldDir = path.join(tempDir, "agent-test-scaffold");
     await fs.ensureDir(scaffoldDir);
     await fs.writeFile(
@@ -186,7 +192,7 @@ describe("aidd create --agent flag", () => {
     );
     await fs.writeFile(
       path.join(scaffoldDir, "SCAFFOLD-MANIFEST.yml"),
-      "steps:\n  - prompt: hello world\n",
+      "steps:\n  - run: npx aidd --version\n  - prompt: hello world\n",
     );
   });
 
@@ -194,13 +200,14 @@ describe("aidd create --agent flag", () => {
     await fs.remove(tempDir);
   });
 
-  test("passes the agent name to prompt step invocations", async () => {
+  test("passes the agent config to prompt step invocations", async () => {
     const scaffoldUri = `file://${path.join(tempDir, "agent-test-scaffold")}`;
 
-    // Use 'echo' as the agent: it just prints the prompt and exits successfully
+    // Use the echo-agent YAML config: resolveAgentConfig loads { command: 'echo' }
+    // so the prompt step runs `echo hello world` and exits successfully.
     const agentProjectDir = path.join(tempDir, "agent-project");
     const { stdout } = await execAsync(
-      `npx aidd create --agent echo "${scaffoldUri}" "${agentProjectDir}"`,
+      `npx aidd create --agent-config "${echoAgentConfigPath}" "${scaffoldUri}" "${agentProjectDir}"`,
       { timeout: 30_000 },
     );
 
@@ -208,21 +215,87 @@ describe("aidd create --agent flag", () => {
     const dirExists = await fs.pathExists(agentProjectDir);
 
     assert({
-      given: "--agent echo flag with a scaffold containing a prompt step",
-      should: "run the prompt step using the specified agent (echo)",
+      given:
+        "--agent-config <yaml-config> flag with a scaffold containing a prompt step",
+      should: "run the prompt step using the specified agent config",
       actual: dirExists,
       expected: true,
     });
 
     assert({
       given:
-        "--agent echo with a manifest prompt step containing 'hello world'",
+        "--agent-config echo-agent.yml with a manifest prompt step containing 'hello world'",
       should:
-        "include the prompt text in stdout, proving echo was invoked with it",
+        "include the prompt text in stdout, proving the agent was invoked with it",
       actual: stdout.includes("hello world"),
       expected: true,
     });
   }, 30_000);
+});
+
+describe("aidd agent command", () => {
+  let tempDir;
+
+  beforeEach(async () => {
+    tempDir = path.join(os.tmpdir(), `aidd-e2e-agent-cmd-${Date.now()}`);
+    await fs.ensureDir(tempDir);
+  });
+
+  afterEach(async () => {
+    await fs.remove(tempDir);
+  });
+
+  test("exits 0 and echoes the prompt when using an echo agent config", async () => {
+    const configPath = path.join(tempDir, "echo-agent.yml");
+    await fs.writeFile(configPath, "command: echo\n");
+
+    const { stdout } = await execAsync(
+      `npx aidd agent --prompt "hello" --agent-config "${configPath}"`,
+      { timeout: 10_000 },
+    );
+
+    assert({
+      given: "aidd agent --prompt hello with an echo agent config",
+      should: "exit 0 and include the prompt text in stdout",
+      actual: stdout.includes("hello"),
+      expected: true,
+    });
+  }, 10_000);
+
+  test("exits 1 when --prompt is not provided", async () => {
+    let exitCode = 0;
+    try {
+      await execAsync("npx aidd agent", { timeout: 10_000 });
+    } catch (err) {
+      exitCode = err.code;
+    }
+
+    assert({
+      given: "aidd agent invoked without --prompt",
+      should: "exit with code 1",
+      actual: exitCode,
+      expected: 1,
+    });
+  }, 10_000);
+
+  test("exits 1 when the agent config file does not exist", async () => {
+    let exitCode = 0;
+    try {
+      await execAsync(
+        `npx aidd agent --prompt "hello" --agent-config "${tempDir}/nonexistent.yml"`,
+        { timeout: 10_000 },
+      );
+    } catch (err) {
+      exitCode = err.code;
+    }
+
+    assert({
+      given: "aidd agent with a non-existent agent config YAML path",
+      should: "exit with code 1",
+      actual: exitCode,
+      expected: 1,
+    });
+  }, 10_000);
 });
 
 describe("aidd create — error paths", () => {

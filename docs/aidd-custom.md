@@ -20,6 +20,7 @@ automatically by the AIDD installer and tracked in your repository alongside
 | Option            | Default | Description                                                                    |
 |-------------------|---------|--------------------------------------------------------------------------------|
 | `e2eBeforeCommit` | `false` | Run `npm run test:e2e` locally before each commit. When `false`, the full e2e suite runs in CI only. Set to `true` in projects where e2e tests are fast and reliably parallel. |
+| `agent-config`    | `claude` | Agent used for prompt manifest steps and `npx aidd agent`. Accepted values: `claude` \| `opencode` \| `cursor` \| a path to a `.yml` agent config file \| an inline `{ command, args }` object. |
 
 ## Agent Instruction Overrides
 

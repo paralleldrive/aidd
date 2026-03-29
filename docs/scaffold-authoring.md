@@ -33,6 +33,9 @@ steps:
   - prompt: Set up a basic project structure with src/ and tests/
 ```
 
+> **Prefer `run:` over `prompt:` for CLI operations.**
+> Anything expressible as a deterministic shell command (package installs, `npx` scaffolding tools, `npm pkg set`, file generation) MUST use `run:`. Reserve `prompt:` for work that genuinely requires agent reasoning — creative decisions, wiring together components, writing app-specific logic.
+
 ### Validation rules
 
 `npx aidd create` validates the manifest before executing any steps. Your manifest will be rejected with a clear error if:
@@ -41,6 +44,13 @@ steps:
 - Any step is not a plain object (e.g. a bare string or `null`)
 - Any step has no recognized keys (`run` or `prompt`)
 - Any step has both `run` and `prompt` keys (ambiguous — use two separate steps instead)
+- Any `prompt:` step appears before a `run:` step that invokes the `aidd` CLI
+
+**The `aidd` ordering rule:** every manifest that contains a `prompt:` step must first install the AIDD framework with a `run:` step such as `run: npx aidd .`. This ensures the AI agent has access to AIDD's prompts and skills when it runs. Valid invocation forms include `npx aidd`, `bunx aidd`, `yarn dlx aidd`, `pnpm dlx aidd`, and `npx -y aidd`.
+
+    steps:
+      - run: npx aidd .      # ← required before any prompt: step
+      - prompt: Set up the project structure
 
 Run `npx aidd verify-scaffold <name-or-uri>` at any time to check your manifest without executing it:
 
@@ -119,16 +129,11 @@ npx aidd create https://github.com/your-org/my-scaffold my-project
 
 ---
 
-## Distributing via GitHub releases (recommended) vs git clone
+## Distributing via GitHub releases
 
-| | GitHub release tarball | git clone |
-|---|---|---|
-| **Versioned** | Yes — pinned to a tag | No — always HEAD |
-| **Reproducible** | Yes | No |
-| **Download size** | Small — source only | Large — includes git history |
-| **No git required on consumer** | Yes (HTTP download) | No (requires git) |
+The AIDD resolver downloads a release tarball from GitHub rather than cloning the repository. This gives consumers a fast, versioned, reproducible install with no git tooling required. Git clone is not a supported consumer path — `npx aidd create` only accepts HTTP/HTTPS tarball URLs, named scaffolds bundled in the package, and `file://` URIs for local testing.
 
-The AIDD resolver will download and extract the release tarball rather than cloning the repository, giving users a fast, versioned, reproducible scaffold install.
+**A published GitHub release is required.** When a user passes a GitHub repository URL, the resolver fetches the latest release tarball automatically. If no release exists yet, the download will fail. Create at least one tagged release before sharing your scaffold URL.
 
 ---
 
@@ -144,3 +149,32 @@ npx aidd create file:///path/to/my-scaffold my-test-project
 ### Downloaded scaffold files
 
 When `npx aidd create` downloads a scaffold from a remote URL (HTTP/HTTPS), the temporary files in `~/.aidd/scaffold/` are removed automatically after the scaffold finishes — whether it succeeds or fails. There is no manual cleanup step required.
+
+---
+
+## Using named scaffolds
+
+The built-in scaffolds (`next-shadcn`, `scaffold-example`) are bundled inside the `aidd` package. When you run `npx aidd create my-app`, the CLI locates the scaffold, copies its files into your new project directory, and executes the manifest steps.
+
+### Using `next-shadcn` (the default)
+
+```bash
+# Uses next-shadcn by default
+npx aidd create my-app
+
+# Equivalent — explicit scaffold name
+npx aidd create next-shadcn my-app
+
+# After scaffolding, kick off an agent in the new project automatically
+npx aidd create my-app --prompt "Add authentication using NextAuth.js"
+```
+
+### Building a custom scaffold based on next-shadcn
+
+Reference a GitHub release to create a versioned, shareable scaffold:
+
+```bash
+npx aidd create https://github.com/your-org/my-next-scaffold my-app
+```
+
+See _Distributing via GitHub releases_ above for packaging instructions.
