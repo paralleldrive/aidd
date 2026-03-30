@@ -22,6 +22,12 @@ Rank files by hotspot score to identify prime candidates for refactoring before 
 
 Review a PR, resolve addressed comments, and generate /aidd-fix delegation prompts for remaining issues
 
+### 📋 /aidd-requirements
+
+**File:** `aidd-requirements.md`
+
+Write functional requirements for a user story. Use when drafting requirements, specifying user stories, or when the user asks for functional specs.
+
 ### Commit
 
 **File:** `commit.md`
