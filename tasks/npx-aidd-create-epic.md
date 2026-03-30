@@ -192,16 +192,24 @@ The existing `!typeDir.startsWith(scaffoldsRoot + path.sep)` check incorrectly a
 
 ---
 
-## Support `GITHUB_TOKEN` for private repos and higher rate limits
+## GitHub authentication for private repos and higher rate limits
 
-`defaultResolveRelease` and `defaultDownloadAndExtract` currently make unauthenticated requests, limiting usage to public repos and 60 API requests/hr per IP. Adding optional `GITHUB_TOKEN` support covers private-repo scaffold authors and avoids spurious rate-limit failures in busy environments.
+`defaultResolveRelease` and `defaultDownloadAndExtract` resolve a GitHub token automatically via `getGitHubToken()` (`lib/gh-auth.js`). The resolution order is:
+
+1. `GITHUB_TOKEN` environment variable (explicit override)
+2. `gh auth token` output (GitHub CLI credential store)
+
+This means users who have run `gh auth login` can access private repos they've been granted access to — even repos they don't own — without manually creating a PAT.
 
 **Requirements**:
-- Given `GITHUB_TOKEN` is set in the environment, `defaultResolveRelease` should include an `Authorization: Bearer ${GITHUB_TOKEN}` header on the GitHub API request
-- Given `GITHUB_TOKEN` is set in the environment, `defaultDownloadAndExtract` should include an `Authorization: Bearer ${GITHUB_TOKEN}` header only when the download URL's hostname is `api.github.com`, `github.com`, or `codeload.github.com` — never for third-party hosts
-- Given the GitHub API returns 403 (rate limited), the error should say "GitHub API rate limit exceeded — set GITHUB_TOKEN for 5,000 req/hr" regardless of whether a token is set
-- Given the GitHub API returns 404 and `GITHUB_TOKEN` is **not** set, the error should include the hint: "If the repo is private, set GITHUB_TOKEN to authenticate"
-- Given the GitHub API returns 404 and `GITHUB_TOKEN` **is** set, the error should not include that hint (the token is set; the repo simply doesn't exist or has no releases)
+- Given `GITHUB_TOKEN` is set in the environment, `defaultResolveRelease` should include an `Authorization: Bearer` header on the GitHub API request
+- Given `GITHUB_TOKEN` is not set but `gh auth login` has been completed, `defaultResolveRelease` should include an `Authorization: Bearer` header using the `gh` CLI token
+- Given a token is available from any source, `defaultDownloadAndExtract` should include an `Authorization: Bearer` header only when the download URL's hostname is `api.github.com`, `github.com`, or `codeload.github.com` — never for third-party hosts
+- Given the GitHub API returns 403 (rate limited), the error should mention both `GITHUB_TOKEN` and `gh auth login` as authentication options
+- Given the GitHub API returns 404 and no token is available from any source, the error should include the hint to set `GITHUB_TOKEN` or run `gh auth login`
+- Given the GitHub API returns 404 and a token **is** available, the error should not include that hint (already authenticated; repo simply doesn't exist or has no releases)
+- Given `gh` CLI is not installed, token resolution should silently fall back to unauthenticated (no error)
+- Given the `gh` CLI result, it should be cached for the process lifetime to avoid repeated subprocess spawns
 
 ---
 
