@@ -155,3 +155,7 @@ fn whenCreatingOrModifyingReactComponent() {
   }
 }
 ```
+
+## Review
+
+IMPORTANT! Make absolutely certain that all hooks are executed in the same order every call. DO NOT have any early exits or returns preceding any hooks!

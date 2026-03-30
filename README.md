@@ -101,6 +101,17 @@ Install without Cursor integration:
 npx aidd my-project
 ```
 
+```bash
+# Run an agent directly
+npx aidd agent --prompt "Set up authentication"
+# Scaffold + run agent in one command
+npx aidd create my-app --prompt "Set up authentication"
+```
+
+For `npx aidd create` with a **GitHub repository URL** (`https://github.com/owner/repo`), authentication uses the GitHub CLI first when available: run [`gh auth login`](https://cli.github.com/) so private repos you can access (including org repos you do not own) work without exporting a long-lived token. If `gh` is not available or not logged in, you can still set `GITHUB_TOKEN` or `GH_TOKEN` for CI or compatibility.
+
+_See [Agent CLI](docs/agent-cli.md) for full usage._
+
 ### 📋 Requirements
 
 - **Node.js**: 16.0.0+ (requires ESM support)
@@ -260,6 +271,11 @@ export default createRoute(
   }
 );
 ```
+
+- `aidd/agent` — spawn an AI agent process programmatically
+- `aidd/agent-config` — resolve agent configuration from presets, env, or config file
+
+_See [Agent API](docs/agent-api.md) for full usage._
 
 **Core Features:**
 
@@ -443,8 +459,34 @@ npx aidd backend-api
 
 Skills are reusable agent workflows that extend AIDD with specialized capabilities. Invoke them by name in any AI coding assistant.
 
+- **[/aidd-agent-orchestrator](ai/skills/aidd-agent-orchestrator/README.md)** — Coordinates specialized agents for software development tasks. Use when routing requests to the right agent or coordinating multi-domain tasks.
+- **[/aidd-autodux](ai/skills/aidd-autodux/README.md)** — Create and transpile Autodux Redux state management dux objects. Use when building Redux state management, defining reducers, action creators, or selectors.
 - **[/aidd-churn](ai/skills/aidd-churn/README.md)** — Hotspot analysis: run `npx aidd churn`, interpret the ranked results, and recommend specific files to review or refactor with concrete strategies. Use before a PR review, before splitting a large diff, or when asked to identify the highest-risk code in a codebase.
+- **[/aidd-ecs](ai/skills/aidd-ecs/README.md)** — Enforces @adobe/data/ecs best practices. Use when working with ECS components, resources, transactions, actions, systems, or services.
+- **[/aidd-error-causes](ai/skills/aidd-error-causes/README.md)** — Structured error handling with the error-causes library. Use when throwing errors, catching errors, defining error types, or implementing error routing.
 - **[/aidd-fix](ai/skills/aidd-fix/README.md)** — Fix a bug or implement review feedback following the AIDD fix process. Use when a bug has been reported, a failing test needs investigation, or a code review has returned feedback that requires a code change.
+- **[/aidd-functional-requirements](ai/skills/aidd-functional-requirements/README.md)** — Write functional requirements for a user story. Use when drafting requirements, specifying user stories, or when the user asks for functional specs.
+- **[/aidd-javascript](ai/skills/aidd-javascript/README.md)** — JavaScript and TypeScript best practices and guidance. Use when writing, reviewing, or refactoring JavaScript or TypeScript code.
+- **[/aidd-javascript-io-effects](ai/skills/aidd-javascript-io-effects/README.md)** — Isolate network I/O and side effects using the saga pattern with call and put. Use when making network requests, invoking side effects, or implementing Redux sagas.
+- **[/aidd-jwt-security](ai/skills/aidd-jwt-security/README.md)** — JWT security review patterns. Use when reviewing or implementing authentication code, token handling, or session management.
+- **[/aidd-layout](ai/skills/aidd-layout/README.md)** — Enforces UI component layout and composition patterns. Use when designing layouts, spacing, gaps, or component hierarchy.
+- **[/aidd-lit](ai/skills/aidd-lit/README.md)** — Enforces Lit element authoring best practices. Use when creating Lit elements, binding elements, presentations, or reactive binding patterns.
+- **[/aidd-log](ai/skills/aidd-log/README.md)** — Document completed epics in a structured changelog with emoji categorization. Use after completing a significant feature or epic.
+- **[/aidd-namespace](ai/skills/aidd-namespace/README.md)** — Ensures types and related functions are authored in a modular, discoverable, tree-shakeable pattern. Use when creating types, refactoring type folders, or defining schemas.
+- **[/aidd-observe](ai/skills/aidd-observe/README.md)** — Enforces Observe pattern best practices from @adobe/data/observe. Use when working with observables, reactive data flow, or service Observe properties.
+- **[/aidd-please](ai/skills/aidd-please/README.md)** — General AI assistant for software development projects. Use for general assistance, logging, committing, and proofing tasks.
+- **[/aidd-product-manager](ai/skills/aidd-product-manager/README.md)** — Plan features, user stories, user journeys, and conduct product discovery. Use when building specifications, journey maps, story maps, or personas.
+- **[/aidd-react](ai/skills/aidd-react/README.md)** — Enforces React component authoring best practices. Use when creating React components, binding components, or working with React UI patterns.
+- **[/aidd-review](ai/skills/aidd-review/README.md)** — Conduct thorough code reviews focusing on quality, security, test coverage, and adherence to project standards. Use when reviewing code, pull requests, or completed epics.
+- **[/aidd-service](ai/skills/aidd-service/README.md)** — Enforces asynchronous data service authoring best practices. Use when creating front-end or back-end services, service interfaces, or data flow patterns.
+- **[/aidd-stack](ai/skills/aidd-stack/README.md)** — Tech stack guidance for NextJS + React/Redux + Shadcn UI features. Use when implementing full stack features or choosing architecture patterns.
+- **[/aidd-structure](ai/skills/aidd-structure/README.md)** — Enforces source code structuring and interdependency best practices. Use when creating folders, moving files, adding imports, or planning module architecture.
+- **[/aidd-sudolang-syntax](ai/skills/aidd-sudolang-syntax/README.md)** — Quick cheat sheet for SudoLang syntax. Use when writing or reading SudoLang pseudocode, interfaces, constraints, or function definitions.
+- **[/aidd-task-creator](ai/skills/aidd-task-creator/README.md)** — Systematic task and epic planning and execution. Use when planning an epic, breaking down work, or executing a task plan.
+- **[/aidd-tdd](ai/skills/aidd-tdd/README.md)** — Systematic test-driven development with proper test isolation. Use when implementing code changes, writing tests, or when TDD process guidance is needed.
+- **[/aidd-timing-safe-compare](ai/skills/aidd-timing-safe-compare/README.md)** — Security rule for timing-safe secret comparison using SHA3-256 hashing. Use when reviewing or implementing secret comparisons, token validation, or API key checks.
+- **[/aidd-ui](ai/skills/aidd-ui/README.md)** — Design beautiful and friendly user interfaces and experiences. Use when building UI components, styling, animations, accessibility, or responsive design.
+- **[/aidd-user-testing](ai/skills/aidd-user-testing/README.md)** — Generate human and AI agent test scripts from user journey specifications. Use when creating user test scripts or validating user journeys.
 
 ## 📁 AI System Structure
 

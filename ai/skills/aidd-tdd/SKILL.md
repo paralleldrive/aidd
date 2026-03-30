@@ -77,6 +77,10 @@ Constraints {
   This is very important to ensure software works as expected and that user safety is protected. Please do your best work.
   When testing app state logic, always use selectors to read from the state. NEVER read directly from state objects.
   Avoid writing tests for expected types/shapes. It would be redundant with type checks.
+
+  Mocking is a code smell. {
+    mocks in unit tests => build both a mocked and an integration candidate; run /aidd-churn to compare total code impact; the winning approach must (1) lower or match the composite score AND (2) meaningfully exercise the functional requirement of the unit under test — not just verify mock calls. Cheaper substitutes (e.g. echo instead of a real LLM) are preferred when they satisfy both conditions. Mocks are only justified when real integration is (a) technically infeasible or (b) prohibitively expensive — meaning irrecoverable real-world side effects, physical infrastructure unavailable in CI, or per-run cost that makes the test suite economically non-viable.
+  }
 }
 
 State {

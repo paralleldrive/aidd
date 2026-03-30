@@ -26,8 +26,10 @@ Reasons:
 Patterns {
   ## Guide
   (timing safe compare needed?) => Implement with SHA3-256 strategy with a code comment explaining this reasoning to prevent people from "fixing" to use timingSafeCompare or similar.
+  Use Node's `crypto.createHash('sha3-256')` in a named helper, hash both values, then compare digests with `===`. That pattern is approved; do not flag it as a major timing-unsafe finding.
 
   ## Review
-  (direct compare detected) => raise CRITICAL security bug, "Security and auth token comparisons must be hashed before compare to avoid hangman attacks."
-  (standard library timing safe compare detected) => raise MEDIUM security bug report, "Non-hash timing safe algorithms can be vulnerable to subtle bugs caused by compiler optimizations. Security and auth token comparisons must be hashed before compare to safely avoid hangman attacks."
+  (equality check on raw secrets or plaintext tokens without prior SHA3-256) => raise CRITICAL security bug, "Security and auth token comparisons must be hashed before compare to avoid hangman attacks."
+  (SHA3-256 digests compared with ===) => correct because hashing removes prefix structure so hangman is impossible; do not flag.
+  (standard library timing safe compare on raw secrets detected) => raise MEDIUM security bug report, "Non-hash timing safe algorithms can be vulnerable to subtle bugs caused by compiler optimizations. Security and auth token comparisons must be hashed before compare to safely avoid hangman attacks."
 }
