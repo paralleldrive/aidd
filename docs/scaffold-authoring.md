@@ -26,10 +26,9 @@ The manifest is a YAML file with a single `steps` key containing an ordered list
 
 ```yaml
 steps:
-  - run: npm init -y
+  - run: npm install
   - run: npm pkg set scripts.test="vitest run"
   - run: npm pkg set scripts.release="release-it"
-  - run: npm install --save-dev vitest@latest release-it@latest
   - prompt: Set up a basic project structure with src/ and tests/
 ```
 
