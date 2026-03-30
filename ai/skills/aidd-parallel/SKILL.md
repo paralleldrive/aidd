@@ -56,5 +56,5 @@ delegate(tasks, branch) {
 
 Commands {
   /aidd-parallel [--branch <branch>] <tasks> - generate one /aidd-fix delegation prompt per task
-  /aidd-parallel delegate - build file list + mermaid dep graph, sequence, and dispatch to sub-agents
+  /aidd-parallel delegate [--branch <branch>] <tasks> - build file list + mermaid dep graph, sequence, and dispatch to sub-agents
 }
