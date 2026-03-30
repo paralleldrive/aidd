@@ -27,18 +27,14 @@ Given the following PR:
 1. Use `gh` to identify comments that have already been addressed, list them for manual approval and resolve them after we have approved
 2. Validate remaining issues, and:
 
-For each issue:
-
-Generate a prompt to delegate to another agent to address ONLY that issue using the /aidd-fix command. Remember to start the delegation prompt with `/aidd-fix`.
+For each issue, use `/aidd-parallel --branch <PR branch>` to generate the delegation prompts.
 
 Constraints {
-  put the prompt in a markdown codeblock, indenting any nested codeblocks to prevent breaking the outer block
-  instruct the agent to branch directly from the main PR branch and commit directly to the main PR branch (not from/to main, not to their own fix branch)
   Do not close any other PRs
   Do not touch anything but the branch below
 }
 
 Commands {
   /aidd-pr [PR URL] - take a PR URL, identify issues, and delegate prompts to fix the issues
-  /aidd-pr delegate - delegate the generated prompts to sub-agents and use the GraphQL API to resolve any related PR conversations
+  /aidd-pr delegate - call /aidd-parallel delegate to dispatch prompts, then resolve related PR conversation threads via the GitHub GraphQL API
 }

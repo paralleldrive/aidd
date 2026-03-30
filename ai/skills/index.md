@@ -60,6 +60,10 @@ See [`aidd-namespace/index.md`](./aidd-namespace/index.md) for contents.
 
 See [`aidd-observe/index.md`](./aidd-observe/index.md) for contents.
 
+### 📁 aidd-parallel/
+
+See [`aidd-parallel/index.md`](./aidd-parallel/index.md) for contents.
+
 ### 📁 aidd-please/
 
 See [`aidd-please/index.md`](./aidd-please/index.md) for contents.
