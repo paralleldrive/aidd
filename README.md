@@ -108,6 +108,8 @@ npx aidd agent --prompt "Set up authentication"
 npx aidd create my-app --prompt "Set up authentication"
 ```
 
+For `npx aidd create` with a **GitHub repository URL** (`https://github.com/owner/repo`), authentication uses the GitHub CLI first when available: run [`gh auth login`](https://cli.github.com/) so private repos you can access (including org repos you do not own) work without exporting a long-lived token. If `gh` is not available or not logged in, you can still set `GITHUB_TOKEN` or `GH_TOKEN` for CI or compatibility.
+
 _See [Agent CLI](docs/agent-cli.md) for full usage._
 
 ### 📋 Requirements
