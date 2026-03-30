@@ -135,6 +135,12 @@ The AIDD resolver downloads a release tarball from GitHub rather than cloning th
 
 **A published GitHub release is required.** When a user passes a GitHub repository URL, the resolver fetches the latest release tarball automatically. If no release exists yet, the download will fail. Create at least one tagged release before sharing your scaffold URL.
 
+### Authenticating for private GitHub scaffolds
+
+Consumers need credentials that can read your repository and its releases. **Prefer the [GitHub CLI](https://cli.github.com/):** run `gh auth login` on the machine where you run `npx aidd create`. The CLI session is used automatically for GitHub API and tarball requests—no need to export a personal access token in the shell for day-to-day use.
+
+If `gh` is not installed or not logged in, `GITHUB_TOKEN` or `GH_TOKEN` (classic PAT or fine-grained token with **Contents** read access to the repo) is still supported for scripts and CI. Credentials are only sent to `api.github.com`, `github.com`, and `codeload.github.com`, never to arbitrary third-party scaffold URLs.
+
 ---
 
 ## Testing your scaffold locally

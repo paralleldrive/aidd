@@ -205,6 +205,17 @@ The existing `!typeDir.startsWith(scaffoldsRoot + path.sep)` check incorrectly a
 
 ---
 
+## GitHub authentication for private scaffolds (`create` / `verify-scaffold`)
+
+**Requirements**:
+- Given the user has authenticated with the GitHub CLI (`gh auth login`) and a GitHub scaffold URL is resolved or downloaded, should use that credential for GitHub API and tarball requests without requiring exported `GITHUB_TOKEN` or `GH_TOKEN` in the environment
+- Given the GitHub CLI does not provide a token but `GITHUB_TOKEN` or `GH_TOKEN` is set, should use that environment variable for the same GitHub requests
+- Given neither the GitHub CLI nor those environment variables provide a token, should perform unauthenticated GitHub requests
+- Given both a usable GitHub CLI session and `GITHUB_TOKEN` are available, should prefer the GitHub CLI token when attaching `Authorization` headers
+- Given a scaffold download URL is not hosted on `api.github.com`, `github.com`, or `codeload.github.com`, should not attach GitHub credentials to that download request
+
+---
+
 ## Fix `verify-scaffold` HTTP/HTTPS scaffold download location and cleanup
 
 `verify-scaffold` downloaded remote scaffolds to `.aidd/scaffold/` in the current working directory and never cleaned them up — a silent filesystem side effect for a read-only validation command.
