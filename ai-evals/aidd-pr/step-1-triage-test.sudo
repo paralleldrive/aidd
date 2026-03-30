@@ -16,9 +16,10 @@ mock gh api (list review threads) => returns:
 
 mock GraphQL resolveReviewThread => returns: { thread: { isResolved: true } }
 
-Run step 1 of /aidd-pr: fetch the PR details and review threads.
+Run step 1 of /aidd-pr: triage the review threads.
 """
 
-- Given mock gh tools, should call gh pr view to retrieve the PR branch name
-- Given mock gh tools, should call gh api to list the open review threads
-- Given the review threads, should present them before taking any action
+- Given the mock gh api returns two threads, should list both threads before taking any action
+- Given a thread whose concern is already fixed in the current source, should classify it as addressed
+- Given a thread whose concern is not present in the current source, should classify it as remaining
+- Given the addressed list is presented, should require approval before resolving

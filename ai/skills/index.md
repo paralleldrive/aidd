@@ -88,6 +88,10 @@ See [`aidd-requirements/index.md`](./aidd-requirements/index.md) for contents.
 
 See [`aidd-review/index.md`](./aidd-review/index.md) for contents.
 
+### 📁 aidd-riteway-ai/
+
+See [`aidd-riteway-ai/index.md`](./aidd-riteway-ai/index.md) for contents.
+
 ### 📁 aidd-service/
 
 See [`aidd-service/index.md`](./aidd-service/index.md) for contents.

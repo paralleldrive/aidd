@@ -34,6 +34,12 @@ Review a PR, resolve addressed comments, and generate /aidd-fix delegation promp
 
 Write functional requirements for a user story. Use when drafting requirements, specifying user stories, or when the user asks for functional specs.
 
+### 🧪 /aidd-riteway-ai
+
+**File:** `aidd-riteway-ai.md`
+
+Write correct riteway ai prompt evals for multi-step tool-calling flows. Use when creating .sudo eval files or testing agent skills that use tools.
+
 ### Commit
 
 **File:** `commit.md`
