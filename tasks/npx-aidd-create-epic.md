@@ -205,6 +205,21 @@ The existing `!typeDir.startsWith(scaffoldsRoot + path.sep)` check incorrectly a
 
 ---
 
+## Support `gh auth login` as a token fallback for private repos not owned by the user
+
+Users cannot create a `GITHUB_TOKEN` for private repos they do not own (e.g. a scaffold in a third-party private org). The `gh` CLI credential store (`gh auth token`) provides an OAuth token that works for any repo the authenticated user has access to, including org-owned private repos.
+
+**Requirements**:
+- Given `GITHUB_TOKEN` is set in the environment, `getGitHubToken` should return the environment token (unchanged behaviour — env var takes priority)
+- Given `GITHUB_TOKEN` is **not** set and `gh auth token` returns a non-empty token, `getGitHubToken` should return that token (enables access to private repos the user has `gh` access to)
+- Given `GITHUB_TOKEN` is **not** set and `gh auth token` fails or returns empty, `getGitHubToken` should return `null` (graceful degradation — unauthenticated behaviour unchanged)
+- Given `GITHUB_TOKEN` is set, `getGitHubToken` should NOT call `gh auth token` (env var short-circuits the subprocess call)
+- Given `GITHUB_TOKEN` is not set and `gh` is authenticated, `defaultResolveRelease` should include an `Authorization: Bearer <gh-token>` header in the GitHub API request
+- Given `GITHUB_TOKEN` is not set and `gh` is authenticated, `defaultDownloadAndExtract` should include an `Authorization: Bearer <gh-token>` header for GitHub download URLs
+- Given no auth is available (no `GITHUB_TOKEN`, no `gh` login), the error for a 404 response should hint to set `GITHUB_TOKEN` **or** run `gh auth login` to authenticate
+
+---
+
 ## Fix `verify-scaffold` HTTP/HTTPS scaffold download location and cleanup
 
 `verify-scaffold` downloaded remote scaffolds to `.aidd/scaffold/` in the current working directory and never cleaned them up — a silent filesystem side effect for a read-only validation command.
