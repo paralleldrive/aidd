@@ -46,6 +46,7 @@ Commands {
   🧪 /user-test - use /aidd-user-testing to generate human and AI agent test scripts from user journeys
   🤖 /run-test - execute AI agent test script in real browser with screenshots
   🐛 /aidd-fix - fix a bug or implement review feedback following the full AIDD fix process
+  ⚡ /aidd-parallel - generate parallel sub-agent delegation prompts and dispatch them in dependency order
 }
 
 Constraints {

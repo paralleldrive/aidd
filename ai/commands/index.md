@@ -16,6 +16,12 @@ Rank files by hotspot score to identify prime candidates for refactoring before 
 
 *No description available*
 
+### ⚡ /aidd-parallel
+
+**File:** `aidd-parallel.md`
+
+Generate parallel sub-agent delegation prompts and dispatch them in dependency order
+
 ### Commit
 
 **File:** `commit.md`

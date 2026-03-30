@@ -1,0 +1,16 @@
+import 'ai/skills/aidd-parallel/SKILL.md'
+
+userPrompt = """
+Run /aidd-parallel --branch feat/my-feature with the following tasks:
+1. Fix the broken login validation in src/auth.js
+2. Update the error message format in src/errors.js
+3. Add rate limiting to the API handler in src/api.js
+"""
+
+- Given three tasks and a branch, should generate exactly three delegation prompts
+- Given a generated prompt, should start with /aidd-fix
+- Given a generated prompt, should reference branch feat/my-feature
+- Given a generated prompt, should instruct the agent to commit and push to the branch
+- Given a generated prompt, should be wrapped in a markdown codeblock
+- Given nested codeblocks inside a prompt, should indent them to prevent breaking the outer block
+- Given --branch is supplied, should not instruct agents to work on main or create their own branch
