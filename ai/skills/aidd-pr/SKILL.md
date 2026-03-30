@@ -31,7 +31,7 @@ For each issue, use `/aidd-parallel --branch <PR branch>` to generate the delega
 
 Constraints {
   Do not close any other PRs
-  Do not touch anything but the branch below
+  Do not touch any git branches other than the PR's branch as determined via `gh pr view`
 }
 
 Commands {
