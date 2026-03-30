@@ -213,6 +213,10 @@ The existing `!typeDir.startsWith(scaffoldsRoot + path.sep)` check incorrectly a
 - Given neither the GitHub CLI nor those environment variables provide a token, should perform unauthenticated GitHub requests
 - Given both a usable GitHub CLI session and `GITHUB_TOKEN` are available, should prefer the GitHub CLI token when attaching `Authorization` headers
 - Given a scaffold download URL is not hosted on `api.github.com`, `github.com`, or `codeload.github.com`, should not attach GitHub credentials to that download request
+- Given the download URL hostname is not in the GitHub allowlist, `defaultDownloadAndExtract` should not call `getAuthToken()` at all — no subprocess should be spawned for non-GitHub URLs
+- Given `resolveGithubAuthToken` is called multiple times in the same process (e.g. once to resolve the release URL and once to download the tarball), should invoke the `gh auth token` subprocess only once and return the cached result for subsequent calls
+- Given `resetTokenCache` is called, should reset the in-process cache so the next call to `resolveGithubAuthToken` re-invokes the token resolution logic afresh
+- Given the GitHub API returns 403 (rate limited), the error message should mention all three supported authentication methods: `gh auth login`, `GITHUB_TOKEN`, and `GH_TOKEN`
 
 ---
 
