@@ -4,7 +4,7 @@
 
 **The standard framework for AI Driven Development**
 
-AI agents like Claude Code ship features fast. aidd Framework keeps them working, secure, and maintainable.
+AI agents like Claude Code ship features fast. AIDD Framework keeps them working, secure, and maintainable.
 
 AI agents generate code that runs but fails at scale. [GitClear tracked 211 million lines from 2020 to 2024](https://leaddev.com/software-quality/how-ai-generated-code-accelerates-technical-debt) and found 8x more code duplication as AI adoption increased. [Google's DORA report](https://www.sonarsource.com/blog/the-inevitable-rise-of-poor-code-quality-in-ai-accelerated-codebases/) shows AI adoption correlates with 9% higher bug rates and degraded stability. Agents skip tests, couple modules, duplicate logic, and miss vulnerabilities.
 
@@ -31,7 +31,7 @@ Includes:
 - [🧪 User Testing](#-user-testing)
 - [Why SudoLang?](#why-sudolang)
 - [What's Included](#whats-included)
-- [📚 Learning aidd Framework](#-learning-aidd-framework)
+- [📚 Learning AIDD Framework](#-learning-aidd-framework)
 - [🚀 AIDD Server Framework](#-aidd-server-framework)
   - [Authentication Middleware](#authentication-middleware)
 - [🛠️ AIDD CLI Reference](#-aidd-cli-reference)
@@ -219,9 +219,9 @@ Coming soon:
 - 📄 Documentation generators
 - 🔌 API design
 
-## 📚 Learning aidd Framework
+## 📚 Learning AIDD Framework
 
-aidd Framework combines modern software engineering practices with AI orchestration. To use it effectively, you'll benefit from understanding:
+AIDD Framework combines modern software engineering practices with AI orchestration. To use it effectively, you'll benefit from understanding:
 
 - **Product & Planning**: Product management, user story mapping, functional requirements
 - **Development**: Test driven development, user testing, CI/CD workflows
@@ -619,7 +619,7 @@ If your project already has an `AGENTS.md` file before you install AIDD:
 1. **AIDD appends framework directives** — The installer adds AIDD’s standard agent directives to your existing root `AGENTS.md` rather than replacing the file wholesale.
 2. **Move your custom instructions** — Copy your original, project-specific rules into `aidd-custom/AGENTS.md` (or merge them with any content the installer placed there).
 3. **Preserve override behavior** — Keeping customizations in `aidd-custom/AGENTS.md` ensures they override framework defaults via the root file’s import directive.
-4. **Trim the root file** — After migrating, the root `AGENTS.md` should contain only AIDD framework directives (plus the import of `aidd-custom/AGENTS.md`), not duplicated or conflicting custom text.
+4. **Trim the root file** — After migrating, the root `AGENTS.md` should contain only AIDD Framework directives (plus the import of `aidd-custom/AGENTS.md`), not duplicated or conflicting custom text.
 
 ### `aidd-custom/` — Project Customization
 
