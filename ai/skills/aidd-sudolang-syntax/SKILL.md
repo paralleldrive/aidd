@@ -36,6 +36,30 @@ Constraints {
 }
 
 
+## Semantic Pattern Matching
+
+Map conditions to results by meaning:
+```
+(pattern) => result
+```
+
+e.g.
+```
+(logic is deterministic) => CLI tool, compiled Bun bundle
+(logic requires judgment) => AI prompt
+```
+
+Patterns mix naturally into `Constraints` blocks:
+
+```
+// Real SudoLang agent skill constraints:
+Constraints {
+  Prefer natural language in markdown format
+  (logic is deterministic) => CLI tool, compiled Bun bundle
+  (logic requires judgment) => AI prompt
+}
+```
+
 ## Function Definitions
 
 // You can define an inferred function with the `fn` or `function` keywords:
