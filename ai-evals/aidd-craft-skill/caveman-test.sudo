@@ -1,0 +1,18 @@
+# caveman-test.sudo
+
+import 'ai/skills/aidd-craft-skill/SKILL.md'
+
+userPrompt = """
+Use caveman() to evaluate this skill design decision:
+
+A skill is being designed to both fetch external API data AND format the response
+into a markdown report. Should these two responsibilities live in a single skill
+command, or be split into two separate commands?
+"""
+
+- Given the caveman() function is invoked, should produce a 🎯 restate stage that restates the problem in plain terms (e.g. one command vs two commands, fetch + format responsibilities)
+- Given the caveman() function is invoked, should produce a 💡 ideate stage that generates at least two distinct design options (e.g. single combined command, split into fetch and format commands)
+- Given the caveman() function is invoked, should produce a 🪞 reflect stage that critically identifies a flaw in the ideation — such as noting that mixing a side effect (fetch) with a thinking stage (format) violates the "never mix thinking and effects" constraint from the skill
+- Given the caveman() function is invoked, should produce a 🔭 expand stage that explores orthogonal considerations not yet covered (e.g. testability, composability, progressive disclosure)
+- Given the caveman() function is invoked, should produce a ⚖️ score stage that ranks or evaluates the options against explicit criteria
+- Given the caveman() function is invoked, should produce a 💬 respond stage with a concrete recommendation
