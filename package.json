@@ -79,7 +79,7 @@
     "url": "git+https://github.com/paralleldrive/aidd.git"
   },
   "scripts": {
-    "build:validate-skill": "bun build --compile ai/skills/create-skill/scripts/validate-skill.js --outfile ai/skills/create-skill/scripts/validate-skill",
+    "build:validate-skill": "bun build --compile ai/skills/aidd-craft-skill/scripts/validate-skill.js --outfile ai/skills/aidd-craft-skill/scripts/validate-skill",
     "check-status": "[ -n \"$(git status --porcelain)\" ] && { echo '❌ Uncommitted changes'; exit 1; } || echo '✅ Git status is clean.'",
     "format": "npx @biomejs/biome format --write . && echo 'Format complete.'",
     "format:check": "npx @biomejs/biome check && echo 'Check complete.'",

@@ -57,7 +57,7 @@ Show the full plan; confirm alignment before drafting.
 
 **validate**
 ```bash
-ai/skills/create-skill/scripts/validate-skill ./path-to-skill-directory
+ai/skills/aidd-craft-skill/scripts/validate-skill ./path-to-skill-directory
 # If skills-ref is available:
 skills-ref validate ./path-to-skill-directory
 ```
