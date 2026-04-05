@@ -70,9 +70,6 @@ Every generated SKILL.md body must include:
 ```
 RequiredSections {
   "# Title"                  // skill name as heading
-  "## When to use"           // clear activation criteria
   "## Steps" | "## Process"  // ordered execution instructions
-  "## Examples"              // concrete input/output examples
-  "## Edge cases"            // limitations, error handling, boundary conditions
 }
 ```
