@@ -4,13 +4,22 @@
 
 ```
 createSkill(userRequest) {
-  gatherRequirements
+  gatherRequirements(userRequest) {
+    infer requirements from userRequest + discoverRelatedSkills + researchBestPractices
+    judge: are the inferred requirements complete and unambiguous?
+      yes => proceed
+      no => state assumptions explicitly and proceed
+  }
     |> discoverRelatedSkills
     |> researchBestPractices
     |> nameSkill
     |> caveman()
     |> buildPlan
-    |> presentPlan
+    |> presentPlan(plan: SkillPlan) {
+         run /aidd-review on the plan
+         issues found => run /aidd-fix loop until resolved
+         proceed to draftSkillMd
+       }
     |> draftSkillMd
     |> writeSkill
     |> validate
@@ -21,7 +30,12 @@ createSkill(userRequest) {
 ## Steps
 
 **gatherRequirements(userRequest)**
-Ask clarifying questions:
+Infer requirements from the user request, related skills found during discovery, and research into best practices. Do not ask clarifying questions or block on user input. Instead, use a judge to evaluate the inferred requirements:
+- judge: are the inferred requirements complete and unambiguous enough to proceed?
+  - yes => proceed
+  - no => state the gaps as explicit assumptions and proceed
+
+Infer answers to these questions from context rather than asking the user:
 - What problem does this skill solve?
 - What are its inputs and outputs?
 - Any technical constraints or requirements?
@@ -44,7 +58,10 @@ Ask clarifying questions:
 Produce a `SkillPlan` struct (see `references/types.md`).
 
 **presentPlan(plan: SkillPlan)**
-Show the full plan; confirm alignment before drafting.
+Show the full plan, then run a self-validating quality gate — do not await user approval:
+1. Run `/aidd-review` on the plan
+2. Issues found => run `/aidd-fix` loop until all issues are resolved
+3. Proceed to `draftSkillMd`
 
 **draftSkillMd(plan: SkillPlan)**
 - Write frontmatter: `name` + `description` required; add `metadata.alwaysApply` if needed
