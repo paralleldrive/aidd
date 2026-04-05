@@ -8,7 +8,7 @@ createSkill(userRequest) {
     |> discoverRelatedSkills
     |> researchBestPractices
     |> nameSkill
-    |> caveman()       // deep thinking: restate → ideate → reflect → expand → score → respond
+    |> caveman()
     |> buildPlan
     |> presentPlan
     |> draftSkillMd
@@ -74,7 +74,8 @@ reviewSkill(target) {
     |> checkRequiredSections
     |> checkSizeMetrics
     |> checkCommandSeparation
-    |> caveman()       // deep thinking: restate → ideate → reflect → expand → score → respond
+    |> deduplicateWithCaveman()
+    |> caveman()
     |> reportFindings
 }
 ```
@@ -83,4 +84,5 @@ reviewSkill(target) {
 **checkRequiredSections** — verify all `RequiredSections` are present  
 **checkSizeMetrics** — run `validate-skill.js` and report warnings  
 **checkCommandSeparation** — verify no command mixes thinking and side effects  
+**deduplicateWithCaveman()** — find every instance of repeated information across SKILL.md and its references; flag each duplicate and identify where the single source of truth should live  
 **reportFindings** — list issues, suggestions, and a pass/fail verdict

@@ -98,7 +98,6 @@ fn caveman() {
 }
 ```
 
-Use `caveman()` at the design stage (before committing to a plan) and during review (before rendering a verdict). It is a pure thinking stage — no side effects — so it is independently testable.
 
 ---
 
