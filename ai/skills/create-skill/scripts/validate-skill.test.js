@@ -6,6 +6,7 @@ import {
   checkThresholds,
   parseSkillMd,
   validateName,
+  validateSkillContent,
 } from "./validate-skill.js";
 
 describe("parseSkillMd", () => {
@@ -236,6 +237,67 @@ describe("checkThresholds", () => {
       given: "body at 5000 tokens",
       should: "return a token warning",
       actual: warnings.some((w) => w.includes("5000")),
+      expected: true,
+    });
+  });
+});
+
+describe("validateSkillContent", () => {
+  test("valid skill with matching dir name", () => {
+    const content = `---
+name: my-skill
+description: A test skill.
+---
+# My Skill
+
+Body content here.`;
+
+    const result = validateSkillContent(content, "my-skill");
+
+    assert({
+      given: "valid SKILL.md content and matching directory name",
+      should: "return no errors and computed metrics",
+      actual: result.errors,
+      expected: [],
+    });
+
+    assert({
+      given: "valid SKILL.md content",
+      should: "return bodyLines metric",
+      actual: typeof result.metrics.bodyLines,
+      expected: "number",
+    });
+  });
+
+  test("mismatched directory name", () => {
+    const content = `---
+name: my-skill
+description: A test skill.
+---
+# My Skill`;
+
+    const result = validateSkillContent(content, "other-dir");
+
+    assert({
+      given: "SKILL.md name does not match directory name",
+      should: "return an error",
+      actual: result.errors.length > 0,
+      expected: true,
+    });
+  });
+
+  test("missing frontmatter name", () => {
+    const content = `---
+description: No name here.
+---
+# My Skill`;
+
+    const result = validateSkillContent(content, "");
+
+    assert({
+      given: "frontmatter without a name field",
+      should: "return an error",
+      actual: result.errors.length > 0,
       expected: true,
     });
   });
