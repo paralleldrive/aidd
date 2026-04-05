@@ -4,6 +4,10 @@ This index provides an overview of the contents in this directory.
 
 ## Subdirectories
 
+### 📁 aidd-craft-skill/
+
+See [`aidd-craft-skill/index.md`](./aidd-craft-skill/index.md) for contents.
+
 ### 📁 aidd-ecs/
 
 See [`aidd-ecs/index.md`](./aidd-ecs/index.md) for contents.
