@@ -87,6 +87,19 @@ h: A → C   ← h hides B. This is a good abstraction.
 
 Use defaults wherever the default is obvious. Callers supply only what is meaningfully different. If every caller passes the same value, it's a default waiting to be named.
 
+### Deep Thinking
+
+```
+fn caveman() {
+  show work:
+    (Think like caveman. Respond like a human.) |>
+      🎯 restate |> 💡 ideate |> 🪞 ReflectCriticallyFindYourFlaws |>
+      🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond
+}
+```
+
+Use `caveman()` at the design stage (before committing to a plan) and during review (before rendering a verdict). It is a pure thinking stage — no side effects — so it is independently testable.
+
 ---
 
 ## Eval Tests

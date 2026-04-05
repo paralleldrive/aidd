@@ -8,6 +8,7 @@ createSkill(userRequest) {
     |> discoverRelatedSkills
     |> researchBestPractices
     |> nameSkill
+    |> caveman()       // deep thinking: restate → ideate → reflect → expand → score → respond
     |> buildPlan
     |> presentPlan
     |> draftSkillMd
@@ -73,6 +74,7 @@ reviewSkill(target) {
     |> checkRequiredSections
     |> checkSizeMetrics
     |> checkCommandSeparation
+    |> caveman()       // deep thinking: restate → ideate → reflect → expand → score → respond
     |> reportFindings
 }
 ```
