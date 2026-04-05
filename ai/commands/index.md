@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### aidd-craft-skill
+
+**File:** `aidd-craft-skill.md`
+
+*No description available*
+
 ### 🐛 /aidd-fix
 
 **File:** `aidd-fix.md`
@@ -13,12 +19,6 @@ This index provides an overview of the contents in this directory.
 ### Commit
 
 **File:** `commit.md`
-
-*No description available*
-
-### create-skill
-
-**File:** `create-skill.md`
 
 *No description available*
 

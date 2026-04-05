@@ -8,6 +8,10 @@ This index provides an overview of the contents in this directory.
 
 See [`references/index.md`](./references/index.md) for contents.
 
+### 📁 scripts/
+
+See [`scripts/index.md`](./scripts/index.md) for contents.
+
 ## Files
 
 ### aidd-craft-skill
