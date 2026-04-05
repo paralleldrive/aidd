@@ -23,9 +23,9 @@ type SkillDescription = string(
 
 ```
 SizeMetrics {
-  frontmatterTokens: number  // should be < 100
-  bodyLines: number          // should be < 160, must be < 500
-  bodyTokens: number         // should be < 5000
+  frontmatterTokens: number  // run validate-skill for current thresholds
+  bodyLines: number          // run validate-skill for current thresholds
+  bodyTokens: number         // run validate-skill for current thresholds
 }
 ```
 

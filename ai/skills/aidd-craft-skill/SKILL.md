@@ -48,7 +48,7 @@ ai/skills/aidd-<verbOrRoleBasedNoun>/
 2. Full `SKILL.md` body — loaded on activation
 3. `scripts/`, `references/`, `assets/` — loaded on demand
 
-Keep `SKILL.md` under 150 lines. Move reference material to `references/`. Use `import $referenceFile` to link it.
+Keep `SKILL.md` concise — run `validate-skill` to check thresholds. Move reference material to `references/`. Use `import $referenceFile` to link it.
 
 ---
 

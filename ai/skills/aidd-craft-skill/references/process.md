@@ -49,7 +49,7 @@ Show the full plan; confirm alignment before drafting.
 **draftSkillMd(plan: SkillPlan)**
 - Write frontmatter: `name` + `description` required; add `metadata.alwaysApply` if needed
 - Write body with all `RequiredSections`
-- If body will exceed 150 LoC, extract content to `references/` and use `import $referenceFile`
+- If body will exceed the line threshold (run `validate-skill` to check), extract content to `references/` and use `import $referenceFile`
 
 **writeSkill(skillMd)**
 - Write to `$projectRoot/aidd-custom/${skillName}/SKILL.md`
@@ -57,7 +57,7 @@ Show the full plan; confirm alignment before drafting.
 
 **validate**
 ```bash
-node ai/skills/create-skill/scripts/validate-skill.js ./path-to-skill-directory
+ai/skills/create-skill/scripts/validate-skill ./path-to-skill-directory
 # If skills-ref is available:
 skills-ref validate ./path-to-skill-directory
 ```
@@ -82,7 +82,7 @@ reviewSkill(target) {
 
 **runFunctionTest** — apply the 5-question Function Test from SKILL.md  
 **checkRequiredSections** — verify all `RequiredSections` are present  
-**checkSizeMetrics** — run `validate-skill.js` and report warnings  
+**checkSizeMetrics** — run `validate-skill` and report warnings  
 **checkCommandSeparation** — verify no command mixes thinking and side effects  
 **deduplicateWithCaveman()** — find every instance of repeated information across SKILL.md and its references; flag each duplicate and identify where the single source of truth should live  
 **reportFindings** — list issues, suggestions, and a pass/fail verdict
