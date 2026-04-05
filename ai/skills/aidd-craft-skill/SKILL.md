@@ -102,7 +102,7 @@ fn caveman() {
 
 ## Eval Tests
 
-Use Riteway AI to write eval tests for skill commands. See `ai/skills/aidd-riteway` for the full testing skill.
+Use Riteway AI to write eval tests for skill commands. See `ai/skills/aidd-riteway-ai` for the full testing skill.
 
 **Core principle:** never mix thinking and effects in a single `/command`. Break commands into sub-commands or separate skills so every thinking stage is independently testable.
 
