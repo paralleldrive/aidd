@@ -59,17 +59,21 @@ Body content here.`;
 describe("validateName", () => {
   test("valid names", () => {
     assert({
-      given: "a valid lowercase hyphenated name",
+      given: "a valid aidd-prefixed lowercase hyphenated name",
       should: "return no errors",
-      actual: validateName("format-code", "format-code"),
+      actual: validateName("aidd-format-code", "aidd-format-code"),
       expected: [],
     });
+  });
+
+  test("missing aidd- prefix", () => {
+    const errors = validateName("format-code", "format-code");
 
     assert({
-      given: "a single-word name",
-      should: "return no errors",
-      actual: validateName("lint", "lint"),
-      expected: [],
+      given: "a name without the aidd- prefix",
+      should: "return a validation error",
+      actual: errors.length > 0,
+      expected: true,
     });
   });
 
@@ -245,14 +249,14 @@ describe("checkThresholds", () => {
 describe("validateSkillContent", () => {
   test("valid skill with matching dir name", () => {
     const content = `---
-name: my-skill
+name: aidd-my-skill
 description: A test skill.
 ---
 # My Skill
 
 Body content here.`;
 
-    const result = validateSkillContent(content, "my-skill");
+    const result = validateSkillContent(content, "aidd-my-skill");
 
     assert({
       given: "valid SKILL.md content and matching directory name",
@@ -271,7 +275,7 @@ Body content here.`;
 
   test("mismatched directory name", () => {
     const content = `---
-name: my-skill
+name: aidd-my-skill
 description: A test skill.
 ---
 # My Skill`;

@@ -2,11 +2,13 @@
  * Validate an AgentSkills.io SKILL.md file.
  *
  * Usage: validate-skill ./path-to-skill-directory
- *        node validate-skill.js ./path-to-skill-directory
+ *        (compiled to a binary via `bun build --compile`)
+ *        For development: bun run validate-skill.js ./path-to-skill-directory
  */
 
 import { readFileSync } from "node:fs";
 import { basename, join } from "node:path";
+import { fileURLToPath } from "url";
 
 export const parseSkillMd = (content) => {
   const match = content.match(/^---\n([\s\S]*?)\n---/);
@@ -23,6 +25,8 @@ export const validateName = (name, dirName) => {
     errors.push("Name must be 1-64 characters");
   if (/[^a-z0-9-]/.test(name))
     errors.push("Name must be lowercase alphanumeric + hyphens only");
+  if (!name.startsWith("aidd-"))
+    errors.push("Name must start with 'aidd-' prefix");
   if (/^-|-$/.test(name)) errors.push("Name must not start or end with hyphen");
   if (/--/.test(name)) errors.push("Name must not contain consecutive hyphens");
   if (name !== dirName) errors.push("Name must match directory name");
@@ -38,7 +42,7 @@ export const calculateMetrics = (frontmatter, body) => ({
 export const checkThresholds = (metrics) => {
   const warnings = [];
   if (metrics.frontmatterTokens >= 100)
-    warnings.push("Frontmatter exceeds 100 token guideline");
+    warnings.push("Frontmatter reaches or exceeds 100 token guideline");
   if (metrics.bodyLines >= 160)
     warnings.push("Body exceeds 160 line guideline");
   if (metrics.bodyLines >= 500)
@@ -64,7 +68,7 @@ export const validateSkillContent = (content, dirName) => {
   return { errors, metrics, warnings };
 };
 
-if (import.meta.main) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const skillDir = process.argv[2];
   if (!skillDir) {
     console.error("Usage: validate-skill <path-to-skill-directory>");
