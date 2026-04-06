@@ -11,7 +11,7 @@ import { basename, join } from "node:path";
 import { fileURLToPath } from "url";
 
 export const parseSkillMd = (content) => {
-  const match = content.match(/^---\n([\s\S]*?)\n---/);
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) return { body: content, frontmatter: "" };
   return {
     body: content.slice(match[0].length).trim(),
@@ -40,18 +40,19 @@ export const calculateMetrics = (frontmatter, body) => ({
 });
 
 export const checkThresholds = (metrics) => {
+  const errors = [];
   const warnings = [];
   if (metrics.frontmatterTokens >= 100)
     warnings.push("Frontmatter reaches or exceeds 100 token guideline");
-  if (metrics.bodyLines >= 160)
-    warnings.push("Body exceeds 160 line guideline");
   if (metrics.bodyLines >= 500)
-    warnings.push(
+    errors.push(
       "Body exceeds 500 line spec limit - split into reference files",
     );
+  else if (metrics.bodyLines >= 160)
+    warnings.push("Body exceeds 160 line guideline");
   if (metrics.bodyTokens >= 5000)
     warnings.push("Body exceeds 5000 token spec guideline");
-  return warnings;
+  return { errors, warnings };
 };
 
 /**
@@ -62,10 +63,15 @@ export const validateSkillContent = (content, dirName) => {
   const { frontmatter, body } = parseSkillMd(content);
   const nameMatch = frontmatter.match(/^name:\s*(.+)$/m);
   const name = nameMatch ? nameMatch[1].trim() : "";
+  const descriptionMatch = frontmatter.match(/^description:\s*(.*)$/m);
+  const description = descriptionMatch
+    ? descriptionMatch[1].trim().replace(/^["']|["']$/g, "")
+    : "";
   const errors = validateName(name, dirName);
+  if (!description) errors.push("Description is required");
   const metrics = calculateMetrics(frontmatter, body);
-  const warnings = checkThresholds(metrics);
-  return { errors, metrics, warnings };
+  const { errors: thresholdErrors, warnings } = checkThresholds(metrics);
+  return { errors: [...errors, ...thresholdErrors], metrics, warnings };
 };
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

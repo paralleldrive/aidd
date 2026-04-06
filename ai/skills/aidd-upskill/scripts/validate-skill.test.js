@@ -54,6 +54,26 @@ Body content here.`;
       expected: content,
     });
   });
+
+  test("CRLF line endings", () => {
+    const content =
+      "---\r\nname: aidd-my-skill\r\ndescription: A test skill.\r\n---\r\n# My Skill\r\n\r\nBody content here.";
+    const result = parseSkillMd(content);
+
+    assert({
+      given: "SKILL.md content with CRLF line endings",
+      should: "return parsed frontmatter string",
+      actual: result.frontmatter.includes("name: aidd-my-skill"),
+      expected: true,
+    });
+
+    assert({
+      given: "SKILL.md content with CRLF line endings",
+      should: "return body without frontmatter block",
+      actual: result.body.startsWith("# My Skill"),
+      expected: true,
+    });
+  });
 });
 
 describe("validateName", () => {
@@ -188,60 +208,96 @@ describe("calculateMetrics", () => {
 describe("checkThresholds", () => {
   test("all within limits", () => {
     const metrics = { frontmatterTokens: 50, bodyLines: 100, bodyTokens: 3000 };
+    const result = checkThresholds(metrics);
+
+    assert({
+      given: "metrics within all thresholds",
+      should: "return no errors",
+      actual: result.errors,
+      expected: [],
+    });
 
     assert({
       given: "metrics within all thresholds",
       should: "return no warnings",
-      actual: checkThresholds(metrics),
+      actual: result.warnings,
       expected: [],
     });
   });
 
   test("frontmatter too large", () => {
     const metrics = { frontmatterTokens: 100, bodyLines: 50, bodyTokens: 1000 };
-    const warnings = checkThresholds(metrics);
+    const result = checkThresholds(metrics);
 
     assert({
       given: "frontmatter at 100 tokens",
       should: "return a frontmatter warning",
-      actual: warnings.some((w) => w.includes("Frontmatter")),
+      actual: result.warnings.some((w) => w.includes("Frontmatter")),
       expected: true,
+    });
+
+    assert({
+      given: "frontmatter at 100 tokens",
+      should: "not produce a hard error",
+      actual: result.errors,
+      expected: [],
     });
   });
 
   test("body exceeds 160 lines", () => {
     const metrics = { frontmatterTokens: 10, bodyLines: 160, bodyTokens: 1000 };
-    const warnings = checkThresholds(metrics);
+    const result = checkThresholds(metrics);
 
     assert({
       given: "body at 160 lines",
       should: "return a 160-line warning",
-      actual: warnings.some((w) => w.includes("160")),
+      actual: result.warnings.some((w) => w.includes("160")),
       expected: true,
+    });
+
+    assert({
+      given: "body at 160 lines",
+      should: "not produce a hard error",
+      actual: result.errors,
+      expected: [],
     });
   });
 
   test("body exceeds 500 lines", () => {
     const metrics = { frontmatterTokens: 10, bodyLines: 500, bodyTokens: 1000 };
-    const warnings = checkThresholds(metrics);
+    const result = checkThresholds(metrics);
 
     assert({
       given: "body at 500 lines",
-      should: "return a 500-line spec limit warning",
-      actual: warnings.some((w) => w.includes("500")),
+      should: "return a 500-line hard error",
+      actual: result.errors.some((e) => e.includes("500")),
       expected: true,
+    });
+
+    assert({
+      given: "body at 500 lines",
+      should: "not duplicate 500-line message in warnings",
+      actual: result.warnings.some((w) => w.includes("500")),
+      expected: false,
     });
   });
 
   test("body exceeds 5000 tokens", () => {
     const metrics = { frontmatterTokens: 10, bodyLines: 50, bodyTokens: 5000 };
-    const warnings = checkThresholds(metrics);
+    const result = checkThresholds(metrics);
 
     assert({
       given: "body at 5000 tokens",
       should: "return a token warning",
-      actual: warnings.some((w) => w.includes("5000")),
+      actual: result.warnings.some((w) => w.includes("5000")),
       expected: true,
+    });
+
+    assert({
+      given: "body at 5000 tokens",
+      should: "not produce a hard error",
+      actual: result.errors,
+      expected: [],
     });
   });
 });
@@ -302,6 +358,62 @@ description: No name here.
       given: "frontmatter without a name field",
       should: "return an error",
       actual: result.errors.length > 0,
+      expected: true,
+    });
+  });
+
+  test("valid description passes without description-related errors", () => {
+    const content = `---
+name: aidd-my-skill
+description: A valid skill description.
+---
+# My Skill
+
+Body content here.`;
+
+    const result = validateSkillContent(content, "aidd-my-skill");
+
+    assert({
+      given: "a skill with a valid description",
+      should: "return no errors",
+      actual: result.errors,
+      expected: [],
+    });
+  });
+
+  test("missing description field fails with error", () => {
+    const content = `---
+name: aidd-my-skill
+---
+# My Skill
+
+Body content here.`;
+
+    const result = validateSkillContent(content, "aidd-my-skill");
+
+    assert({
+      given: "a skill with no description field",
+      should: "return a description required error",
+      actual: result.errors.some((e) => e.includes("Description is required")),
+      expected: true,
+    });
+  });
+
+  test("empty string description field fails with error", () => {
+    const content = `---
+name: aidd-my-skill
+description: ""
+---
+# My Skill
+
+Body content here.`;
+
+    const result = validateSkillContent(content, "aidd-my-skill");
+
+    assert({
+      given: "a skill with an empty string description",
+      should: "return a description required error",
+      actual: result.errors.some((e) => e.includes("Description is required")),
       expected: true,
     });
   });
