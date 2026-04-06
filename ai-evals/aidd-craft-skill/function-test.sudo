@@ -1,0 +1,21 @@
+# function-test.sudo
+
+import 'ai/skills/aidd-craft-skill/SKILL.md'
+
+userPrompt = """
+Run the Function Test on the skill described in
+ai-evals/aidd-craft-skill/fixtures/sample-format-skill.md.
+
+Answer all five Function Test questions:
+1. What is f? Name it.
+2. What varies? (parameters)
+3. What is constant? (defaults)
+4. Is f deterministic?
+5. Is the result independently useful and recomposable?
+"""
+
+- Given the skill description maps raw git commits to a structured markdown changelog, should name f as something like "formatChangelog" or "groupCommitsByType" — a clear verb-based name
+- Given the skill accepts a list of commit messages as input, should identify the commit list as the parameter (what varies per caller)
+- Given every caller uses the same grouping logic and markdown rendering, should identify the grouping strategy and output format as defaults (what is constant)
+- Given the formatting logic is rule-based and produces the same output for the same input, should conclude that f is deterministic and therefore better suited to a CLI tool than an AI prompt
+- Given a deterministic f verdict, should state the result in terms of the CLI vs AI prompt constraint from the skill (i.e. deterministic logic => CLI tool or compiled Bun bundle)
