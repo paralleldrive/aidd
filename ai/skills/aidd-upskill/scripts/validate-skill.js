@@ -9,6 +9,7 @@
 import { readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { fileURLToPath } from "url";
+import yaml from "js-yaml";
 
 export const parseSkillMd = (content) => {
   const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -47,16 +48,6 @@ const ALLOWED_FRONTMATTER_KEYS = new Set([
   "metadata",
   "allowed-tools",
 ]);
-
-/** Top-level YAML keys from a frontmatter string (lines like `key:` at column 0). */
-const frontmatterStringTopLevelKeys = (frontmatter) => {
-  const keys = [];
-  for (const line of frontmatter.split(/\r?\n/)) {
-    const m = line.match(/^([a-zA-Z0-9_-]+):\s*/);
-    if (m) keys.push(m[1]);
-  }
-  return keys;
-};
 
 export const validateFrontmatterKeys = (frontmatterObj) => {
   const errors = [];
@@ -97,11 +88,8 @@ export const validateSkillContent = (content, dirName) => {
     ? descriptionMatch[1].trim().replace(/^["']|["']$/g, "")
     : "";
   const errors = validateName(name, dirName);
-  for (const key of frontmatterStringTopLevelKeys(frontmatter)) {
-    if (!ALLOWED_FRONTMATTER_KEYS.has(key)) {
-      errors.push(`Unknown frontmatter key: ${key}`);
-    }
-  }
+  const parsedFrontmatter = frontmatter ? yaml.load(frontmatter) : {};
+  errors.push(...validateFrontmatterKeys(parsedFrontmatter ?? {}));
   if (!description) errors.push("Description is required");
   const metrics = calculateMetrics(frontmatter, body);
   const { errors: thresholdErrors, warnings } = checkThresholds(metrics);
