@@ -1,33 +1,35 @@
-# aidd-upskill RequiredSections Epic
+# aidd-upskill Epic
 
-**Status**: 🔧 IN PROGRESS
-**Goal**: Keep `RequiredSections` in `ai/skills/aidd-upskill/references/types.md` accurate and minimal.
+**Goal**: A skill that guides agents to create and review high-quality AIDD skills.
 
-## Overview
+## Skill Design
 
-The `RequiredSections` block in `types.md` lists five required sections that every generated `SKILL.md` must include. Three of them (`## When to use`, `## Examples`, `## Edge cases`) are not truly required and create unnecessary constraints on skill authors. Only `# Title` and `## Steps | ## Process` represent universal requirements.
+- Given an agent is designing a skill, should apply a function framing (`f: Input → Output`) as the primary design lens before committing to structure.
+- Given two skills share the same `f`, should extract a shared abstraction rather than duplicating.
+- Given a candidate abstraction cannot be named, should not be treated as an abstraction yet.
+- Given a skill is being designed or reviewed, should apply the Function Test: name `f`, identify parameters vs defaults, determine CLI vs AI prompt, confirm recomposability.
 
----
+## Create Pipeline
 
-## Trim RequiredSections to only truly required sections
+- Given `/aidd-upskill create [name]` is invoked, should infer requirements from context rather than blocking on user input; any gaps should be stated as explicit assumptions before proceeding.
+- Given a plan has been built, should validate it via `/aidd-review` and resolve issues via `/aidd-fix` before drafting — should not await explicit user approval.
+- Given a skill is being created, should produce a `README.md` containing what the skill is, why it is useful, and a command reference with usage examples.
 
-**Requirements**:
-- Given `RequiredSections` is defined in `ai/skills/aidd-upskill/references/types.md`, should list only `# Title` and `## Steps | ## Process` as required sections — `## When to use`, `## Examples`, and `## Edge cases` should not appear as required.
+## Review Pipeline
 
----
+- Given `/aidd-upskill review [target]` is invoked, should run all checks and produce a per-check pass/fail table with an overall verdict.
+- Given a skill is under review, should scan SKILL.md and all reference files for duplicated information and identify the single source of truth for each.
+- Given a skill README is under review, should flag if it is missing, lacks what/why/commands, or contains implementation details or process narratives.
 
-## Eliminate duplicate threshold numbers from prose files
+## README Authoring
 
-**Requirements**:
-- Given `ai/skills/aidd-upskill/SKILL.md` line 51 states "Keep `SKILL.md` under 150 lines", should instead direct readers to run `validate-skill` to check thresholds — no hard-coded number.
-- Given `ai/skills/aidd-upskill/references/process.md` line 52 states "If body will exceed 150 LoC", should instead direct readers to run `validate-skill` to check thresholds — no hard-coded number.
-- Given `ai/skills/aidd-upskill/references/types.md` `SizeMetrics` block contains numeric threshold comments, should keep field names but remove numeric values and note that the validator is the source of truth.
+- Given a skill README is authored, should not contain implementation details, process pipeline descriptions, or internal narratives.
 
----
+## Validator CLI
 
-## Add CLI entry point and compiled binary to validate-skill.js
+- Given `validate-skill` is run against a skill directory, should report name errors and size threshold warnings.
 
-**Requirements**:
-- Given `ai/skills/aidd-upskill/scripts/validate-skill.js` is imported as a module only, should also expose a `main` block that reads the skill path from `process.argv[2]`, runs all validations, and prints results — so it can be used as a standalone CLI tool.
-- Given `validate-skill.js` has a `main` block, should be compilable via `bun build --compile` into a binary named `validate-skill` in the `scripts/` directory.
-- Given `ai/skills/aidd-upskill/references/process.md` validate step references `node validate-skill.js`, should instead reference the compiled `validate-skill` binary.
+## Eval Tests
+
+- Given `runFunctionTest` is applied to a skill description, should correctly name `f`, distinguish parameters from defaults, and reach the correct CLI vs AI prompt verdict.
+- Given `deduplicateWithCaveman()` is applied to a SKILL.md and reference file containing duplicated content, should identify the duplicate and name the canonical location.
