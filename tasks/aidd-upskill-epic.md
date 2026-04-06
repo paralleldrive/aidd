@@ -28,6 +28,7 @@
 ## Validator CLI
 
 - Given `validate-skill` is run against a skill directory, should report name errors and size threshold warnings.
+- Given `validate-skill` is executed as the program entry point (including when packaged as a Bun-compiled binary), should run the CLI and validate the target directory instead of treating the script as an imported library only.
 
 ## Eval Tests
 

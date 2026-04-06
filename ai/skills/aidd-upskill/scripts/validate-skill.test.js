@@ -1,3 +1,4 @@
+import { fileURLToPath } from "url";
 import { assert } from "riteway/vitest";
 import { describe, test } from "vitest";
 
@@ -5,9 +6,65 @@ import {
   calculateMetrics,
   checkThresholds,
   parseSkillMd,
+  resolveIsMainEntry,
+  validateFrontmatterKeys,
   validateName,
   validateSkillContent,
 } from "./validate-skill.js";
+
+describe("resolveIsMainEntry", () => {
+  const moduleUrl =
+    "file:///workspace/ai/skills/aidd-upskill/scripts/validate-skill.js";
+  const modulePath = fileURLToPath(moduleUrl);
+
+  test("uses import.meta.main when defined (Bun)", () => {
+    assert({
+      given: "import.meta.main is true and argv1 does not match module path",
+      should: "return true so compiled Bun binaries still run the CLI",
+      actual: resolveIsMainEntry({
+        main: true,
+        argv1: "/tmp/stale-build-path",
+        moduleUrl,
+      }),
+      expected: true,
+    });
+
+    assert({
+      given: "import.meta.main is false",
+      should: "return false",
+      actual: resolveIsMainEntry({
+        main: false,
+        argv1: modulePath,
+        moduleUrl,
+      }),
+      expected: false,
+    });
+  });
+
+  test("falls back to argv comparison when main is undefined (Node)", () => {
+    assert({
+      given: "main is undefined and argv1 matches this module URL path",
+      should: "return true",
+      actual: resolveIsMainEntry({
+        main: undefined,
+        argv1: modulePath,
+        moduleUrl,
+      }),
+      expected: true,
+    });
+
+    assert({
+      given: "main is undefined and argv1 does not match",
+      should: "return false",
+      actual: resolveIsMainEntry({
+        main: undefined,
+        argv1: "/other/script.js",
+        moduleUrl,
+      }),
+      expected: false,
+    });
+  });
+});
 
 describe("parseSkillMd", () => {
   test("valid frontmatter", () => {
@@ -414,6 +471,95 @@ Body content here.`;
       given: "a skill with an empty string description",
       should: "return a description required error",
       actual: result.errors.some((e) => e.includes("Description is required")),
+      expected: true,
+    });
+  });
+
+  test("unknown frontmatter key produces an error via validateSkillContent", () => {
+    const content = `---
+name: aidd-my-skill
+description: A valid skill description.
+unknown-key: some value
+---
+# My Skill
+
+Body content here.`;
+
+    const result = validateSkillContent(content, "aidd-my-skill");
+
+    assert({
+      given: "a skill with an unknown frontmatter key",
+      should: "return an error naming the unknown key",
+      actual: result.errors.some((e) =>
+        e.includes("Unknown frontmatter key: unknown-key"),
+      ),
+      expected: true,
+    });
+  });
+});
+
+describe("validateFrontmatterKeys", () => {
+  test("all allowed keys present returns no errors", () => {
+    const frontmatterObj = {
+      name: "aidd-my-skill",
+      description: "A test skill.",
+      license: "MIT",
+      compatibility: "node >= 18",
+      metadata: { alwaysApply: "true" },
+      "allowed-tools": "read write",
+    };
+
+    assert({
+      given: "a frontmatter object with only allowed keys",
+      should: "return no errors",
+      actual: validateFrontmatterKeys(frontmatterObj),
+      expected: [],
+    });
+  });
+
+  test("one unknown key returns one error naming the key", () => {
+    const frontmatterObj = {
+      name: "aidd-my-skill",
+      description: "A test skill.",
+      "unknown-key": "some value",
+    };
+
+    assert({
+      given: "a frontmatter object with one unknown key",
+      should: "return one error naming the key",
+      actual: validateFrontmatterKeys(frontmatterObj),
+      expected: ["Unknown frontmatter key: unknown-key"],
+    });
+  });
+
+  test("multiple unknown keys return multiple errors", () => {
+    const frontmatterObj = {
+      name: "aidd-my-skill",
+      description: "A test skill.",
+      "bad-key": "x",
+      "another-bad-key": "y",
+    };
+
+    const errors = validateFrontmatterKeys(frontmatterObj);
+
+    assert({
+      given: "a frontmatter object with two unknown keys",
+      should: "return two errors",
+      actual: errors.length,
+      expected: 2,
+    });
+
+    assert({
+      given: "a frontmatter object with two unknown keys",
+      should: "name first unknown key in an error",
+      actual: errors.some((e) => e.includes("bad-key")),
+      expected: true,
+    });
+
+    assert({
+      given: "a frontmatter object with two unknown keys",
+      should: "name second unknown key in an error",
+      actual: errors.some((e) => e.includes("another-bad-key")),
       expected: true,
     });
   });

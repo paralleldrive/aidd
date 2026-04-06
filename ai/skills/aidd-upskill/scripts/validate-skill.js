@@ -39,6 +39,35 @@ export const calculateMetrics = (frontmatter, body) => ({
   frontmatterTokens: Math.ceil(frontmatter.length / 4),
 });
 
+const ALLOWED_FRONTMATTER_KEYS = new Set([
+  "name",
+  "description",
+  "license",
+  "compatibility",
+  "metadata",
+  "allowed-tools",
+]);
+
+/** Top-level YAML keys from a frontmatter string (lines like `key:` at column 0). */
+const frontmatterStringTopLevelKeys = (frontmatter) => {
+  const keys = [];
+  for (const line of frontmatter.split(/\r?\n/)) {
+    const m = line.match(/^([a-zA-Z0-9_-]+):\s*/);
+    if (m) keys.push(m[1]);
+  }
+  return keys;
+};
+
+export const validateFrontmatterKeys = (frontmatterObj) => {
+  const errors = [];
+  for (const key of Object.keys(frontmatterObj)) {
+    if (!ALLOWED_FRONTMATTER_KEYS.has(key)) {
+      errors.push(`Unknown frontmatter key: ${key}`);
+    }
+  }
+  return errors;
+};
+
 export const checkThresholds = (metrics) => {
   const errors = [];
   const warnings = [];
@@ -68,13 +97,27 @@ export const validateSkillContent = (content, dirName) => {
     ? descriptionMatch[1].trim().replace(/^["']|["']$/g, "")
     : "";
   const errors = validateName(name, dirName);
+  for (const key of frontmatterStringTopLevelKeys(frontmatter)) {
+    if (!ALLOWED_FRONTMATTER_KEYS.has(key)) {
+      errors.push(`Unknown frontmatter key: ${key}`);
+    }
+  }
   if (!description) errors.push("Description is required");
   const metrics = calculateMetrics(frontmatter, body);
   const { errors: thresholdErrors, warnings } = checkThresholds(metrics);
   return { errors: [...errors, ...thresholdErrors], metrics, warnings };
 };
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+/** Resolves whether this module is the entry point (testable; mirrors CLI guard). */
+export const resolveIsMainEntry = ({ main, argv1, moduleUrl }) =>
+  typeof main !== "undefined" ? main : argv1 === fileURLToPath(moduleUrl);
+
+const isMain =
+  typeof import.meta.main !== "undefined"
+    ? import.meta.main
+    : process.argv[1] === fileURLToPath(import.meta.url);
+
+if (isMain) {
   const skillDir = process.argv[2];
   if (!skillDir) {
     console.error("Usage: validate-skill <path-to-skill-directory>");
