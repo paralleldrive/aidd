@@ -16,6 +16,30 @@ Rank files by hotspot score to identify prime candidates for refactoring before 
 
 *No description available*
 
+### 🔀 /aidd-parallel
+
+**File:** `aidd-parallel.md`
+
+Generate /aidd-fix delegation prompts for a list of tasks and optionally dispatch them to sub-agents in dependency order
+
+### 🔍 /aidd-pr
+
+**File:** `aidd-pr.md`
+
+Review a PR, resolve addressed comments, and generate /aidd-fix delegation prompts for remaining issues
+
+### 📋 /aidd-requirements
+
+**File:** `aidd-requirements.md`
+
+Write functional requirements for a user story. Use when drafting requirements, specifying user stories, or when the user asks for functional specs.
+
+### 🧪 /aidd-riteway-ai
+
+**File:** `aidd-riteway-ai.md`
+
+Write correct riteway ai prompt evals for multi-step tool-calling flows. Use when creating .sudo eval files or testing agent skills that use tools.
+
 ### Commit
 
 **File:** `commit.md`

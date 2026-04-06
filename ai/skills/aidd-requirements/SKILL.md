@@ -1,5 +1,5 @@
 ---
-name: aidd-functional-requirements
+name: aidd-requirements
 description: Write functional requirements for a user story. Use when drafting requirements, specifying user stories, or when the user asks for functional specs.
 ---
 

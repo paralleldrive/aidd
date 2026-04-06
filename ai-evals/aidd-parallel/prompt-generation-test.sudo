@@ -1,0 +1,21 @@
+import 'ai/skills/aidd-parallel/SKILL.md'
+
+userPrompt = """
+Run /aidd-parallel --branch feature/utils with the following two tasks:
+
+Task 1:
+  File: ai-evals/aidd-parallel/fixtures/add.js, line 1
+  "add() subtracts instead of adding — should use + not -"
+
+Task 2:
+  File: ai-evals/aidd-parallel/fixtures/greet.js, line 1
+  "greet() should include an exclamation mark at the end of the greeting"
+
+Generate delegation prompts for both tasks.
+"""
+
+- Given two tasks and a branch, should generate a separate delegation prompt for each task
+- Given a generated prompt, should start with /aidd-fix
+- Given a generated prompt, should reference the correct branch feature/utils
+- Given a generated prompt, should instruct the sub-agent to commit and push to origin/feature/utils
+- Given a generated prompt, should be wrapped in a markdown codeblock
