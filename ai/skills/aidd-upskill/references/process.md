@@ -52,7 +52,7 @@ Infer answers to these questions from context rather than asking the user:
 - Summarize findings relevant to skill authoring
 
 **nameSkill(topic)**
-- Use verb or role-based noun form (e.g., `aidd-format-code`, `aidd-craft-skill`)
+- Use verb or role-based noun form (e.g., `aidd-format-code`, `aidd-upskill`)
 - Validate against `SkillName` type constraints
 
 **buildPlan() => SkillPlan**
@@ -80,7 +80,7 @@ Show the full plan, then run a self-validating quality gate — do not await use
 
 **validate**
 ```bash
-ai/skills/aidd-craft-skill/scripts/validate-skill ./path-to-skill-directory
+ai/skills/aidd-upskill/scripts/validate-skill ./path-to-skill-directory
 # If skills-ref is available:
 skills-ref validate ./path-to-skill-directory
 ```

@@ -21,4 +21,4 @@ Frontmatter must include `name` and `description`. The `name` field must be
 lowercase alphanumeric with hyphens, 1-64 characters, prefixed with `aidd-`,
 and must match the parent directory name.
 
-import ai-evals/aidd-craft-skill/fixtures/dedup-reference.md
+import ai-evals/aidd-upskill/fixtures/dedup-reference.md

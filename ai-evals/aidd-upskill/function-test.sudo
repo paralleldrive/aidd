@@ -1,10 +1,10 @@
 # function-test.sudo
 
-import 'ai/skills/aidd-craft-skill/SKILL.md'
+import 'ai/skills/aidd-upskill/SKILL.md'
 
 userPrompt = """
 Run the Function Test on the skill described in
-ai-evals/aidd-craft-skill/fixtures/sample-format-skill.md.
+ai-evals/aidd-upskill/fixtures/sample-format-skill.md.
 
 Answer all five Function Test questions:
 1. What is f? Name it.

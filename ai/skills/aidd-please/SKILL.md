@@ -45,7 +45,7 @@ Commands {
   📊 /aidd-churn - rank files by hotspot score (LoC × churn × complexity) to identify prime candidates for refactoring
   🧪 /user-test - use /aidd-user-testing to generate human and AI agent test scripts from user journeys
   🤖 /run-test - execute AI agent test script in real browser with screenshots
-  🛠️ /aidd-craft-skill - create a new agent skill using AgentSkills.io spec and SudoLang
+  🛠️ /aidd-upskill - create a new agent skill using AgentSkills.io spec and SudoLang
   🐛 /aidd-fix - fix a bug or implement review feedback following the full AIDD fix process
 }
 

@@ -10,15 +10,15 @@ This index provides an overview of the contents in this directory.
 
 Rank files by hotspot score to identify prime candidates for refactoring before PR review
 
-### aidd-craft-skill
-
-**File:** `aidd-craft-skill.md`
-
-*No description available*
-
 ### 🐛 /aidd-fix
 
 **File:** `aidd-fix.md`
+
+*No description available*
+
+### aidd-upskill
+
+**File:** `aidd-upskill.md`
 
 *No description available*
 

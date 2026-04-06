@@ -1,6 +1,6 @@
 # caveman-test.sudo
 
-import 'ai/skills/aidd-craft-skill/SKILL.md'
+import 'ai/skills/aidd-upskill/SKILL.md'
 
 userPrompt = """
 Use caveman() to evaluate this skill design decision:

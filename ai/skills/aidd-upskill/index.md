@@ -1,4 +1,4 @@
-# aidd-craft-skill
+# aidd-upskill
 
 This index provides an overview of the contents in this directory.
 
@@ -14,7 +14,7 @@ See [`scripts/index.md`](./scripts/index.md) for contents.
 
 ## Files
 
-### aidd-craft-skill
+### aidd-upskill
 
 **File:** `SKILL.md`
 

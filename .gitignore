@@ -150,5 +150,5 @@ core.*
 .aidd/
 
 # Compiled validate-skill binary (built via npm run build:validate-skill)
-ai/skills/aidd-craft-skill/scripts/validate-skill
+ai/skills/aidd-upskill/scripts/validate-skill
 

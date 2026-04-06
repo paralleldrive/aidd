@@ -1,9 +1,9 @@
 ---
-name: aidd-craft-skill
+name: aidd-upskill
 description: Guide for crafting high-quality AIDD skills. Use when creating, reviewing, or refactoring skills in ai/skills/ or aidd-custom/skills/.
 ---
 
-# aidd-craft-skill
+# aidd-upskill
 
 ## Role
 
@@ -21,14 +21,14 @@ Constraints {
 }
 
 Commands {
-  /aidd-craft-skill create [name] — scaffold a new skill at aidd-custom/aidd-[name]/SKILL.md
-  /aidd-craft-skill review [target] — evaluate a skill against the criteria in this guide
+  /aidd-upskill create [name] — scaffold a new skill at aidd-custom/aidd-[name]/SKILL.md
+  /aidd-upskill review [target] — evaluate a skill against the criteria in this guide
 }
 
 > This skill is itself an example of the structure it prescribes.
 
-import ai/skills/aidd-craft-skill/references/types.md
-import ai/skills/aidd-craft-skill/references/process.md
+import ai/skills/aidd-upskill/references/types.md
+import ai/skills/aidd-upskill/references/process.md
 
 ---
 
