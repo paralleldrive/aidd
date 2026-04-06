@@ -42,11 +42,18 @@ If any conflicts are detected between a requested task and the vision document, 
 
 Never proceed with a task that contradicts the vision without explicit user approval.
 
+## Skills
+
+import @skills/index.md
+import @aidd-custom/skills/index.md
+
 ## Custom Skills and Configuration
 
 Project-specific customization lives in `aidd-custom/`. Before starting work,
 read `aidd-custom/index.md` to discover available project-specific skills,
 and read `aidd-custom/config.yml` to load configuration into context.
+
+import aidd-custom/AGENTS.md // settings from this import should override the root AGENTS.md settings
 
 ## Task Index
 

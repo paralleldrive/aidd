@@ -1,0 +1,143 @@
+# `aidd create --prompt` Epic
+
+**Status**: 📋 PLANNED  
+**Goal**: Add a `--prompt` flag to `npx aidd create`, a standalone `npx aidd agent` subcommand, and programmatic `runAgent` / `resolveAgentConfig` exports — backed by a portable agent-cli library so AI agents are invoked consistently and non-interactively across scaffold manifest steps, post-scaffold automation, direct CLI use, and third-party tools.
+
+## Overview
+
+Today scaffold `prompt:` steps spawn agents by name with no config (interactive by default), `create` has no way to kick off autonomous development after scaffolding, and there is no programmatic API for spawning agents. This epic introduces a full agent invocation stack collocated in `lib/agent-cli/`: `errors.js` (scoped error types), `config.js` (the single module responsible for the full resolution chain: `--agentConfig` CLI > `AIDD_AGENT_CONFIG` env > `agent-config` in `aidd-custom/config.yml` > claude default), `runner.js` (the `runAgent` spawn primitive), and `command.js` (the `npx aidd agent` subcommand, registered via one import in `bin/aidd.js`). All resolution logic lives exclusively in `lib/agent-cli/config.js`; no other module reinvents it.
+
+---
+
+## `lib/agent-cli/errors.js` — Agent error types
+
+One module defines all agent error types and the error handler via a single `errorCauses` call; both are exported for use across `lib/agent-cli/`.
+
+**Requirements**:
+- Given the module, exports `AgentConfigReadError`, `AgentConfigParseError`, `AgentConfigValidationError`, and `handleAgentErrors` — all defined in one `errorCauses` call
+
+---
+
+## `lib/agent-cli/config.js` — Agent config library
+
+The single module responsible for all agent config resolution; portable to Riteway and other tools via the `aidd/agent-config` package export.
+
+**Requirements**:
+- Given agent name `'claude'`, `getAgentConfig` returns `{ command: 'claude', args: ['-p'] }`
+- Given agent name `'opencode'`, `getAgentConfig` returns `{ command: 'opencode', args: ['run'] }`
+- Given agent name `'cursor'`, `getAgentConfig` returns `{ command: 'cursor', args: ['agent', '--print'] }`
+- Given `--agent-config cursor`, the spawned command should be `cursor agent --print <prompt>`, not `agent --print <prompt>`
+- Given no argument, `getAgentConfig` defaults to the claude preset
+- Given any casing (e.g. `'Claude'`), `getAgentConfig` resolves case-insensitively
+- Given an unknown name, `getAgentConfig` throws `AgentConfigValidationError` listing all supported agent names
+- Given a value ending in `.yml` or `.yaml`, `resolveAgentConfig` loads and validates `{ command, args? }` from that YAML file; throws `AgentConfigReadError` on read failure and `AgentConfigParseError` on invalid YAML
+- Given a loaded YAML agent config missing `command`, `resolveAgentConfig` throws `AgentConfigValidationError`
+- Given a plain object `{ command, args? }`, `resolveAgentConfig` uses it directly as the AgentConfig
+- Given a plain agent name string, `resolveAgentConfig` delegates to `getAgentConfig`
+- Given no explicit value, `resolveAgentConfig` reads `AIDD_AGENT_CONFIG` env var (name or `.yml`/`.yaml` path) before checking `agent-config` in `<cwd>/aidd-custom/config.yml`
+- Given none of the above yield a value, `resolveAgentConfig` returns `getAgentConfig('claude')`
+- Given `package.json`, the `"./agent-config"` export resolves to `lib/agent-cli/config.js`
+- Given `getAgentConfig` is called multiple times with the same name, each call should return a distinct object (mutations to one must not affect the other)
+- Given `agent-config` in `aidd-custom/config.yml` is a YAML mapping with a `command` field, `resolveAgentConfig` should use it as the agent config
+- Given `value` is `null` or an array, `resolveAgentConfig` should throw `AgentConfigValidationError`
+- Given `agent-config: ./agent.yml` in `aidd-custom/config.yml` and the file exists in `cwd`, `resolveAgentConfig` should load it regardless of which directory the CLI was invoked from
+- Given `agent-config` in `aidd-custom/config.yml` contains an invalid value (typo, bad YAML path, missing command), `resolveAgentConfig` should warn to stderr and fall through to the claude default rather than silently ignoring the error
+- Given `agent-config` in `aidd-custom/config.yml` references a missing YAML file, `resolveAgentConfig` should warn with a message specific to the read failure (not a generic 'failed to read' message)
+- Given an inline YAML object in `aidd-custom/config.yml` missing the `command` field, `resolveAgentConfig` should warn and fall back to claude
+- Given `agent-config: false` in `aidd-custom/config.yml`, `resolveAgentConfig` should warn and fall back to claude rather than silently ignoring the value
+- Given `agent-config: 42` (a number) in `aidd-custom/config.yml`, `resolveAgentConfig` should warn with an `AgentConfigValidationError` message rather than a TypeError
+
+---
+
+## `lib/agent-cli/runner.js` — Agent runner
+
+Programmatic spawn primitive; exported as `aidd/agent` for use by third-party tools and by `command.js` internally.
+
+**Requirements**:
+- Given `runAgent({ agentConfig, prompt, cwd })`, spawns `[command, ...args, prompt]` as a no-shell array in `cwd` with `stdio: 'inherit'`
+- Given the spawned process exits non-zero, throws `ScaffoldStepError`
+- Given the agent command does not exist (ENOENT), `runAgent` should reject with `ScaffoldStepError` instead of crashing the process
+- Given `spawn` emits an `error` event with `code === 'E2BIG'` or `code === 'ENOBUFS'`, `runAgent` should reject with a `ScaffoldStepError` whose message says 'Argument list too long for spawn'
+- Given the spawned agent process is terminated by a signal, `runAgent` should reject with a `ScaffoldStepError` whose message includes the signal name rather than 'code null'
+- Given `package.json`, the `"./agent"` export resolves to `lib/agent-cli/runner.js`
+- Given `runAgent` is called with an empty prompt, it should reject with an error rather than spawning the agent process with an empty string
+
+---
+
+## Manifest validation — prompt ordering guard
+
+Enforce at parse time that no `prompt:` step appears before an aidd-installing `run:` step.
+
+**Requirements**:
+- Given a scaffold manifest, deterministic CLI operations should use `run:` steps rather than delegating to an agent `prompt:` step
+- Given a manifest where a `prompt:` step appears before any `run:` step containing the string `"aidd"`, `parseManifest` throws `ScaffoldValidationError` with a message advising that a `run:` step invoking aidd (e.g. `run: npx aidd .`) must precede any `prompt:` step
+- Given a manifest where the only run step mentioning `"aidd"` is `echo aidd` (not an invocation of the aidd CLI), `parseManifest` should throw `ScaffoldValidationError`
+- Given `run: npx -y aidd .` or `run: npx --yes aidd .` before a prompt step, `parseManifest` should accept the manifest
+
+---
+
+## Manifest runner — non-interactive agent invocation
+
+Update `runManifest` to call `resolveAgentConfig` and `runAgent` lazily only when a `prompt:` step is encountered; the `agentConfig` parameter remains a string override — no caller changes required.
+
+**Requirements**:
+- Given a manifest `prompt:` step, calls `resolveAgentConfig({ value: agentConfig, cwd: folder })` then `runAgent` with the result, spawning `[command, ...args, promptText]` (non-interactive)
+- Given no `prompt:` steps in the manifest, never calls `resolveAgentConfig`
+- Given a manifest with multiple `prompt:` steps, `resolveAgentConfig` should be called exactly once per `runManifest` invocation (not once per step)
+- Given existing tests asserting `[agent, promptText]` as the spawned command, updates them to assert `[command, ...args, promptText]`
+
+---
+
+## `lib/agent-cli/command.js` and `npx aidd agent` subcommand
+
+Standalone subcommand registered via a single `registerAgentCommand(program)` import in `bin/aidd.js`; no agent logic in the main CLI dispatcher.
+
+**Requirements**:
+- Given `bin/aidd.js`, adds exactly one import (`registerAgentCommand`) and one call (`registerAgentCommand(cli)`) — no agent-specific logic in the dispatcher
+- Given `npx aidd agent --prompt "hello" --agent-config echo-agent.yml` (where `echo-agent.yml` contains `command: echo`), exits 0 and the prompt text appears in stdout
+- Given invoked without `--prompt`, exits 1
+- Given `--agent-config` pointing to a non-existent YAML file, exits 1
+
+---
+
+## Named scaffold code path — no local clone required
+
+All branches of `npx aidd create` resolve a source path, copy it into the project folder via `fs.copy`, then run the manifest — there is no separate code path for local clones.
+
+**Requirements**:
+- Given `npx aidd create my-project` run without a local clone of the aidd repository, the default named scaffold resolves, copies, and executes correctly
+- Given `npx aidd create next-shadcn my-project`, the scaffold files are copied from the npm-installed package into the project folder using the same fs.copy mechanism as URL scaffolds
+
+---
+
+## `create` — add `--prompt` and wire agent config
+
+Rename `--agent` → `--agentConfig` on `create`; pass the flag value through to `runManifest`; after manifest completes re-resolve from the new project dir for the post-scaffold `--prompt` step.
+
+**Requirements**:
+- Given `--agentConfig <name|path>` on `create`, passes it as the `agentConfig` override to `runManifest` and as the `value` override to `resolveAgentConfig` for the post-scaffold `--prompt` step
+- Given `--prompt "Build a todo app"`, after all manifest steps complete, calls `resolveAgentConfig({ value: agentConfigFlag, cwd: newProjectDir })` then `runAgent` in the new project directory
+- Given the `--prompt` agent exits non-zero, reports `ScaffoldStepError` and exits 1
+- Given `--prompt` is absent, `create` behavior is unchanged
+- Given existing `--agent` usage, `--agentConfig` is the renamed replacement (breaking change; update docs and tests)
+- Given `AIDD_AGENT_CONFIG=opencode` is set and `--agentConfig` is not passed, `npx aidd create` should use opencode for prompt steps
+- Given `agent-config: opencode` in `aidd-custom/config.yml` and `--agentConfig` is not passed, `npx aidd create` should use opencode for prompt steps
+- Given `runCreate`, should not accept `ensureDirFn`, `copyFn`, `existsFn`, `resolveAgentConfigFn`, or `runAgentFn` as parameters; integration tests use real temp directories and a minimal `steps: []` scaffold fixture
+- Given the failing scaffold fixture used in tests, the run step should exit non-zero on all platforms including Windows
+
+---
+
+## `lib/churn-collector.js` — accurate PR-aware churn counting
+
+**Requirements**:
+- Given a PR branch, `collectChurn` should report each file's churn as its commit count on the main branch history plus one (for the upcoming squash merge), regardless of clone depth or remote availability
+- Given a repository whose default branch is not `main` (e.g. `master`), `collectChurn` should correctly scope churn to that branch's history
+- Given a file deleted in this PR, `collectChurn` should not include it in the churn map with an inflated +1 count
+
+---
+
+## `aidd-custom/config.yml` template and docs
+
+**Requirements**:
+- Given `npx aidd` install, the generated `aidd-custom/config.yml` includes a commented `# agent-config: claude` example line
+- Given the `aidd-custom/README.md` config options table, adds an `agent-config` row documenting accepted values: an agent name (`claude`, `opencode`, `cursor`), a path to a `.yml` agent config file, or an inline `{ command, args }` object

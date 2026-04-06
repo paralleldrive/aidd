@@ -4,7 +4,7 @@
 
 **The standard framework for AI Driven Development**
 
-AI agents like Claude Code ship features fast. aidd Framework keeps them working, secure, and maintainable.
+AI agents like Claude Code ship features fast. AIDD Framework keeps them working, secure, and maintainable.
 
 AI agents generate code that runs but fails at scale. [GitClear tracked 211 million lines from 2020 to 2024](https://leaddev.com/software-quality/how-ai-generated-code-accelerates-technical-debt) and found 8x more code duplication as AI adoption increased. [Google's DORA report](https://www.sonarsource.com/blog/the-inevitable-rise-of-poor-code-quality-in-ai-accelerated-codebases/) shows AI adoption correlates with 9% higher bug rates and degraded stability. Agents skip tests, couple modules, duplicate logic, and miss vulnerabilities.
 
@@ -31,12 +31,14 @@ Includes:
 - [🧪 User Testing](#-user-testing)
 - [Why SudoLang?](#why-sudolang)
 - [What's Included](#whats-included)
+- [📚 Learning AIDD Framework](#-learning-aidd-framework)
 - [🚀 AIDD Server Framework](#-aidd-server-framework)
   - [Authentication Middleware](#authentication-middleware)
 - [🛠️ AIDD CLI Reference](#-aidd-cli-reference)
   - [Installation & Usage](#installation--usage)
   - [Command Options](#command-options)
   - [Examples](#examples)
+- [🧩 Skills](#-skills)
 - [📁 AI System Structure](#-ai-system-structure)
   - [Key Components](#key-components)
 - [🎯 AI Integration](#-ai-integration)
@@ -45,6 +47,7 @@ Includes:
   - [Creating Your Vision Document](#creating-your-vision-document)
   - [How Agents Use the Vision Document](#how-agents-use-the-vision-document)
   - [AGENTS.md File](#agentsmd-file)
+    - [Migrating an Existing AGENTS.md](#migrating-an-existing-agentsmd)
   - [`aidd-custom/` — Project Customization](#aidd-custom--project-customization)
 - [🔧 Cursor Editor Setup](#-cursor-editor-setup)
   - [Automatic Setup (Recommended)](#automatic-setup-recommended)
@@ -53,6 +56,7 @@ Includes:
   - [Manual Integration](#manual-integration)
   - [Troubleshooting](#troubleshooting)
 - [📄 License](#-license)
+- [📹 Weekly Training Sessions](#-weekly-training-sessions)
 - [🤝 Contributing](#-contributing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -97,6 +101,17 @@ Install without Cursor integration:
 npx aidd my-project
 ```
 
+```bash
+# Run an agent directly
+npx aidd agent --prompt "Set up authentication"
+# Scaffold + run agent in one command
+npx aidd create my-app --prompt "Set up authentication"
+```
+
+For `npx aidd create` with a **GitHub repository URL** (`https://github.com/owner/repo`), authentication uses the GitHub CLI first when available: run [`gh auth login`](https://cli.github.com/) so private repos you can access (including org repos you do not own) work without exporting a long-lived token. If `gh` is not available or not logged in, you can still set `GITHUB_TOKEN` or `GH_TOKEN` for CI or compatibility.
+
+_See [Agent CLI](docs/agent-cli.md) for full usage._
+
 ### 📋 Requirements
 
 - **Node.js**: 16.0.0+ (requires ESM support)
@@ -128,17 +143,17 @@ npx aidd my-project
    ```bash
    cd my-project
    ls ai/                    # See available components
-   cat ai/rules/please.mdc   # Read the main orchestrator
+   cat ai/skills/aidd-please/SKILL.md   # Read the main orchestrator
    ```
 
 5. **Start using AI workflows**:
-   - Reference `ai/rules/` in AI prompts for better context
+   - Reference `ai/skills/` in AI prompts for better context
    - Use `ai/commands/` as workflow templates
-   - Customize rules for your specific project needs
+   - Customize skills for your specific project needs
 
 This gives you immediate access to:
 
-- 🤖 **Agent orchestration rules** (`ai/rules/`)
+- 🤖 **Agent orchestration skills** (`ai/skills/`)
 - ⚙️ **AI workflow commands** (`ai/commands/`)
 - 📋 **Development best practices** (JavaScript, TDD, UI/UX)
 - 🎯 **Product management tools** (user stories, journey mapping)
@@ -204,6 +219,18 @@ Coming soon:
 - 📄 Documentation generators
 - 🔌 API design
 
+## 📚 Learning AIDD Framework
+
+AIDD Framework combines modern software engineering practices with AI orchestration. To use it effectively, you'll benefit from understanding:
+
+- **Product & Planning**: Product management, user story mapping, functional requirements
+- **Development**: Test driven development, user testing, CI/CD workflows
+- **AI-Specific Skills**: Context engineering, prompt engineering, SudoLang, agent orchestration
+
+📖 **[Complete Learning Roadmap →](docs/learn-aidd-framework.md)** — Detailed competency areas, technical skills, and weekly training sessions
+
+**New to AI-driven development?** Start with the Quick Start below, then explore the `/discover` → `/task` → `/execute` workflow. The AI agents will guide you through the process.
+
 ## 🚀 AIDD Server Framework
 
 A lightweight alternative to Express, built for function composition and type-safe development.
@@ -244,6 +271,11 @@ export default createRoute(
   }
 );
 ```
+
+- `aidd/agent` — spawn an AI agent process programmatically
+- `aidd/agent-config` — resolve agent configuration from presets, env, or config file
+
+_See [Agent API](docs/agent-api.md) for full usage._
 
 **Core Features:**
 
@@ -391,6 +423,7 @@ aidd [target-directory] [options]
 | `-v, --verbose`    | Provide detailed output                                        |
 | `-c, --cursor`     | Create `.cursor` symlink for Cursor editor integration         |
 | `-i, --index`      | Generate `index.md` files from frontmatter in `ai/` subfolders |
+| `churn`            | Rank files by hotspot score — see [documentation](ai/skills/aidd-churn/README.md) |
 | `-h, --help`       | Display help information                                       |
 | `--version`        | Show version number                                            |
 
@@ -400,6 +433,10 @@ aidd [target-directory] [options]
 # Basic usage
 npx aidd                    # Current directory
 npx aidd my-project        # Specific directory
+
+# Hotspot analysis (see ai/skills/aidd-churn/SKILL.md for details)
+npx aidd churn              # Rank files by hotspot score (top 20, 90-day window)
+npx aidd churn --days 30 --top 10 --min-loc 100 --json
 
 # Preview and force options
 npx aidd --dry-run         # See what would be copied
@@ -418,6 +455,39 @@ npx aidd frontend-app
 npx aidd backend-api
 ```
 
+## 🧩 Skills
+
+Skills are reusable agent workflows that extend AIDD with specialized capabilities. Invoke them by name in any AI coding assistant.
+
+- **[/aidd-agent-orchestrator](ai/skills/aidd-agent-orchestrator/README.md)** — Coordinates specialized agents for software development tasks. Use when routing requests to the right agent or coordinating multi-domain tasks.
+- **[/aidd-autodux](ai/skills/aidd-autodux/README.md)** — Create and transpile Autodux Redux state management dux objects. Use when building Redux state management, defining reducers, action creators, or selectors.
+- **[/aidd-churn](ai/skills/aidd-churn/README.md)** — Hotspot analysis: run `npx aidd churn`, interpret the ranked results, and recommend specific files to review or refactor with concrete strategies. Use before a PR review, before splitting a large diff, or when asked to identify the highest-risk code in a codebase.
+- **[/aidd-ecs](ai/skills/aidd-ecs/README.md)** — Enforces @adobe/data/ecs best practices. Use when working with ECS components, resources, transactions, actions, systems, or services.
+- **[/aidd-error-causes](ai/skills/aidd-error-causes/README.md)** — Structured error handling with the error-causes library. Use when throwing errors, catching errors, defining error types, or implementing error routing.
+- **[/aidd-fix](ai/skills/aidd-fix/README.md)** — Fix a bug or implement review feedback following the AIDD fix process. Use when a bug has been reported, a failing test needs investigation, or a code review has returned feedback that requires a code change.
+- **[/aidd-functional-requirements](ai/skills/aidd-functional-requirements/README.md)** — Write functional requirements for a user story. Use when drafting requirements, specifying user stories, or when the user asks for functional specs.
+- **[/aidd-javascript](ai/skills/aidd-javascript/README.md)** — JavaScript and TypeScript best practices and guidance. Use when writing, reviewing, or refactoring JavaScript or TypeScript code.
+- **[/aidd-javascript-io-effects](ai/skills/aidd-javascript-io-effects/README.md)** — Isolate network I/O and side effects using the saga pattern with call and put. Use when making network requests, invoking side effects, or implementing Redux sagas.
+- **[/aidd-jwt-security](ai/skills/aidd-jwt-security/README.md)** — JWT security review patterns. Use when reviewing or implementing authentication code, token handling, or session management.
+- **[/aidd-layout](ai/skills/aidd-layout/README.md)** — Enforces UI component layout and composition patterns. Use when designing layouts, spacing, gaps, or component hierarchy.
+- **[/aidd-lit](ai/skills/aidd-lit/README.md)** — Enforces Lit element authoring best practices. Use when creating Lit elements, binding elements, presentations, or reactive binding patterns.
+- **[/aidd-log](ai/skills/aidd-log/README.md)** — Document completed epics in a structured changelog with emoji categorization. Use after completing a significant feature or epic.
+- **[/aidd-namespace](ai/skills/aidd-namespace/README.md)** — Ensures types and related functions are authored in a modular, discoverable, tree-shakeable pattern. Use when creating types, refactoring type folders, or defining schemas.
+- **[/aidd-observe](ai/skills/aidd-observe/README.md)** — Enforces Observe pattern best practices from @adobe/data/observe. Use when working with observables, reactive data flow, or service Observe properties.
+- **[/aidd-please](ai/skills/aidd-please/README.md)** — General AI assistant for software development projects. Use for general assistance, logging, committing, and proofing tasks.
+- **[/aidd-product-manager](ai/skills/aidd-product-manager/README.md)** — Plan features, user stories, user journeys, and conduct product discovery. Use when building specifications, journey maps, story maps, or personas.
+- **[/aidd-react](ai/skills/aidd-react/README.md)** — Enforces React component authoring best practices. Use when creating React components, binding components, or working with React UI patterns.
+- **[/aidd-review](ai/skills/aidd-review/README.md)** — Conduct thorough code reviews focusing on quality, security, test coverage, and adherence to project standards. Use when reviewing code, pull requests, or completed epics.
+- **[/aidd-service](ai/skills/aidd-service/README.md)** — Enforces asynchronous data service authoring best practices. Use when creating front-end or back-end services, service interfaces, or data flow patterns.
+- **[/aidd-stack](ai/skills/aidd-stack/README.md)** — Tech stack guidance for NextJS + React/Redux + Shadcn UI features. Use when implementing full stack features or choosing architecture patterns.
+- **[/aidd-structure](ai/skills/aidd-structure/README.md)** — Enforces source code structuring and interdependency best practices. Use when creating folders, moving files, adding imports, or planning module architecture.
+- **[/aidd-sudolang-syntax](ai/skills/aidd-sudolang-syntax/README.md)** — Quick cheat sheet for SudoLang syntax. Use when writing or reading SudoLang pseudocode, interfaces, constraints, or function definitions.
+- **[/aidd-task-creator](ai/skills/aidd-task-creator/README.md)** — Systematic task and epic planning and execution. Use when planning an epic, breaking down work, or executing a task plan.
+- **[/aidd-tdd](ai/skills/aidd-tdd/README.md)** — Systematic test-driven development with proper test isolation. Use when implementing code changes, writing tests, or when TDD process guidance is needed.
+- **[/aidd-timing-safe-compare](ai/skills/aidd-timing-safe-compare/README.md)** — Security rule for timing-safe secret comparison using SHA3-256 hashing. Use when reviewing or implementing secret comparisons, token validation, or API key checks.
+- **[/aidd-ui](ai/skills/aidd-ui/README.md)** — Design beautiful and friendly user interfaces and experiences. Use when building UI components, styling, animations, accessibility, or responsive design.
+- **[/aidd-user-testing](ai/skills/aidd-user-testing/README.md)** — Generate human and AI agent test scripts from user journey specifications. Use when creating user test scripts or validating user journeys.
+
 ## 📁 AI System Structure
 
 After running the CLI, you'll have a complete `ai/` folder:
@@ -431,13 +501,12 @@ your-project/
 │   │   ├── review.md         # Code reviews
 │   │   ├── task.md           # Task management
 │   │   └── ...
-│   ├── rules/                # Agent orchestration rules
-│   │   ├── agent-orchestrator.mdc
-│   │   ├── javascript/       # JS/TS best practices
-│   │   ├── frameworks/       # Redux, TDD patterns
-│   │   ├── productmanager.mdc
-│   │   ├── tdd.mdc
-│   │   ├── ui.mdc
+│   ├── skills/               # Agent orchestration skills
+│   │   ├── aidd-please/      # Main agent orchestrator
+│   │   ├── aidd-javascript/  # JS/TS best practices
+│   │   ├── aidd-tdd/         # Test-driven development
+│   │   ├── aidd-review/      # Code review guidelines
+│   │   ├── aidd-ui/          # UI/UX design guidelines
 │   │   └── ...
 │   └── ...
 ├── plan/                     # Product discovery artifacts
@@ -449,13 +518,13 @@ your-project/
 
 ### Key Components
 
-- **Agent Orchestrator** (`ai/rules/agent-orchestrator.mdc`) - Coordinates multiple AI agents
-- **Development Rules** (`ai/rules/javascript/`, `ai/rules/tdd.mdc`) - Best practices and patterns
+- **Agent Orchestrator** (`ai/skills/aidd-agent-orchestrator/SKILL.md`) - Coordinates multiple AI agents
+- **Development Skills** (`ai/skills/aidd-javascript/`, `ai/skills/aidd-tdd/`) - Best practices and patterns
 - **Workflow Commands** (`ai/commands/`) - Structured AI interaction templates
-- **Product Management** (`ai/rules/productmanager.mdc`) - User stories and journey mapping
+- **Product Management** (`ai/skills/aidd-product-manager/SKILL.md`) - User stories and journey mapping
 - **Product Discovery Artifacts** (`plan/story-map/`) - User journeys, personas, and story maps (YAML format)
 - **User Testing Scripts** (`plan/`) - Human and AI agent test scripts generated from journeys
-- **UI/UX Guidelines** (`ai/rules/ui.mdc`) - Design and user experience standards
+- **UI/UX Guidelines** (`ai/skills/aidd-ui/SKILL.md`) - Design and user experience standards
 
 ## 🎯 AI Integration
 
@@ -539,10 +608,29 @@ When you run the AIDD installer, it automatically creates (or updates) an `AGENT
 - Practice progressive discovery (only reading folders relevant to the current task)
 - Respect the vision document as the source of truth
 - Handle conflicts appropriately
+- Import project-specific overrides from `aidd-custom/AGENTS.md`
+
+The root `AGENTS.md` includes an import directive that tells agents to load and prioritize project-specific settings from `aidd-custom/AGENTS.md`, ensuring your customizations override default framework behavior.
+
+#### Migrating an Existing AGENTS.md
+
+If your project already has an `AGENTS.md` file before you install AIDD:
+
+1. **AIDD appends framework directives** — The installer adds AIDD’s standard agent directives to your existing root `AGENTS.md` rather than replacing the file wholesale.
+2. **Move your custom instructions** — Copy your original, project-specific rules into `aidd-custom/AGENTS.md` (or merge them with any content the installer placed there).
+3. **Preserve override behavior** — Keeping customizations in `aidd-custom/AGENTS.md` ensures they override framework defaults via the root file’s import directive.
+4. **Trim the root file** — After migrating, the root `AGENTS.md` should contain only AIDD Framework directives (plus the import of `aidd-custom/AGENTS.md`), not duplicated or conflicting custom text.
 
 ### `aidd-custom/` — Project Customization
 
-The installer also creates `aidd-custom/config.yml` in your project root. This folder is the place for project-specific overrides: custom skills, behavior configuration, and additional agent directives. Agents are instructed to read `aidd-custom/index.md` on startup so your customizations are always in context.
+The installer also creates `aidd-custom/config.yml` and `aidd-custom/AGENTS.md` in your project root. This folder is the place for project-specific overrides:
+
+- **`config.yml`** — Framework behavior configuration (e.g., `e2eBeforeCommit`)
+- **`AGENTS.md`** — Project-specific agent instructions that override root `AGENTS.md` settings
+- **`skills/`** — Custom skills specific to your project
+- **Additional `.md` files** — Extra agent rules and commands
+
+Agents are instructed to read `aidd-custom/index.md` on startup so your customizations are always in context.
 
 See [docs/aidd-custom.md](docs/aidd-custom.md) for all available options.
 
@@ -584,20 +672,20 @@ npx aidd my-project
 
 **For Cursor users with existing rules:**
 
-Reference the rules in your prompts or add to `.cursor/rules`:
+Reference the skills in your prompts or add to `.cursor/skills`:
 
 ```
-See ai/rules/javascript/javascript.mdc for JavaScript best practices
-See ai/rules/tdd.mdc for test-driven development
-See ai/rules/productmanager.mdc for product management
+See ai/skills/aidd-javascript/SKILL.md for JavaScript best practices
+See ai/skills/aidd-tdd/SKILL.md for test-driven development
+See ai/skills/aidd-product-manager/SKILL.md for product management
 ```
 
 **For other editors (VS Code, Vim, etc.):**
 
-Reference rules directly in your AI assistant prompts:
+Reference skills directly in your AI assistant prompts:
 
 ```
-Please follow the guidelines in ai/rules/javascript/javascript.mdc
+Please follow the guidelines in ai/skills/aidd-javascript/SKILL.md
 Use the workflow from ai/commands/task.md
 ```
 
@@ -610,7 +698,7 @@ Use the workflow from ai/commands/task.md
 ls ai/
 
 # Verify key files exist
-ls ai/rules/please.mdc
+ls ai/skills/aidd-please/SKILL.md
 ls ai/commands/
 ```
 
@@ -651,6 +739,12 @@ rm .cursor
 ## 📄 License
 
 MIT © [ParallelDrive](https://github.com/paralleldrive)
+
+## 📹 Weekly Training Sessions
+
+Public-access, recorded trainings published to YouTube on a (mostly) weekly basis, covering AIDD Framework workflows and software engineering in general. We meet at 3:00pm PT every Tuesday.
+
+📖 **[Browse all training sessions →](docs/training-videos.md)**
 
 ## 🤝 Contributing
 

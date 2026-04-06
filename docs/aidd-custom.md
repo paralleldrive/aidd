@@ -9,6 +9,7 @@ automatically by the AIDD installer and tracked in your repository alongside
 
 | File / Folder        | Purpose                                                    |
 |----------------------|------------------------------------------------------------|
+| `AGENTS.md`          | Project-specific agent instructions that override root `AGENTS.md` settings |
 | `config.yml`         | Framework behavior overrides (see options below)           |
 | `skills/`            | Custom project-specific skills                             |
 | _(any `.md`/`.mdc`)_ | Additional agent rules and commands                        |
@@ -19,6 +20,24 @@ automatically by the AIDD installer and tracked in your repository alongside
 | Option            | Default | Description                                                                    |
 |-------------------|---------|--------------------------------------------------------------------------------|
 | `e2eBeforeCommit` | `false` | Run `npm run test:e2e` locally before each commit. When `false`, the full e2e suite runs in CI only. Set to `true` in projects where e2e tests are fast and reliably parallel. |
+| `agent-config`    | `claude` | Agent used for prompt manifest steps and `npx aidd agent`. Accepted values: `claude` \| `opencode` \| `cursor` \| a path to a `.yml` agent config file \| an inline `{ command, args }` object. |
+
+## Agent Instruction Overrides
+
+The `aidd-custom/AGENTS.md` file allows you to add or override agent instructions from the root `AGENTS.md`. The root `AGENTS.md` includes an import directive:
+
+```
+import aidd-custom/AGENTS.md // settings from this import should override the root AGENTS.md settings
+```
+
+This tells agents to load your project-specific instructions with higher priority than the framework defaults. Use this file to:
+
+- Add project-specific workflows or rules
+- Override default agent behaviors for your project
+- Document project conventions agents should follow
+- Specify custom task routing or delegation rules
+
+The file is created as a scaffold on first install and **never overwritten**, ensuring your customizations are always preserved during framework upgrades.
 
 ## Custom Skills
 
