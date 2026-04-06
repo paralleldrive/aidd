@@ -70,7 +70,7 @@ Show the full plan, then run a self-validating quality gate — do not await use
 - If body will exceed the line threshold (run `validate-skill` to check), extract content to `references/` and use `import $referenceFile`
 
 **writeSkill(skillMd)**
-- Write to `$projectRoot/aidd-custom/${skillName}/SKILL.md`
+- Write to `$projectRoot/aidd-custom/skills/${skillName}/SKILL.md`
 - Create `scripts/`, `references/`, or `assets/` directories only if planned
 
 **writeReadme(skillMd)**

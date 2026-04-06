@@ -21,14 +21,14 @@ Constraints {
 }
 
 Commands {
-  /aidd-upskill create [name] — scaffold a new skill at aidd-custom/aidd-[name]/SKILL.md
+  /aidd-upskill create [name] — scaffold a new skill at aidd-custom/skills/aidd-[name]/SKILL.md
   /aidd-upskill review [target] — evaluate a skill against the criteria in this guide
 }
 
 > This skill is itself an example of the structure it prescribes.
 
-import ai/skills/aidd-upskill/references/types.md
-import ai/skills/aidd-upskill/references/process.md
+import references/types.md
+import references/process.md
 
 ## Process
 
