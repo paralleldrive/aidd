@@ -30,6 +30,12 @@ Commands {
 import ai/skills/aidd-upskill/references/types.md
 import ai/skills/aidd-upskill/references/process.md
 
+## Process
+
+The `createSkill` and `reviewSkill` pipelines — including all step definitions — are defined in
+`references/process.md` (imported above). Read that file for the full authoring and review
+workflows.
+
 ---
 
 ## Skill Structure
@@ -103,7 +109,7 @@ fn caveman() {
 
 ## Eval Tests
 
-Use Riteway AI to write eval tests for skill commands. See `ai/skills/aidd-riteway-ai` for the full testing skill.
+Use Riteway AI to write eval tests for skill commands. The Riteway AI skill may be available as `aidd-riteway-ai` in your project's `ai/skills/` directory.
 
 **Core principle:** never mix thinking and effects in a single `/command`. Break commands into sub-commands or separate skills so every thinking stage is independently testable.
 
