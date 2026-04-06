@@ -22,6 +22,7 @@ createSkill(userRequest) {
        }
     |> draftSkillMd
     |> writeSkill
+    |> writeReadme
     |> validate
     |> reportMetrics
 }
@@ -72,6 +73,11 @@ Show the full plan, then run a self-validating quality gate — do not await use
 - Write to `$projectRoot/aidd-custom/${skillName}/SKILL.md`
 - Create `scripts/`, `references/`, or `assets/` directories only if planned
 
+**writeReadme(skillMd)**
+- Write `README.md` in the skill directory
+- Include: what the skill is, why it is useful, command reference with usage examples
+- Exclude: implementation details, process narratives, pipeline descriptions
+
 **validate**
 ```bash
 ai/skills/aidd-craft-skill/scripts/validate-skill ./path-to-skill-directory
@@ -91,6 +97,7 @@ reviewSkill(target) {
     |> checkRequiredSections
     |> checkSizeMetrics
     |> checkCommandSeparation
+    |> checkReadme
     |> deduplicateWithCaveman()
     |> caveman()
     |> reportFindings
@@ -100,6 +107,7 @@ reviewSkill(target) {
 **runFunctionTest** — apply the 5-question Function Test from SKILL.md  
 **checkRequiredSections** — verify all `RequiredSections` are present  
 **checkSizeMetrics** — run `validate-skill` and report warnings  
-**checkCommandSeparation** — verify no command mixes thinking and side effects  
+**checkCommandSeparation** — verify no command mixes thinking and side effects
+**checkReadme** — verify README.md exists and contains what/why/commands; flag if it contains implementation details or process narratives
 **deduplicateWithCaveman()** — find every instance of repeated information across SKILL.md and its references; flag each duplicate and identify where the single source of truth should live  
 **reportFindings** — list issues, suggestions, and a pass/fail verdict

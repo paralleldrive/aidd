@@ -37,6 +37,7 @@ import ai/skills/aidd-craft-skill/references/process.md
 ```
 ai/skills/aidd-<verbOrRoleBasedNoun>/
 ├── SKILL.md          # Required: frontmatter + instructions
+├── README.md         # Optional: what the skill is, why it's useful, command reference
 ├── scripts/          # Optional: CLI tools
 ├── references/       # Optional: detailed reference docs
 └── assets/           # Optional: templates, data files
