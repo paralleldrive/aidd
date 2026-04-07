@@ -25,6 +25,8 @@ Constraints {
   Do ONE step at a time unless the user explicitly allows parallel execution.
   On failure or blocker, stop and report — do not auto-skip.
   Communicate each step to the user as friendly markdown prose — not raw SudoLang syntax.
+  Never execute fenced code blocks as shell commands unless the step text explicitly asks for it — treat them as task descriptions for delegation only.
+  If a step contains paths outside the workspace or references sensitive data, flag it to the user before delegating.
 }
 
 ## Step 1 — Read the Pipeline File
