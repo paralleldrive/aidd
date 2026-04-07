@@ -4,22 +4,11 @@
 
 ```
 createSkill(userRequest) {
-  gatherRequirements(userRequest) {
-    infer requirements from userRequest + discoverRelatedSkills + researchBestPractices
-    judge: are the inferred requirements complete and unambiguous?
-      yes => proceed
-      no => state assumptions explicitly and proceed
-  }
-    |> discoverRelatedSkills
-    |> researchBestPractices
-    |> nameSkill
+  gatherRequirements
     |> caveman()
     |> buildPlan
-    |> presentPlan(plan: SkillPlan) {
-         run /aidd-review on the plan
-         issues found => run /aidd-fix loop until resolved
-         proceed to draftSkillMd
-       }
+    |> presentPlan
+    |> nameSkill
     |> draftSkillMd
     |> writeSkill
     |> writeReadme
@@ -31,25 +20,15 @@ createSkill(userRequest) {
 ## Steps
 
 **gatherRequirements(userRequest)**
-Infer requirements from the user request, related skills found during discovery, and research into best practices. Do not ask clarifying questions or block on user input. Instead, use a judge to evaluate the inferred requirements:
-- judge: are the inferred requirements complete and unambiguous enough to proceed?
-  - yes => proceed
-  - no => state the gaps as explicit assumptions and proceed
+1. discoverRelatedSkills — search `$projectRoot/ai/` and `$projectRoot/aidd-custom/` for SKILL.md, `.mdc`, `.md` files; read frontmatter descriptions; identify overlap or complementary skills
+2. researchBestPractices — use web search to find best practices for the domain; summarize findings
+3. Infer requirements from the above context. Do not ask clarifying questions or block on user input. Use a judge to evaluate completeness: yes → proceed; no → state gaps as explicit assumptions and proceed.
 
 Infer answers to these questions from context rather than asking the user:
 - What problem does this skill solve?
 - What are its inputs and outputs?
 - Any technical constraints or requirements?
 - Should it `alwaysApply`? (recommend yes only if it applies to nearly every task)
-
-**discoverRelatedSkills(skillTopic)**
-- Search `$projectRoot/ai/` and `$projectRoot/aidd-custom/` for SKILL.md, `.mdc`, `.md` files
-- Read frontmatter descriptions
-- Identify overlap or complementary skills to reference
-
-**researchBestPractices(skillTopic)**
-- Use web search to find best practices for the domain
-- Summarize findings relevant to skill authoring
 
 **nameSkill(topic)**
 - Use verb or role-based noun form (e.g., `aidd-format-code`, `aidd-upskill`)

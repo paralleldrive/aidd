@@ -11,6 +11,7 @@
 
 ## Create Pipeline
 
+- Given the create pipeline documented in `ai/skills/aidd-upskill/references/process.md`, should treat `discoverRelatedSkills` and `researchBestPractices` as sub-steps inside `gatherRequirements`, not as separate top-level pipeline stages that would run before those outputs exist.
 - Given `/aidd-upskill create [name]` is invoked, should infer requirements from context rather than blocking on user input; any gaps should be stated as explicit assumptions before proceeding.
 - Given a plan has been built, should validate it via `/aidd-review` and resolve issues via `/aidd-fix` before drafting — should not await explicit user approval.
 - Given a skill is being created, should produce a `README.md` containing what the skill is, why it is useful, and a command reference with usage examples.
