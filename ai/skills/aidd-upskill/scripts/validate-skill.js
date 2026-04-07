@@ -110,6 +110,8 @@ export const validateSkillContent = (content, dirName) => {
   errors.push(...validateName(name, dirName));
   errors.push(...validateFrontmatterKeys(parsedFrontmatter));
   if (!description) errors.push("Description is required");
+  else if (description.length > 1024)
+    errors.push("Description must be 1024 characters or fewer");
   const metrics = calculateMetrics(frontmatter, body);
   const { errors: thresholdErrors, warnings } = checkThresholds(metrics);
   return { errors: [...errors, ...thresholdErrors], metrics, warnings };

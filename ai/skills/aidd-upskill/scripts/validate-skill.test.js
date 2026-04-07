@@ -607,6 +607,50 @@ Body content here.`;
     });
   });
 
+  test("description exceeding 1024 characters fails with error", () => {
+    const longDescription = "a".repeat(1025);
+    const content = `---
+name: aidd-my-skill
+description: ${longDescription}
+---
+# My Skill
+
+Body content here.`;
+
+    const result = validateSkillContent(content, "aidd-my-skill");
+
+    assert({
+      given: "a skill with a description longer than 1024 characters",
+      should: "return a description length error",
+      actual: result.errors.some((e) =>
+        e.includes("Description must be 1024 characters or fewer"),
+      ),
+      expected: true,
+    });
+  });
+
+  test("description of exactly 1024 characters passes without error", () => {
+    const maxDescription = "a".repeat(1024);
+    const content = `---
+name: aidd-my-skill
+description: ${maxDescription}
+---
+# My Skill
+
+Body content here.`;
+
+    const result = validateSkillContent(content, "aidd-my-skill");
+
+    assert({
+      given: "a skill with a description of exactly 1024 characters",
+      should: "not return a description length error",
+      actual: result.errors.some((e) =>
+        e.includes("Description must be 1024 characters or fewer"),
+      ),
+      expected: false,
+    });
+  });
+
   test("quoted name field is stripped of quotes before validation", () => {
     const content = `---
 name: "aidd-my-skill"
