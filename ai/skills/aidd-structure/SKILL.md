@@ -6,30 +6,32 @@ description: Enforces source code structuring and interdependency best practices
 # Standard folder structure
 
 ```
-types ← services ← plugins ← components
-  ↑         ↑         ↑
-  └─────────┴─────────┘ (types only depend on types)
+types ← services ← state ← components
+  ↑         ↑        ↑
+  └─────────┴────────┘ (types only depend on types)
 ```
+
+Use a top-level folder named **`state`** (not `plugins`) for application state and ECS wiring. The name reads clearly in game and product codebases.
 
 ## Dependency rules
 
 ```sudolang
 LayerDependency {
-  layer: "components" | "plugins" | "services" | "types"
+  layer: "components" | "state" | "services" | "types"
   mayDependOn: String[]
   mustNotDependOn: String[]
 }
 
 DependencyRules [
-  { layer: "components", mayDependOn: ["plugins (Observe<Data>, void actions)", "types"], mustNotDependOn: ["services"] },
-  { layer: "plugins", mayDependOn: ["services", "types", "other plugins"], mustNotDependOn: [] },
-  { layer: "services", mayDependOn: ["other services", "types"], mustNotDependOn: ["components", "plugins"] },
+  { layer: "components", mayDependOn: ["state (Observe<Data>, void actions)", "types"], mustNotDependOn: ["services"] },
+  { layer: "state", mayDependOn: ["services", "types", "other state modules"], mustNotDependOn: [] },
+  { layer: "services", mayDependOn: ["other services", "types"], mustNotDependOn: ["components", "state"] },
   { layer: "types", mayDependOn: ["other types"], mustNotDependOn: ["everything else"] }
 ]
 
 Constraints {
   Never: components → services
-  Never: services → components or plugins
+  Never: services → components or state
   Never: types → anything except types
 }
 ```
@@ -40,11 +42,11 @@ Constraints {
 
 UI components or elements (also called "elements").
 
-**From plugins:** only Observe<Data> for reactive re-renders and void-returning action functions.
+**From state:** only Observe<Data> for reactive re-renders and void-returning action functions.
 
-## plugins (if using @adobe/data/ecs for state)
+## state (if using @adobe/data/ecs for state)
 
-ECS Database.Plugin declarations. Usually depend on services, types, and other plugins.
+ECS `Database.Plugin` declarations and related state composition live under a **`state`** folder. Usually depend on services, types, and other state modules.
 
 ## services
 
@@ -65,7 +67,7 @@ When a component has implementation-specific sub-parts, mirror the root structur
 ```
 components/my-component/
   components/
-  plugins/
+  state/
   types/
 ```
 
@@ -76,7 +78,7 @@ components/my-component/
 ```sudolang
 fn whenAddingOrMovingCode() {
   Constraints {
-    Place code in the correct layer (components, plugins, services, types)
+    Place code in the correct layer (components, state, services, types)
     Check dependencies against the dependency rules
     Fix any violations (e.g. components importing services)
   }
