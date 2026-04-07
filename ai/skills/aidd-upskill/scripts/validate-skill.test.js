@@ -81,15 +81,15 @@ Body content here.`;
     assert({
       given: "SKILL.md content with valid frontmatter",
       should: "return parsed frontmatter string",
-      actual: result.frontmatter.includes("name: my-skill"),
-      expected: true,
+      actual: result.frontmatter,
+      expected: "name: my-skill\ndescription: A test skill.",
     });
 
     assert({
       given: "SKILL.md content with valid frontmatter",
       should: "return body without frontmatter",
-      actual: result.body.startsWith("# My Skill"),
-      expected: true,
+      actual: result.body,
+      expected: "# My Skill\n\nBody content here.",
     });
   });
 
@@ -120,15 +120,15 @@ Body content here.`;
     assert({
       given: "SKILL.md content with CRLF line endings",
       should: "return parsed frontmatter string",
-      actual: result.frontmatter.includes("name: aidd-my-skill"),
-      expected: true,
+      actual: result.frontmatter,
+      expected: "name: aidd-my-skill\r\ndescription: A test skill.",
     });
 
     assert({
       given: "SKILL.md content with CRLF line endings",
       should: "return body without frontmatter block",
-      actual: result.body.startsWith("# My Skill"),
-      expected: true,
+      actual: result.body,
+      expected: "# My Skill\r\n\r\nBody content here.",
     });
   });
 });
@@ -353,6 +353,82 @@ describe("checkThresholds", () => {
     assert({
       given: "body at 5000 tokens",
       should: "not produce a hard error",
+      actual: result.errors,
+      expected: [],
+    });
+  });
+
+  test("body at 159 lines (just below soft threshold)", () => {
+    const metrics = { frontmatterTokens: 10, bodyLines: 159, bodyTokens: 1000 };
+    const result = checkThresholds(metrics);
+
+    assert({
+      given: "body at 159 lines",
+      should: "return no body-line warning",
+      actual: result.warnings.filter((w) => w.includes("160")),
+      expected: [],
+    });
+
+    assert({
+      given: "body at 159 lines",
+      should: "return no errors",
+      actual: result.errors,
+      expected: [],
+    });
+  });
+
+  test("body at 499 lines (just below hard limit)", () => {
+    const metrics = { frontmatterTokens: 10, bodyLines: 499, bodyTokens: 1000 };
+    const result = checkThresholds(metrics);
+
+    assert({
+      given: "body at 499 lines",
+      should: "return a 160-line soft warning",
+      actual: result.warnings.some((w) => w.includes("160")),
+      expected: true,
+    });
+
+    assert({
+      given: "body at 499 lines",
+      should: "not produce a hard error",
+      actual: result.errors,
+      expected: [],
+    });
+  });
+
+  test("frontmatter at 99 tokens (just below warning threshold)", () => {
+    const metrics = { frontmatterTokens: 99, bodyLines: 50, bodyTokens: 1000 };
+    const result = checkThresholds(metrics);
+
+    assert({
+      given: "frontmatter at 99 tokens",
+      should: "return no frontmatter warning",
+      actual: result.warnings.filter((w) => w.includes("Frontmatter")),
+      expected: [],
+    });
+
+    assert({
+      given: "frontmatter at 99 tokens",
+      should: "return no errors",
+      actual: result.errors,
+      expected: [],
+    });
+  });
+
+  test("body at 4999 tokens (just below warning threshold)", () => {
+    const metrics = { frontmatterTokens: 10, bodyLines: 50, bodyTokens: 4999 };
+    const result = checkThresholds(metrics);
+
+    assert({
+      given: "body at 4999 tokens",
+      should: "return no token warning",
+      actual: result.warnings.filter((w) => w.includes("5000")),
+      expected: [],
+    });
+
+    assert({
+      given: "body at 4999 tokens",
+      should: "return no errors",
       actual: result.errors,
       expected: [],
     });
