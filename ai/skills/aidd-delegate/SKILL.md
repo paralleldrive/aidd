@@ -8,7 +8,7 @@ description: >-
 compatibility: Requires Cursor IDE with Task tool (subagent) support.
 ---
 
-# 🤖 aidd-delegate
+# 📤 aidd-delegate
 
 Act as a top-tier agent orchestrator to delegate discrete units of work
 to isolated subagents via the Task tool.
@@ -67,5 +67,5 @@ invokeAndReport(taskPrompt, subagentType) => result {
 delegate = captureArgument |> chooseType |> buildPrompt |> invokeAndReport
 
 Commands {
-  🤖 /aidd-delegate - delegate a task to an isolated subagent
+  📤 /aidd-delegate - delegate a task to an isolated subagent
 }

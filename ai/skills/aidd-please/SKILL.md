@@ -46,7 +46,7 @@ Commands {
   🧪 /user-test - use /aidd-user-testing to generate human and AI agent test scripts from user journeys
   🤖 /run-test - execute AI agent test script in real browser with screenshots
   🐛 /aidd-fix - fix a bug or implement review feedback following the full AIDD fix process
-  🤖 /aidd-delegate - delegate a task to an isolated subagent
+  📤 /aidd-delegate - delegate a task to an isolated subagent
   🔗 /aidd-pipeline - run a markdown task list as a step-by-step subagent pipeline
 }
 
