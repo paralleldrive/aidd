@@ -111,4 +111,4 @@ reviewSkill(target) {
 **checkReadme** — verify README.md exists and contains what/why/commands; flag if it contains implementation details or process narratives
 **deduplicateWithCaveman()** — find every instance of repeated information across SKILL.md and its references; flag each duplicate and identify where the single source of truth should live  
 **caveman()** — synthesize all findings into a holistic judgment before rendering the verdict; independently testable as a pure thinking stage  
-**reportFindings** — list issues, suggestions, and a pass/fail verdict
+**reportFindings** — produce a per-check pass/fail table (one row per check: runFunctionTest, checkRequiredSections, checkSizeMetrics, checkCommandSeparation, checkReadme, deduplicateWithCaveman, caveman) with columns for check name, result (✅/⚠️/❌), and detail; conclude with an overall verdict

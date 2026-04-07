@@ -16,7 +16,7 @@ sized to stay concise, and organized for progressive disclosure.
 /aidd-upskill create [name]
 ```
 
-Scaffolds a new skill at `aidd-custom/aidd-[name]/SKILL.md` with the required
+Scaffolds a new skill at `aidd-custom/skills/aidd-[name]/SKILL.md` with the required
 frontmatter, sections, and directory layout.
 
 ```
