@@ -475,6 +475,78 @@ Body content here.`;
     });
   });
 
+  test("quoted name field is stripped of quotes before validation", () => {
+    const content = `---
+name: "aidd-my-skill"
+description: A test skill.
+---
+# My Skill
+
+Body content here.`;
+
+    const result = validateSkillContent(content, "aidd-my-skill");
+
+    assert({
+      given:
+        'a skill with name: "aidd-my-skill" (YAML double-quoted) and matching directory',
+      should: "return no name-related errors",
+      actual: result.errors,
+      expected: [],
+    });
+  });
+
+  test("single-quoted name field is stripped of quotes before validation", () => {
+    const content = `---
+name: 'aidd-my-skill'
+description: A test skill.
+---
+# My Skill
+
+Body content here.`;
+
+    const result = validateSkillContent(content, "aidd-my-skill");
+
+    assert({
+      given:
+        "a skill with name: 'aidd-my-skill' (YAML single-quoted) and matching directory",
+      should: "return no name-related errors",
+      actual: result.errors,
+      expected: [],
+    });
+  });
+
+  test("malformed YAML frontmatter returns an Invalid YAML error instead of throwing", () => {
+    const content = `---
+name: aidd-my-skill
+description: [broken
+---
+# My Skill
+
+Body content here.`;
+
+    let result;
+    let threw = false;
+    try {
+      result = validateSkillContent(content, "aidd-my-skill");
+    } catch {
+      threw = true;
+    }
+
+    assert({
+      given: "a skill with malformed YAML in frontmatter",
+      should: "not throw an exception",
+      actual: threw,
+      expected: false,
+    });
+
+    assert({
+      given: "a skill with malformed YAML in frontmatter",
+      should: 'return an error containing "Invalid YAML"',
+      actual: result.errors.some((e) => e.includes("Invalid YAML")),
+      expected: true,
+    });
+  });
+
   test("unknown frontmatter key produces an error via validateSkillContent", () => {
     const content = `---
 name: aidd-my-skill

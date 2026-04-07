@@ -82,13 +82,21 @@ export const checkThresholds = (metrics) => {
 export const validateSkillContent = (content, dirName) => {
   const { frontmatter, body } = parseSkillMd(content);
   const nameMatch = frontmatter.match(/^name:\s*(.+)$/m);
-  const name = nameMatch ? nameMatch[1].trim() : "";
+  const name = nameMatch ? nameMatch[1].trim().replace(/^["']|["']$/g, "") : "";
   const descriptionMatch = frontmatter.match(/^description:\s*(.*)$/m);
   const description = descriptionMatch
     ? descriptionMatch[1].trim().replace(/^["']|["']$/g, "")
     : "";
   const errors = validateName(name, dirName);
-  const parsedFrontmatter = frontmatter ? yaml.load(frontmatter) : {};
+  let parsedFrontmatter;
+  try {
+    parsedFrontmatter = frontmatter ? yaml.load(frontmatter) : {};
+  } catch (e) {
+    errors.push(`Invalid YAML in frontmatter: ${e.message}`);
+    const metrics = calculateMetrics(frontmatter, body);
+    const { errors: thresholdErrors, warnings } = checkThresholds(metrics);
+    return { errors: [...errors, ...thresholdErrors], metrics, warnings };
+  }
   errors.push(...validateFrontmatterKeys(parsedFrontmatter ?? {}));
   if (!description) errors.push("Description is required");
   const metrics = calculateMetrics(frontmatter, body);
