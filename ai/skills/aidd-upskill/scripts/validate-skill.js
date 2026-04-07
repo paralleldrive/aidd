@@ -81,13 +81,7 @@ export const checkThresholds = (metrics) => {
  */
 export const validateSkillContent = (content, dirName) => {
   const { frontmatter, body } = parseSkillMd(content);
-  const nameMatch = frontmatter.match(/^name:\s*(.+)$/m);
-  const name = nameMatch ? nameMatch[1].trim().replace(/^["']|["']$/g, "") : "";
-  const descriptionMatch = frontmatter.match(/^description:\s*(.*)$/m);
-  const description = descriptionMatch
-    ? descriptionMatch[1].trim().replace(/^["']|["']$/g, "")
-    : "";
-  const errors = validateName(name, dirName);
+  const errors = [];
   let parsedFrontmatter;
   try {
     parsedFrontmatter = frontmatter ? yaml.load(frontmatter) : {};
@@ -97,7 +91,24 @@ export const validateSkillContent = (content, dirName) => {
     const { errors: thresholdErrors, warnings } = checkThresholds(metrics);
     return { errors: [...errors, ...thresholdErrors], metrics, warnings };
   }
-  errors.push(...validateFrontmatterKeys(parsedFrontmatter ?? {}));
+  if (
+    typeof parsedFrontmatter !== "object" ||
+    parsedFrontmatter === null ||
+    Array.isArray(parsedFrontmatter)
+  ) {
+    errors.push("Frontmatter must be a YAML mapping (key-value object)");
+    const metrics = calculateMetrics(frontmatter, body);
+    const { errors: thresholdErrors, warnings } = checkThresholds(metrics);
+    return { errors: [...errors, ...thresholdErrors], metrics, warnings };
+  }
+  const name =
+    typeof parsedFrontmatter.name === "string" ? parsedFrontmatter.name : "";
+  const description =
+    typeof parsedFrontmatter.description === "string"
+      ? parsedFrontmatter.description
+      : "";
+  errors.push(...validateName(name, dirName));
+  errors.push(...validateFrontmatterKeys(parsedFrontmatter));
   if (!description) errors.push("Description is required");
   const metrics = calculateMetrics(frontmatter, body);
   const { errors: thresholdErrors, warnings } = checkThresholds(metrics);
@@ -108,10 +119,11 @@ export const validateSkillContent = (content, dirName) => {
 export const resolveIsMainEntry = ({ main, argv1, moduleUrl }) =>
   typeof main !== "undefined" ? main : argv1 === fileURLToPath(moduleUrl);
 
-const isMain =
-  typeof import.meta.main !== "undefined"
-    ? import.meta.main
-    : process.argv[1] === fileURLToPath(import.meta.url);
+const isMain = resolveIsMainEntry({
+  argv1: process.argv[1],
+  main: import.meta.main,
+  moduleUrl: import.meta.url,
+});
 
 if (isMain) {
   const skillDir = process.argv[2];

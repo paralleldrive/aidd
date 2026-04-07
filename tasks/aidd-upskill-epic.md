@@ -29,6 +29,9 @@
 
 - Given `validate-skill` is run against a skill directory, should report name errors and size threshold warnings.
 - Given `validate-skill` is executed as the program entry point (including when packaged as a Bun-compiled binary), should run the CLI and validate the target directory instead of treating the script as an imported library only.
+- Given the module is loaded as a CLI entry point, should determine `isMain` by calling `resolveIsMainEntry` instead of duplicating its logic inline.
+- Given a SKILL.md frontmatter field value contains an inline YAML comment (e.g. `name: aidd-my-skill # comment`), should validate `name` and `description` correctly without treating the comment as part of the value.
+- Given `yaml.load` returns a non-object value for degenerate frontmatter (e.g. a bare scalar string), should return an error containing "must be a YAML mapping" without throwing.
 
 ## Eval Tests
 

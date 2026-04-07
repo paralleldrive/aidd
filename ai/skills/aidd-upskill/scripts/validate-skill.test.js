@@ -568,6 +568,59 @@ Body content here.`;
       expected: true,
     });
   });
+
+  test("inline YAML comment on name field does not corrupt name validation", () => {
+    const content = `---
+name: aidd-my-skill # inline comment
+description: A test skill.
+---
+# My Skill
+
+Body content here.`;
+
+    const result = validateSkillContent(content, "aidd-my-skill");
+
+    assert({
+      given:
+        "a SKILL.md with an inline YAML comment on the name field (name: aidd-my-skill # comment)",
+      should: "validate name correctly and return no errors",
+      actual: result.errors,
+      expected: [],
+    });
+  });
+
+  test("degenerate frontmatter that is a bare scalar returns a YAML mapping error without throwing", () => {
+    const content = `---
+just a string
+---
+# My Skill
+
+Body content here.`;
+
+    let result;
+    let threw = false;
+    try {
+      result = validateSkillContent(content, "aidd-my-skill");
+    } catch {
+      threw = true;
+    }
+
+    assert({
+      given:
+        "a SKILL.md whose frontmatter is a bare YAML scalar (not a mapping)",
+      should: "not throw an exception",
+      actual: threw,
+      expected: false,
+    });
+
+    assert({
+      given:
+        "a SKILL.md whose frontmatter is a bare YAML scalar (not a mapping)",
+      should: 'return an error containing "must be a YAML mapping"',
+      actual: result.errors.some((e) => e.includes("must be a YAML mapping")),
+      expected: true,
+    });
+  });
 });
 
 describe("validateFrontmatterKeys", () => {
