@@ -148,9 +148,9 @@ describe("validateName", () => {
 
     assert({
       given: "a name without the aidd- prefix",
-      should: "return a validation error",
-      actual: errors.length > 0,
-      expected: true,
+      should: "return an error requiring the aidd- prefix",
+      actual: errors[0],
+      expected: "Name must start with 'aidd-' prefix",
     });
   });
 
@@ -159,9 +159,16 @@ describe("validateName", () => {
 
     assert({
       given: "a name with uppercase letters",
-      should: "return a validation error",
-      actual: errors.length > 0,
-      expected: true,
+      should: "return an error requiring lowercase alphanumeric + hyphens",
+      actual: errors[0],
+      expected: "Name must be lowercase alphanumeric + hyphens only",
+    });
+
+    assert({
+      given: "a name with uppercase letters",
+      should: "also return an error requiring the aidd- prefix",
+      actual: errors[1],
+      expected: "Name must start with 'aidd-' prefix",
     });
   });
 
@@ -170,9 +177,16 @@ describe("validateName", () => {
 
     assert({
       given: "a name starting with a hyphen",
-      should: "return a validation error",
-      actual: errors.length > 0,
-      expected: true,
+      should: "return an error requiring the aidd- prefix",
+      actual: errors[0],
+      expected: "Name must start with 'aidd-' prefix",
+    });
+
+    assert({
+      given: "a name starting with a hyphen",
+      should: "return an error about leading/trailing hyphen",
+      actual: errors[1],
+      expected: "Name must not start or end with hyphen",
     });
   });
 
@@ -181,9 +195,16 @@ describe("validateName", () => {
 
     assert({
       given: "a name ending with a hyphen",
-      should: "return a validation error",
-      actual: errors.length > 0,
-      expected: true,
+      should: "return an error requiring the aidd- prefix",
+      actual: errors[0],
+      expected: "Name must start with 'aidd-' prefix",
+    });
+
+    assert({
+      given: "a name ending with a hyphen",
+      should: "return an error about leading/trailing hyphen",
+      actual: errors[1],
+      expected: "Name must not start or end with hyphen",
     });
   });
 
@@ -192,9 +213,16 @@ describe("validateName", () => {
 
     assert({
       given: "a name with consecutive hyphens",
-      should: "return a validation error",
-      actual: errors.length > 0,
-      expected: true,
+      should: "return an error requiring the aidd- prefix",
+      actual: errors[0],
+      expected: "Name must start with 'aidd-' prefix",
+    });
+
+    assert({
+      given: "a name with consecutive hyphens",
+      should: "return an error about consecutive hyphens",
+      actual: errors[1],
+      expected: "Name must not contain consecutive hyphens",
     });
   });
 
@@ -204,9 +232,16 @@ describe("validateName", () => {
 
     assert({
       given: "a name longer than 64 characters",
-      should: "return a validation error",
-      actual: errors.length > 0,
-      expected: true,
+      should: "return an error about name length",
+      actual: errors[0],
+      expected: "Name must be 1-64 characters",
+    });
+
+    assert({
+      given: "a name longer than 64 characters",
+      should: "return an error requiring the aidd- prefix",
+      actual: errors[1],
+      expected: "Name must start with 'aidd-' prefix",
     });
   });
 
@@ -215,9 +250,23 @@ describe("validateName", () => {
 
     assert({
       given: "an empty name",
-      should: "return a validation error",
-      actual: errors.length > 0,
-      expected: true,
+      should: "return an error about name length",
+      actual: errors[0],
+      expected: "Name must be 1-64 characters",
+    });
+
+    assert({
+      given: "an empty name",
+      should: "return an error requiring the aidd- prefix",
+      actual: errors[1],
+      expected: "Name must start with 'aidd-' prefix",
+    });
+
+    assert({
+      given: "an empty name",
+      should: "return an error about mismatched directory name",
+      actual: errors[2],
+      expected: "Name must match directory name",
     });
   });
 
@@ -226,9 +275,16 @@ describe("validateName", () => {
 
     assert({
       given: "a name that does not match the directory name",
-      should: "return a validation error",
-      actual: errors.length > 0,
-      expected: true,
+      should: "return an error requiring the aidd- prefix",
+      actual: errors[0],
+      expected: "Name must start with 'aidd-' prefix",
+    });
+
+    assert({
+      given: "a name that does not match the directory name",
+      should: "return an error about mismatched directory name",
+      actual: errors[1],
+      expected: "Name must match directory name",
     });
   });
 });
@@ -241,9 +297,9 @@ describe("calculateMetrics", () => {
 
     assert({
       given: "frontmatter and body text",
-      should: "estimate frontmatter tokens as ceil(length / 4)",
+      should: "estimate frontmatter tokens as ceil(31 chars / 4) = 8",
       actual: result.frontmatterTokens,
-      expected: Math.ceil(frontmatter.length / 4),
+      expected: 8,
     });
 
     assert({
@@ -255,9 +311,9 @@ describe("calculateMetrics", () => {
 
     assert({
       given: "body text",
-      should: "estimate body tokens as ceil(length / 4)",
+      should: "estimate body tokens as ceil(22 chars / 4) = 6",
       actual: result.bodyTokens,
-      expected: Math.ceil(body.length / 4),
+      expected: 6,
     });
   });
 });
