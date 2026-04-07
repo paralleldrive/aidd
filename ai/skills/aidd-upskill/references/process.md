@@ -5,10 +5,10 @@
 ```
 createSkill(userRequest) {
   gatherRequirements
+    |> nameSkill
     |> caveman()
     |> buildPlan
     |> presentPlan
-    |> nameSkill
     |> draftSkillMd
     |> writeSkill
     |> writeReadme
