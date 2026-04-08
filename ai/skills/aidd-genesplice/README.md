@@ -1,23 +1,43 @@
 # aidd-genesplice
 
-Evolutionary optimization framework for creative output — pitches, copy, UI designs, and strategies.
+Evolutionary optimization framework for creative output — copy, UI prototypes,
+pitches, strategies, or any artifact where multiple viable approaches exist
+and you need to find the optimal blend.
 
 ## Why
 
-When "good enough" isn't enough, genesplice runs competing candidates through scored generations, splices the strongest genes, and picks a provably best version with full justification. It encodes hard-won lessons about individually optimized genes producing weaker organisms, and mandates holistic scoring criteria to catch emergent problems.
+Generating a single "best attempt" leaves value on the table. Genesplice
+borrows from genetic algorithms: competing candidates with distinct gene
+profiles are scored against researched criteria, and the strongest traits are
+spliced across generations. Mutations introduce structural novelty that no
+single-pass approach would discover. The result compounds improvements across
+generations — the winner rarely looks like any single parent.
 
-## Usage
+## Commands
 
 ```
-/genesplice [artifact] [n=2]   — run the full evolutionary optimization pipeline
-/genesplice review             — review the current generation's scoring table
-/genesplice winner             — name the winner and justify gene inheritance
+/genesplice [artifact]
 ```
 
-Invoke `/genesplice` with the artifact you want to optimize (e.g. "investor one-pager", "landing page hero", "product pitch"). The skill researches domain criteria, generates `n` candidates per generation with distinct gene profiles, scores them, splices the best traits, introduces a mutation, and repeats until scores plateau.
+Run the full evolutionary optimization pipeline: research criteria → generate
+candidates → score → splice → mutate → repeat → pick winner.
 
-## When to use
+```
+/genesplice score [candidates]
+```
 
-- Optimizing any creative artifact where multiple viable approaches exist
-- When a pitch, design, or copy must be provably better than alternatives
-- When you need to find the optimal blend of competing ideas
+Score existing candidates against the researched criteria without running a
+new generation.
+
+```
+/genesplice splice [candidate-a] [candidate-b]
+```
+
+Manually splice two specific candidates, combining their best genes into a
+new candidate.
+
+## When to Use
+
+- Optimizing creative output (pitches, copy, UI designs, strategies)
+- When "good enough" isn't enough — need a provably best version
+- When there are multiple viable approaches and you need the optimal blend
