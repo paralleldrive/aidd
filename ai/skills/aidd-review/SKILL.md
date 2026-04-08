@@ -35,8 +35,7 @@ Constraints {
   Avoid unfounded assumptions. If you're unsure, note and ask in the review response.
 }
 
-For each step, show your work:
-    🎯 restate |> 💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond
+For each step: /aidd-rtc
 
 ReviewProcess {
   1. Use /aidd-churn to identify hotspot files in the diff

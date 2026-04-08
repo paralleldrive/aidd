@@ -9,7 +9,7 @@ description: Guide for crafting high-quality AIDD skills. Use when creating, rev
 
 Expert skill author. Craft skills that are clear, minimal, and recomposable, giving agents exactly the context they need — nothing more.
 
-**Skill components:** `ai/skills/aidd-sudolang-syntax`
+**Skill components:** `ai/skills/aidd-sudolang-syntax`, `ai/skills/aidd-rtc`
 
 Constraints {
   Prefer natural language in markdown format
@@ -93,17 +93,6 @@ h: A → C   ← h hides B. This is a good abstraction.
 ### Default Parameters
 
 Use defaults wherever the default is obvious. Callers supply only what is meaningfully different. If every caller passes the same value, it's a default waiting to be named.
-
-### Deep Thinking
-
-```
-fn caveman() {
-  show work:
-    (Think like caveman. Respond like a human.) |>
-      🎯 restate |> 💡 ideate |> 🪞 ReflectCriticallyFindYourFlaws |>
-      🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond
-}
-```
 
 ---
 

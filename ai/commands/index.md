@@ -16,6 +16,12 @@ Rank files by hotspot score to identify prime candidates for refactoring before 
 
 *No description available*
 
+### aidd-rtc
+
+**File:** `aidd-rtc.md`
+
+*No description available*
+
 ### aidd-upskill
 
 **File:** `aidd-upskill.md`
