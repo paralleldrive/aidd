@@ -6,7 +6,7 @@
 createSkill(userRequest) {
   gatherRequirements
     |> nameSkill
-    |> /aidd-rtc --compress-thinking
+    |> /aidd-rtc --compact
     |> buildPlan
     |> presentPlan
     |> draftSkillMd
@@ -78,7 +78,7 @@ reviewSkill(target) {
     |> checkCommandSeparation
     |> checkReadme
     |> deduplicate()
-    |> /aidd-rtc --compress-thinking
+    |> /aidd-rtc --compact
     |> reportFindings
 }
 ```
@@ -88,6 +88,6 @@ reviewSkill(target) {
 **checkSizeMetrics** — run `validate-skill` and report warnings  
 **checkCommandSeparation** — verify no command mixes thinking and side effects
 **checkReadme** — verify README.md exists and contains what/why/commands; flag if it contains implementation details or process narratives
-**deduplicate()** — find every instance of repeated information across SKILL.md and its references; flag each duplicate and identify where the single source of truth should live; use `/aidd-rtc --compress-thinking` to reason about the canonical location  
-**/aidd-rtc --compress-thinking** — synthesize all findings into a holistic judgment before rendering the verdict; independently testable as a pure thinking stage  
+**deduplicate()** — find every instance of repeated information across SKILL.md and its references; flag each duplicate and identify where the single source of truth should live; use `/aidd-rtc --compact` to reason about the canonical location  
+**/aidd-rtc --compact** — synthesize all findings into a holistic judgment before rendering the verdict; independently testable as a pure thinking stage  
 **reportFindings** — produce a per-check pass/fail table (one row per check: runFunctionTest, checkRequiredSections, checkSizeMetrics, checkCommandSeparation, checkReadme, deduplicate) with columns for check name, result (✅/⚠️/❌), and detail; conclude with an overall verdict

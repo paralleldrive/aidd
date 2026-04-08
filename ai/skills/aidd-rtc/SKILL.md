@@ -8,12 +8,12 @@ description: Reflective Thought Composition. Structured thinking pipeline for co
 Reflective Thought Composition (RTC) — a structured thinking pipeline that shows work at each stage before responding.
 
 Commands {
-  /aidd-rtc [--compress-thinking] [--depth N] — run the RTC pipeline; output reasoning at each stage
+  /aidd-rtc [--compact] [--depth N] — run the RTC pipeline; output reasoning at each stage
 }
 
 Options {
-  🗜️🐘🤔💭 --compress-thinking  SPR🧠 associative. Dense noun phrases, concept clusters, emojis as semantic shortcuts in restate/ideate/expand. Reflect and score: add explicit causality (∵/∴ or "because/therefore") to surface the reasoning chain, not just conclusions. Every internal stage: load-bearing tokens only, no filler. 💬Respond = full natural language, standalone, structured.
-  --depth -d [1..10]  Response density. 1 = a few words per step, 10 = several bullet points per step. Default: 5.
+  🗜️🐘🤔💭 --compact  Compress thinking: SPR🧠 associative. Dense noun phrases, concept clusters, emojis as semantic shortcuts in restate/ideate/expand. Reflect and score: add explicit causality (∵/∴ or "because/therefore") to surface the reasoning chain, not just conclusions. Every internal stage: load-bearing tokens only, no filler. 💬Respond = full natural language, standalone, structured.
+  --depth -d=10 [1..10]  Response density. 1 = a few words per step, 10 = several bullet points per step.
 }
 
 ## Pipeline
@@ -29,12 +29,12 @@ fn think(input, options) {
 ## When to use each option
 
 ```
-(thinking itself is the goal — improving reasoning quality) => /aidd-rtc --compress-thinking
+(thinking itself is the goal — improving reasoning quality) => /aidd-rtc --compact
 (communicating depth to the user is the goal)              => /aidd-rtc --depth N
-(both)                                                     => /aidd-rtc --compress-thinking --depth N
+(both)                                                     => /aidd-rtc --compact --depth N
 ```
 
-`--compress-thinking` is for internal reasoning passes where the output feeds another step, not directly to the user. Think deeply but compactly — every token earns its place. Switch to natural language at 💬 respond.
+`--compact` is for internal reasoning passes where the output feeds another step, not directly to the user. Think deeply but compactly — every token earns its place. Switch to natural language at 💬 respond.
 
 **Pass:** remove any word → lose meaning. Reflect/score show explicit causal chain, not just conclusions.
 **Fail:** consultant prose. Hedging. Filler. Conclusions without reasoning. Polish before the respond stage.
@@ -46,4 +46,4 @@ fn think(input, options) {
 **🪞 ReflectCriticallyFindYourFlaws** — Attack your own ideation. Find the weakest assumptions, the missing cases, the things that could go wrong.
 **🔭 expandOrthogonally** — Look sideways. What adjacent concerns, second-order effects, or non-obvious angles haven't been considered?
 **⚖️ scoreRankEvaluate** — Weigh options. Rank by quality, risk, or fit. Reach a conclusion.
-**💬 respond** — Deliver the output. `--compress-thinking` ends here: switch to natural language.
+**💬 respond** — Deliver the output. `--compact` ends here: switch to natural language.
