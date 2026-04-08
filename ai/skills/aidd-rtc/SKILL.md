@@ -13,7 +13,7 @@ Commands {
 
 Options {
   🗜️🐘🤔💭 --compact  Compress thinking: SPR🧠 associative. Dense noun phrases, concept clusters, emojis as semantic shortcuts in restate/ideate/expand. Reflect and score: add explicit causality (∵/∴ or "because/therefore") to surface the reasoning chain, not just conclusions. Every internal stage: load-bearing tokens only, no filler. 💬Respond = full natural language, standalone, structured.
-  --depth -d=10 [1..10]  Response density. 1 = a few words per step, 10 = several bullet points per step.
+  --depth -d [1..10] (default: 10)  Response density. 1 = a few words per step, 10 = several bullet points per step.
 }
 
 ## Pipeline
@@ -39,7 +39,7 @@ fn think(input, options) {
 **Pass:** remove any word → lose meaning. Reflect/score show explicit causal chain, not just conclusions.
 **Fail:** consultant prose. Hedging. Filler. Conclusions without reasoning. Polish before the respond stage.
 
-## Stages
+## Steps
 
 **🎯 restate** — Restate the problem in your own words. Surface any ambiguity.
 **💡 ideate** — Generate candidate approaches, options, or observations without filtering.
