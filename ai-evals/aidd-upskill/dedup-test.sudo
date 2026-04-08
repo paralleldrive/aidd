@@ -1,0 +1,17 @@
+# dedup-test.sudo
+
+import 'ai/skills/aidd-upskill/SKILL.md'
+
+userPrompt = """
+Run deduplicateWithCaveman() on the following two files:
+
+SKILL.md body: ai-evals/aidd-upskill/fixtures/dedup-skill.md
+Reference file: ai-evals/aidd-upskill/fixtures/dedup-reference.md
+
+Identify every piece of information that appears in both files and determine
+where the single source of truth should live.
+"""
+
+- Given the SkillName constraints (lowercase alphanumeric, 1-64 chars, aidd- prefix, match parent dir) appear in both dedup-skill.md and dedup-reference.md, should identify the name constraint rules as duplicated information present in both files
+- Given the name constraints are duplicated, should identify the reference file (dedup-reference.md) as the canonical location because it is titled "Name Constraints" and explicitly notes it is the canonical definition
+- Given the name constraints are in the reference file, should recommend removing the duplicated name constraint prose from the SKILL.md body and relying solely on the import of the reference file

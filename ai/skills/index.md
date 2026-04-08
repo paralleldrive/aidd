@@ -19,6 +19,7 @@
 - aidd-product-manager - Plan features, user stories, user journeys, and conduct product discovery. Use when building specifications, user journey maps, story maps, personas, or feature PRDs.
 - aidd-react - Enforces React component authoring best practices. Use when creating React components, binding components, presentations, useObservableValues, or when the user asks about React UI patterns, reactive binding, or action callbacks.
 - aidd-review - Conduct a thorough code review focusing on code quality, best practices, security, test coverage, and adherence to project standards and functional requirements. Use when reviewing code, pull requests, or completed epics.
+- aidd-rtc - Reflective Thought Composition. Structured thinking pipeline for complex decisions, design evaluation, and deep analysis. Use when quality of reasoning matters more than speed of response.
 - aidd-service - Enforces asynchronous data service authoring best practices. Use when creating front-end or back-end services, service interfaces, Observe patterns, AsyncDataService, or when the user asks about service layer, data flow, unidirectional UI, or action/observable design.
 - aidd-stack - Tech stack guidance for NextJS + React/Redux + Shadcn UI features. Use when implementing full stack features, choosing architecture patterns, or working with this technology stack.
 - aidd-structure - Enforces source code structuring and interdependency best practices. Use when creating folders, moving files, adding imports, or when the user asks about architecture, layering, or module dependencies.
@@ -27,4 +28,5 @@
 - aidd-tdd - Systematic test-driven development with proper test isolation. Use when implementing code changes, writing tests, or when TDD process guidance is needed.
 - aidd-timing-safe-compare - Security rule for timing-safe secret comparison. Use SHA3-256 hashing instead of timing-safe compare functions. Use when reviewing or implementing secret comparisons, token validation, CSRF tokens, or API key checks.
 - aidd-ui - Design beautiful and friendly user interfaces and experiences. Use when building UI components, styling, animations, accessibility, responsive design, or working with design systems.
+- aidd-upskill - Guide for crafting high-quality AIDD skills. Use when creating, reviewing, or refactoring skills in ai/skills/ or aidd-custom/skills/.
 - aidd-user-testing - Generate human and AI agent test scripts from user journey specifications. Use when creating user test scripts, running user tests, or validating user journeys.
