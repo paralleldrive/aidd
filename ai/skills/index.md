@@ -7,6 +7,7 @@
 - aidd-error-causes - Use the error-causes library for structured error handling in JavaScript/TypeScript. Use when throwing errors, catching errors, defining error types, or implementing error routing.
 - aidd-fix - Fix a bug or implement review feedback following the AIDD fix process. Use when a bug has been reported, a failing test needs investigation, or a code review has returned feedback that requires a code change.
 - aidd-functional-requirements - Write functional requirements for a user story. Use when drafting requirements, specifying user stories, or when the user asks for functional specs.
+- aidd-genesplice - Evolutionary optimization framework. Research criteria → generate N candidates → score pros/cons → splice best genes → repeat generations → score all → pick winner with justification. Use when optimizing any creative output (copy, design, strategy, pitches).
 - aidd-javascript - JavaScript and TypeScript best practices and guidance. Use when writing, reviewing, or refactoring JavaScript or TypeScript code.
 - aidd-javascript-io-effects - Isolate network I/O and side effects using the saga pattern with call and put. Use when making network requests, invoking side effects, or implementing Redux sagas.
 - aidd-jwt-security - JWT security review patterns. Use when reviewing or implementing authentication code, token handling, session management, or when JWT is mentioned.
