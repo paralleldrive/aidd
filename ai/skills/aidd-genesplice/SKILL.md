@@ -25,9 +25,9 @@ Competencies {
 ## Process
 
 ```
-genesplice(artifact) {
-  research(artifact)
-    |> generationLoop(n=2)
+genesplice(context, n=2, userCriteria?) {
+  research(context, userCriteria?)
+    |> generationLoop(generations=n)
     |> scoreAllCandidates
     |> suggestWinner
 }
@@ -35,16 +35,16 @@ genesplice(artifact) {
 
 ## Step 1 — Research Criteria
 
-research(context) => reviewedCriteria {
-  1. Use web search to find best practices and most-loved features for this
+research(context, userCriteria?) => criteria {
+  1. If userCriteria are provided, lock them in first — they are not overridable
+  2. Use web search to find best practices and most-loved features for this
      class of artifact — favor quality sources: research papers, published
      industry findings, peer-reviewed studies, and authoritative practitioner
      reports over opinion pieces or blog posts
-  2. Synthesize findings into scored criteria (0–10 each), one criterion per
-     finding — no bundling
-  3. For each criterion write one paragraph of explanation + citations
-     (author, title, URL or DOI)
-  4. Source everything — reject any criterion that cannot be cited
+  3. Synthesize findings into additional scored criteria (0–10 each) that fill
+     gaps not covered by userCriteria — one criterion per finding, no bundling
+  4. For each researched criterion write one paragraph of explanation + citations
+     (author, title, URL or DOI) — reject any criterion that cannot be cited
   5. Always include these two holistic criteria (no citation needed):
      - *Information Efficiency* — does every element add NEW information?
      - *Narrative Structure* — does the reading order tell a story?
@@ -59,9 +59,9 @@ research(context) => reviewedCriteria {
 
 ## Step 2 — Generation Loop
 
-generationLoop(candidates=2, criteria) => generations[] {
-  Per generation:
-  1. Build N candidates with *distinct gene profiles* — not minor variations
+generationLoop(generations=n, criteria) => generations[] {
+  Run `generations` rounds; each round produces 2 candidates (the proven sweet spot):
+  1. Build 2 candidates with *distinct gene profiles* — not minor variations
   2. Save each candidate to the prototypes folder (see Candidate Output)
   3. For UI candidates: run quality gate (see references/quality-gate.md)
   4. Score each candidate against all criteria
@@ -69,7 +69,6 @@ generationLoop(candidates=2, criteria) => generations[] {
   6. Identify best genes from each candidate
   7. Splice best genes into next generation's starting point
   8. Introduce 1 mutation (structurally novel idea) per generation
-  9. Repeat until scores plateau or time-boxed
 }
 
 import references/candidate-output.md
@@ -112,7 +111,7 @@ Constraints {
 }
 
 Commands {
-  🧬 /genesplice [artifact] — run full evolutionary optimization
+  🧬 /genesplice [-n=2] [context] — run full evolutionary optimization; n = number of generations
   /genesplice research [context] — research criteria only; output reviewedCriteria
   /genesplice score [candidates] — score existing candidates against criteria
   /genesplice splice [candidate-a] [candidate-b] — manually splice two candidates
