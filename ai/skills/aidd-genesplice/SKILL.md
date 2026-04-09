@@ -26,7 +26,7 @@ Competencies {
 
 ```
 genesplice(artifact) {
-  researchCriteria(artifact)
+  research(artifact)
     |> generationLoop(n=2)
     |> scoreAllCandidates
     |> suggestWinner
@@ -35,14 +35,26 @@ genesplice(artifact) {
 
 ## Step 1 — Research Criteria
 
-researchCriteria(artifact) => scoredCriteria {
-  1. Search for domain-specific best practices
-  2. Synthesize into scored criteria (0–10 each)
-  3. Source everything — no unsourced criteria
-  4. Always include these two holistic criteria:
+research(context) => reviewedCriteria {
+  1. Use web search to find best practices and most-loved features for this
+     class of artifact — favor quality sources: research papers, published
+     industry findings, peer-reviewed studies, and authoritative practitioner
+     reports over opinion pieces or blog posts
+  2. Synthesize findings into scored criteria (0–10 each), one criterion per
+     finding — no bundling
+  3. For each criterion write one paragraph of explanation + citations
+     (author, title, URL or DOI)
+  4. Source everything — reject any criterion that cannot be cited
+  5. Always include these two holistic criteria (no citation needed):
      - *Information Efficiency* — does every element add NEW information?
      - *Narrative Structure* — does the reading order tell a story?
-  5. For UI prototypes: add "A11y/Readability" criterion (weighted ×2)
+  6. For UI prototypes: add "A11y/Readability" criterion (weighted ×2)
+
+  output format:
+    ## [Criterion Name] (weight: N)
+    [One paragraph explaining what this criterion measures and why it matters,
+    grounded in the research.]
+    *Sources:* [Author, "Title", URL or DOI]
 }
 
 ## Step 2 — Generation Loop
@@ -101,6 +113,7 @@ Constraints {
 
 Commands {
   🧬 /genesplice [artifact] — run full evolutionary optimization
+  /genesplice research [context] — research criteria only; output reviewedCriteria
   /genesplice score [candidates] — score existing candidates against criteria
   /genesplice splice [candidate-a] [candidate-b] — manually splice two candidates
 }
