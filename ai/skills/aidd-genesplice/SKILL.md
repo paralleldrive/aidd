@@ -25,58 +25,71 @@ Competencies {
 ## Process
 
 ```
-genesplice(context, n=2, userCriteria?) {
-  research(context, userCriteria?)
-    |> generationLoop(generations=n)
-    |> scoreAllCandidates
-    |> suggestWinner
+genesplice(context, n=2) {
+  gatherContext(context)     // effect
+    |> research              // effect → thinking
+    |> runGenerations(n)     // effect → thinking, ×n
+    |> summarize             // thinking
 }
 ```
 
-## Step 1 — Research Criteria
+## Step 1 — Gather Context
 
-research(context, userCriteria?) => criteria {
-  1. If userCriteria are provided, lock them in first — they are not overridable
-  2. Use web search to find best practices and most-loved features for this
-     class of artifact — favor quality sources: research papers, published
-     industry findings, peer-reviewed studies, and authoritative practitioner
-     reports over opinion pieces or blog posts
-  3. Synthesize findings into additional scored criteria (0–10 each) that fill
-     gaps not covered by userCriteria — one criterion per finding, no bundling
-  4. For each researched criterion write one paragraph of explanation + citations
-     (author, title, URL or DOI) — reject any criterion that cannot be cited
-  5. Always include these two holistic criteria (no citation needed):
+gatherContext(userPrompt) => enrichedContext {  // effect
+  1. Scan workspace for existing artifacts relevant to the prompt
+     (prior candidates, specs, related files) — pull them into context
+  2. Extract any fitness criteria the user included in their prompt
+}
+
+## Step 2 — Research
+
+Isolated sub-stages so reasoning and I/O effects can be tested independently.
+
+fetchBestPractices(enrichedContext) => rawFindings {  // effect
+  (enrichedContext has sufficient criteria) => skip; pass existing criteria as rawFindings
+  (no criteria) =>
+    Use web search to find best practices for this class of artifact.
+    Favor research papers, peer-reviewed studies, and authoritative industry
+    findings over opinion pieces or blog posts.
+}
+
+synthesizeCriteria(rawFindings, enrichedContext) => criteria {  // thinking
+  1. Lock in any user-supplied criteria from enrichedContext first — not overridable
+  2. Synthesize researched findings into additional scored criteria (0–10 each)
+     that fill gaps — one criterion per finding, no bundling
+  3. Cite every researched criterion (author, title, URL or DOI) — reject uncitable criteria
+  4. Always include (no citation needed):
      - *Information Efficiency* — does every element add NEW information?
      - *Narrative Structure* — does the reading order tell a story?
-  6. For UI prototypes: add "A11y/Readability" criterion (weighted ×2)
+  5. For UI prototypes: add "A11y/Readability" (weighted ×2)
 
   output format:
     ## [Criterion Name] (weight: N)
-    [One paragraph explaining what this criterion measures and why it matters,
-    grounded in the research.]
+    [One paragraph grounded in the research.]
     *Sources:* [Author, "Title", URL or DOI]
 }
 
-## Step 2 — Generation Loop
+## Step 3 — Run Generations
 
-generationLoop(generations=n, criteria) => generations[] {
-  Run `generations` rounds; each round produces 2 candidates (the proven sweet spot):
-  1. Build 2 candidates with *distinct gene profiles* — not minor variations
-  2. Save each candidate to the prototypes folder (see Candidate Output)
+Repeat n times. Each round produces 2 candidates and a splice seed for the next round.
+
+buildCandidates(seed, context) => candidates {  // effect
+  1. Generate 2 candidates with *distinct gene profiles* from the seed — not minor variations
+  2. Save each to the prototypes folder (see references/candidate-output.md)
   3. For UI candidates: run quality gate (see references/quality-gate.md)
-  4. Score each candidate against all criteria
-  5. List pros and cons for each
-  6. Identify best genes from each candidate
-  7. Splice best genes into next generation's starting point
-  8. Introduce 1 mutation (structurally novel idea) per generation
 }
 
-import references/candidate-output.md
-import references/quality-gate.md
+scoreAndSplice(candidates, criteria) => nextSeed {  // thinking
+  1. Score each candidate against all criteria
+  2. List pros and cons for each
+  3. Identify best genes from each candidate
+  4. Splice best genes into next generation seed
+  5. Introduce 1 mutation (structurally novel idea) into the seed
+}
 
-## Step 3 — Score All Candidates
+## Step 4 — Summarize
 
-scoreAllCandidates(generations[]) => scoringTable {
+scoreAllCandidates(generations[]) => scoringTable {  // thinking
   1. Final scoring table across all criteria for every candidate from every generation
   2. Stack rank all candidates
 
@@ -89,9 +102,7 @@ scoreAllCandidates(generations[]) => scoringTable {
     TOTAL                ??        ??        ??
 }
 
-## Step 4 — Suggest Winner
-
-suggestWinner(scoringTable) => winner {
+suggestWinner(scoringTable) => winner {  // thinking
   1. Name the winner
   2. Show which genes it inherited and from whom
   3. State the "one core idea" the output delivers
@@ -108,11 +119,12 @@ Constraints {
   A collection of individually optimized genes can produce a weaker organism
   than a coherent but less flashy design. The final splice needs holistic review.
   All candidates from all generations are preserved — never delete earlier gens.
+  Run autonomously by default — no mandatory user review steps.
 }
 
 Commands {
   🧬 /genesplice [-n=2] [context] — run full evolutionary optimization; n = number of generations
-  /genesplice research [context] — research criteria only; output reviewedCriteria
+  /genesplice research [context] — gatherContext + research only; output criteria
   /genesplice score [candidates] — score existing candidates against criteria
   /genesplice splice [candidate-a] [candidate-b] — manually splice two candidates
 }
