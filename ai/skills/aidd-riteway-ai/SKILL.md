@@ -21,6 +21,18 @@ writing assertions inside `.sudo` eval files.
 
 ---
 
+## Process
+
+1. Read the skill under test and its functional requirements
+2. Identify the discrete steps in the skill's flow
+3. Create one `.sudo` eval file per step (Rule 1), placed in `ai-evals/<skill-name>/`
+4. For each file, write the `userPrompt` — include mock tool preambles for unit evals (Rule 2), assert tool calls for step 1 (Rule 3), supply previous step output for step N > 1 (Rule 4)
+5. Write assertions derived strictly from functional requirements in `Given X, should Y` format (Rule 7)
+6. Create small, single-condition fixture files as needed (Rule 6)
+7. Verify against the Eval Authoring Checklist below
+
+---
+
 ## Eval File Structure
 
 A `.sudo` eval file has three sections:

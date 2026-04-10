@@ -16,6 +16,12 @@ Rank files by hotspot score to identify prime candidates for refactoring before 
 
 *No description available*
 
+### 🧪 /aidd-riteway-ai
+
+**File:** `aidd-riteway-ai.md`
+
+Write correct riteway ai prompt evals for multi-step tool-calling flows. Use when creating .sudo eval files or testing agent skills that use tools.
+
 ### Commit
 
 **File:** `commit.md`
