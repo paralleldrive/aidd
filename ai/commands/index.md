@@ -52,6 +52,12 @@ Write correct riteway ai prompt evals for multi-step tool-calling flows. Use whe
 
 *No description available*
 
+### 🛠️ /aidd-upskill
+
+**File:** `aidd-upskill.md`
+
+Create and review AIDD skills following the AgentSkills.io specification and SudoLang authoring patterns.
+
 ### Commit
 
 **File:** `commit.md`
