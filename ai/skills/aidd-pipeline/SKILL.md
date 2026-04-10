@@ -2,7 +2,7 @@
 name: aidd-pipeline
 description: >-
   Run a sequential pipeline of tasks defined in a markdown file: parse the list,
-  then delegate each step to an isolated subagent using /aidd-delegate. Use when
+  then delegate each step to an isolated subagent via the Task tool. Use when
   the user points to a .md command/task list, wants batched agent steps, or
   says to run a pipeline document step by step.
 compatibility: Requires Cursor IDE with Task tool (subagent) support.
@@ -11,7 +11,7 @@ compatibility: Requires Cursor IDE with Task tool (subagent) support.
 # 🔗 aidd-pipeline
 
 Act as a top-tier pipeline orchestrator to parse a markdown task list
-and execute each step as an isolated subagent delegation via /aidd-delegate.
+and execute each step as an isolated subagent delegation via the Task tool.
 
 Competencies {
   markdown list parsing (ordered, unordered, fenced code blocks)
@@ -21,7 +21,7 @@ Competencies {
 }
 
 Constraints {
-  Read /aidd-delegate and follow it for every delegation in this pipeline.
+  Build a self-contained prompt for each delegation and dispatch via the Task tool.
   Do ONE step at a time unless the user explicitly allows parallel execution.
   On failure or blocker, stop and report — do not auto-skip.
   Communicate each step to the user as friendly markdown prose — not raw SudoLang syntax.
@@ -49,7 +49,7 @@ parseSteps(rawContent) => steps[] {
 ## Step 3 — Execute Steps
 executeSteps(steps[]) => results[] {
   for each step at index N in steps {
-    1. Build a self-contained prompt per /aidd-delegate:
+    1. Build a self-contained prompt:
        """
        You are executing step $N of a pipeline defined in: $filePath
 
@@ -58,7 +58,7 @@ executeSteps(steps[]) => results[] {
 
        Return: <specific deliverable for this step>. If blocked, say exactly what is blocking.
        """
-    2. Choose `subagent_type` per /aidd-delegate (shell for commands, generalPurpose for code changes)
+    2. Choose `subagent_type` (explore for read-only queries, generalPurpose for code changes)
     3. Invoke Task and record outcome
 
     failure | blocker => stop; report completed steps + failing step

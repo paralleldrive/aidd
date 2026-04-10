@@ -10,7 +10,7 @@ ai-evals/aidd-pipeline/fixtures/sample-pipeline.md
 - Given three ordered list items, should identify exactly 3 pipeline steps
 - Given step 1 is a file listing task, should delegate it with subagent type `explore` or `shell`
 - Given sequential execution, should complete step 1 before starting step 2
-- Given each delegation, should follow /aidd-delegate (self-contained prompt with workspace path and return expectation)
+- Given each delegation, should build a self-contained Task prompt with workspace path and return expectation
 - Given all steps succeed, should summarize successes and artifacts for the user
 - Given a step failure, should stop execution and report completed steps plus the failing step
 - Given narrative text outside the "Steps" section, should not treat it as a pipeline item
