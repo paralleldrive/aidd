@@ -16,8 +16,8 @@ for multi-step agent skills that involve tool calls.
 Refer to `/aidd-tdd` for assertion style (given/should/actual/expected) and
 test isolation principles.
 
-Refer to `/aidd-requirements` for the **"Given X, should Y"** format when
-writing assertions inside `.sudo` eval files.
+Refer to `/aidd-functional-requirements` for the **"Given X, should Y"** format
+when writing assertions inside `.sudo` eval files.
 
 ---
 
@@ -107,7 +107,7 @@ Correct pattern for step 1:
 ```
 userPrompt = """
 You have mock tools available. Use them instead of real API calls.
-Run step 1 of /aidd-pr: fetch the PR details and review threads.
+Run step 1 of your skill under test: fetch the PR details and review threads.
 """
 
 - Given mock gh tools, should call gh pr view to retrieve the PR branch name
@@ -152,7 +152,7 @@ Generate delegation prompts for the remaining issues.
 
 ---
 
-## Rule 5 — E2e evals: use real tools, follow -e2e.test.sudo naming
+## Rule 5 — E2E evals: use real tools, follow -e2e.test.sudo naming
 
 Given an e2e eval, use real tools (no mock preamble) and follow the
 `-e2e.test.sudo` naming convention to mirror the project's existing unit/e2e
@@ -162,7 +162,7 @@ split:
 ai-evals/<skill-name>/step-1-<description>-e2e.test.sudo
 ```
 
-E2e evals run against live APIs. Only run them when the environment is
+E2E evals run against live APIs. Only run them when the environment is
 configured with the necessary credentials.
 
 ---
@@ -190,7 +190,8 @@ assertion conditions unambiguous.
 ## Rule 7 — Assertions: derived from functional requirements only
 
 Given assertions in a `.sudo` eval, derive them strictly from the functional
-requirements of the skill under test using the `/aidd-requirements` format:
+requirements of the skill under test using the `/aidd-functional-requirements`
+format:
 
 ```
 - Given <condition>, should <observable behavior>
@@ -212,7 +213,7 @@ Before saving a `.sudo` eval file, verify:
 - [ ] Unit evals include mock tool preamble (Rule 2)
 - [ ] Step 1 asserts tool calls, not pre-supplied answers (Rule 3)
 - [ ] Step N > 1 includes previous step output as context (Rule 4)
-- [ ] E2e evals use `-e2e.test.sudo` suffix (Rule 5)
+- [ ] E2E evals use `-e2e.test.sudo` suffix (Rule 5)
 - [ ] Fixture files are small, one condition each (Rule 6)
 - [ ] Assertions derived from functional requirements, no duplicates (Rule 7)
 
