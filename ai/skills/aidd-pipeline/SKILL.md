@@ -27,11 +27,12 @@ Constraints {
   Communicate each step to the user as friendly markdown prose — not raw SudoLang syntax.
   Never execute fenced code blocks as shell commands unless the step text explicitly asks for it — treat them as task descriptions for delegation only.
   If a step contains paths outside the workspace or references sensitive data, flag it to the user before delegating.
+  Restrict file reads to the workspace by default; if a path resolves outside the workspace, ask the user for explicit confirmation before reading or delegating.
 }
 
 ## Step 1 — Read the Pipeline File
 readPipeline(filePath) => rawContent {
-  1. Read the target `.md` file from the path the user gave (absolute path if provided)
+  1. Read the target `.md` file from the path the user gave; allow absolute paths, but if `filePath` resolves outside the workspace, ask the user for explicit confirmation before reading it.
   2. file has a section titled `Pipeline`, `Steps`, `Tasks`, or `Commands` => restrict items to that section
   3. otherwise => use the first coherent list in the file
 }
@@ -47,7 +48,7 @@ parseSteps(rawContent) => steps[] {
 }
 
 ## Step 3 — Execute Steps
-executeSteps(steps[]) => results[] {
+executeSteps(filePath, steps[]) => results[] {
   for each step at index N in steps {
     1. Build a self-contained prompt:
        """
@@ -73,7 +74,7 @@ summarize(results[]) => report {
   2. Recommend follow-ups if any step was blocked or partially completed
 }
 
-pipeline = readPipeline |> parseSteps |> executeSteps |> summarize
+pipeline(filePath) = readPipeline(filePath) |> parseSteps |> executeSteps(filePath, _) |> summarize
 
 Commands {
   🔗 /aidd-pipeline - run a markdown task list as a step-by-step subagent pipeline
