@@ -26,7 +26,9 @@ Constraints {
   If --branch is omitted, use the current branch (git rev-parse --abbrev-ref HEAD)
 }
 
-## Command: /aidd-parallel [--branch <branch>] <tasks>
+## Process
+
+### /aidd-parallel [--branch <branch>] <tasks>
 
 generateDelegationPrompts(tasks, branch) => prompts {
   1. Resolve the branch: if --branch is supplied use it; otherwise run `git rev-parse --abbrev-ref HEAD`
@@ -39,7 +41,7 @@ generateDelegationPrompts(tasks, branch) => prompts {
   4. Output one codeblock per task
 }
 
-## Command: /aidd-parallel delegate
+### /aidd-parallel delegate [--branch <branch>] <tasks>
 
 delegate(tasks, branch) {
   1. Call generateDelegationPrompts to produce one prompt per task
