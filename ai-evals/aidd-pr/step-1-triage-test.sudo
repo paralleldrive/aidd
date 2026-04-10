@@ -8,7 +8,7 @@ mock gh pr view => returns:
   branch: feature/utils
   base: main
 
-mock gh api (list review threads) => returns:
+mock GraphQL (list review threads) => returns:
   [
     { id: "T_01", resolved: false, file: "ai-evals/aidd-pr/fixtures/add.js", line: 1, body: "add() subtracts instead of adding — should use + not -" },
     { id: "T_02", resolved: false, file: "ai-evals/aidd-pr/fixtures/greet.js", line: 1, body: "greet() should include an exclamation mark at the end of the greeting" }
