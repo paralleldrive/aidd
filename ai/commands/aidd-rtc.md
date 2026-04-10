@@ -1,13 +1,9 @@
-## 🧠 Reflective Thought Composition
+# 🧠 /aidd-rtc
 
-Use `ai/skills/aidd-rtc/SKILL.md` to run a structured thinking pipeline that shows work at each stage.
+Load and execute the skill at `ai/skills/aidd-rtc/SKILL.md`.
 
-Run: `/aidd-rtc [--compact] [--depth N]`
-
-Options:
-- `--compact` — SPR dense/associative thinking with explicit causality in reflect/score. Every internal token earns its place. Use when thinking quality matters more than polish.
-- `--depth N` — Set response density (1–10). Default: 10.
+Run: `/aidd-rtc [--compact] [--depth N] [prompt]`
 
 Constraints {
-  Before beginning, read and respect the constraints in ai/skills/aidd-please/SKILL.md.
+  Before beginning, read and respect the constraints in /aidd-please.
 }

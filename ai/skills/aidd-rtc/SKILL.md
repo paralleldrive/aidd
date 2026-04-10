@@ -8,7 +8,7 @@ description: Reflective Thought Composition. Structured thinking pipeline for co
 Reflective Thought Composition (RTC) — a structured thinking pipeline that shows work at each stage before responding.
 
 Commands {
-  /aidd-rtc [--compact] [--depth=] [prompt]  Reflective Thought Composition — think deeply and critically over multiple reasoning paths prior to responding.
+  /aidd-rtc [--compact] [--depth N] [prompt]  Reflective Thought Composition — think deeply and critically over multiple reasoning paths prior to responding.
 }
 
 Options {
@@ -38,5 +38,3 @@ fn think(input, options) {
 
 **Pass:** remove any word → lose meaning. Reflect/score show explicit causal chain, not just conclusions.
 **Fail:** consultant prose. Hedging. Filler. Conclusions without reasoning. Polish before the respond stage.
-
-
