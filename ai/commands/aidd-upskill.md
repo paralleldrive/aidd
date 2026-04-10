@@ -1,13 +1,15 @@
-## 🛠️ Upskill — Create or Review Skills
+# 🛠️ /aidd-upskill
 
-Use `ai/skills/aidd-upskill/SKILL.md` to create a new agent skill following the AgentSkills.io specification.
+Load and execute the skill at `ai/skills/aidd-upskill/SKILL.md`.
 
 Constraints {
-  Before beginning, read and respect the constraints in ai/skills/aidd-please/SKILL.md.
+  Before beginning, read and respect the constraints in /aidd-please.
 }
 
-## 🔍 Review Skill
+## Create
 
-Use `ai/skills/aidd-upskill/SKILL.md` to review an existing skill against the quality criteria in this guide.
+Run: `/aidd-upskill create [name]`
+
+## Review
 
 Run: `/aidd-upskill review [path-to-skill]`
