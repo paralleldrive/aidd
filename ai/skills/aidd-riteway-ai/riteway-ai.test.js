@@ -46,7 +46,7 @@ describe("aidd-riteway-ai", () => {
       });
     });
 
-    test("references /aidd-tdd and /aidd-requirements", async () => {
+    test("references /aidd-tdd and /aidd-functional-requirements", async () => {
       const filePath = path.join(__dirname, "./SKILL.md");
       const content = await fs.readFile(filePath, "utf-8");
 
@@ -59,8 +59,8 @@ describe("aidd-riteway-ai", () => {
 
       assert({
         given: "aidd-riteway-ai SKILL.md content",
-        should: "reference /aidd-requirements",
-        actual: content.includes("/aidd-requirements"),
+        should: "reference /aidd-functional-requirements",
+        actual: content.includes("/aidd-functional-requirements"),
         expected: true,
       });
     });
