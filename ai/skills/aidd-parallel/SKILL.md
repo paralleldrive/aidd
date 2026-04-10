@@ -23,6 +23,7 @@ Competencies {
 Constraints {
   Put each delegation prompt in a markdown codeblock, indenting any nested codeblocks to prevent breaking the outer block
   Instruct each sub-agent to work directly on the supplied branch and commit and push to origin on that branch (not to main, not to their own branch)
+  Instruct each sub-agent to pull --rebase before pushing so concurrent agents on the same branch don't fail with non-fast-forward errors
   If --branch is omitted, use the current branch (git rev-parse --abbrev-ref HEAD)
 }
 
@@ -36,6 +37,7 @@ generateDelegationPrompts(tasks, branch) => prompts {
      - Start the prompt with `/aidd-fix`
      - Include only the context needed to address that single task
      - Instruct the sub-agent to work directly on `<branch>`, commit, and push to `origin/<branch>`
+     - Instruct the sub-agent to run `git pull --rebase origin <branch>` before pushing
      - Do NOT instruct the sub-agent to create a new branch
   3. Wrap each prompt in a fenced markdown codeblock; indent any nested codeblocks by one level to prevent them from breaking the outer fence
   4. Output one codeblock per task

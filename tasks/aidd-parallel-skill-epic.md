@@ -1,6 +1,6 @@
 # aidd-parallel Skill Epic
 
-**Status**: 📋 PLANNED
+**Status**: 🔬 IN REVIEW
 **Goal**: Extract parallel prompt generation and sub-agent dispatch into a shared `/aidd-parallel` skill, fix the constraint conflation in `/aidd-pr`, and make prompt generation independently unit-testable.
 
 ## Overview
@@ -30,6 +30,7 @@ Add `ai/skills/aidd-parallel/SKILL.md` following the AgentSkills specification.
 Constraints {
   put the prompt in a markdown codeblock, indenting any nested codeblocks to prevent breaking the outer block
   instruct the agent to work directly from the supplied branch and commit directly to the supplied branch (not from/to main, not to their own fix branch)
+  instruct the agent to pull --rebase before pushing so concurrent agents on the same branch don't fail with non-fast-forward errors
 }
 
 Commands {

@@ -18,4 +18,6 @@ Generate delegation prompts for both tasks.
 - Given a generated prompt, should start with /aidd-fix
 - Given a generated prompt, should reference the correct branch feature/utils
 - Given a generated prompt, should instruct the sub-agent to commit and push to origin/feature/utils
+- Given a generated prompt, should instruct the sub-agent to pull --rebase before pushing
 - Given a generated prompt, should be wrapped in a markdown codeblock
+- Given a generated prompt that contains nested codeblocks, should indent the nested codeblocks by one level to prevent breaking the outer fence
