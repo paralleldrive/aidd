@@ -27,8 +27,25 @@ Constraints {
 ### Step 1 — Triage (thinking)
 triageThreads(prUrl) => triageResult {
   1. Run `gh pr view <prUrl>` to determine the PR branch and metadata
-  2. Use `gh api` to list all open review threads
-  3. For each thread, read the referenced file and line — classify as:
+  2. List all open review threads via GitHub GraphQL:
+     ```graphql
+     {
+       repository(owner: "<owner>", name: "<repo>") {
+         pullRequest(number: <number>) {
+           reviewThreads(first: 100) {
+             nodes {
+               id
+               isResolved
+               comments(first: 10) {
+                 nodes { body path line }
+               }
+             }
+           }
+         }
+       }
+     }
+     ```
+  3. For each unresolved thread, read the referenced file and line — classify as:
      - **addressed** — the concern is already fixed in the current source
      - **remaining** — the reported issue is still present
   4. Present the addressed list for manual approval before resolving
@@ -36,19 +53,27 @@ triageThreads(prUrl) => triageResult {
 
 ### Step 2 — Resolve addressed (effects)
 resolveAddressed(triageResult) {
-  approved => resolve addressed threads via GitHub GraphQL `resolveReviewThread` mutation
+  approved => resolve each addressed thread via GitHub GraphQL:
+  ```graphql
+  mutation {
+    resolveReviewThread(input: { threadId: "<thread_id>" }) {
+      thread { isResolved }
+    }
+  }
+  ```
 }
 
 ### Step 3 — Delegate (thinking)
 delegateRemaining(triageResult) => delegationPrompts {
-  1. For each remaining issue, use `/aidd-parallel --branch <PR branch>` to generate delegation prompts
-  2. Each prompt targets one issue, referencing the specific file and line
+  1. For each remaining issue, generate a `/aidd-fix` delegation prompt
+  2. Each prompt targets one issue, referencing the specific file, line, and PR branch
+  3. Wrap each prompt in a markdown code block for easy copy-paste or sub-agent dispatch
 }
 
 ### Step 4 — Dispatch (effects)
 dispatchAndResolve(delegationPrompts) {
-  1. Call `/aidd-parallel delegate` to dispatch prompts to sub-agents
-  2. After each fix is confirmed, resolve the related PR conversation thread via GitHub GraphQL
+  1. Dispatch each `/aidd-fix` prompt to a sub-agent (when available) or execute directly
+  2. After each fix is confirmed, resolve the related thread via the GraphQL mutation above
 }
 
 Constraints {
