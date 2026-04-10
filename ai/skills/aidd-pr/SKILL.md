@@ -22,12 +22,34 @@ Constraints {
   Always delegate fixes to sub-agents to avoid attention dilution when sub-agents are available
 }
 
-Given the following PR:
+## Process
 
-1. Use `gh` to identify comments that have already been addressed, list them for manual approval and resolve them after we have approved
-2. Validate remaining issues, and:
+### Step 1 — Triage (thinking)
+triageThreads(prUrl) => triageResult {
+  1. Run `gh pr view <prUrl>` to determine the PR branch and metadata
+  2. Use `gh api` to list all open review threads
+  3. For each thread, read the referenced file and line — classify as:
+     - **addressed** — the concern is already fixed in the current source
+     - **remaining** — the reported issue is still present
+  4. Present the addressed list for manual approval before resolving
+}
 
-For each issue, use `/aidd-parallel --branch <PR branch>` to generate the delegation prompts.
+### Step 2 — Resolve addressed (effects)
+resolveAddressed(triageResult) {
+  approved => resolve addressed threads via GitHub GraphQL `resolveReviewThread` mutation
+}
+
+### Step 3 — Delegate (thinking)
+delegateRemaining(triageResult) => delegationPrompts {
+  1. For each remaining issue, use `/aidd-parallel --branch <PR branch>` to generate delegation prompts
+  2. Each prompt targets one issue, referencing the specific file and line
+}
+
+### Step 4 — Dispatch (effects)
+dispatchAndResolve(delegationPrompts) {
+  1. Call `/aidd-parallel delegate` to dispatch prompts to sub-agents
+  2. After each fix is confirmed, resolve the related PR conversation thread via GitHub GraphQL
+}
 
 Constraints {
   Do not close any other PRs
@@ -35,6 +57,6 @@ Constraints {
 }
 
 Commands {
-  /aidd-pr [PR URL] - take a PR URL, identify issues, and delegate prompts to fix the issues
-  /aidd-pr delegate - call /aidd-parallel delegate to dispatch prompts, then resolve related PR conversation threads via the GitHub GraphQL API
+  /aidd-pr [PR URL] - triage comments, resolve addressed threads, and generate /aidd-fix delegation prompts
+  /aidd-pr delegate - dispatch prompts to sub-agents and resolve related PR conversations via the GitHub GraphQL API
 }
