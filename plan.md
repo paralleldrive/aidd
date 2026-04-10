@@ -2,6 +2,12 @@
 
 ## Current Epics
 
+### 📋 Critical Dependencies Epic
+
+**Status**: 📋 PLANNED  
+**File**: [`tasks/aidd-critical-dependencies-epic.md`](./tasks/aidd-critical-dependencies-epic.md)  
+**Goal**: Land the foundational PRs that unblock `/aidd-parallel`, `/aidd-genesplice`, and downstream work — in dependency order (PR #168 → #181 → #184)
+
 ### 📋 `aidd create --prompt` Epic
 
 **Status**: 📋 PLANNED  
