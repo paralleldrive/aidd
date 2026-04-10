@@ -39,11 +39,4 @@ fn think(input, options) {
 **Pass:** remove any word → lose meaning. Reflect/score show explicit causal chain, not just conclusions.
 **Fail:** consultant prose. Hedging. Filler. Conclusions without reasoning. Polish before the respond stage.
 
-## Steps
 
-**🎯 restate** — Restate the problem in your own words. Surface any ambiguity.
-**💡 ideate** — Generate candidate approaches, options, or observations without filtering.
-**🪞 ReflectCriticallyFindYourFlaws** — Attack your own ideation. Find the weakest assumptions, the missing cases, the things that could go wrong.
-**🔭 expandOrthogonally** — Look sideways. What adjacent concerns, second-order effects, or non-obvious angles haven't been considered?
-**⚖️ scoreRankEvaluate** — Weigh options. Rank by quality, risk, or fit. Reach a conclusion.
-**💬 respond** — Deliver the output. `--compact` ends here: switch to natural language.
