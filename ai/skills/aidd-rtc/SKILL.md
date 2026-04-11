@@ -5,18 +5,7 @@ description: Reflective Thought Composition. Structured thinking pipeline for co
 
 # aidd-rtc
 
-Reflective Thought Composition (RTC) — a structured thinking pipeline that shows work at each stage before responding.
-
-Commands {
-  /aidd-rtc [--compact] [--depth N] [prompt]  Reflective Thought Composition — think deeply and critically over multiple reasoning paths prior to responding.
-}
-
-Options {
-  🗜️🐘🤔💭 --compact  Compress thinking: SPR🧠 associative. Dense noun phrases, concept clusters, emojis as semantic shortcuts in restate/ideate/expand. Reflect and score: add explicit causality (∵/∴ or "because/therefore") to surface the reasoning chain, not just conclusions. Every internal stage: load-bearing tokens only, no filler. 💬Respond = full natural language, standalone, structured.
-  --depth -d [1..10] (default: 10)  Response density. 1 = a few words per step, 10 = several bullet points per step.
-}
-
-## Pipeline
+Reflective Thought Composition (RTC) — a structured thinking pipeline that expands the thinking process of any model.
 
 ```
 fn think(input, options) {
@@ -25,6 +14,15 @@ fn think(input, options) {
     🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond
 }
 ```
+
+Commands {
+  /aidd-rtc [--compact] [--depth N] [prompt]  Reflective Thought Composition — think deeply and critically over multiple reasoning paths prior to responding.
+}
+
+Options {
+  --compact  🗜️🐘🤔💭 Compress thinking: SPR🧠 associative. Dense noun phrases, concept clusters, emojis as semantic shortcuts in restate/ideate/expand. Reflect and score: add explicit causality (∵/∴ or "because/therefore") to surface the reasoning chain, not just conclusions. Every internal stage: load-bearing tokens only, no filler. 💬Respond = full natural language, standalone, structured.
+  --depth -d [1..10] (default: 10)  Response density. 1 = a few words per step, 10 = several bullet points per step.
+}
 
 ## When to use each option
 
