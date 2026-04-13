@@ -1,0 +1,14 @@
+import 'ai/skills/aidd-delegate/SKILL.md'
+
+userPrompt = """
+Use /aidd-delegate to delegate the following task:
+"List all files in the ai/skills/ directory and report the count."
+"""
+
+- Given a clear task string, should invoke the Task tool (not attempt the work inline)
+- Given the task involves listing files, should select `explore` or `shell` as the subagent type
+- Given the delegation, should include the absolute workspace path in the subagent prompt
+- Given the delegation, should include an explicit return expectation describing what to report back
+- Given the subagent prompt, should be self-contained (not reference chat history or prior messages)
+- Given a successful subagent result, should summarize the outcome to the user
+- Given no instruction to split work, should delegate exactly once (not spawn multiple subagents)

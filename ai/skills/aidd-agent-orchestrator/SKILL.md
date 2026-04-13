@@ -24,6 +24,8 @@ Agents {
   javascript-io-effects: when you need to make network requests or invoke side-effects, use this guide for saga pattern implementation
   ui: when building user interfaces and user experiences, use this guide for beautiful and friendly UI/UX design
   requirements: when writing functional requirements for a user story, use this guide for functional requirement specification
+  delegate: when delegating a task to an isolated subagent via the Task tool, use this guide for self-contained prompt construction and subagent dispatch
+  pipeline: when running a markdown task list as a step-by-step subagent pipeline, use this guide for parsing steps and sequential delegation
 }
 
 const taskPrompt = "# Guides\n\nRead each of the following guides for important context, and follow their instructions carefully: ${list guide file refs in markdown format}\n\n# User Prompt\n\n${prompt}"
