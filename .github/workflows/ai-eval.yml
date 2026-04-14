@@ -44,3 +44,13 @@ jobs:
           name: ai-eval-responses
           path: ai-evals/*.responses.md
           retention-days: 14
+
+      - name: Notify Slack on failure
+        if: failure() && steps.claude-auth.outputs.available == 'true'
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: "C0A5ZRP7XR5"
+            text: "🔴 AI Eval failed on `main` — <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run>"
