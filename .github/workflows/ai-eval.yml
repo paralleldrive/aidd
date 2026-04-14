@@ -1,0 +1,46 @@
+name: AI Eval
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  ai-eval:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Check Claude authentication
+        id: claude-auth
+        run: node scripts/check-claude-ai-eval-gate.js
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+
+      - name: Run AI prompt evaluations
+        if: steps.claude-auth.outputs.available == 'true'
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: npm run test:ai-eval
+
+      - name: Upload AI eval responses
+        if: always() && steps.claude-auth.outputs.available == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-eval-responses
+          path: ai-evals/*.responses.md
+          retention-days: 14
