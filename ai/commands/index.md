@@ -22,6 +22,12 @@ Rank files by hotspot score to identify prime candidates for refactoring before 
 
 Generate /aidd-fix delegation prompts for a list of tasks and optionally dispatch them to sub-agents in dependency order
 
+### 🔗 /aidd-pipeline
+
+**File:** `aidd-pipeline.md`
+
+Run a markdown task list as a step-by-step subagent pipeline
+
 ### 📋 /aidd-requirements
 
 **File:** `aidd-requirements.md`
