@@ -16,7 +16,7 @@ for multi-step agent skills that involve tool calls.
 Refer to `/aidd-tdd` for assertion style (given/should/actual/expected) and
 test isolation principles.
 
-Refer to `/aidd-functional-requirements` for the **"Given X, should Y"** format
+Refer to `/aidd-requirements` for the **"Given X, should Y"** format
 when writing assertions inside `.sudo` eval files.
 
 ---
@@ -190,7 +190,7 @@ assertion conditions unambiguous.
 ## Rule 7 — Assertions: derived from functional requirements only
 
 Given assertions in a `.sudo` eval, derive them strictly from the functional
-requirements of the skill under test using the `/aidd-functional-requirements`
+requirements of the skill under test using the `/aidd-requirements`
 format:
 
 ```
