@@ -28,6 +28,12 @@ Generate /aidd-fix delegation prompts for a list of tasks and optionally dispatc
 
 Run a markdown task list as a step-by-step subagent pipeline
 
+### 🔍 /aidd-pr
+
+**File:** `aidd-pr.md`
+
+Review a PR, resolve addressed comments, and generate /aidd-fix delegation prompts for remaining issues
+
 ### 📋 /aidd-requirements
 
 **File:** `aidd-requirements.md`
