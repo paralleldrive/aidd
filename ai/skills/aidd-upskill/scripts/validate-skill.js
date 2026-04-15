@@ -116,7 +116,8 @@ export const validateSkillContent = (content, dirName) => {
   if (!description) errors.push("Description is required");
   else if (description.length > 1024)
     errors.push("Description must be 1024 characters or fewer");
-  if (!/^# .+/m.test(body)) errors.push("Body must contain a top-level heading (# Title)");
+  if (!/^# .+/m.test(body))
+    errors.push("Body must contain a top-level heading (# Title)");
   if (!/^## (?:Steps|Process)/m.test(body))
     errors.push("Body must contain a ## Steps or ## Process section");
   const metrics = calculateMetrics(frontmatter, body);
