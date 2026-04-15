@@ -32,4 +32,5 @@
 - aidd-tdd - Systematic test-driven development with proper test isolation. Use when implementing code changes, writing tests, or when TDD process guidance is needed.
 - aidd-timing-safe-compare - Security rule for timing-safe secret comparison. Use SHA3-256 hashing instead of timing-safe compare functions. Use when reviewing or implementing secret comparisons, token validation, CSRF tokens, or API key checks.
 - aidd-ui - Design beautiful and friendly user interfaces and experiences. Use when building UI components, styling, animations, accessibility, responsive design, or working with design systems.
+- aidd-upskill - Guide for crafting high-quality AIDD skills. Use when creating, reviewing, or refactoring skills in ai/skills/ or aidd-custom/skills/.
 - aidd-user-testing - Generate human and AI agent test scripts from user journey specifications. Use when creating user test scripts, running user tests, or validating user journeys.
