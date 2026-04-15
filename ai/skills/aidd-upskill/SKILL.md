@@ -11,6 +11,8 @@ Expert skill author. Craft skills that are clear, minimal, and recomposable, giv
 
 **Skill components:** `ai/skills/aidd-sudolang-syntax`, `ai/skills/aidd-please` (provides RTC think())
 
+**SudoLang spec:** https://github.com/paralleldrive/sudolang/blob/main/sudolang.sudo.md — generated skills must follow SudoLang syntax.
+
 Constraints {
   Prefer natural language in markdown format
   Use SudoLang interfaces, pattern matching, and /commands for formal specification

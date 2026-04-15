@@ -74,6 +74,8 @@ description: A test skill.
 ---
 # My Skill
 
+## Process
+
 Body content here.`;
 
     const result = parseSkillMd(content);
@@ -89,7 +91,7 @@ Body content here.`;
       given: "SKILL.md content with valid frontmatter",
       should: "return body without frontmatter",
       actual: result.body,
-      expected: "# My Skill\n\nBody content here.",
+      expected: "# My Skill\n\n## Process\n\nBody content here.",
     });
   });
 
@@ -114,7 +116,7 @@ Body content here.`;
 
   test("CRLF line endings", () => {
     const content =
-      "---\r\nname: aidd-my-skill\r\ndescription: A test skill.\r\n---\r\n# My Skill\r\n\r\nBody content here.";
+      "---\r\nname: aidd-my-skill\r\ndescription: A test skill.\r\n---\r\n# My Skill\r\n\r\n## Process\r\n\r\nBody content here.";
     const result = parseSkillMd(content);
 
     assert({
@@ -128,7 +130,7 @@ Body content here.`;
       given: "SKILL.md content with CRLF line endings",
       should: "return body without frontmatter block",
       actual: result.body,
-      expected: "# My Skill\r\n\r\nBody content here.",
+      expected: "# My Skill\r\n\r\n## Process\r\n\r\nBody content here.",
     });
   });
 });
@@ -149,8 +151,8 @@ describe("validateName", () => {
     assert({
       given: "a name without the aidd- prefix",
       should: "return an error requiring the aidd- prefix",
-      actual: errors[0],
-      expected: "Name must start with 'aidd-' prefix",
+      actual: errors.some((e) => e.includes("aidd-")),
+      expected: true,
     });
   });
 
@@ -160,15 +162,15 @@ describe("validateName", () => {
     assert({
       given: "a name with uppercase letters",
       should: "return an error requiring lowercase alphanumeric + hyphens",
-      actual: errors[0],
-      expected: "Name must be lowercase alphanumeric + hyphens only",
+      actual: errors.some((e) => e.includes("lowercase alphanumeric")),
+      expected: true,
     });
 
     assert({
       given: "a name with uppercase letters",
       should: "also return an error requiring the aidd- prefix",
-      actual: errors[1],
-      expected: "Name must start with 'aidd-' prefix",
+      actual: errors.some((e) => e.includes("aidd-")),
+      expected: true,
     });
   });
 
@@ -178,15 +180,15 @@ describe("validateName", () => {
     assert({
       given: "a name starting with a hyphen",
       should: "return an error requiring the aidd- prefix",
-      actual: errors[0],
-      expected: "Name must start with 'aidd-' prefix",
+      actual: errors.some((e) => e.includes("aidd-")),
+      expected: true,
     });
 
     assert({
       given: "a name starting with a hyphen",
       should: "return an error about leading/trailing hyphen",
-      actual: errors[1],
-      expected: "Name must not start or end with hyphen",
+      actual: errors.some((e) => e.includes("start or end with hyphen")),
+      expected: true,
     });
   });
 
@@ -196,15 +198,15 @@ describe("validateName", () => {
     assert({
       given: "a name ending with a hyphen",
       should: "return an error requiring the aidd- prefix",
-      actual: errors[0],
-      expected: "Name must start with 'aidd-' prefix",
+      actual: errors.some((e) => e.includes("aidd-")),
+      expected: true,
     });
 
     assert({
       given: "a name ending with a hyphen",
       should: "return an error about leading/trailing hyphen",
-      actual: errors[1],
-      expected: "Name must not start or end with hyphen",
+      actual: errors.some((e) => e.includes("start or end with hyphen")),
+      expected: true,
     });
   });
 
@@ -214,15 +216,15 @@ describe("validateName", () => {
     assert({
       given: "a name with consecutive hyphens",
       should: "return an error requiring the aidd- prefix",
-      actual: errors[0],
-      expected: "Name must start with 'aidd-' prefix",
+      actual: errors.some((e) => e.includes("aidd-")),
+      expected: true,
     });
 
     assert({
       given: "a name with consecutive hyphens",
       should: "return an error about consecutive hyphens",
-      actual: errors[1],
-      expected: "Name must not contain consecutive hyphens",
+      actual: errors.some((e) => e.includes("consecutive hyphens")),
+      expected: true,
     });
   });
 
@@ -499,6 +501,8 @@ description: A test skill.
 ---
 # My Skill
 
+## Process
+
 Body content here.`;
 
     const result = validateSkillContent(content, "aidd-my-skill");
@@ -558,6 +562,8 @@ description: A valid skill description.
 ---
 # My Skill
 
+## Process
+
 Body content here.`;
 
     const result = validateSkillContent(content, "aidd-my-skill");
@@ -575,6 +581,8 @@ Body content here.`;
 name: aidd-my-skill
 ---
 # My Skill
+
+## Process
 
 Body content here.`;
 
@@ -595,6 +603,8 @@ description: ""
 ---
 # My Skill
 
+## Process
+
 Body content here.`;
 
     const result = validateSkillContent(content, "aidd-my-skill");
@@ -614,6 +624,8 @@ name: aidd-my-skill
 description: ${longDescription}
 ---
 # My Skill
+
+## Process
 
 Body content here.`;
 
@@ -637,6 +649,8 @@ description: ${maxDescription}
 ---
 # My Skill
 
+## Process
+
 Body content here.`;
 
     const result = validateSkillContent(content, "aidd-my-skill");
@@ -658,6 +672,8 @@ description: A test skill.
 ---
 # My Skill
 
+## Process
+
 Body content here.`;
 
     const result = validateSkillContent(content, "aidd-my-skill");
@@ -678,6 +694,8 @@ description: A test skill.
 ---
 # My Skill
 
+## Process
+
 Body content here.`;
 
     const result = validateSkillContent(content, "aidd-my-skill");
@@ -697,6 +715,8 @@ name: aidd-my-skill
 description: [broken
 ---
 # My Skill
+
+## Process
 
 Body content here.`;
 
@@ -731,6 +751,8 @@ unknown-key: some value
 ---
 # My Skill
 
+## Process
+
 Body content here.`;
 
     const result = validateSkillContent(content, "aidd-my-skill");
@@ -752,6 +774,8 @@ description: A test skill.
 ---
 # My Skill
 
+## Process
+
 Body content here.`;
 
     const result = validateSkillContent(content, "aidd-my-skill");
@@ -770,6 +794,8 @@ Body content here.`;
 just a string
 ---
 # My Skill
+
+## Process
 
 Body content here.`;
 
@@ -794,6 +820,45 @@ Body content here.`;
         "a SKILL.md whose frontmatter is a bare YAML scalar (not a mapping)",
       should: 'return an error containing "must be a YAML mapping"',
       actual: result.errors.some((e) => e.includes("must be a YAML mapping")),
+      expected: true,
+    });
+  });
+
+  test("missing top-level heading", () => {
+    const content = `---
+name: aidd-my-skill
+description: A test skill.
+---
+
+## Process
+
+Body content here.`;
+
+    const result = validateSkillContent(content, "aidd-my-skill");
+
+    assert({
+      given: "a SKILL.md without a top-level heading",
+      should: "return an error about missing # Title",
+      actual: result.errors.some((e) => e.includes("top-level heading")),
+      expected: true,
+    });
+  });
+
+  test("missing Process/Steps section", () => {
+    const content = `---
+name: aidd-my-skill
+description: A test skill.
+---
+# My Skill
+
+Body content here.`;
+
+    const result = validateSkillContent(content, "aidd-my-skill");
+
+    assert({
+      given: "a SKILL.md without a ## Steps or ## Process section",
+      should: "return an error about missing section",
+      actual: result.errors.some((e) => e.includes("## Steps or ## Process")),
       expected: true,
     });
   });

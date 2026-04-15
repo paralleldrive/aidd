@@ -34,6 +34,8 @@ export const validateName = (name, dirName) => {
   return errors;
 };
 
+// Token counts are rough estimates (chars / 4). This is a heuristic, not a
+// real tokenizer — actual counts may vary by 30-50% depending on content.
 export const calculateMetrics = (frontmatter, body) => ({
   bodyLines: body.split("\n").length,
   bodyTokens: Math.ceil(body.length / 4),
@@ -84,7 +86,9 @@ export const validateSkillContent = (content, dirName) => {
   const errors = [];
   let parsedFrontmatter;
   try {
-    parsedFrontmatter = frontmatter ? yaml.load(frontmatter) : {};
+    parsedFrontmatter = frontmatter
+      ? yaml.load(frontmatter, { schema: yaml.DEFAULT_SAFE_SCHEMA })
+      : {};
   } catch (e) {
     errors.push(`Invalid YAML in frontmatter: ${e.message}`);
     const metrics = calculateMetrics(frontmatter, body);
@@ -112,6 +116,9 @@ export const validateSkillContent = (content, dirName) => {
   if (!description) errors.push("Description is required");
   else if (description.length > 1024)
     errors.push("Description must be 1024 characters or fewer");
+  if (!/^# .+/m.test(body)) errors.push("Body must contain a top-level heading (# Title)");
+  if (!/^## (?:Steps|Process)/m.test(body))
+    errors.push("Body must contain a ## Steps or ## Process section");
   const metrics = calculateMetrics(frontmatter, body);
   const { errors: thresholdErrors, warnings } = checkThresholds(metrics);
   return { errors: [...errors, ...thresholdErrors], metrics, warnings };
