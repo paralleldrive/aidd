@@ -1,4 +1,4 @@
-# aidd-functional-requirements
+# aidd-requirements
 
 Writes functional requirements for user stories using a standardized
 "Given X, should Y" format focused on user outcomes.
@@ -11,7 +11,7 @@ requirements testable and unambiguous.
 
 ## Usage
 
-Invoke `/aidd-functional-requirements` with the user story. Each requirement
+Invoke `/aidd-requirements` with the user story. Each requirement
 follows this template:
 
 ```

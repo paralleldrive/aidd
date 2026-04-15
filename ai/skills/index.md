@@ -6,7 +6,6 @@
 - aidd-ecs - Enforces @adobe/data/ecs best practices. Use this whenever @adobe/data/ecs is imported, when creating or modifying Database.Plugin definitions, or when working with ECS components, resources, transactions, actions, systems, or services.
 - aidd-error-causes - Use the error-causes library for structured error handling in JavaScript/TypeScript. Use when throwing errors, catching errors, defining error types, or implementing error routing.
 - aidd-fix - Fix a bug or implement review feedback following the AIDD fix process. Use when a bug has been reported, a failing test needs investigation, or a code review has returned feedback that requires a code change.
-- aidd-functional-requirements - Write functional requirements for a user story. Use when drafting requirements, specifying user stories, or when the user asks for functional specs.
 - aidd-javascript - JavaScript and TypeScript best practices and guidance. Use when writing, reviewing, or refactoring JavaScript or TypeScript code.
 - aidd-javascript-io-effects - Isolate network I/O and side effects using the saga pattern with call and put. Use when making network requests, invoking side effects, or implementing Redux sagas.
 - aidd-jwt-security - JWT security review patterns. Use when reviewing or implementing authentication code, token handling, session management, or when JWT is mentioned.
@@ -18,6 +17,7 @@
 - aidd-please - General AI assistant for software development projects. Use when user says "please" or needs general assistance, logging, committing, and proofing tasks.
 - aidd-product-manager - Plan features, user stories, user journeys, and conduct product discovery. Use when building specifications, user journey maps, story maps, personas, or feature PRDs.
 - aidd-react - Enforces React component authoring best practices. Use when creating React components, binding components, presentations, useObservableValues, or when the user asks about React UI patterns, reactive binding, or action callbacks.
+- aidd-requirements - Write functional requirements for a user story. Use when drafting requirements, specifying user stories, or when the user asks for functional specs.
 - aidd-review - Conduct a thorough code review focusing on code quality, best practices, security, test coverage, and adherence to project standards and functional requirements. Use when reviewing code, pull requests, or completed epics.
 - aidd-rtc - Reflective Thought Composition. Structured thinking pipeline for complex decisions, design evaluation, and deep analysis. Use when quality of reasoning matters more than speed of response.
 - aidd-service - Enforces asynchronous data service authoring best practices. Use when creating front-end or back-end services, service interfaces, Observe patterns, AsyncDataService, or when the user asks about service layer, data flow, unidirectional UI, or action/observable design.
