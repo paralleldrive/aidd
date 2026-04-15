@@ -1,0 +1,16 @@
+import 'ai/skills/aidd-parallel/SKILL.md'
+
+userPrompt = """
+Run /aidd-parallel with the following single task (no --branch flag):
+
+Task 1:
+  File: ai-evals/aidd-parallel/fixtures/add.js, line 1
+  "add() subtracts instead of adding — should use + not -"
+
+Generate a delegation prompt for this task.
+"""
+
+- Given --branch is omitted, should state that the current branch (from git rev-parse --abbrev-ref HEAD) will be used
+- Given a generated prompt, should start with /aidd-fix
+- Given a generated prompt, should be wrapped in a markdown codeblock
+- Given a generated prompt, should instruct the sub-agent to pull --rebase before pushing
