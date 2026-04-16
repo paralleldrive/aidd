@@ -81,8 +81,12 @@ resolveAddressed(triageResult) {
 
 ### Step 3 — Delegate (thinking)
 delegateRemaining(triageResult) => delegationPrompts {
+  Do NOT fix code directly — only produce prompt text for sub-agents to execute later.
   1. For each remaining issue, generate a `/aidd-fix` delegation prompt
-  2. Each prompt targets one issue, referencing the specific file, line, and PR branch
+  2. Each prompt must:
+     - Start with `/aidd-fix` on the first line
+     - Reference the specific file, line, and review comment
+     - Instruct the sub-agent to commit directly to the PR branch and not create a new branch
   3. Wrap each prompt in a markdown code block for easy copy-paste or sub-agent dispatch
 }
 
