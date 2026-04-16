@@ -53,5 +53,5 @@ jobs:
           method: chat.postMessage
           token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
-            channel: "C0A5ZRP7XR5"
+            channel: "C0ASZRP7XRS"
             text: "🔴 AI Eval failed on `${{ github.ref_name }}` — <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run>"
