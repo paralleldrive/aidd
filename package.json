@@ -106,7 +106,7 @@
     "prepare": "husky",
     "release": "node release.js",
     "test": "vitest run && echo 'Test complete.' && npm run -s lint && npm run -s typecheck",
-    "test:ai-eval": "riteway ai 'ai-evals/**/*.sudo' --runs 1 --threshold 75 --timeout 600000 --agent claude --color --save-responses",
+    "test:ai-eval": "bash -c 'shopt -s globstar; for f in ai-evals/**/*-test.sudo; do riteway ai \"$f\" --runs 1 --threshold 75 --timeout 600000 --agent claude --color --save-responses || exit 1; done'",
     "test:e2e": "vitest run **/*-e2e.test.js && echo 'E2E tests complete.'",
     "test:unit": "vitest run --exclude '**/*-e2e.test.js' && echo 'Unit tests complete.' && npm run -s lint && npm run -s typecheck",
     "toc": "doctoc README.md",
