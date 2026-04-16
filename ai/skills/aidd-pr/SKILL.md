@@ -25,6 +25,7 @@ Constraints {
   Paginate GraphQL queries using pageInfo.hasNextPage until all results are retrieved — do not assume first: 100 covers all threads
   Do not close any other PRs
   Do not touch any git branches other than the PR's branch as determined via `gh pr view`
+  Delegation prompts must explicitly instruct the sub-agent to commit directly to the PR branch and not create a new branch
 }
 
 DelegateSubtasks {
