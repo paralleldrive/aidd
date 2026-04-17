@@ -461,6 +461,7 @@ Skills are reusable agent workflows that extend AIDD with specialized capabiliti
 
 - **[/aidd-agent-orchestrator](ai/skills/aidd-agent-orchestrator/README.md)** — Coordinates specialized agents for software development tasks. Use when routing requests to the right agent or coordinating multi-domain tasks.
 - **[/aidd-autodux](ai/skills/aidd-autodux/README.md)** — Create and transpile Autodux Redux state management dux objects. Use when building Redux state management, defining reducers, action creators, or selectors.
+- **[/aidd-changelog](ai/skills/aidd-changelog/README.md)** — Write and maintain release changelog entries focused on consumer impact. Use when preparing a release or auditing unreleased changes.
 - **[/aidd-churn](ai/skills/aidd-churn/README.md)** — Hotspot analysis: run `npx aidd churn`, interpret the ranked results, and recommend specific files to review or refactor with concrete strategies. Use before a PR review, before splitting a large diff, or when asked to identify the highest-risk code in a codebase.
 - **[/aidd-ecs](ai/skills/aidd-ecs/README.md)** — Enforces @adobe/data/ecs best practices. Use when working with ECS components, resources, transactions, actions, systems, or services.
 - **[/aidd-error-causes](ai/skills/aidd-error-causes/README.md)** — Structured error handling with the error-causes library. Use when throwing errors, catching errors, defining error types, or implementing error routing.
@@ -474,10 +475,15 @@ Skills are reusable agent workflows that extend AIDD with specialized capabiliti
 - **[/aidd-log](ai/skills/aidd-log/README.md)** — Document completed epics in a structured changelog with emoji categorization. Use after completing a significant feature or epic.
 - **[/aidd-namespace](ai/skills/aidd-namespace/README.md)** — Ensures types and related functions are authored in a modular, discoverable, tree-shakeable pattern. Use when creating types, refactoring type folders, or defining schemas.
 - **[/aidd-observe](ai/skills/aidd-observe/README.md)** — Enforces Observe pattern best practices from @adobe/data/observe. Use when working with observables, reactive data flow, or service Observe properties.
+- **[/aidd-parallel](ai/skills/aidd-parallel/README.md)** — Generate `/aidd-fix` delegation prompts for a list of tasks and dispatch them to sub-agents in dependency order. Use when fanning work out across multiple parallel agents.
 - **[/aidd-please](ai/skills/aidd-please/README.md)** — General AI assistant for software development projects. Use for general assistance, logging, committing, and proofing tasks.
+- **[/aidd-pipeline](ai/skills/aidd-pipeline/README.md)** — Run a sequential pipeline of tasks defined in a markdown file, delegating each step to an isolated sub-agent. Use when executing a multi-step task list automatically.
+- **[/aidd-pr](ai/skills/aidd-pr/README.md)** — Triage PR review comments, resolve already-addressed threads, and delegate remaining fixes to sub-agents. Use when a PR has open review comments that need to be triaged or fixed.
 - **[/aidd-product-manager](ai/skills/aidd-product-manager/README.md)** — Plan features, user stories, user journeys, and conduct product discovery. Use when building specifications, journey maps, story maps, or personas.
 - **[/aidd-react](ai/skills/aidd-react/README.md)** — Enforces React component authoring best practices. Use when creating React components, binding components, or working with React UI patterns.
 - **[/aidd-review](ai/skills/aidd-review/README.md)** — Conduct thorough code reviews focusing on quality, security, test coverage, and adherence to project standards. Use when reviewing code, pull requests, or completed epics.
+- **[/aidd-riteway-ai](ai/skills/aidd-riteway-ai/README.md)** — Write correct Riteway AI prompt evals (`.sudo` files) for multi-step agent flows that involve tool calls. Use when writing or testing agent skill evals.
+- **[/aidd-rtc](ai/skills/aidd-rtc/README.md)** — Reflective Thought Composition: structured multi-stage reasoning to improve answer quality. Use when quality of reasoning matters more than speed.
 - **[/aidd-service](ai/skills/aidd-service/README.md)** — Enforces asynchronous data service authoring best practices. Use when creating front-end or back-end services, service interfaces, or data flow patterns.
 - **[/aidd-stack](ai/skills/aidd-stack/README.md)** — Tech stack guidance for NextJS + React/Redux + Shadcn UI features. Use when implementing full stack features or choosing architecture patterns.
 - **[/aidd-structure](ai/skills/aidd-structure/README.md)** — Enforces source code structuring and interdependency best practices. Use when creating folders, moving files, adding imports, or planning module architecture.
@@ -486,6 +492,7 @@ Skills are reusable agent workflows that extend AIDD with specialized capabiliti
 - **[/aidd-tdd](ai/skills/aidd-tdd/README.md)** — Systematic test-driven development with proper test isolation. Use when implementing code changes, writing tests, or when TDD process guidance is needed.
 - **[/aidd-timing-safe-compare](ai/skills/aidd-timing-safe-compare/README.md)** — Security rule for timing-safe secret comparison using SHA3-256 hashing. Use when reviewing or implementing secret comparisons, token validation, or API key checks.
 - **[/aidd-ui](ai/skills/aidd-ui/README.md)** — Design beautiful and friendly user interfaces and experiences. Use when building UI components, styling, animations, accessibility, or responsive design.
+- **[/aidd-upskill](ai/skills/aidd-upskill/README.md)** — Create and review AIDD skills following a consistent authoring standard. Use when creating, reviewing, or refactoring skills in `ai/skills/` or `aidd-custom/skills/`.
 - **[/aidd-user-testing](ai/skills/aidd-user-testing/README.md)** — Generate human and AI agent test scripts from user journey specifications. Use when creating user test scripts or validating user journeys.
 
 ## 📁 AI System Structure

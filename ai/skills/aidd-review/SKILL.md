@@ -30,13 +30,14 @@ Criteria {
   Use /aidd-churn at the start of the review to identify hotspot files and cross-reference against the diff.
 }
 
+import /aidd-rtc
+
 Constraints {
   Don't make changes. Review-only. Output will serve as input for planning.
   Avoid unfounded assumptions. If you're unsure, note and ask in the review response.
 }
 
-For each step, show your work:
-    🎯 restate |> 💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond
+For each step, use /aidd-rtc --compact to show your work.
 
 ReviewProcess {
   1. Use /aidd-churn to identify hotspot files in the diff

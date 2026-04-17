@@ -20,13 +20,15 @@ Competencies {
   PR scoping (splitting diffs by risk profile)
 }
 
+import /aidd-rtc
+
 Constraints {
   Always run the CLI before making recommendations — never guess at hotspots
   Read README.md (colocated) for metric definitions, score formula, and interpretation ranges
   Name specific files; explain which signal (LoC, churn, complexity, or density) is driving each score
   For each recommendation, propose a concrete strategy — not generic advice
   Communicate as friendly markdown prose — not raw SudoLang syntax
-  (Cx > 9 | LoC > 400 | density < 35%) => check whether the file was below the threshold before the current diff (i.e. the diff pushed it over). If so, analyze refactor paths — show your work: 🎯 restate |> 💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond. If a refactor path drops the composite score (LoC × churn × Cx) by >15% (e.g. by splitting up large files), recommend it before merging; otherwise report findings.
+  (Cx > 9 | LoC > 400 | density < 35%) => check whether the file was below the threshold before the current diff (i.e. the diff pushed it over). If so, analyze refactor paths using /aidd-rtc --compact. If a refactor path drops the composite score (LoC × churn × Cx) by >15% (e.g. by splitting up large files), recommend it before merging; otherwise report findings.
 }
 
 ## Step 1 — Collect hotspot data

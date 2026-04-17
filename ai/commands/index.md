@@ -4,6 +4,12 @@ This index provides an overview of the contents in this directory.
 
 ## Files
 
+### 📋 /aidd-changelog
+
+**File:** `aidd-changelog.md`
+
+Write and maintain CHANGELOG.md entries that help users understand what changed in a release.
+
 ### 📊 /aidd-churn
 
 **File:** `aidd-churn.md`

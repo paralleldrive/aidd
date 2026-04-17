@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2026-04-15
+
+### Breaking Changes
+- **`/aidd-functional-requirements` moved** to **`/aidd-requirements`** with the directory `ai/skills/aidd-requirements/`. Update agent rules, README-style links, and any paths that pointed at `aidd-functional-requirements`.
+
+### Added
+- `/aidd-rtc` skill — Reflective Thought Composition for structured, higher-quality reasoning
+- `/aidd-parallel` skill — `/aidd-fix` delegation prompts and parallel sub-agent coordination (dependency ordering, rebase constraint)
+- `/aidd-pipeline` skill — run a sequential pipeline from a markdown task list via isolated sub-agents (Task tool)
+- `/aidd-pr` skill — triage PR review threads, resolve addressed feedback, delegate remaining work to sub-agents
+- `/aidd-riteway-ai` skill — Riteway AI `.sudo` prompt evals for multi-step flows that use tools (with unit tests)
+- `/aidd-upskill` skill — authoring and upskilling AIDD skills; reference `validate-skill` implementation, tests, and docs
+- `/aidd-changelog` skill — write and maintain release changelog entries focused on consumer impact
+- README skills list — added entries for all 7 new skills
+- **`build:validate-skill`** npm script — compile the upskill validator via Bun
+- **`test:ai-eval:upskill`** npm script — run Riteway AI evals under `ai-evals/aidd-upskill/`
+- GitHub Actions — AI eval workflow on a **daily cron** (1 run), **Slack** notification to `#ai-test-reports` on failure, restricted to **`main`**
+
+### Changed
+- **`test:ai-eval`** — default `--runs` reduced from **4** to **1** (matches cron and lowers local/CI cost)
+- `docs/scaffold-authoring.md` — clearer guidance for CLI operations during scaffold authoring
+- `/aidd-sudolang-syntax` skill **Semantic pattern matching** documented
+
+
+### Fixed
+- `aidd-please`, `aidd-task-creator`, `aidd-review`, `aidd-churn` now use `/aidd-rtc --compact` to save thinking tokens and improve thinking quality
+- Stale **`/aidd-functional-requirements`** references across skills and docs updated to **`/aidd-requirements`**
+
+## [3.1.0] - 2026-03-30
+
+### Fixed
+- `npx aidd create` — scaffold downloads from GitHub prefer **`gh auth token`**, then **`GITHUB_TOKEN`** / **`GH_TOKEN`**; `Authorization` is attached only for GitHub hosts (`api.github.com`, `github.com`, `codeload.github.com`); documented `gh auth login` in README and scaffold authoring guide (#176)
+
+### Changed
+- `aidd-react` skill — **Review** note on stable React hooks ordering
+
 ## [3.0.0] - 2026-03-29
 
 ### Added

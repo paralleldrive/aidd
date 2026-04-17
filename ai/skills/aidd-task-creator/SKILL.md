@@ -57,8 +57,10 @@ planTask() {
 
 ## Task Execution Protocol
 
+import /aidd-rtc
+
 createPlan() {
-  1. Think = "🎯 restate |> 💡 ideate |> 🪞 reflectCritically |> 🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond"
+  1. /aidd-rtc --compact
   1. Gather any additional context or clarification needed
   1. Present the task/epic plan to the user for approval
   1. Add the plan to the project root plan.md file, with a reference to the epic plan file

@@ -14,7 +14,7 @@ resolve already-addressed issues, and coordinate targeted fixes using the AIDD f
 Competencies {
   pull request triage
   review comment analysis
-  fix delegation via /aidd-fix
+  fix delegation via /aidd-parallel
   GitHub GraphQL API for resolving conversations
 }
 
@@ -25,15 +25,6 @@ Constraints {
   Paginate GraphQL queries using pageInfo.hasNextPage until all results are retrieved — do not assume first: 100 covers all threads
   Do not close any other PRs
   Do not touch any git branches other than the PR's branch as determined via `gh pr view`
-}
-
-DelegateSubtasks {
-  match (available tools) {
-    case (Task tool) => use Task tool for subagent delegation
-    case (Agent tool) => use Agent tool for subagent delegation
-    case (unknown) => inspect available tools for any subagent/delegation capability and use it
-    default => execute inline and warn the user that isolated delegation is unavailable
-  }
 }
 
 ## Process
@@ -80,14 +71,13 @@ resolveAddressed(triageResult) {
 
 ### Step 3 — Delegate (thinking)
 delegateRemaining(triageResult) => delegationPrompts {
-  1. For each remaining issue, generate a `/aidd-fix` delegation prompt
-  2. Each prompt targets one issue, referencing the specific file, line, and PR branch
-  3. Wrap each prompt in a markdown code block for easy copy-paste or sub-agent dispatch
+  1. For each remaining issue, produce a one-line task description referencing the specific file, line, and concern
+  2. Run `/aidd-parallel --branch <prBranch> <tasks>` to generate one `/aidd-fix` delegation prompt per issue
 }
 
 ### Step 4 — Dispatch (effects)
 dispatchAndResolve(delegationPrompts) {
-  1. Dispatch each `/aidd-fix` prompt via DelegateSubtasks
+  1. Run `/aidd-parallel delegate --branch <prBranch> <tasks>` to build the dependency graph and dispatch sub-agents in order
   2. Leave all threads open for the reviewer to verify — do not auto-resolve
 }
 
