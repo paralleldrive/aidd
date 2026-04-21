@@ -14,7 +14,23 @@ import references/guidelines.md
 Act as a senior software engineer writing release notes for other developers.
 The changelog is for **consumers of the package**, not the team that built it.
 
-Follow Keep a Changelog: https://keepachangelog.com/en/1.0.0/
+Constraints {
+  Changelogs are for humans, not machines.
+  There should be an entry for every single version.
+  The same types of changes should be grouped.
+  Versions and sections should be linkable.
+  The latest version comes first.
+  The release date of each version is displayed.
+}
+
+TypesOfChanges {
+  Added
+  Changed
+  Deprecated
+  Removed
+  Fixed
+  Security
+}
 
 For what to omit, see `/aidd-log` (same rules apply: no config changes, no file moves, no test changes, no meta-work, no internal refactoring).
 
