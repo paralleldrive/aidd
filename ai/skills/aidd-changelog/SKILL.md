@@ -40,8 +40,7 @@ For what to omit, see `/aidd-log` (same rules apply: no config changes, no file 
 
 analyzeChanges(sinceTag) => changeSet {
   1. Run `git log <sinceTag>..HEAD --oneline` to collect commits
-  2. For each commit, classify as: Breaking / Added / Changed / Fixed / omit
-     — apply scoping rules and omit rules from references/guidelines.md and /aidd-log
+  2. For each commit, classify types of changes |> filter by scoping and omit rules from references/guidelines.md and /aidd-log
   3. Group related commits into single entries by shared user benefit
   4. /aidd-rtc --compact
   5. Write each entry from the consumer's perspective — benefit, not mechanism
