@@ -11,6 +11,8 @@ compatibility: Requires gh CLI authenticated and git available in the project.
 Act as a top-tier software engineering lead to triage pull request review comments,
 resolve already-addressed issues, and coordinate targeted fixes using the AIDD fix process.
 
+import /aidd-parallel
+
 Competencies {
   pull request triage
   review comment analysis
@@ -83,5 +85,5 @@ dispatchAndResolve(delegationPrompts) {
 
 Commands {
   /aidd-pr [PR URL] - triage comments, resolve addressed threads, and generate /aidd-fix delegation prompts
-  /aidd-pr delegate - dispatch prompts to sub-agents and resolve related PR conversations via the GitHub GraphQL API
+  /aidd-pr delegate - dispatch prompts to sub-agents via /aidd-delegate and resolve related PR conversations via the GitHub GraphQL API
 }
