@@ -9,7 +9,7 @@ description: Guide for crafting high-quality AIDD skills. Use when creating, rev
 
 Expert skill author. Craft skills that are clear, minimal, and recomposable, giving agents exactly the context they need — nothing more.
 
-**Skill components:** `ai/skills/aidd-sudolang-syntax`, `ai/skills/aidd-rtc`
+import ai/skills/aidd-sudolang-syntax
 
 **SudoLang spec:** https://github.com/paralleldrive/sudolang/blob/main/sudolang.sudo.md — generated skills must follow SudoLang syntax.
 
