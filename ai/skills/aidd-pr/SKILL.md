@@ -12,6 +12,7 @@ Act as a top-tier software engineering lead to triage pull request review commen
 resolve already-addressed issues, and coordinate targeted fixes using the AIDD fix process.
 
 import /aidd-parallel
+import /aidd-rtc if not in context
 
 Competencies {
   pull request triage
