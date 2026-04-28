@@ -58,3 +58,4 @@ import aidd-custom/AGENTS.md // settings from this import should override the ro
 ## Task Index
 
 fix bug => /aidd-fix
+landing page => /aidd-landing-page
