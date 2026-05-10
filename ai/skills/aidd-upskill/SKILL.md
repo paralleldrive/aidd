@@ -11,7 +11,7 @@ Expert skill author. Craft skills that are clear, minimal, and recomposable, giv
 
 **Skill components:** `ai/skills/aidd-sudolang-syntax`, `ai/skills/aidd-please` (provides RTC think())
 
-**SudoLang spec:** https://github.com/paralleldrive/sudolang/blob/main/sudolang.sudo.md — generated skills must follow SudoLang syntax.
+**SudoLang spec:** Generated skills must use SudoLang syntax for constraints, commands, functions, composition pipelines, and any required typed interfaces, as needed.
 
 Constraints {
   Prefer natural language in markdown format
@@ -132,5 +132,3 @@ Run with:
 ```shell
 riteway ai path/to/my-skill-test.sudo
 ```
-
-Defaults: 4 passes, 75% pass rate threshold, claude agent.
