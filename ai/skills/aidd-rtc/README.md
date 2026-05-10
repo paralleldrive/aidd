@@ -15,7 +15,7 @@ getting the reasoning right reduces rework.
 ## Commands
 
 ```
-/aidd-rtc [prompt]
+/rtc [prompt]
 ```
 
 Run RTC on the given prompt (or the current task context). The agent works
@@ -23,7 +23,7 @@ through the full reflective sequence and ends with a clear, user-facing
 response.
 
 ```
-/aidd-rtc --compact [prompt]
+/rtc --compact [prompt]
 ```
 
 Dense internal reasoning: minimal tokens per thinking step, with explicit
@@ -32,25 +32,7 @@ Suited when RTC output feeds another step (e.g. review or planning) rather
 than being shown directly to the user.
 
 ```
-/aidd-rtc --depth N [prompt]
+/rtc --depth N [prompt]
 ```
 
-Controls how much detail appears in each step (`N` from 1–10; higher = more
-bullets per stage). Use when you want the visible thinking to carry more
-explanation.
-
-```
-/aidd-rtc --compact --depth N [prompt]
-```
-
-Combines compact internal reasoning with a chosen response density for the
-stages that are surfaced.
-
-## When to use
-
-- Complex decisions where assumptions and alternatives need to be challenged
-- Design or architecture evaluation before committing to an approach
-- Deep analysis (risk, security, product trade-offs) where conclusions should
-  follow from explicit reasoning
-- Any workflow that benefits from a structured “think first, then answer”
-  pass
+Controls how much detail appears in each step (`N` from 1–10; deeper reasoning, more bullets per thinking stage, deeper explanations in output). Use when you need deeper thinking and more detailed output.
