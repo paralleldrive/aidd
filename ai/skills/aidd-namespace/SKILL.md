@@ -3,9 +3,36 @@ name: aidd-namespace
 description: Ensures types and related functions are authored and consumed in a modular, discoverable, tree-shakeable pattern. Use when creating types, refactoring type folders, defining schemas, importing types, or when the user mentions type namespaces, constants, or Schema.ToType.
 ---
 
-# Type namespace pattern
+Every file only exports a single public declaration though it may contain other non exported declarations.
+Every file is named to match the single export.
 
-Single import surface per type: `<type-name>/<type-name>.ts`. Each constant or function lives in `<exported-name>.ts`; namespace re-export from `public.js`. Types live in the `types/` layer per [structure](../aidd-structure/SKILL.md).
+Good {
+  // do-foo-bar.ts
+  export function doFooBar() {}
+}
+Bad {
+  // foo-bar-type.ts
+  export type FooBar = "a" | "b"
+}
+
+# Should we use single file or namespace pattern?
+
+if this type has no related declarations {
+  <type-name>.ts
+  DO NOT use the namespace pattern.
+}
+else {
+  USE the following namespace pattern.
+}
+
+# Namespace pattern
+
+<type-name>/<type-name>.ts # exports the type <type-name> AND export * as <type-name> from "./public.js"
+The exported type should be defined directly in this file and not re-exported.
+<type-name>/public.ts # contains re-exports * from each public declaration
+<type-name>/<declaration>.ts # each related declaration with a single export
+
+If you have logical sub-types, which are never used externally to that type then you may use this namespace pattern recursively to contain them.
 
 **Precedence:** This skill defines the canonical pattern. Existing files may not yet follow it; all new work and changes must conform. Do not copy legacy structure when adding or editing code.
 
@@ -13,16 +40,11 @@ Single import surface per type: `<type-name>/<type-name>.ts`. Each constant or f
 
 Inside a type folder, name each file after the single export it provides. The folder already identifies the type, so no type prefix in the filename.
 
-```sudolang
-NamespaceFileNaming {
-  typeEntry: "<type-name>.ts — type alias and namespace re-export"
-  utilityOrConstant: "<exported-name>.ts — one file per exported function or constant; filename = export name"
-}
-
 Constraints {
-  Do not use <type-name>-<exported-name>.ts for children; <exported-name>.ts is sufficient
+  Same name rule: File names must always match the single exported declaration.
+  Do not use <type-name>-<exported-name>.ts for children; <exported-name>.ts is sufficient and pre-pending would violate same name rule.
+  Do not use <type-name>-type.ts or anything else which would violate same name rule.
 }
-```
 
 Example: under `types/point/`, files `length.ts`, `add.ts`, and `normalize.ts` each export the like-named function.
 
