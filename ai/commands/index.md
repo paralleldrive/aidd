@@ -22,6 +22,12 @@ Rank files by hotspot score to identify prime candidates for refactoring before 
 
 Generate /aidd-fix delegation prompts for a list of tasks and optionally dispatch them to sub-agents in dependency order
 
+### /aidd-phase-list
+
+**File:** `aidd-phase-list.md`
+
+Run a folder-based phase list (sequenced *.md phases) with optional nested delegation
+
 ### 🔗 /aidd-pipeline
 
 **File:** `aidd-pipeline.md`
