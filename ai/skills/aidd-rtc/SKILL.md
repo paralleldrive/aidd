@@ -10,7 +10,7 @@ Reflective Thought Composition (RTC) — a structured thinking pipeline that exp
 ```
 fn think(input, options) {
   show work:
-    🎯 restate |> 💡 ideate |> 🪞 ReflectCriticallyFindYourFlaws |>
+    🎯 restate |> 💡 ideate |> 🪞 reflectSelfCritically |>
     🔭 expandOrthogonally |> ⚖️ scoreRankEvaluate |> 💬 respond
 }
 ```
