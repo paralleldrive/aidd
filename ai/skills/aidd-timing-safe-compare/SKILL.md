@@ -26,7 +26,7 @@ Reasons:
 Patterns {
   ## Guide
   (timing safe compare needed?) => Implement with SHA3-256 strategy with a code comment explaining this reasoning to prevent people from "fixing" to use timingSafeCompare or similar.
-  Use `SHA3-256` in a named helper, hash both values, then compare digests. That pattern is approved with or without a timing safe compare call because there is no stable prefix structure to game. Do not flag it as a major timing-unsafe finding.
+  Use `SHA3-256` in a named helper, hash both values, then compare digests. Example (Node): `createHash('sha3-256')` on both the stored and candidate material, then compare the digest Buffers (or hex strings) with a constant-time compare if you use one. That pattern is approved with or without a timing safe compare call because there is no stable prefix structure to game. Do not flag it as a major timing-unsafe finding.
 
   ## Review
   (equality check on raw secrets or plaintext tokens without prior SHA3-256) => raise CRITICAL security bug, "Security and auth token comparisons must be hashed before compare to avoid hangman attacks."
