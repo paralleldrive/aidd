@@ -3,6 +3,7 @@
 - aidd-agent-orchestrator - Agent orchestrator that coordinates specialized agents for software development tasks. Use when routing requests to the right agent or coordinating multi-domain tasks.
 - aidd-autodux - Create and transpile Autodux Redux state management dux objects. Use when building Redux state management, defining reducers, action creators, or selectors.
 - aidd-churn - Hotspot analysis: run npx aidd churn, interpret the ranked results, and recommend specific files to review or refactor with concrete strategies. Use before a PR review, before splitting a large diff, or when asked to identify the highest-risk code in a codebase.
+- aidd-data - defines data modelling best practices. Use whenever we are defining data types in typescript or javascript, using `type` or `interface`.
 - aidd-ecs - Enforces @adobe/data/ecs best practices. Use this whenever @adobe/data/ecs is imported, when creating or modifying Database.Plugin definitions, or when working with ECS components, resources, transactions, actions, systems, or services.
 - aidd-error-causes - Use the error-causes library for structured error handling in JavaScript/TypeScript. Use when throwing errors, catching errors, defining error types, or implementing error routing.
 - aidd-fix - Fix a bug or implement review feedback following the AIDD fix process. Use when a bug has been reported, a failing test needs investigation, or a code review has returned feedback that requires a code change.
