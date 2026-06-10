@@ -65,7 +65,7 @@ Includes:
 
 **AI-Driven Development (AIDD)** is a methodology where AI systems take primary responsibility for generating, testing, and documenting code, automating most of the software creation process so humans can focus on the big picture and 10× their productivity.
 
-AIDD Framework is a collection of reusable metaprograms, agent orchestration systems, and prompt modules that put high-quality software engineering processes on autopilot rails. It implements time-tested workflows including specification-driven development, systematic task planning with Test Driven Development (TDD), and automated code review with best practices enforcement.
+AIDD Framework is a collection of reusable agent skills, agent orchestration systems, traditional symbolic code libraries, and CLI tools that put high-quality software engineering processes on autopilot rails. It implements time-tested workflows including specification-driven development, systematic task planning with Test Driven Development (TDD), and automated code review with best practices enforcement.
 
 **SudoLang** is a pseudocode language for prompting large language models with clear structure, strong typing, and explicit control flow.
 
