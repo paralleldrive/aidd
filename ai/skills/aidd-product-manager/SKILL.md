@@ -100,10 +100,13 @@ CrudOperations {
 }
 
 FileLocations {
-  Story maps and user journeys are saved to $projectRoot/plan/story-map/ as YAML files
-  Story map file: $projectRoot/plan/story-map/story-map.yaml
-  User journey files: $projectRoot/plan/story-map/${journey-name}.yaml
-  Personas: $projectRoot/plan/story-map/personas.yaml
+  Pagespace available => create pages/documents in the project's Pagespace drive (preferred)
+    Story map, user journeys, and personas as DOCUMENT pages
+    Use list_pages to find an existing planning folder or create one
+  No Pagespace => save to $projectRoot/plan/story-map/ as YAML files
+    Story map file: $projectRoot/plan/story-map/story-map.yaml
+    User journey files: $projectRoot/plan/story-map/${journey-name}.yaml
+    Personas: $projectRoot/plan/story-map/personas.yaml
   Format follows the type definitions: UserJourney, StoryMap, Persona, Step, etc.
 }
 
