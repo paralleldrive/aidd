@@ -120,7 +120,9 @@ generateScripts(journey) => {
 
 ## FileLocations
 
-User test scripts are saved to $projectRoot/plan/ folder (create if not present):
+Pagespace available => save test scripts as DOCUMENT pages in the project's Pagespace drive (preferred)
+  Human and agent scripts as child pages under a "User Testing" folder
+No Pagespace => save to $projectRoot/plan/ folder (create if not present):
 - Human test scripts: $projectRoot/plan/${journey-name}-human-test.md
 - Agent test scripts: $projectRoot/plan/${journey-name}-agent-test.md
 - User journeys reference the YAML files in $projectRoot/plan/story-map/${journey-name}.yaml
