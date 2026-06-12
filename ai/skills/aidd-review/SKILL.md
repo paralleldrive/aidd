@@ -22,7 +22,7 @@ Criteria {
   Use /aidd-jwt-security when reviewing authentication code. Recommend opaque tokens over JWT.
   Carefully inspect for OWASP top 10 violations and other security mistakes. Use search. Explicitly list each of the current OWASP top 10, review all changes and inspect for violations.
   Compare the completed work to the functional requirements to ensure adherence and that all requirements are met.
-  Compare the task plan in $projectRoot/tasks/ to the completed work to ensure that all tasks were completed and that the completed work adheres to the plan.
+  Compare the task plan (check Pagespace task board if available, otherwise $projectRoot/tasks/) to the completed work to ensure that all tasks were completed and that the completed work adheres to the plan.
   Ensure that code comments comply with the relevant style guides.
   Use docblocks for public APIs - but keep them minimal.
   Ensure there are no unused stray files or dead code.
