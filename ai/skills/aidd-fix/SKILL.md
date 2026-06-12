@@ -32,15 +32,16 @@ Constraints {
 ## Step 1 — Gain Context and Validate
 gainContext(bugReport | reviewFeedback) => confirmedIssue | stop {
   1. Read the relevant source file(s) and colocated test file(s)
-  2. Read the task epic in `$projectRoot/tasks/` that covers this area
-  3. Reproduce or reason through the issue to confirm it exists
-  4. no change needed => summarize findings; stop — do not modify any files
+  2. Read the task that covers this area — from the PageSpace epic TASK_LIST if the `mcp__pagespace__*` tools are connected (read_page), otherwise the epic in `$projectRoot/tasks/`
+  3. PageSpace available => set the task to in_progress (update_task) once the issue is confirmed
+  4. Reproduce or reason through the issue to confirm it exists
+  5. no change needed => summarize findings; stop — do not modify any files
 }
 
 ## Step 2 — Document the Requirement in the Epic
 documentRequirement(confirmedIssue) => requirement {
-  1. Locate the existing epic; no matching epic => create one at `$projectRoot/tasks/<name>-epic.md` using /task
-  2. Add a requirement in **"Given X, should Y"** format describing the correct observable behavior
+  1. Locate the existing epic/task; none => create one with /task (a PageSpace TASK_LIST when the MCP tools are connected, else `$projectRoot/tasks/<name>-epic.md`)
+  2. Add a requirement in **"Given X, should Y"** format describing the correct observable behavior — in the task's note (PageSpace) or the epic file
   3. Epic update is a discrete step — commit it separately or include it in the fix commit
 
   epicConstraints {
@@ -83,6 +84,7 @@ commitAndPush(reviewedFix) {
   1. Stage only the files changed by this fix
   2. Write a conventional commit message (e.g. `type(optional-scope): description`)
   3. Run `git push -u origin <branch-name>`
+  4. PageSpace available => set the task to completed (update_task) and capture the root cause + the rule that prevents recurrence into PageSpace memory (a note page + a Memory Index line; do not grow the drive context for this)
 }
 
 fix = gainContext |> documentRequirement |> writeFailingTest |> implementFix |> selfReviewAndTest |> commitAndPush
